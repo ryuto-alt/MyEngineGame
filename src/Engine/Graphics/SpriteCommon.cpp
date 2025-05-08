@@ -107,10 +107,10 @@ void SpriteCommon::GraphicsPipelineInitialize()
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	//shaderをコンパイルする
 	IDxcBlob* vertexshaderBlob = dxCommon_->CompileShader(L"Resources/Shaders/Object3D.VS.hlsl",
-		L"vs_6_0");
+		L"vs_6_0", L"main");
 	assert(vertexshaderBlob != nullptr);
 	IDxcBlob* pixelShaderBlob = dxCommon_->CompileShader(L"Resources/Shaders/Object3D.PS.hlsl",
-		L"ps_6_0");
+		L"ps_6_0", L"main");
 	assert(pixelShaderBlob != nullptr);
 	//DepthStencilStateの設定
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};

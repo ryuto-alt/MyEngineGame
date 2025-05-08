@@ -66,9 +66,9 @@ void ParticleManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager
 void ParticleManager::InitializeGraphicsPipeline() {
     // シェーダーの読み込み - パスを修正してシェーダーを正しく読み込む
     Microsoft::WRL::ComPtr<IDxcBlob> vsBlob = dxCommon_->CompileShader(
-        L"Resources/Shaders/Particle.VS.hlsl", L"vs_6_0");
+        L"Resources/Shaders/Particle.VS.hlsl", L"vs_6_0", L"main");
     Microsoft::WRL::ComPtr<IDxcBlob> psBlob = dxCommon_->CompileShader(
-        L"Resources/Shaders/Particle.PS.hlsl", L"ps_6_0");
+        L"Resources/Shaders/Particle.PS.hlsl", L"ps_6_0", L"main");
 
     // 頂点レイアウト - 新しいシェーダーの入力に合わせる
     D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};

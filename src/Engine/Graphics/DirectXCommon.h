@@ -21,6 +21,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 class DirectXCommon
 {
+private: // 初期化用プライベートメソッド
 	void DeviceInitialize();
 	void CommandInitialize();
 	void SwapChainInitialize();
@@ -34,6 +35,19 @@ class DirectXCommon
 	void DxcCompilerInitialize();
 	void ImguiInitialize();
 
+	// 基本的なシェーダーとパイプラインの初期化
+	void CreateBasicGraphicsPipeline();
+
+	//DescriptorHeap関連
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>
+		CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heaptype,
+			UINT numDescriptrs, bool shaderVisible);
+
+	//FPS固定初期化
+	void InitializeFixFPS();
+	//FPS固定更新
+	void UpdateFixFPS();
+
 public:
 	//初期化
 	void Initialize(WinApp* winApp);
@@ -46,9 +60,13 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
-	
+
 	// ワールドトランスフォームリソースの取得
 	ID3D12Resource* GetWorldTransformResource() const { return worldTransformResource.Get(); }
+
+	// パイプラインステートとルートシグネチャのアクセサ
+	ID3D12PipelineState* GetBasicPipelineState() const { return basicPipelineState.Get(); }
+	ID3D12RootSignature* GetRootSignature() const { return rootSignature.Get(); }
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap,
@@ -65,7 +83,9 @@ public:
 		//ComilerするSahaderファイルへのパス
 		const std::wstring& filePath,
 		//compilerに使用するProfile
-		const wchar_t* profile);
+		const wchar_t* profile,
+		//エントリーポイント名
+		const wchar_t* entryPoint = L"main");
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(size_t sizeInBytes);
 
@@ -81,7 +101,7 @@ public:
 		return depthStencilDesc;
 	}
 
-private:
+private: // メンバ変数
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;
 	HRESULT hr;
@@ -91,6 +111,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
+	// シェーダーとパイプライン関連
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> basicPipelineState = nullptr;
 	// ワールド変換行列用リソース
 	Microsoft::WRL::ComPtr<ID3D12Resource> worldTransformResource = nullptr;
 
@@ -126,16 +149,4 @@ private:
 	std::chrono::steady_clock::time_point reference_;
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
-
-
-private:
-
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>
-		CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE heaptype,
-			UINT numDescriptrs, bool shaderVisible);
-
-	//FPS固定初期化
-	void InitializeFixFPS();
-	//FPS固定更新
-	void UpdateFixFPS();
 };

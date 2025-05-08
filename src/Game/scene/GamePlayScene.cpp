@@ -1,5 +1,7 @@
 #include "GamePlayScene.h"
 #include "../../../src/Engine/Physics/GameObject.h"
+#include "../../../src/Engine/Graphics/TextureManager.h"
+#include "../../../src/Engine/Camera/Camera.h"
 
 GamePlayScene::GamePlayScene() {
     // コンストラクタでは特に何もしない
@@ -19,7 +21,17 @@ void GamePlayScene::Initialize() {
     // カメラの初期設定
     camera_->SetTranslate(cameraPosition_);
     camera_->SetRotate(cameraRotation_);
+    
+    // カメラの視野角と描画範囲を設定
+    camera_->SetFovY(45.0f * (3.14159f / 180.0f)); // 45度をラジアンに変換
+    camera_->SetNearClip(0.1f);
+    camera_->SetFarClip(100.0f);
+    
+    // カメラ行列を更新
     camera_->Update();
+    
+    // デフォルトカメラとして設定
+    Object3dCommon::SetDefaultCamera(camera_);
 
     // Bullet物理シミュレーションの初期化
     // 衝突検出方法の設定
@@ -161,15 +173,27 @@ void GamePlayScene::Draw() {
 
     // 青い画面の描画は自動的に行われる
 
+    // カメラ更新を確実に行う
+    camera_->Update();
+
     // デバッグ情報の出力
     OutputDebugStringA("GamePlayScene::Draw - 描画開始\n");
     char buffer[256];
     sprintf_s(buffer, "カメラ位置: (%.2f, %.2f, %.2f)\n", cameraPosition_.x, cameraPosition_.y, cameraPosition_.z);
     OutputDebugStringA(buffer);
 
+    // シェーダーとパイプラインステートの設定
+    dxCommon_->GetCommandList()->SetPipelineState(dxCommon_->GetBasicPipelineState());
+    dxCommon_->GetCommandList()->SetGraphicsRootSignature(dxCommon_->GetRootSignature());
+
+    // デフォルトカメラを設定
+    Object3dCommon::SetDefaultCamera(camera_);
+
     // ゲームオブジェクトの描画
     for (size_t i = 0; i < gameObjects_.size(); i++) {
         OutputDebugStringA(("描画オブジェクト " + std::to_string(i) + "\n").c_str());
+        // モデルの更新を確実に行ってから描画
+        gameObjects_[i]->Update();
         // GameObjectのDrawメソッドを呼び出す
         gameObjects_[i]->Draw();
     }

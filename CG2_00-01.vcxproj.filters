@@ -355,5 +355,8 @@
     <FxCompile Include="Resources\shaders\Particle.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="src\Engine\Graphics\BasicShaders.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -138,6 +138,12 @@ void DirectXCommon::DepthBufferInitialize()
 	assert(SUCCEEDED(hr));
 	//DepthStencilTextureをウィンドウサイズで作成
 	depthStencilResource = resource;
+
+	// デプスステンシルの設定
+	depthStencilDesc.DepthEnable = true; // 深度テストを有効に
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL; // 書き込み許可
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // 小さいか等しければ合格
+	depthStencilDesc.StencilEnable = false; // ステンシルテストは無効
 }
 
 
@@ -267,27 +273,31 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	ScissorInitialize();
 	DxcCompilerInitialize();
 	// ImguiInitializeは後ほど別途ImGuiManagerクラスを作成して管理する
-	
+
 	// ワールド変換用定数バッファの作成
 	worldTransformResource = CreateBufferResource(sizeof(TransformationMatrix));
-	
+
 	// 初期値を設定 - 単位行列を直接作成
 	TransformationMatrix* transformMatrix = nullptr;
 	worldTransformResource->Map(0, nullptr, reinterpret_cast<void**>(&transformMatrix));
-	
+
 	// 単位行列を直接作成
 	Matrix4x4 identity = {};
 	identity.m[0][0] = 1.0f;
 	identity.m[1][1] = 1.0f;
 	identity.m[2][2] = 1.0f;
 	identity.m[3][3] = 1.0f;
-	
+
 	transformMatrix->WVP = identity;
 	transformMatrix->World = identity;
 	worldTransformResource->Unmap(0, nullptr);
-	
+
 	// デバッグメッセージ
 	OutputDebugStringA("DirectXCommon: ワールド変換行列用定数バッファを作成しました\n");
+
+	// 基本的なシェーダーとパイプラインの初期化
+	CreateBasicGraphicsPipeline();
+	OutputDebugStringA("DirectXCommon: 基本グラフィックスパイプラインを作成しました\n");
 }
 
 
@@ -315,7 +325,7 @@ void DirectXCommon::Begin()
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, &dsvHandle);
 	commandList->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	//指定した色で画面全体をクリアする
-	// 背景色を黒に変更
+	// 背景色を青っぽい色に変更
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色。RGBAの順
 	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
 
@@ -449,10 +459,10 @@ D3D12_GPU_DESCRIPTOR_HANDLE DirectXCommon::GetGPUDescriptorHandle(Microsoft::WRL
 }
 
 
-IDxcBlob* DirectXCommon::CompileShader(const std::wstring& filePath, const wchar_t* profile)
+IDxcBlob* DirectXCommon::CompileShader(const std::wstring& filePath, const wchar_t* profile, const wchar_t* entryPoint)
 {
 	//シェーダーをコンパイルする旨をログに出す
-	Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
+	Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{},entryPoint:{}\n", filePath, profile, entryPoint)));
 	//hlslファイルを読む
 	IDxcBlobEncoding* shaderSource = nullptr;
 	HRESULT hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
@@ -465,7 +475,7 @@ IDxcBlob* DirectXCommon::CompileShader(const std::wstring& filePath, const wchar
 	shaderSourceBuffer.Encoding = DXC_CP_UTF8;//UTF8の文字コードであることを通知
 	LPCWSTR arguments[] = {
 		filePath.c_str(),//コンパイル対象のhlslファイル名
-		L"-E",L"main",//エントリーpointの指定。基本的にmain以外にはしない
+		L"-E",entryPoint,//エントリーポイントの指定
 		L"-T",profile,//shaderProfileの設定
 		L"-Zi",L"-Qembed_debug",//デバック用の情報を埋め込む
 		L"-Od",//最適化を外しておく
@@ -609,4 +619,129 @@ void DirectXCommon::CommandKick()
 	assert(SUCCEEDED(hr));
 	hr = commandList->Reset(commandAllocator.Get(), nullptr);
 	assert(SUCCEEDED(hr));
+}
+
+// 基本的なシェーダーとパイプラインの初期化
+void DirectXCommon::CreateBasicGraphicsPipeline() {
+	// ルートシグネチャの作成
+	// ディスクリプタレンジの設定
+	D3D12_DESCRIPTOR_RANGE descriptorRange{};
+	descriptorRange.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // シェーダーリソースビュー
+	descriptorRange.NumDescriptors = 1; // テクスチャ1つ
+	descriptorRange.BaseShaderRegister = 0; // レジスタ番号0
+	descriptorRange.RegisterSpace = 0; // デフォルト
+	descriptorRange.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	// ルートパラメータの設定
+	D3D12_ROOT_PARAMETER rootParameters[2] = {};
+	// ルートパラメータ0番
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; // 定数バッファビュー
+	rootParameters[0].Descriptor.ShaderRegister = 0; // レジスタ番号0
+	rootParameters[0].Descriptor.RegisterSpace = 0; // デフォルト
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL; // 全てのシェーダから見える
+
+	// ルートパラメータ1番
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; // デスクリプタテーブル
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = 1; // ディスクリプタレンジ数
+	rootParameters[1].DescriptorTable.pDescriptorRanges = &descriptorRange;
+	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // ピクセルシェーダからのみ見える
+
+	// サンプラーの設定
+	D3D12_STATIC_SAMPLER_DESC samplerDesc{};
+	samplerDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+	samplerDesc.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+	samplerDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.MaxLOD = D3D12_FLOAT32_MAX;
+	samplerDesc.MinLOD = 0.0f;
+	samplerDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+	samplerDesc.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+	// ルートシグネチャの設定
+	D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
+	rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	rootSignatureDesc.pParameters = rootParameters; // ルートパラメータの先頭アドレス
+	rootSignatureDesc.NumParameters = _countof(rootParameters); // ルートパラメータ数
+	rootSignatureDesc.pStaticSamplers = &samplerDesc;
+	rootSignatureDesc.NumStaticSamplers = 1;
+
+	// シリアライズしてバイナリにする
+	ID3DBlob* rootSignatureBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+	HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1_0, &rootSignatureBlob, &errorBlob);
+	if (FAILED(hr)) {
+		OutputDebugStringA("ルートシグネチャのシリアライズに失敗");
+		if (errorBlob) {
+			OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
+			errorBlob->Release();
+		}
+		return;
+	}
+
+	// ルートシグネチャの生成
+	hr = device->CreateRootSignature(0, rootSignatureBlob->GetBufferPointer(), rootSignatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+	assert(SUCCEEDED(hr));
+	rootSignatureBlob->Release();
+
+	// 頂点レイアウト
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[] = {
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	};
+
+	// シェーダーをコンパイル
+	// 頂点シェーダー
+	IDxcBlob* vertexShaderBlob = CompileShader(L"Resources/Shaders/BasicShaders.hlsl", L"vs_6_0", L"VSMain");
+	// ピクセルシェーダー
+	IDxcBlob* pixelShaderBlob = CompileShader(L"Resources/Shaders/BasicShaders.hlsl", L"ps_6_0", L"PSMain");
+
+	// グラフィックスパイプラインの設定
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineDesc{};
+	pipelineDesc.pRootSignature = rootSignature.Get();
+
+	// シェーダーの設定
+	if (vertexShaderBlob) {
+		pipelineDesc.VS.pShaderBytecode = vertexShaderBlob->GetBufferPointer();
+		pipelineDesc.VS.BytecodeLength = vertexShaderBlob->GetBufferSize();
+	}
+	if (pixelShaderBlob) {
+		pipelineDesc.PS.pShaderBytecode = pixelShaderBlob->GetBufferPointer();
+		pipelineDesc.PS.BytecodeLength = pixelShaderBlob->GetBufferSize();
+	}
+
+	// サンプルマスクとラスタライザステートの設定
+	pipelineDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK; // 標準設定
+	pipelineDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK; // 背面カリング
+	pipelineDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID; // ポリゴン内塗りつぶし
+	pipelineDesc.RasterizerState.DepthClipEnable = true; // 深度クリッピングを有効に
+
+	// ブレンドステートの設定
+	D3D12_RENDER_TARGET_BLEND_DESC& blenddesc = pipelineDesc.BlendState.RenderTarget[0];
+	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	blenddesc.BlendEnable = false; // ブレンドを無効に
+
+	// 入力レイアウトの設定
+	pipelineDesc.InputLayout.pInputElementDescs = inputElementDescs;
+	pipelineDesc.InputLayout.NumElements = _countof(inputElementDescs);
+
+	// 図形の形状設定
+	pipelineDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+	// デプスステンシルステートの設定
+	pipelineDesc.DepthStencilState = depthStencilDesc;
+
+	// レンダーターゲットの設定
+	pipelineDesc.NumRenderTargets = 1; // 描画対象は1つ
+	pipelineDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 0〜255指定のRGBA
+	pipelineDesc.SampleDesc.Count = 1; // 1ピクセルにつき1回サンプリング
+
+	// パイプラインステートの生成
+	hr = device->CreateGraphicsPipelineState(&pipelineDesc, IID_PPV_ARGS(&basicPipelineState));
+	assert(SUCCEEDED(hr));
+
+	// シェーダーリソースを解放
+	if (vertexShaderBlob) vertexShaderBlob->Release();
+	if (pixelShaderBlob) pixelShaderBlob->Release();
 }

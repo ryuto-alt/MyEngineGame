@@ -1,5 +1,6 @@
 #include "Model.h"
 #include "TextureManager.h"
+#include "../Camera/Camera.h"
 #include <fstream>
 #include <sstream>
 #include <cassert>
@@ -315,6 +316,32 @@ void Model::Draw() {
     if (modelData_.vertices.empty()) {
         return;
     }
+
+    // 定数バッファの更新
+    TransformationMatrix* transformData = nullptr;
+    dxCommon_->GetWorldTransformResource()->Map(0, nullptr, reinterpret_cast<void**>(&transformData));
+    transformData->World = worldMatrix_;
+    
+    // カメラを取得
+    Camera* camera = Object3dCommon::GetDefaultCamera();
+    if (camera) {
+        // カメラのビュー行列とプロジェクション行列を取得
+        const Matrix4x4& viewMatrix = camera->GetViewMatrix();
+        const Matrix4x4& projectionMatrix = camera->GetProjectionMatrix();
+
+        // WVP行列を計算（ワールド×ビュー×プロジェクション）
+        Matrix4x4 viewProjectionMatrix = Multiply(viewMatrix, projectionMatrix);
+        transformData->WVP = Multiply(worldMatrix_, viewProjectionMatrix);
+    } else {
+        // カメラが設定されていない場合はワールド行列のみを使用
+        transformData->WVP = worldMatrix_;
+        OutputDebugStringA("Warning: No camera set for model drawing\n");
+    }
+    
+    dxCommon_->GetWorldTransformResource()->Unmap(0, nullptr);
+
+    // 定数バッファの設定
+    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, dxCommon_->GetWorldTransformResource()->GetGPUVirtualAddress());
 
     // 頂点バッファをコマンドリストに設定
     dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
