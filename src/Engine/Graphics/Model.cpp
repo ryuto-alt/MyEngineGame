@@ -1,4 +1,3 @@
-// src/Engine/Graphics/Model.cpp
 #include "Model.h"
 #include "TextureManager.h"
 #include <fstream>
@@ -70,13 +69,19 @@ void Model::LoadFromObj(const std::string& directoryPath, const std::string& fil
 
             if (!found) {
                 // どこにも見つからない場合
-                OutputDebugStringA("WARNING: Texture file not found in any location. Clearing texture path.\n");
+                OutputDebugStringA("WARNING: Texture file not found in any location. Loading default texture.\n");
                 modelData_.material.textureFilePath = ""; // パスをクリア
+                // デフォルトテクスチャを読み込む
+                TextureManager::GetInstance()->LoadDefaultTexture();
+                modelData_.material.textureFilePath = TextureManager::GetInstance()->GetDefaultTexturePath();
             }
         }
     }
     else {
-        OutputDebugStringA("Model: No texture specified in MTL file\n");
+        OutputDebugStringA("Model: No texture specified in MTL file. Using default texture.\n");
+        // デフォルトテクスチャを読み込む
+        TextureManager::GetInstance()->LoadDefaultTexture();
+        modelData_.material.textureFilePath = TextureManager::GetInstance()->GetDefaultTexturePath();
     }
 
     // 頂点バッファの作成
@@ -162,6 +167,10 @@ void Model::CreateCube() {
         Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f)
     );
 
+    // デフォルトテクスチャを読み込む
+    TextureManager::GetInstance()->LoadDefaultTexture();
+    modelData_.material.textureFilePath = TextureManager::GetInstance()->GetDefaultTexturePath();
+
     // 頂点バッファの作成
     vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
 
@@ -203,68 +212,63 @@ void Model::CreateSphere(int segments) {
             Vector2 texcoord = { u, v };
             Vector3 normal = { px * 2.0f, py * 2.0f, pz * 2.0f }; // 法線は中心からの方向
 
-            // トライアングルストリップを作成
+            // トライアングルを作成
             if (y < segments && x < segments) {
-                int i1 = y * (segments + 1) + x;
-                int i2 = i1 + 1;
-                int i3 = i1 + (segments + 1);
-                int i4 = i3 + 1;
-
                 // 第1三角形
                 VertexData v1, v2, v3;
 
-                v1.position = { position.x, position.y, position.z, 1.0f };
-                v1.texcoord = texcoord;
-                v1.normal = normal;
-
-                Vector3 pos2 = {
-                    std::sin(phi) * std::cos(theta + 2.0f * 3.14159265f / segments) * 0.5f,
+                // 左下の頂点
+                v1.position = {
+                    std::sin(phi) * std::cos(theta) * 0.5f,
                     std::cos(phi) * 0.5f,
-                    std::sin(phi) * std::sin(theta + 2.0f * 3.14159265f / segments) * 0.5f
+                    std::sin(phi) * std::sin(theta) * 0.5f,
+                    1.0f
                 };
-                Vector2 uv2 = { u + 1.0f / segments, v };
-                Vector3 norm2 = { pos2.x * 2.0f, pos2.y * 2.0f, pos2.z * 2.0f };
+                v1.texcoord = { u, v };
+                v1.normal = { px * 2.0f, py * 2.0f, pz * 2.0f };
 
-                v2.position = { pos2.x, pos2.y, pos2.z, 1.0f };
-                v2.texcoord = uv2;
-                v2.normal = norm2;
+                // 右下の頂点
+                float px2 = std::sin(phi) * std::cos(theta + 2.0f * 3.14159265f / segments) * 0.5f;
+                float py2 = std::cos(phi) * 0.5f;
+                float pz2 = std::sin(phi) * std::sin(theta + 2.0f * 3.14159265f / segments) * 0.5f;
+                v2.position = { px2, py2, pz2, 1.0f };
+                v2.texcoord = { u + 1.0f / segments, v };
+                v2.normal = { px2 * 2.0f, py2 * 2.0f, pz2 * 2.0f };
 
-                Vector3 pos3 = {
-                    std::sin(phi + 3.14159265f / segments) * std::cos(theta) * 0.5f,
-                    std::cos(phi + 3.14159265f / segments) * 0.5f,
-                    std::sin(phi + 3.14159265f / segments) * std::sin(theta) * 0.5f
-                };
-                Vector2 uv3 = { u, v + 1.0f / segments };
-                Vector3 norm3 = { pos3.x * 2.0f, pos3.y * 2.0f, pos3.z * 2.0f };
+                // 左上の頂点
+                float px3 = std::sin(phi + 3.14159265f / segments) * std::cos(theta) * 0.5f;
+                float py3 = std::cos(phi + 3.14159265f / segments) * 0.5f;
+                float pz3 = std::sin(phi + 3.14159265f / segments) * std::sin(theta) * 0.5f;
+                v3.position = { px3, py3, pz3, 1.0f };
+                v3.texcoord = { u, v + 1.0f / segments };
+                v3.normal = { px3 * 2.0f, py3 * 2.0f, pz3 * 2.0f };
 
-                v3.position = { pos3.x, pos3.y, pos3.z, 1.0f };
-                v3.texcoord = uv3;
-                v3.normal = norm3;
-
-                modelData_.vertices.push_back(v3);
-                modelData_.vertices.push_back(v2);
+                // 三角形の頂点追加（頂点の順序に注意）
                 modelData_.vertices.push_back(v1);
+                modelData_.vertices.push_back(v2);
+                modelData_.vertices.push_back(v3);
 
                 // 第2三角形
+                // 右上の頂点
                 VertexData v4;
-                Vector3 pos4 = {
-                    std::sin(phi + 3.14159265f / segments) * std::cos(theta + 2.0f * 3.14159265f / segments) * 0.5f,
-                    std::cos(phi + 3.14159265f / segments) * 0.5f,
-                    std::sin(phi + 3.14159265f / segments) * std::sin(theta + 2.0f * 3.14159265f / segments) * 0.5f
-                };
-                Vector2 uv4 = { u + 1.0f / segments, v + 1.0f / segments };
-                Vector3 norm4 = { pos4.x * 2.0f, pos4.y * 2.0f, pos4.z * 2.0f };
+                float px4 = std::sin(phi + 3.14159265f / segments) * std::cos(theta + 2.0f * 3.14159265f / segments) * 0.5f;
+                float py4 = std::cos(phi + 3.14159265f / segments) * 0.5f;
+                float pz4 = std::sin(phi + 3.14159265f / segments) * std::sin(theta + 2.0f * 3.14159265f / segments) * 0.5f;
+                v4.position = { px4, py4, pz4, 1.0f };
+                v4.texcoord = { u + 1.0f / segments, v + 1.0f / segments };
+                v4.normal = { px4 * 2.0f, py4 * 2.0f, pz4 * 2.0f };
 
-                v4.position = { pos4.x, pos4.y, pos4.z, 1.0f };
-                v4.texcoord = uv4;
-                v4.normal = norm4;
-
-                modelData_.vertices.push_back(v3);
-                modelData_.vertices.push_back(v4);
+                // 三角形の頂点追加（頂点の順序に注意）
                 modelData_.vertices.push_back(v2);
+                modelData_.vertices.push_back(v4);
+                modelData_.vertices.push_back(v3);
             }
         }
     }
+
+    // デフォルトテクスチャを読み込む
+    TextureManager::GetInstance()->LoadDefaultTexture();
+    modelData_.material.textureFilePath = TextureManager::GetInstance()->GetDefaultTexturePath();
 
     // 頂点バッファの作成
     vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
@@ -297,6 +301,12 @@ void Model::Update() {
 
     // ワールド行列を合成（スケール×回転×位置）
     worldMatrix_ = Multiply(matScale, Multiply(matRot, matTrans));
+
+    // デバッグ情報出力
+    OutputDebugStringA("Model::Update - Position: ");
+    char buffer[256];
+    sprintf_s(buffer, "(%.2f, %.2f, %.2f)\n", position_.x, position_.y, position_.z);
+    OutputDebugStringA(buffer);
 }
 
 // モデルを描画するメソッド
@@ -314,11 +324,17 @@ void Model::Draw() {
 
     // 描画コマンド
     dxCommon_->GetCommandList()->DrawInstanced(static_cast<UINT>(modelData_.vertices.size()), 1, 0, 0);
+
+    // デバッグ情報
+    OutputDebugStringA("Model::Draw - 頂点数: ");
+    char buffer[256];
+    sprintf_s(buffer, "%u\n", static_cast<UINT>(modelData_.vertices.size()));
+    OutputDebugStringA(buffer);
 }
 
 // 順序付き頂点リストから三角形を生成するメソッド
-void Model::AddTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
-                         const Vector2& uv1, const Vector2& uv2, const Vector2& uv3) {
+void Model::AddTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3,
+    const Vector2& uv1, const Vector2& uv2, const Vector2& uv3) {
     // 法線を計算
     Vector3 normal = CalculateNormal(v1, v2, v3);
 

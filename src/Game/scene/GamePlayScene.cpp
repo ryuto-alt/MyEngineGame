@@ -43,7 +43,7 @@ void GamePlayScene::Initialize() {
 
     // 床形状の作成（箱型）
     groundShape_ = new btBoxShape(btVector3(50, 1, 50));
-    
+
     // 剛体の情報を設定
     btRigidBody::btRigidBodyConstructionInfo rbInfo(
         0, // 質量（0で静的な物体）
@@ -51,12 +51,12 @@ void GamePlayScene::Initialize() {
         groundShape_,
         btVector3(0, 0, 0) // 慣性（静的物体なので0）
     );
-    
+
     // 反発係数の設定
     rbInfo.m_restitution = 0.5f;
     // 摩擦係数の設定
     rbInfo.m_friction = 0.5f;
-    
+
     // 剛体を作成して世界に追加
     groundBody_ = new btRigidBody(rbInfo);
     dynamicsWorld_->addRigidBody(groundBody_);
@@ -161,15 +161,17 @@ void GamePlayScene::Draw() {
 
     // 青い画面の描画は自動的に行われる
 
+    // デバッグ情報の出力
+    OutputDebugStringA("GamePlayScene::Draw - 描画開始\n");
+    char buffer[256];
+    sprintf_s(buffer, "カメラ位置: (%.2f, %.2f, %.2f)\n", cameraPosition_.x, cameraPosition_.y, cameraPosition_.z);
+    OutputDebugStringA(buffer);
+
     // ゲームオブジェクトの描画
     for (size_t i = 0; i < gameObjects_.size(); i++) {
-        // モデルを取得
-        Model* model = gameObjects_[i]->GetModel();
-        if (model) {
-            // モデルの描画はエンジン側で行う必要がある
-            // 現在の実装ではモデルにDrawメソッドがないため、ここではコメントアウト
-            // model->Draw();
-        }
+        OutputDebugStringA(("描画オブジェクト " + std::to_string(i) + "\n").c_str());
+        // GameObjectのDrawメソッドを呼び出す
+        gameObjects_[i]->Draw();
     }
 
     // 操作説明をImGuiで表示
@@ -181,6 +183,16 @@ void GamePlayScene::Draw() {
     ImGui::Text("スペース - 箱を追加");
     ImGui::Text("Enter - 球を追加");
     ImGui::Text("物理オブジェクト数: %zu", gameObjects_.size());
+    ImGui::End();
+
+    // デバッグ情報を表示
+    ImGui::Begin("デバッグ情報");
+    ImGui::Text("カメラ位置: (%.2f, %.2f, %.2f)", cameraPosition_.x, cameraPosition_.y, cameraPosition_.z);
+    ImGui::Text("カメラ回転: (%.2f, %.2f, %.2f)", cameraRotation_.x, cameraRotation_.y, cameraRotation_.z);
+    if (!gameObjects_.empty()) {
+        const Vector3& pos = gameObjects_[0]->GetPosition();
+        ImGui::Text("最初のオブジェクト位置: (%.2f, %.2f, %.2f)", pos.x, pos.y, pos.z);
+    }
     ImGui::End();
 }
 
@@ -248,7 +260,10 @@ void GamePlayScene::Finalize() {
 GameObject* GamePlayScene::AddBox(const Vector3& position, const Vector3& size, float mass) {
     // モデルを作成（LoadFromObjでロードする代わりに、基本形状を使用）
     Model* model = new Model();
-    model->Initialize(dxCommon_); // dxCommon_はID3D12Deviceではなく、DirectXCommonに変更
+    model->Initialize(dxCommon_);
+
+    // 立方体モデルを作成
+    model->CreateCube();
 
     // モデルの後でのメモリ解放のために保存
     models_.push_back(model);
@@ -298,7 +313,10 @@ GameObject* GamePlayScene::AddBox(const Vector3& position, const Vector3& size, 
 GameObject* GamePlayScene::AddSphere(const Vector3& position, float radius, float mass) {
     // モデルを作成（LoadFromObjでロードする代わりに、基本形状を使用）
     Model* model = new Model();
-    model->Initialize(dxCommon_); // dxCommon_はID3D12Deviceではなく、DirectXCommonに変更
+    model->Initialize(dxCommon_);
+
+    // 球体モデルを作成（セグメント数を指定して詳細度を調整）
+    model->CreateSphere(16);
 
     // モデルの後でのメモリ解放のために保存
     models_.push_back(model);

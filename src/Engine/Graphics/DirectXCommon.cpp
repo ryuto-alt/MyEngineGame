@@ -267,6 +267,27 @@ void DirectXCommon::Initialize(WinApp* winApp)
 	ScissorInitialize();
 	DxcCompilerInitialize();
 	// ImguiInitializeは後ほど別途ImGuiManagerクラスを作成して管理する
+	
+	// ワールド変換用定数バッファの作成
+	worldTransformResource = CreateBufferResource(sizeof(TransformationMatrix));
+	
+	// 初期値を設定 - 単位行列を直接作成
+	TransformationMatrix* transformMatrix = nullptr;
+	worldTransformResource->Map(0, nullptr, reinterpret_cast<void**>(&transformMatrix));
+	
+	// 単位行列を直接作成
+	Matrix4x4 identity = {};
+	identity.m[0][0] = 1.0f;
+	identity.m[1][1] = 1.0f;
+	identity.m[2][2] = 1.0f;
+	identity.m[3][3] = 1.0f;
+	
+	transformMatrix->WVP = identity;
+	transformMatrix->World = identity;
+	worldTransformResource->Unmap(0, nullptr);
+	
+	// デバッグメッセージ
+	OutputDebugStringA("DirectXCommon: ワールド変換行列用定数バッファを作成しました\n");
 }
 
 

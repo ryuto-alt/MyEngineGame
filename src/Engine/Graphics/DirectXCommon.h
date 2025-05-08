@@ -15,6 +15,7 @@
 #include <vector>
 #include <chrono>
 #include <thread>
+#include "../Math/Mymath.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
@@ -45,6 +46,9 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE GetRTVGPUDescriptorHandle(uint32_t index);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
+	
+	// ワールドトランスフォームリソースの取得
+	ID3D12Resource* GetWorldTransformResource() const { return worldTransformResource.Get(); }
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap,
@@ -87,6 +91,8 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue = nullptr;
+	// ワールド変換行列用リソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> worldTransformResource = nullptr;
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain = nullptr;

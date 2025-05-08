@@ -20,32 +20,58 @@ void GameObject::Update() {
 }
 
 void GameObject::Draw() {
-    // モデルの描画（現在はprivateなので直接アクセスできない）
-    // model_->Draw();
+    // モデルの描画
+    if (model_) {
+        // 位置情報のデバッグ出力
+        OutputDebugStringA("GameObject::Draw - ");
+        char buffer[256];
+        sprintf_s(buffer, "位置: (%.2f, %.2f, %.2f)\n", position_.x, position_.y, position_.z);
+        OutputDebugStringA(buffer);
+        
+        // モデルの描画処理
+        model_->Draw();   // モデルの描画
+    } else {
+        OutputDebugStringA("GameObject::Draw - モデルが設定されていません\n");
+    }
 }
 
 void GameObject::SetPosition(const Vector3& position) {
     position_ = position;
-    
+
     // 物理ボディがある場合は位置を更新
     if (body_) {
         UpdateBulletTransform();
+    }
+
+    // モデルがある場合は位置を更新
+    if (model_) {
+        model_->SetPosition(position_);
     }
 }
 
 void GameObject::SetRotation(const Vector3& rotation) {
     rotation_ = rotation;
-    
+
     // 物理ボディがある場合は回転を更新
     if (body_) {
         UpdateBulletTransform();
+    }
+
+    // モデルがある場合は回転を更新
+    if (model_) {
+        model_->SetRotation(rotation_);
     }
 }
 
 void GameObject::SetScale(const Vector3& scale) {
     scale_ = scale;
-    
+
     // スケールはBullet側には直接反映されない
+
+    // モデルがある場合はスケールを更新
+    if (model_) {
+        model_->SetScale(scale_);
+    }
 }
 
 Matrix4x4 GameObject::GetWorldMatrix() const {
@@ -58,7 +84,7 @@ Matrix4x4 GameObject::GetWorldMatrix() const {
 
     // 回転合成
     Matrix4x4 matRot = Multiply(matRotZ, Multiply(matRotX, matRotY));
-    
+
     // ワールド行列を合成
     return Multiply(matScale, Multiply(matRot, matTrans));
 }
@@ -104,5 +130,20 @@ void GameObject::UpdateModelTransform() {
         // 回転を更新（クォータニオンからオイラー角に変換）
         btMatrix3x3 rotMat = transform.getBasis();
         rotMat.getEulerYPR(rotation_.y, rotation_.x, rotation_.z);
+
+        // モデルの位置と回転を更新
+        if (model_) {
+            model_->SetPosition(position_);
+            model_->SetRotation(rotation_);
+            
+            // デバッグ情報出力
+            char buffer[256];
+            sprintf_s(buffer, "GameObject::UpdateModelTransform - 位置: (%.2f, %.2f, %.2f)\n", 
+                     position_.x, position_.y, position_.z);
+            OutputDebugStringA(buffer);
+            
+            // モデルの更新を確実に実行
+            model_->Update();
+        }
     }
 }
