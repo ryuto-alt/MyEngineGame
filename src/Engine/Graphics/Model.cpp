@@ -96,6 +96,291 @@ void Model::LoadFromObj(const std::string& directoryPath, const std::string& fil
     OutputDebugStringA(("Model: Loaded " + std::to_string(modelData_.vertices.size()) + " vertices from " + filename + "\n").c_str());
 }
 
+// 立方体を作成するメソッド
+void Model::CreateCube() {
+    // モデルデータを初期化
+    modelData_.vertices.clear();
+
+    // 立方体の各面を生成
+    // 前面 (Z+)
+    AddTriangle(
+        Vector3(-0.5f, -0.5f, 0.5f), Vector3(0.5f, -0.5f, 0.5f), Vector3(0.5f, 0.5f, 0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f)
+    );
+    AddTriangle(
+        Vector3(-0.5f, -0.5f, 0.5f), Vector3(0.5f, 0.5f, 0.5f), Vector3(-0.5f, 0.5f, 0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f)
+    );
+
+    // 背面 (Z-)
+    AddTriangle(
+        Vector3(0.5f, -0.5f, -0.5f), Vector3(-0.5f, -0.5f, -0.5f), Vector3(-0.5f, 0.5f, -0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f)
+    );
+    AddTriangle(
+        Vector3(0.5f, -0.5f, -0.5f), Vector3(-0.5f, 0.5f, -0.5f), Vector3(0.5f, 0.5f, -0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f)
+    );
+
+    // 右面 (X+)
+    AddTriangle(
+        Vector3(0.5f, -0.5f, 0.5f), Vector3(0.5f, -0.5f, -0.5f), Vector3(0.5f, 0.5f, -0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f)
+    );
+    AddTriangle(
+        Vector3(0.5f, -0.5f, 0.5f), Vector3(0.5f, 0.5f, -0.5f), Vector3(0.5f, 0.5f, 0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f)
+    );
+
+    // 左面 (X-)
+    AddTriangle(
+        Vector3(-0.5f, -0.5f, -0.5f), Vector3(-0.5f, -0.5f, 0.5f), Vector3(-0.5f, 0.5f, 0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f)
+    );
+    AddTriangle(
+        Vector3(-0.5f, -0.5f, -0.5f), Vector3(-0.5f, 0.5f, 0.5f), Vector3(-0.5f, 0.5f, -0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f)
+    );
+
+    // 上面 (Y+)
+    AddTriangle(
+        Vector3(-0.5f, 0.5f, 0.5f), Vector3(0.5f, 0.5f, 0.5f), Vector3(0.5f, 0.5f, -0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f)
+    );
+    AddTriangle(
+        Vector3(-0.5f, 0.5f, 0.5f), Vector3(0.5f, 0.5f, -0.5f), Vector3(-0.5f, 0.5f, -0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f)
+    );
+
+    // 下面 (Y-)
+    AddTriangle(
+        Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, -0.5f, -0.5f), Vector3(0.5f, -0.5f, 0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f)
+    );
+    AddTriangle(
+        Vector3(-0.5f, -0.5f, -0.5f), Vector3(0.5f, -0.5f, 0.5f), Vector3(-0.5f, -0.5f, 0.5f),
+        Vector2(0.0f, 1.0f), Vector2(1.0f, 0.0f), Vector2(0.0f, 0.0f)
+    );
+
+    // 頂点バッファの作成
+    vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
+
+    // 頂点バッファビューの設定
+    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+    // 頂点データの書き込み
+    VertexData* vertexData = nullptr;
+    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+    std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+
+    // デバッグ情報
+    OutputDebugStringA("Model: Created cube with 36 vertices\n");
+}
+
+// 球体を作成するメソッド
+void Model::CreateSphere(int segments) {
+    // モデルデータを初期化
+    modelData_.vertices.clear();
+
+    // 球面上の頂点を生成
+    for (int y = 0; y <= segments; y++) {
+        float v = static_cast<float>(y) / static_cast<float>(segments);
+        float phi = v * 3.14159265f; // 0～π
+
+        for (int x = 0; x <= segments; x++) {
+            float u = static_cast<float>(x) / static_cast<float>(segments);
+            float theta = u * 2.0f * 3.14159265f; // 0～2π
+
+            // 球面上の点を計算
+            float px = std::sin(phi) * std::cos(theta) * 0.5f;
+            float py = std::cos(phi) * 0.5f;
+            float pz = std::sin(phi) * std::sin(theta) * 0.5f;
+
+            // 現在の頂点を記憶
+            Vector3 position = { px, py, pz };
+            Vector2 texcoord = { u, v };
+            Vector3 normal = { px * 2.0f, py * 2.0f, pz * 2.0f }; // 法線は中心からの方向
+
+            // トライアングルストリップを作成
+            if (y < segments && x < segments) {
+                int i1 = y * (segments + 1) + x;
+                int i2 = i1 + 1;
+                int i3 = i1 + (segments + 1);
+                int i4 = i3 + 1;
+
+                // 第1三角形
+                VertexData v1, v2, v3;
+
+                v1.position = { position.x, position.y, position.z, 1.0f };
+                v1.texcoord = texcoord;
+                v1.normal = normal;
+
+                Vector3 pos2 = {
+                    std::sin(phi) * std::cos(theta + 2.0f * 3.14159265f / segments) * 0.5f,
+                    std::cos(phi) * 0.5f,
+                    std::sin(phi) * std::sin(theta + 2.0f * 3.14159265f / segments) * 0.5f
+                };
+                Vector2 uv2 = { u + 1.0f / segments, v };
+                Vector3 norm2 = { pos2.x * 2.0f, pos2.y * 2.0f, pos2.z * 2.0f };
+
+                v2.position = { pos2.x, pos2.y, pos2.z, 1.0f };
+                v2.texcoord = uv2;
+                v2.normal = norm2;
+
+                Vector3 pos3 = {
+                    std::sin(phi + 3.14159265f / segments) * std::cos(theta) * 0.5f,
+                    std::cos(phi + 3.14159265f / segments) * 0.5f,
+                    std::sin(phi + 3.14159265f / segments) * std::sin(theta) * 0.5f
+                };
+                Vector2 uv3 = { u, v + 1.0f / segments };
+                Vector3 norm3 = { pos3.x * 2.0f, pos3.y * 2.0f, pos3.z * 2.0f };
+
+                v3.position = { pos3.x, pos3.y, pos3.z, 1.0f };
+                v3.texcoord = uv3;
+                v3.normal = norm3;
+
+                modelData_.vertices.push_back(v3);
+                modelData_.vertices.push_back(v2);
+                modelData_.vertices.push_back(v1);
+
+                // 第2三角形
+                VertexData v4;
+                Vector3 pos4 = {
+                    std::sin(phi + 3.14159265f / segments) * std::cos(theta + 2.0f * 3.14159265f / segments) * 0.5f,
+                    std::cos(phi + 3.14159265f / segments) * 0.5f,
+                    std::sin(phi + 3.14159265f / segments) * std::sin(theta + 2.0f * 3.14159265f / segments) * 0.5f
+                };
+                Vector2 uv4 = { u + 1.0f / segments, v + 1.0f / segments };
+                Vector3 norm4 = { pos4.x * 2.0f, pos4.y * 2.0f, pos4.z * 2.0f };
+
+                v4.position = { pos4.x, pos4.y, pos4.z, 1.0f };
+                v4.texcoord = uv4;
+                v4.normal = norm4;
+
+                modelData_.vertices.push_back(v3);
+                modelData_.vertices.push_back(v4);
+                modelData_.vertices.push_back(v2);
+            }
+        }
+    }
+
+    // 頂点バッファの作成
+    vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
+
+    // 頂点バッファビューの設定
+    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+    // 頂点データの書き込み
+    VertexData* vertexData = nullptr;
+    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+    std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+
+    // デバッグ情報
+    OutputDebugStringA(("Model: Created sphere with " + std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+}
+
+// トランスフォームを更新するメソッド
+void Model::Update() {
+    // ワールド行列を計算
+    Matrix4x4 matScale = MakeScaleMatrix(scale_);
+    Matrix4x4 matRotX = MakeRotateXMatrix(rotation_.x);
+    Matrix4x4 matRotY = MakeRotateYMatrix(rotation_.y);
+    Matrix4x4 matRotZ = MakeRotateZMatrix(rotation_.z);
+    Matrix4x4 matTrans = MakeTranslateMatrix(position_);
+
+    // 回転行列を合成（ZXYの順）
+    Matrix4x4 matRot = Multiply(matRotZ, Multiply(matRotX, matRotY));
+
+    // ワールド行列を合成（スケール×回転×位置）
+    worldMatrix_ = Multiply(matScale, Multiply(matRot, matTrans));
+}
+
+// モデルを描画するメソッド
+void Model::Draw() {
+    // 頂点がない場合は描画しない
+    if (modelData_.vertices.empty()) {
+        return;
+    }
+
+    // 頂点バッファをコマンドリストに設定
+    dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
+
+    // 描画トポロジーを設定（三角形リスト）
+    dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    // 描画コマンド
+    dxCommon_->GetCommandList()->DrawInstanced(static_cast<UINT>(modelData_.vertices.size()), 1, 0, 0);
+}
+
+// 順序付き頂点リストから三角形を生成するメソッド
+void Model::AddTriangle(const Vector3& v1, const Vector3& v2, const Vector3& v3, 
+                         const Vector2& uv1, const Vector2& uv2, const Vector2& uv3) {
+    // 法線を計算
+    Vector3 normal = CalculateNormal(v1, v2, v3);
+
+    // 三角形の各頂点を追加
+    VertexData vertex1, vertex2, vertex3;
+
+    vertex1.position = { v1.x, v1.y, v1.z, 1.0f };
+    vertex1.texcoord = uv1;
+    vertex1.normal = normal;
+
+    vertex2.position = { v2.x, v2.y, v2.z, 1.0f };
+    vertex2.texcoord = uv2;
+    vertex2.normal = normal;
+
+    vertex3.position = { v3.x, v3.y, v3.z, 1.0f };
+    vertex3.texcoord = uv3;
+    vertex3.normal = normal;
+
+    // モデルデータに追加
+    modelData_.vertices.push_back(vertex1);
+    modelData_.vertices.push_back(vertex2);
+    modelData_.vertices.push_back(vertex3);
+}
+
+// 法線計算メソッド
+Vector3 Model::CalculateNormal(const Vector3& v1, const Vector3& v2, const Vector3& v3) {
+    // 二つの辺ベクトルを計算
+    Vector3 edge1 = {
+        v2.x - v1.x,
+        v2.y - v1.y,
+        v2.z - v1.z
+    };
+
+    Vector3 edge2 = {
+        v3.x - v1.x,
+        v3.y - v1.y,
+        v3.z - v1.z
+    };
+
+    // 外積で法線を計算
+    Vector3 normal = {
+        edge1.y * edge2.z - edge1.z * edge2.y,
+        edge1.z * edge2.x - edge1.x * edge2.z,
+        edge1.x * edge2.y - edge1.y * edge2.x
+    };
+
+    // 法線を正規化
+    float length = std::sqrt(
+        normal.x * normal.x +
+        normal.y * normal.y +
+        normal.z * normal.z
+    );
+
+    if (length > 0.0001f) {
+        normal.x /= length;
+        normal.y /= length;
+        normal.z /= length;
+    }
+
+    return normal;
+}
+
 // UV球などの表示品質を向上させるためのモデルデータ最適化関数
 void Model::OptimizeTriangles(ModelData& modelData, const std::string& filename) {
     // 最適化前の頂点数を保存
