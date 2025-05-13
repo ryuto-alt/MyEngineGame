@@ -21,6 +21,7 @@ void GamePlayScene::Initialize() {
     // カメラの初期設定
     camera_->SetTranslate(cameraPosition_);
     camera_->SetRotate(cameraRotation_);
+
     
     // カメラの視野角と描画範囲を設定
     camera_->SetFovY(45.0f * (3.14159f / 180.0f)); // 45度をラジアンに変換
