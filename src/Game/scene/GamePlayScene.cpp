@@ -1,5 +1,7 @@
 #include "GamePlayScene.h"
 #include "ParticleManager.h"
+#include "Particle3DManager.h"
+#include "EffectManager3D.h"
 #include "Mymath.h"
 #include <random>
 
@@ -23,18 +25,28 @@ void GamePlayScene::Initialize() {
     camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
     camera_->Update();
 
-    // パーティクルグループの作成
+    // 2Dパーティクルグループの作成
     ParticleManager::GetInstance()->CreateParticleGroup("basicParticle", "Resources/particle/particle.png");
     ParticleManager::GetInstance()->CreateParticleGroup("hitEffect", "Resources/particle/explosion.png");
     ParticleManager::GetInstance()->CreateParticleGroup("starEffect", "Resources/particle/star.png");
-    ParticleManager::GetInstance()->CreateParticleGroup("radialBurst", "Resources/particle/particle.png"); // 新しい放射状エフェクト
+    ParticleManager::GetInstance()->CreateParticleGroup("radialBurst", "Resources/particle/particle.png");
+
+    // 3Dパーティクルグループの作成（effect.objを使用）
+    Particle3DManager::GetInstance()->CreateParticle3DGroup("HitEffect3D", "effect.obj");
+
+    // 3Dパーティクルデモの初期化
+    particle3DDemo_ = std::make_unique<Particle3DDemo>();
+    particle3DDemo_->Initialize();
 
     // エフェクトエミッタの作成
     CreateEffectEmitters();
 
+    // 3Dエフェクトの初期位置設定
+    hitPosition3D_ = Vector3{0.0f, 2.0f, 0.0f};
+
     // 初期化完了
     initialized_ = true;
-    OutputDebugStringA("GamePlayScene: 初期化完了\n");
+    OutputDebugStringA("GamePlayScene: 初期化完了、2D・3Dパーティクルシステム統合\n");
 }
 
 void GamePlayScene::CreateEffectEmitters() {
@@ -161,15 +173,27 @@ void GamePlayScene::Update() {
         sceneManager_->ChangeScene("Title");
     }
 
-    // エフェクト切り替え制御
-    HandleEffectSwitching();
+    // エフェクト切り替え制御（2D）
+    if (show2DEffects_) {
+        HandleEffectSwitching();
+    }
+
+    // 3Dエフェクト切り替え制御
+    if (show3DEffects_) {
+        Handle3DEffectSwitching();
+    }
+
+    // 3Dパーティクルデモの更新
+    if (particle3DDemo_) {
+        particle3DDemo_->Update();
+    }
 
     // エフェクトの更新
     for (auto& emitter : particleEmitters_) {
         emitter->Update();
     }
 
-    // パーティクルマネージャーの更新
+    // パーティクルマネージャの更新
     ParticleManager::GetInstance()->Update(camera_);
 
     // カメラの更新
@@ -251,37 +275,115 @@ void GamePlayScene::Draw() {
     // 初期化されていない場合はスキップ
     if (!initialized_) return;
 
-    // パーティクルの描画
-    ParticleManager::GetInstance()->Draw();
+    // 2Dパーティクルの描画
+    if (show2DEffects_) {
+        ParticleManager::GetInstance()->Draw();
+    }
 
-    // UI表示
-    ImGui::Begin("パーティクルエフェクトデモ");
-    ImGui::Text("操作説明:");
-    ImGui::Text("1キー - 基本パーティクル（サイズ変更）");
-    ImGui::Text("2キー - ヒットエフェクト");
-    ImGui::Text("3キー - 星型エフェクト（ランダム回転）");
-    ImGui::Text("4キー - 放射状バースト（光線）");
-    ImGui::Text("5キー - すべて同時再生");
+    // 3Dパーティクルの描画はUnoEngineで自動的に実行される
+
+    // 統合UI表示
+    ImGui::Begin("パーティクルエフェクト統合デモ");
+    
+    // 表示切り替えコントロール
+    ImGui::Text("表示制御:");
+    ImGui::Checkbox("2Dエフェクト表示", &show2DEffects_);
+    ImGui::SameLine();
+    ImGui::Checkbox("3Dエフェクト表示", &show3DEffects_);
+    ImGui::Separator();
+    
+    // 2Dエフェクトコントロール
+    if (show2DEffects_) {
+        ImGui::Text("2Dパーティクル操作説明:");
+        ImGui::Text("1キー - 基本パーティクル（サイズ変更）");
+        ImGui::Text("2キー - ヒットエフェクト");
+        ImGui::Text("3キー - 星型エフェクト（ランダム回転）");
+        ImGui::Text("4キー - 放射状バースト（光線）");
+        ImGui::Text("5キー - すべて同時再生");
+        
+        const char* effectNames[] = {
+            "基本パーティクル",
+            "ヒットエフェクト", 
+            "星型エフェクト",
+            "放射状バースト",
+            "すべて同時"
+        };
+        ImGui::Text("現在の2Dエフェクト: %s", effectNames[currentEffect_]);
+        ImGui::Text("次の切り替えまで: %.1f秒", 5.0f - effectTimer_);
+        
+        // 2Dパーティクル数の表示
+        ImGui::Text("2Dパーティクル数:");
+        ImGui::Text("基本: %d", ParticleManager::GetInstance()->GetParticleCount("basicParticle"));
+        ImGui::Text("ヒット: %d", ParticleManager::GetInstance()->GetParticleCount("hitEffect"));
+        ImGui::Text("星型: %d", ParticleManager::GetInstance()->GetParticleCount("starEffect"));
+        ImGui::Text("放射状: %d", ParticleManager::GetInstance()->GetParticleCount("radialBurst"));
+        ImGui::Separator();
+    }
+    
+    // 3Dエフェクトコントロール
+    if (show3DEffects_) {
+        ImGui::Text("3Dパーティクル操作説明:");
+        ImGui::Text("F1キー - Normal Hit");
+        ImGui::Text("F2キー - Critical Hit");
+        ImGui::Text("F3キー - Impact Hit");
+        ImGui::Text("F4キー - Explosion");
+        ImGui::Text("F5キー - ランダムエフェクト");
+        
+        // 3Dエフェクトの位置制御
+        ImGui::Text("3Dエフェクト位置:");
+        ImGui::SliderFloat3("Position", &hitPosition3D_.x, -5.0f, 5.0f);
+        
+        // 3Dエフェクト状態
+        uint32_t activeCount = EffectManager3D::GetInstance()->GetActiveEffectCount();
+        bool anyPlaying = EffectManager3D::GetInstance()->IsAnyEffectPlaying();
+        ImGui::Text("3Dアクティブエフェクト: %u", activeCount);
+        ImGui::Text("3D再生中: %s", anyPlaying ? "Yes" : "No");
+        
+        const char* effect3DNames[] = {
+            "Normal Hit",
+            "Critical Hit",
+            "Impact Hit",
+            "Explosion"
+        };
+        if (current3DEffect_ < 4) {
+            ImGui::Text("現在の3Dエフェクト: %s", effect3DNames[current3DEffect_]);
+        }
+        
+        // 手動エフェクトボタン
+        if (ImGui::Button("Normal Hit")) {
+            EffectManager3D::GetInstance()->PlayNormalHit(hitPosition3D_);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Critical Hit")) {
+            EffectManager3D::GetInstance()->PlayCriticalHit(hitPosition3D_);
+        }
+        
+        if (ImGui::Button("Impact Hit")) {
+            EffectManager3D::GetInstance()->PlayImpactHit(hitPosition3D_);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Explosion")) {
+            EffectManager3D::GetInstance()->PlayExplosion(hitPosition3D_);
+        }
+        
+        if (ImGui::Button("Stop All 3D Effects")) {
+            EffectManager3D::GetInstance()->StopAllEffects();
+        }
+    }
+    
+    ImGui::Separator();
+    ImGui::Text("共通操作:");
     ImGui::Text("ESC - タイトルに戻る");
-    ImGui::Separator();
     
-    const char* effectNames[] = {
-        "基本パーティクル",
-        "ヒットエフェクト", 
-        "星型エフェクト",
-        "放射状バースト",
-        "すべて同時"
-    };
-    ImGui::Text("現在のエフェクト: %s", effectNames[currentEffect_]);
-    ImGui::Text("次の切り替えまで: %.1f秒", 5.0f - effectTimer_);
+    // 3Dパーティクルデモの詳細ImGui
+    if (show3DEffects_ && particle3DDemo_) {
+        ImGui::Separator();
+        if (ImGui::TreeNode("3Dパーティクル詳細設定")) {
+            particle3DDemo_->DrawImGui();
+            ImGui::TreePop();
+        }
+    }
     
-    // パーティクル数の表示
-    ImGui::Separator();
-    ImGui::Text("パーティクル数:");
-    ImGui::Text("基本: %d", ParticleManager::GetInstance()->GetParticleCount("basicParticle"));
-    ImGui::Text("ヒット: %d", ParticleManager::GetInstance()->GetParticleCount("hitEffect"));
-    ImGui::Text("星型: %d", ParticleManager::GetInstance()->GetParticleCount("starEffect"));
-    ImGui::Text("放射状: %d", ParticleManager::GetInstance()->GetParticleCount("radialBurst"));
     ImGui::End();
 }
 
@@ -289,5 +391,71 @@ void GamePlayScene::Finalize() {
     // パーティクルエミッタのクリア
     particleEmitters_.clear();
     
-    OutputDebugStringA("GamePlayScene: 終了処理完了\n");
+    // 3Dパーティクルデモのクリア
+    particle3DDemo_.reset();
+    
+    OutputDebugStringA("GamePlayScene: 終了処理完了（2D・3Dパーティクルシステム）\n");
+}
+
+void GamePlayScene::Handle3DEffectSwitching() {
+    // タイマー更新
+    effect3DTimer_ += 1.0f / 60.0f;
+
+    // Fキーでエフェクト切り替え
+    bool keyF1Pressed = input_->PushKey(DIK_F1);
+    bool keyF2Pressed = input_->PushKey(DIK_F2);
+    bool keyF3Pressed = input_->PushKey(DIK_F3);
+    bool keyF4Pressed = input_->PushKey(DIK_F4);
+    bool keyF5Pressed = input_->PushKey(DIK_F5);
+
+    bool anyKey3DPressed = keyF1Pressed || keyF2Pressed || keyF3Pressed || keyF4Pressed || keyF5Pressed;
+
+    if (anyKey3DPressed && !key3DPressed_) {
+        if (keyF1Pressed) {
+            // F1キー: Normal Hit
+            current3DEffect_ = 0;
+            EffectManager3D::GetInstance()->PlayNormalHit(hitPosition3D_);
+        } else if (keyF2Pressed) {
+            // F2キー: Critical Hit
+            current3DEffect_ = 1;
+            EffectManager3D::GetInstance()->PlayCriticalHit(hitPosition3D_);
+        } else if (keyF3Pressed) {
+            // F3キー: Impact Hit
+            current3DEffect_ = 2;
+            EffectManager3D::GetInstance()->PlayImpactHit(hitPosition3D_);
+        } else if (keyF4Pressed) {
+            // F4キー: Explosion
+            current3DEffect_ = 3;
+            EffectManager3D::GetInstance()->PlayExplosion(hitPosition3D_);
+        } else if (keyF5Pressed) {
+            // F5キー: ランダムエフェクト
+            TriggerRandom3DEffects();
+        }
+
+        effect3DTimer_ = 0.0f;
+    }
+
+    key3DPressed_ = anyKey3DPressed;
+
+    // 自動ランダムエフェクト（3秒ごと）
+    if (effect3DTimer_ >= 3.0f) {
+        TriggerRandom3DEffects();
+        effect3DTimer_ = 0.0f;
+    }
+}
+
+void GamePlayScene::TriggerRandom3DEffects() {
+    // ランダムなエフェクトタイプを選択
+    int randomType = rand() % 4;
+    current3DEffect_ = randomType;
+    
+    // ランダムな位置でエフェクト発生
+    Vector3 randomPos = {
+        hitPosition3D_.x + (rand() % 200 - 100) / 100.0f * 2.0f,  // ±2.0f の範囲
+        hitPosition3D_.y + (rand() % 200 - 100) / 100.0f * 2.0f,
+        hitPosition3D_.z + (rand() % 200 - 100) / 100.0f * 2.0f
+    };
+    
+    HitEffect3D::EffectType type = static_cast<HitEffect3D::EffectType>(randomType);
+    EffectManager3D::GetInstance()->TriggerHitEffect(randomPos, type);
 }

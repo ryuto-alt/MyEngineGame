@@ -123,6 +123,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="src\Engine\Graphics\TextureManager.cpp" />
     <ClCompile Include="src\Engine\Input\Input.cpp" />
     <ClCompile Include="src\Engine\Math\Mymath.cpp" />
+    <ClCompile Include="src\Engine\Particle\EffectManager3D.cpp" />
+    <ClCompile Include="src\Engine\Particle\HitEffect3D.cpp" />
+    <ClCompile Include="src\Engine\Particle\Particle3DDemo.cpp" />
+    <ClCompile Include="src\Engine\Particle\Particle3DEmitter.cpp" />
+    <ClCompile Include="src\Engine\Particle\Particle3DManager.cpp" />
     <ClCompile Include="src\Engine\Particle\ParticleEmitter.cpp" />
     <ClCompile Include="src\Engine\Particle\ParticleManager.cpp" />
     <ClCompile Include="src\Engine\UnoEngine.cpp" />
@@ -173,6 +178,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="src\Engine\Math\Vector2.h" />
     <ClInclude Include="src\Engine\Math\Vector3.h" />
     <ClInclude Include="src\Engine\Math\Vector4.h" />
+    <ClInclude Include="src\Engine\Particle\EffectManager3D.h" />
+    <ClInclude Include="src\Engine\Particle\HitEffect3D.h" />
+    <ClInclude Include="src\Engine\Particle\Particle3DDemo.h" />
+    <ClInclude Include="src\Engine\Particle\Particle3DEmitter.h" />
+    <ClInclude Include="src\Engine\Particle\Particle3DManager.h" />
     <ClInclude Include="src\Engine\Particle\ParticleEmitter.h" />
     <ClInclude Include="src\Engine\Particle\ParticleManager.h" />
     <ClInclude Include="src\Engine\UnoEngine.h" />

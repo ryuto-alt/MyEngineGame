@@ -14,6 +14,10 @@
 #include "Model.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
+#include "Particle3DManager.h"
+#include "Particle3DEmitter.h"
+#include "HitEffect3D.h"
+#include "EffectManager3D.h"
 
 // 衝突判定関連
 #include "Collision.h"
@@ -89,6 +93,12 @@ public:
 
     // パーティクルマネージャーのアクセサ（シングルトン）
     ParticleManager* GetParticleManager() const { return ParticleManager::GetInstance(); }
+
+    // 3Dパーティクルマネージャーのアクセサ（シングルトン）
+    Particle3DManager* GetParticle3DManager() const { return Particle3DManager::GetInstance(); }
+
+    // 3Dエフェクトマネージャーのアクセサ（シングルトン）
+    EffectManager3D* GetEffectManager3D() const { return EffectManager3D::GetInstance(); }
 
     // オーディオマネージャーのアクセサ（シングルトン）
     AudioManager* GetAudioManager() const { return AudioManager::GetInstance(); }

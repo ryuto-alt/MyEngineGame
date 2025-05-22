@@ -49,13 +49,20 @@ void UnoEngine::Initialize() {
         // カメラの作成と初期化
         camera_ = std::make_unique<Camera>();
         camera_->SetTranslate({ 0.0f, 0.0f, -5.0f });
-        Object3dCommon::SetDefaultCamera(camera_.get());
+        // Object3dCommonは存在しないためコメントアウト
+        // Object3dCommon::SetDefaultCamera(camera_.get());
 
         // パーティクルマネージャの初期化
         ParticleManager::GetInstance()->Initialize(dxCommon_.get(), srvManager_.get());
 
         // 基本的なパーティクルグループの作成
         ParticleManager::GetInstance()->CreateParticleGroup("smoke", "Resources/particle/smoke.png");
+
+        // 3Dパーティクルマネージャの初期化
+        Particle3DManager::GetInstance()->Initialize(dxCommon_.get(), srvManager_.get(), spriteCommon_.get());
+
+        // 3Dエフェクトマネージャの初期化
+        EffectManager3D::GetInstance()->Initialize();
 
         // 衝突判定マネージャの初期化（特別な初期化は不要）
         // すでにシングルトンパターンで実装されているため、呼び出すだけで初期化される
@@ -104,6 +111,12 @@ void UnoEngine::Update() {
         // パーティクルマネージャの更新
         ParticleManager::GetInstance()->Update(camera_.get());
 
+        // 3Dパーティクルマネージャの更新
+        Particle3DManager::GetInstance()->Update(camera_.get());
+
+        // 3Dエフェクトマネージャの更新
+        EffectManager3D::GetInstance()->Update();
+
         // 衝突判定マネージャの更新
         Collision::CollisionManager::GetInstance()->Update(1.0f / 60.0f); // 60FPS想定
 
@@ -131,6 +144,9 @@ void UnoEngine::Draw() {
         // パーティクルの描画
         ParticleManager::GetInstance()->Draw();
 
+        // 3Dパーティクルの描画
+        Particle3DManager::GetInstance()->Draw(camera_.get());
+
         // ImGuiの準備と描画
         ImGui::Render();
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
@@ -150,6 +166,9 @@ void UnoEngine::Finalize() {
 
         // パーティクルマネージャーの終了処理
         ParticleManager::GetInstance()->Finalize();
+
+        // 3Dパーティクルマネージャの終了処理
+        Particle3DManager::Finalize();
 
         // 衝突判定マネージャの終了処理
         Collision::CollisionManager::GetInstance()->ClearColliders();

@@ -119,14 +119,13 @@ Camera* Object3d::GetCamera() const {
 void Object3d::Update() {
     assert(transformationMatrixData_);
 
-    // カメラが設定されていない場合はデフォルトカメラを使用
-    Camera* useCamera = camera_;
-    if (!useCamera) {
-        useCamera = Object3dCommon::GetDefaultCamera();
+    // カメラが設定されている場合のみ処理
+    if (!camera_) {
+        // カメラが設定されていない場合は何もしない
+        return;
     }
 
-    // カメラが有効かチェック
-    assert(useCamera);
+    Camera* useCamera = camera_;
 
     // ワールド行列の計算
     Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
