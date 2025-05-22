@@ -3,6 +3,9 @@
 #include "Matrix4x4.h"
 #include "Mymath.h"
 
+// 前方宣言
+class Input;
+
 // カメラクラス - 3Dオブジェクトからカメラ機能を分離
 class Camera {
 public:
@@ -12,6 +15,9 @@ public:
 
     // 更新処理 - 毎フレーム行列を更新する
     void Update();
+    
+    // 入力に応じた更新処理 - WASDでカメラ移動
+    void UpdateWithInput(Input* input);
 
     // セッター
     void SetRotate(const Vector3& rotate);

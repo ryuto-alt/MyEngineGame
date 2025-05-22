@@ -121,6 +121,8 @@
     <ClCompile Include="src\Engine\Graphics\RingSample.cpp" />
     <ClCompile Include="src\Engine\Graphics\RingWrapper.cpp" />
     <ClCompile Include="src\Engine\Graphics\CircleEffect.cpp" />
+    <ClCompile Include="src\Engine\Graphics\MagicCircleEffect.cpp" />
+    <ClCompile Include="src\Engine\Graphics\PortalEffect.cpp" />
     <ClCompile Include="src\Engine\Input\Input.cpp" />
     <ClCompile Include="src\Engine\Math\Mymath.cpp" />
     <ClCompile Include="src\Engine\Particle\EffectManager3D.cpp" />
@@ -177,6 +179,8 @@
     <ClInclude Include="src\Engine\Graphics\RingSample.h" />
     <ClInclude Include="src\Engine\Graphics\RingWrapper.h" />
     <ClInclude Include="src\Engine\Graphics\CircleEffect.h" />
+    <ClInclude Include="src\Engine\Graphics\MagicCircleEffect.h" />
+    <ClInclude Include="src\Engine\Graphics\PortalEffect.h" />
     <ClInclude Include="src\Engine\Input\Input.h" />
     <ClInclude Include="src\Engine\Math\Matrix3x3.h" />
     <ClInclude Include="src\Engine\Math\Matrix4x4.h" />

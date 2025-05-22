@@ -1,5 +1,7 @@
 #include "Camera.h"
 #include "RenderingPipeline.h"
+#include "Input.h"
+#include <cmath>
 
 // 静的メンバ変数の実体化
 Camera* Object3dCommon::defaultCamera_ = nullptr;
@@ -38,6 +40,70 @@ void Camera::Update() {
 
     // ビュープロジェクション行列の計算
     viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+}
+
+void Camera::UpdateWithInput(Input* input) {
+    if (!input) return;
+    
+    const float moveSpeed = 0.3f;  // カメラ移動速度
+    const float rotateSpeed = 0.02f;  // カメラ回転速度
+    
+    Vector3 move = {0, 0, 0};
+    
+    // WASD移動
+    if (input->PushKey(DIK_W)) {
+        move.z += moveSpeed;  // 前進
+    }
+    if (input->PushKey(DIK_S)) {
+        move.z -= moveSpeed;  // 後退
+    }
+    if (input->PushKey(DIK_A)) {
+        move.x -= moveSpeed;  // 左移動
+    }
+    if (input->PushKey(DIK_D)) {
+        move.x += moveSpeed;  // 右移動
+    }
+    
+    // QEで上下移動
+    if (input->PushKey(DIK_Q)) {
+        move.y -= moveSpeed;  // 下降
+    }
+    if (input->PushKey(DIK_E)) {
+        move.y += moveSpeed;  // 上昇
+    }
+    
+    // 矢印キーで回転
+    Vector3 rotate = transform_.rotate;
+    if (input->PushKey(DIK_UP)) {
+        rotate.x += rotateSpeed;
+    }
+    if (input->PushKey(DIK_DOWN)) {
+        rotate.x -= rotateSpeed;
+    }
+    if (input->PushKey(DIK_LEFT)) {
+        rotate.y -= rotateSpeed;
+    }
+    if (input->PushKey(DIK_RIGHT)) {
+        rotate.y += rotateSpeed;
+    }
+    
+    // 移動の適用（カメラの向きに応じて変換）
+    // Y軸回転行列で移動ベクトルを変換
+    float cosY = cosf(transform_.rotate.y);
+    float sinY = sinf(transform_.rotate.y);
+    
+    Vector3 worldMove;
+    worldMove.x = move.x * cosY - move.z * sinY;
+    worldMove.y = move.y;
+    worldMove.z = move.x * sinY + move.z * cosY;
+    
+    transform_.translate.x += worldMove.x;
+    transform_.translate.y += worldMove.y;
+    transform_.translate.z += worldMove.z;
+    transform_.rotate = rotate;
+    
+    // 通常の更新を呼び出し
+    Update();
 }
 
 // セッター

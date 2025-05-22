@@ -1,63 +1,77 @@
 #pragma once
 #include "IScene.h"
-#include "UnoEngine.h"
-#include "CircleEffect.h"
-#include "RingManager.h"
-#include "Object3d.h"
-#include "Input.h"
-#include "imgui.h"
-#include "Vector3.h"
-#include "Vector4.h"
+#include "MagicCircleEffect.h"
+#include "PortalEffect.h"
 #include <memory>
 #include <vector>
 
-// 円形エフェクトのGamePlayScene
+/// <summary>
+/// ゲームプレイシーン - エピックエフェクトデモ
+/// ゲーム品質の派手なエフェクトを2種類展示
+/// </summary>
 class GamePlayScene : public IScene {
 public:
-    // コンストラクタ・デストラクタ
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
     GamePlayScene();
-    ~GamePlayScene() override;
 
-    // ISceneの実装
+    /// <summary>
+    /// デストラクタ
+    /// </summary>
+    ~GamePlayScene();
+
+    /// <summary>
+    /// 初期化
+    /// </summary>
     void Initialize() override;
+
+    /// <summary>
+    /// 更新処理
+    /// </summary>
     void Update() override;
+
+    /// <summary>
+    /// 描画処理
+    /// </summary>
     void Draw() override;
+
+    /// <summary>
+    /// 終了処理
+    /// </summary>
     void Finalize() override;
 
-protected:
-    // 初期化済みフラグ
-    bool initialized_ = false;
+private:
+    /// <summary>
+    /// エフェクト切り替え処理
+    /// </summary>
+    void HandleEffectSwitching();
 
-    // エフェクト切り替え関連
-    float effectTimer_ = 0.0f;       // エフェクト制御タイマー
-    int currentEffect_ = 0;          // 現在のエフェクトタイプ
-    bool keyPressed_ = false;        // キー押下状態
+    /// <summary>
+    /// 動的エフェクト更新
+    /// </summary>
+    /// <param name="deltaTime">デルタタイム</param>
+    void UpdateDynamicEffects(float deltaTime);
+
+    /// <summary>
+    /// エフェクトUI表示
+    /// </summary>
+    void ShowEffectUI();
+
+    // エフェクトオブジェクト
+    std::unique_ptr<MagicCircleEffect> magicCircleEffect_;
+    std::unique_ptr<PortalEffect> portalEffect_;
+
+    // アニメーション制御
+    float animationTime_;
+    float effectTimer_;
+    int currentEffectMode_; // 0: 両方, 1: 魔法陣, 2: ポータル
+    bool keyPressed_;
     
-    // 円形エフェクト関連
-    std::vector<std::unique_ptr<CircleEffect>> circleEffects_;
-    float animationTime_ = 0.0f;     // アニメーション用タイマー
-    
-    // エフェクト関数
-    void CreateCircleEffects();      // 円形エフェクト作成
-    void UpdateCircleEffects();      // 円形エフェクト更新
-    void HandleEffectSwitching();    // エフェクト切り替え
-    void ShowEffectUI();             // UI表示
-    
-    // エフェクト設定構造体
-    struct EffectSettings {
-        Vector3 position;
-        Vector3 rotation;
-        Vector3 scale;
-        Vector4 color;
-        float outerRadius;
-        float innerRadius;
-        uint32_t divisions;
-        float uvScrollSpeedU;
-        float uvScrollSpeedV;
-        bool enableAnimation;
-        std::string name;
-        std::string description;
-    };
-    
-    std::vector<EffectSettings> effectSettings_;
+    // エフェクト表示状態制御
+    bool magicCircleVisible_;
+    bool portalVisible_;
+
+    // 初期化フラグ
+    bool initialized_ = false;
 };

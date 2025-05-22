@@ -253,9 +253,8 @@ void UnoEngine::InitializeImGui() {
         ImFontConfig fontConfig;
         fontConfig.MergeMode = true;  // 既存のフォントと統合
 
-        // 日本語フォントのパス（例：MS Gothic）
-        // Windows標準フォントを使用
-        const char* fontPath = "C:\\Windows\\Fonts\\msgothic.ttc";
+        // 日本語フォントのパス（優先順位：メイリオ -> MSゴシック）
+        const char* fontPath = "C:\\Windows\\Fonts\\meiryo.ttc";
 
         // 日本語の文字範囲を指定
         static const ImWchar japaneseFontRanges[] = {
@@ -270,8 +269,8 @@ void UnoEngine::InitializeImGui() {
         // デフォルトフォント読み込み
         io.Fonts->AddFontDefault();
 
-        // 日本語フォント読み込み
-        io.Fonts->AddFontFromFileTTF(fontPath, 16.0f, &fontConfig, japaneseFontRanges);
+        // 日本語フォント読み込み（サイズを少し大きく）
+        io.Fonts->AddFontFromFileTTF(fontPath, 18.0f, &fontConfig, japaneseFontRanges);
 
         // ファイルが見つからない場合のフォールバック処理
         if (!io.Fonts->Fonts.Size || io.Fonts->Fonts.Size <= 1) {
@@ -286,7 +285,7 @@ void UnoEngine::InitializeImGui() {
             };
 
             for (const char* fallbackFont : fallbackFonts) {
-                io.Fonts->AddFontFromFileTTF(fallbackFont, 16.0f, &fontConfig, japaneseFontRanges);
+                io.Fonts->AddFontFromFileTTF(fallbackFont, 18.0f, &fontConfig, japaneseFontRanges);
                 if (io.Fonts->Fonts.Size > 1) {
                     OutputDebugStringA(("日本語フォールバックフォントを読み込みました: " + std::string(fallbackFont) + "\n").c_str());
                     break;
