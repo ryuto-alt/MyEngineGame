@@ -87,33 +87,67 @@ void ParticleEmitter::Update() {
     // 発生頻度から発生タイミングを計算
     float interval = 1.0f / emitRate_;
 
-    // 発生タイミングを超えていたらパーティクルを発生
-    if (currentTime_ >= interval) {
-        // 発生処理
-        ParticleManager::GetInstance()->Emit(
-            name_,
-            transform_.translate,
-            emitCount_,
-            velocityMin_,
-            velocityMax_,
-            accelMin_,
-            accelMax_,
-            startSizeMin_,
-            startSizeMax_,
-            endSizeMin_,
-            endSizeMax_,
-            startColorMin_,
-            startColorMax_,
-            endColorMin_,
-            endColorMax_,
-            rotationMin_,
-            rotationMax_,
-            rotationVelocityMin_,
-            rotationVelocityMax_,
-            lifeTimeMin_,
-            lifeTimeMax_);
+    // 高い発生頻度（100.0f以上）の場合はバーストモード
+    if (emitRate_ >= 100.0f) {
+        // 一度だけ発生
+        if (!burstFired_) {
+            // 発生処理
+            ParticleManager::GetInstance()->Emit(
+                name_,
+                transform_.translate,
+                emitCount_,
+                velocityMin_,
+                velocityMax_,
+                accelMin_,
+                accelMax_,
+                startSizeMin_,
+                startSizeMax_,
+                endSizeMin_,
+                endSizeMax_,
+                startColorMin_,
+                startColorMax_,
+                endColorMin_,
+                endColorMax_,
+                rotationMin_,
+                rotationMax_,
+                rotationVelocityMin_,
+                rotationVelocityMax_,
+                lifeTimeMin_,
+                lifeTimeMax_);
 
-        // 経過時間を戻す（余剰分を考慮）
-        currentTime_ -= interval;
+            burstFired_ = true;
+            // バースト後は発生を停止
+            isEmitting_ = false;
+        }
+    } else {
+        // 通常モード：発生タイミングを超えていたらパーティクルを発生
+        if (currentTime_ >= interval) {
+            // 発生処理
+            ParticleManager::GetInstance()->Emit(
+                name_,
+                transform_.translate,
+                emitCount_,
+                velocityMin_,
+                velocityMax_,
+                accelMin_,
+                accelMax_,
+                startSizeMin_,
+                startSizeMax_,
+                endSizeMin_,
+                endSizeMax_,
+                startColorMin_,
+                startColorMax_,
+                endColorMin_,
+                endColorMax_,
+                rotationMin_,
+                rotationMax_,
+                rotationVelocityMin_,
+                rotationVelocityMax_,
+                lifeTimeMin_,
+                lifeTimeMax_);
+
+            // 経過時間を戻す（余剰分を考慮）
+            currentTime_ -= interval;
+        }
     }
 }

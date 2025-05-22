@@ -41,7 +41,14 @@ public:
     void Update();
 
     // 発生フラグ設定
-    void SetEmitting(bool isEmitting) { isEmitting_ = isEmitting; }
+    void SetEmitting(bool isEmitting) { 
+        isEmitting_ = isEmitting;
+        if (isEmitting) {
+            // 発生開始時にタイマーをリセット
+            currentTime_ = 0.0f;
+            burstFired_ = false; // バーストフラグをリセット
+        }
+    }
 
     // 発生フラグ取得
     bool IsEmitting() const { return isEmitting_; }
@@ -82,6 +89,9 @@ private:
 
     // 発生フラグ
     bool isEmitting_ = true;
+
+    // バーストフラグ（一度だけ発生するため）
+    bool burstFired_ = false;
 
     // 座標・回転・スケール
     Transform transform_;
