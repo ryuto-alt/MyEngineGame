@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Particle3DEmitter.h"
+#include "ParticleEmitter.h"
 #include "Vector3.h"
 #include <memory>
 #include <vector>
@@ -69,7 +69,7 @@ private:
     void InitializeEffectSettings();
 
     // エミッター
-    std::vector<std::unique_ptr<Particle3DEmitter>> emitters_;
+    std::vector<std::unique_ptr<ParticleEmitter>> emitters_;
 
     // エフェクト設定
     std::vector<EffectSettings> effectSettings_;

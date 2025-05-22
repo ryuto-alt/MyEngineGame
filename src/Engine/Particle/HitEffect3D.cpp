@@ -1,5 +1,5 @@
 #include "HitEffect3D.h"
-#include "Particle3DManager.h"
+#include "ParticleManager.h"
 #include <algorithm>
 
 HitEffect3D::HitEffect3D() 
@@ -7,8 +7,8 @@ HitEffect3D::HitEffect3D()
 }
 
 void HitEffect3D::Initialize() {
-    // 3Dパーティクルグループの作成（effect.objを使用）
-    Particle3DManager::GetInstance()->CreateParticle3DGroup("HitEffect", "effect.obj");
+    // 2Dパーティクルグループの作成（gradationLine.pngを使用）
+    ParticleManager::GetInstance()->CreateParticleGroup("HitEffect", "Resources/particle/gradationLine.png");
 
     // エフェクト設定の初期化
     InitializeEffectSettings();
@@ -24,7 +24,7 @@ void HitEffect3D::Initialize() {
         std::string emitterName = "HitEffect_" + std::to_string(i);
         
         // エミッターを作成
-        emitters_[i] = std::make_unique<Particle3DEmitter>(
+        emitters_[i] = std::make_unique<ParticleEmitter>(
             "HitEffect",  // パーティクルグループ名
             Vector3{0.0f, 0.0f, 0.0f},  // 初期位置
             settings.particleCount,
@@ -33,18 +33,18 @@ void HitEffect3D::Initialize() {
             settings.velocityMax,
             settings.accelMin,
             settings.accelMax,
-            settings.startScaleMin,
-            settings.startScaleMax,
-            settings.endScaleMin,
-            settings.endScaleMax,
+            settings.startScaleMin.x,  // 2Dではスケールは単一の値
+            settings.startScaleMax.x,
+            settings.endScaleMin.x,
+            settings.endScaleMax.x,
             settings.startColorMin,
             settings.startColorMax,
             settings.endColorMin,
             settings.endColorMax,
-            Vector3{0.0f, 0.0f, 0.0f},  // 回転Min
-            Vector3{0.0f, 0.0f, 0.0f},  // 回転Max
-            settings.rotationVelocityMin,
-            settings.rotationVelocityMax,
+            0.0f,  // 回転Min
+            0.0f,  // 回転Max
+            settings.rotationVelocityMin.z,  // 2Dでは Z軸回転のみ
+            settings.rotationVelocityMax.z,
             settings.lifeTimeMin,
             settings.lifeTimeMax
         );

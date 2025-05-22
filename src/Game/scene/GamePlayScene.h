@@ -1,12 +1,17 @@
 #pragma once
+#include "IScene.h"
 #include "UnoEngine.h"
-#include "ParticleEmitter.h"
-#include "Particle3DDemo.h"
-#include "EffectManager3D.h"
+#include "CircleEffect.h"
+#include "RingManager.h"
+#include "Object3d.h"
+#include "Input.h"
+#include "imgui.h"
+#include "Vector3.h"
+#include "Vector4.h"
 #include <memory>
 #include <vector>
 
-// パーティクルエフェクトのGamePlayScene
+// 円形エフェクトのGamePlayScene
 class GamePlayScene : public IScene {
 public:
     // コンストラクタ・デストラクタ
@@ -23,28 +28,36 @@ protected:
     // 初期化済みフラグ
     bool initialized_ = false;
 
-    // パーティクルエミッタ（2D）
-    std::vector<std::unique_ptr<ParticleEmitter>> particleEmitters_;
-
-    // 3Dパーティクルデモ
-    std::unique_ptr<Particle3DDemo> particle3DDemo_;
-
-    // エフェクト制御用
-    float effectTimer_ = 0.0f;
-    int currentEffect_ = 0;
-    bool keyPressed_ = false;
+    // エフェクト切り替え関連
+    float effectTimer_ = 0.0f;       // エフェクト制御タイマー
+    int currentEffect_ = 0;          // 現在のエフェクトタイプ
+    bool keyPressed_ = false;        // キー押下状態
     
-    // 3Dエフェクト制御用
-    Vector3 hitPosition3D_;
-    float effect3DTimer_ = 0.0f;
-    int current3DEffect_ = 0;
-    bool key3DPressed_ = false;
-    bool show3DEffects_ = true;  // 3Dエフェクト表示切り替え
-    bool show2DEffects_ = true;  // 2Dエフェクト表示切り替え
-
-    // エフェクト作成・制御関数
-    void CreateEffectEmitters();
-    void HandleEffectSwitching();
-    void Handle3DEffectSwitching();  // 3Dエフェクト制御
-    void TriggerRandom3DEffects();   // ランダムエフェクト発生
+    // 円形エフェクト関連
+    std::vector<std::unique_ptr<CircleEffect>> circleEffects_;
+    float animationTime_ = 0.0f;     // アニメーション用タイマー
+    
+    // エフェクト関数
+    void CreateCircleEffects();      // 円形エフェクト作成
+    void UpdateCircleEffects();      // 円形エフェクト更新
+    void HandleEffectSwitching();    // エフェクト切り替え
+    void ShowEffectUI();             // UI表示
+    
+    // エフェクト設定構造体
+    struct EffectSettings {
+        Vector3 position;
+        Vector3 rotation;
+        Vector3 scale;
+        Vector4 color;
+        float outerRadius;
+        float innerRadius;
+        uint32_t divisions;
+        float uvScrollSpeedU;
+        float uvScrollSpeedV;
+        bool enableAnimation;
+        std::string name;
+        std::string description;
+    };
+    
+    std::vector<EffectSettings> effectSettings_;
 };

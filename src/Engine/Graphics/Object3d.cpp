@@ -140,7 +140,12 @@ void Object3d::Update() {
 
 void Object3d::Draw() {
     assert(dxCommon_);
-    assert(model_);
+    
+    // modelが設定されていない場合は描画しない
+    if (!model_) {
+        OutputDebugStringA("Object3d::Draw - No model set, skipping draw\n");
+        return;
+    }
 
     // 共通描画設定
     spriteCommon_->CommonDraw();
@@ -204,4 +209,44 @@ void Object3d::Draw() {
 
     // 描画
     dxCommon_->GetCommandList()->DrawInstanced(model_->GetVertexCount(), 1, 0, 0);
+}
+
+void Object3d::SetCircleEffectTexture() {
+    // gradationLine.pngテクスチャを読み込み
+    const std::string gradationTexturePath = "Resources/particle/gradationLine.png";
+    
+    OutputDebugStringA(("Object3d::SetCircleEffectTexture - Loading: " + gradationTexturePath + "\n").c_str());
+    
+    // テクスチャが未ロードなら読み込む
+    if (!TextureManager::GetInstance()->IsTextureExists(gradationTexturePath)) {
+        TextureManager::GetInstance()->LoadTexture(gradationTexturePath);
+        OutputDebugStringA("Object3d::SetCircleEffectTexture - Loaded gradationLine.png for circle effect\n");
+    }
+    
+    // モデルにテクスチャパスを設定（モデルが存在する場合）
+    if (model_) {
+        model_->SetTextureFilePath(gradationTexturePath);
+        OutputDebugStringA("Object3d::SetCircleEffectTexture - Set gradationLine.png to model\n");
+    }
+    
+    // ライティングを無効に（エフェクトに適している）
+    SetEnableLighting(false);
+    
+    OutputDebugStringA("Object3d::SetCircleEffectTexture - Circle effect setup complete\n");
+}
+
+void Object3d::SetUVScroll(float scrollU, float scrollV) {
+    if (materialData_) {
+        // UV変換行列でスクロールを実現
+        Matrix4x4 scrollMatrix = MakeIdentity4x4();
+        
+        // 平行移動でUVスクロールを実現
+        scrollMatrix.m[3][0] = scrollU; // U方向のスクロール
+        scrollMatrix.m[3][1] = scrollV; // V方向のスクロール
+        
+        materialData_->uvTransform = scrollMatrix;
+        
+        OutputDebugStringA(("Object3d::SetUVScroll - U: " + std::to_string(scrollU) + 
+                          ", V: " + std::to_string(scrollV) + "\n").c_str());
+    }
 }

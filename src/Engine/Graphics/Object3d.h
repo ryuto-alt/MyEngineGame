@@ -61,6 +61,25 @@ public:
     void SetDirectionalLight(const DirectionalLight& light) { *directionalLightData_ = light; }
     const DirectionalLight& GetDirectionalLight() const { return *directionalLightData_; }
 
+    /// <summary>
+    /// 円形エフェクト用テクスチャの設定
+    /// gradationLine.pngを使用した円形エフェクトを描画する
+    /// </summary>
+    void SetCircleEffectTexture();
+
+    /// <summary>
+    /// UVScroll の設定
+    /// エフェクトの動的な変化に使用
+    /// </summary>
+    /// <param name="scrollU">U方向のスクロール量</param>
+    /// <param name="scrollV">V方向のスクロール量</param>
+    void SetUVScroll(float scrollU, float scrollV);
+    
+    // リソースアクセサー（CircleEffect用）
+    ID3D12Resource* GetMaterialResource() const { return materialResource_.Get(); }
+    ID3D12Resource* GetTransformationMatrixResource() const { return transformationMatrixResource_.Get(); }
+    ID3D12Resource* GetDirectionalLightResource() const { return directionalLightResource_.Get(); }
+
 private:
     // モデル
     Model* model_;

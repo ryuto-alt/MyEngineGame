@@ -1,0 +1,196 @@
+// src/Game/scene/CircleEffectDemoScene.cpp
+#include "CircleEffectDemoScene.h"
+#include "UnoEngine.h"
+#include <cmath>
+#include <numbers>
+
+CircleEffectDemoScene::CircleEffectDemoScene()
+    : demoTime_(0.0f)
+    , currentEffectIndex_(0)
+    , showAllEffects_(true) {
+}
+
+CircleEffectDemoScene::~CircleEffectDemoScene() {}
+
+void CircleEffectDemoScene::Initialize() {
+    // カメラの初期化
+    camera_ = std::make_unique<Camera>();
+    camera_->Initialize();
+    camera_->SetPosition({0.0f, 0.0f, -10.0f});
+    camera_->SetTarget({0.0f, 0.0f, 0.0f});
+
+    // エフェクト設定の準備
+    effectSettings_ = {
+        // 基本的な円形エフェクト
+        {
+            {-3.0f, 2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f},
+            {1.0f, 1.0f, 1.0f, 1.0f}, 1.0f, 0.2f, 32,
+            0.0f, 0.0f, "Basic Circle Effect"
+        },
+        // UVスクロール（横方向）
+        {
+            {0.0f, 2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.2f, 1.2f, 1.0f},
+            {0.8f, 1.0f, 1.0f, 1.0f}, 1.5f, 0.3f, 48,
+            0.02f, 0.0f, "Horizontal UV Scroll"
+        },
+        // UVスクロール（縦方向）
+        {
+            {3.0f, 2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f},
+            {1.0f, 0.8f, 1.0f, 1.0f}, 1.0f, 0.1f, 64,
+            0.0f, 0.03f, "Vertical UV Scroll"
+        },
+        // 細いリング（境界線効果）
+        {
+            {-3.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.5f, 1.5f, 1.0f},
+            {1.0f, 0.5f, 0.0f, 1.0f}, 1.0f, 0.9f, 64,
+            0.01f, 0.0f, "Thin Ring (Border Effect)"
+        },
+        // 回転アニメーション
+        {
+            {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {2.0f, 2.0f, 1.0f},
+            {1.0f, 1.0f, 0.5f, 0.8f}, 1.2f, 0.4f, 32,
+            0.015f, 0.01f, "Rotating Circle with UV Scroll"
+        },
+        // グラデーション効果
+        {
+            {3.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.3f, 1.3f, 1.0f},
+            {0.5f, 1.0f, 0.5f, 1.0f}, 1.5f, 0.2f, 48,
+            0.0f, -0.02f, "Gradient Effect"
+        },
+        // 大きなエフェクト（背景用）
+        {
+            {-3.0f, -2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {3.0f, 3.0f, 1.0f},
+            {0.3f, 0.3f, 1.0f, 0.5f}, 2.0f, 0.1f, 16,
+            0.005f, 0.005f, "Large Background Effect"
+        },
+        // 高速スクロール
+        {
+            {0.0f, -2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f},
+            {1.0f, 0.2f, 0.2f, 1.0f}, 0.8f, 0.3f, 32,
+            0.05f, 0.0f, "High Speed Scroll"
+        },
+        // 複合エフェクト
+        {
+            {3.0f, -2.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.5f, 1.5f, 1.0f},
+            {1.0f, 1.0f, 1.0f, 1.0f}, 1.0f, 0.2f, 64,
+            0.02f, 0.02f, "Combined Effect"
+        }
+    };
+
+    // 様々な円形エフェクトの作成
+    CreateVariousCircleEffects();
+
+    OutputDebugStringA("CircleEffectDemoScene::Initialize - Demo scene initialized\n");
+    OutputDebugStringA("=== Circle Effect Demonstration ===\n");
+    OutputDebugStringA("- Shows various circle effects using gradationLine.png\n");
+    OutputDebugStringA("- AddressV = CLAMP prevents white center artifacts\n");
+    OutputDebugStringA("- UV scrolling creates dynamic effects\n");
+    OutputDebugStringA("- Suitable for game effects and particle systems\n");
+    OutputDebugStringA("=====================================\n");
+}
+
+void CircleEffectDemoScene::Update() {
+    demoTime_ += 1.0f / 60.0f; // 60FPS想定
+
+    // カメラの更新
+    if (camera_) {
+        camera_->Update();
+    }
+
+    // エフェクトアニメーションの更新
+    UpdateEffectAnimations();
+
+    // 全てのエフェクトを更新
+    for (auto& effect : circleEffects_) {
+        if (effect) {
+            effect->Update();
+        }
+    }
+}
+
+void CircleEffectDemoScene::Draw() {
+    // 全ての円形エフェクトを描画
+    for (auto& effect : circleEffects_) {
+        if (effect && effect->IsVisible()) {
+            effect->Draw();
+        }
+    }
+}
+
+void CircleEffectDemoScene::Finalize() {
+    circleEffects_.clear();
+    OutputDebugStringA("CircleEffectDemoScene::Finalize - Demo scene finalized\n");
+}
+
+void CircleEffectDemoScene::CreateVariousCircleEffects() {
+    UnoEngine* engine = UnoEngine::GetInstance();
+    DirectXCommon* dxCommon = engine->GetDirectXCommon();
+    SpriteCommon* spriteCommon = engine->GetSpriteCommon();
+
+    // 設定に基づいてエフェクトを作成
+    for (size_t i = 0; i < effectSettings_.size(); ++i) {
+        const auto& settings = effectSettings_[i];
+
+        auto effect = std::make_unique<CircleEffect>();
+        effect->Initialize(dxCommon, spriteCommon);
+        effect->SetCamera(camera_.get());
+
+        // エフェクトの作成
+        effect->CreateCircleEffect(settings.outerRadius, settings.innerRadius, settings.divisions);
+
+        // Transform設定
+        effect->SetPosition(settings.position);
+        effect->SetRotation(settings.rotation);
+        effect->SetScale(settings.scale);
+        effect->SetColor(settings.color);
+
+        // UVアニメーション設定
+        if (settings.uvScrollSpeedU != 0.0f || settings.uvScrollSpeedV != 0.0f) {
+            effect->StartUVAnimation(settings.uvScrollSpeedU, settings.uvScrollSpeedV);
+        }
+
+        circleEffects_.push_back(std::move(effect));
+
+        OutputDebugStringA(("CircleEffectDemoScene - Created: " + settings.description + "\n").c_str());
+    }
+
+    OutputDebugStringA(("CircleEffectDemoScene::CreateVariousCircleEffects - " + 
+                      std::to_string(circleEffects_.size()) + " effects created\n").c_str());
+}
+
+void CircleEffectDemoScene::UpdateEffectAnimations() {
+    // 回転アニメーション（インデックス4のエフェクト）
+    if (circleEffects_.size() > 4 && circleEffects_[4]) {
+        float rotationSpeed = 1.0f; // ラジアン/秒
+        Vector3 rotation = circleEffects_[4]->GetRotation();
+        rotation.z += rotationSpeed * (1.0f / 60.0f);
+        circleEffects_[4]->SetRotation(rotation);
+    }
+
+    // 脈動効果（インデックス6の大きなエフェクト）
+    if (circleEffects_.size() > 6 && circleEffects_[6]) {
+        float pulseScale = 1.0f + 0.3f * std::sin(demoTime_ * 2.0f);
+        circleEffects_[6]->SetScale({pulseScale, pulseScale, 1.0f});
+    }
+
+    // 色変化効果（インデックス8の複合エフェクト）
+    if (circleEffects_.size() > 8 && circleEffects_[8]) {
+        float colorPhase = demoTime_ * 3.0f;
+        Vector4 color = {
+            0.5f + 0.5f * std::sin(colorPhase),
+            0.5f + 0.5f * std::sin(colorPhase + 2.094f), // 120度位相差
+            0.5f + 0.5f * std::sin(colorPhase + 4.188f), // 240度位相差
+            1.0f
+        };
+        circleEffects_[8]->SetColor(color);
+    }
+
+    // デバッグ情報の定期出力（5秒間隔）
+    static float lastDebugTime = 0.0f;
+    if (demoTime_ - lastDebugTime > 5.0f) {
+        OutputDebugStringA("CircleEffectDemoScene - Effects running smoothly\n");
+        OutputDebugStringA(("  - Demo time: " + std::to_string(demoTime_) + " seconds\n").c_str());
+        OutputDebugStringA(("  - Active effects: " + std::to_string(circleEffects_.size()) + "\n").c_str());
+        lastDebugTime = demoTime_;
+    }
+}

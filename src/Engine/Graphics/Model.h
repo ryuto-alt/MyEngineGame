@@ -32,6 +32,11 @@ public:
     const D3D12_VERTEX_BUFFER_VIEW& GetVBView() const { return vertexBufferView_; }
     ID3D12Resource* GetVertexResource() const { return vertexResource_.Get(); }
 
+    // テクスチャパスの設定（円形エフェクト用）
+    void SetTextureFilePath(const std::string& textureFilePath) { 
+        modelData_.material.textureFilePath = textureFilePath; 
+    }
+
 private:
     // モデルデータの最適化（UV球など改善のため）
     void OptimizeTriangles(ModelData& modelData, const std::string& filename);

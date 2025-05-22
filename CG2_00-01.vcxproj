@@ -65,10 +65,7 @@
       <AdditionalOptions>/ignore:4049 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
-copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
-    </PostBuildEvent>
+
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -91,10 +88,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4049 /ignore:4048 %(AdditionalOptions)</AdditionalOptions>
     </Link>
-    <PostBuildEvent>
-      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
-copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
-    </PostBuildEvent>
+
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -121,6 +115,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="src\Engine\Graphics\SpriteCommon.cpp" />
     <ClCompile Include="src\Engine\Graphics\SRVManager.cpp" />
     <ClCompile Include="src\Engine\Graphics\TextureManager.cpp" />
+    <ClCompile Include="src\Engine\Graphics\Ring.cpp" />
+    <ClCompile Include="src\Engine\Graphics\AdvancedRing.cpp" />
+    <ClCompile Include="src\Engine\Graphics\RingManager.cpp" />
+    <ClCompile Include="src\Engine\Graphics\RingSample.cpp" />
+    <ClCompile Include="src\Engine\Graphics\RingWrapper.cpp" />
+    <ClCompile Include="src\Engine\Graphics\CircleEffect.cpp" />
     <ClCompile Include="src\Engine\Input\Input.cpp" />
     <ClCompile Include="src\Engine\Math\Mymath.cpp" />
     <ClCompile Include="src\Engine\Particle\EffectManager3D.cpp" />
@@ -171,6 +171,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="src\Engine\Graphics\SpriteCommon.h" />
     <ClInclude Include="src\Engine\Graphics\SRVManager.h" />
     <ClInclude Include="src\Engine\Graphics\TextureManager.h" />
+    <ClInclude Include="src\Engine\Graphics\Ring.h" />
+    <ClInclude Include="src\Engine\Graphics\AdvancedRing.h" />
+    <ClInclude Include="src\Engine\Graphics\RingManager.h" />
+    <ClInclude Include="src\Engine\Graphics\RingSample.h" />
+    <ClInclude Include="src\Engine\Graphics\RingWrapper.h" />
+    <ClInclude Include="src\Engine\Graphics\CircleEffect.h" />
     <ClInclude Include="src\Engine\Input\Input.h" />
     <ClInclude Include="src\Engine\Math\Matrix3x3.h" />
     <ClInclude Include="src\Engine\Math\Matrix4x4.h" />

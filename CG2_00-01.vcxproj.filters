@@ -101,6 +101,21 @@
     <ClCompile Include="src\Engine\Graphics\TextureManager.cpp">
       <Filter>src\engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\Ring.cpp">
+      <Filter>src\engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\AdvancedRing.cpp">
+      <Filter>src\engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\RingManager.cpp">
+      <Filter>src\engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\RingSample.cpp">
+      <Filter>src\engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\RingWrapper.cpp">
+      <Filter>src\engine\Graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\Input\Input.cpp">
       <Filter>src\engine\Input</Filter>
     </ClCompile>
@@ -239,6 +254,21 @@
       <Filter>src\engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Graphics\TextureManager.h">
+      <Filter>src\engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\Ring.h">
+      <Filter>src\engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\AdvancedRing.h">
+      <Filter>src\engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\RingManager.h">
+      <Filter>src\engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\RingSample.h">
+      <Filter>src\engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\RingWrapper.h">
       <Filter>src\engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Input\Input.h">

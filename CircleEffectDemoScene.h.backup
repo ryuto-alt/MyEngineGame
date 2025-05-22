@@ -1,0 +1,82 @@
+#pragma once
+#include "Scene.h"
+#include "CircleEffect.h"
+#include "RingManager.h"
+#include "Camera.h"
+#include <memory>
+#include <vector>
+
+/// <summary>
+/// 円形エフェクトのデモンストレーションシーン
+/// gradationLine.pngテクスチャを使った様々な円形エフェクトを表示する
+/// </summary>
+class CircleEffectDemoScene : public Scene {
+public:
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    CircleEffectDemoScene();
+
+    /// <summary>
+    /// デストラクタ
+    /// </summary>
+    ~CircleEffectDemoScene();
+
+    /// <summary>
+    /// 初期化
+    /// </summary>
+    void Initialize() override;
+
+    /// <summary>
+    /// 更新
+    /// </summary>
+    void Update() override;
+
+    /// <summary>
+    /// 描画
+    /// </summary>
+    void Draw() override;
+
+    /// <summary>
+    /// 終了処理
+    /// </summary>
+    void Finalize() override;
+
+private:
+    /// <summary>
+    /// 様々な円形エフェクトの作成
+    /// </summary>
+    void CreateVariousCircleEffects();
+
+    /// <summary>
+    /// エフェクトアニメーションの更新
+    /// </summary>
+    void UpdateEffectAnimations();
+
+    // カメラ
+    std::unique_ptr<Camera> camera_;
+
+    // 円形エフェクト群
+    std::vector<std::unique_ptr<CircleEffect>> circleEffects_;
+
+    // デモ制御
+    float demoTime_;
+    int currentEffectIndex_;
+    bool showAllEffects_;
+
+    // エフェクト設定
+    struct EffectSettings {
+        Vector3 position;
+        Vector3 rotation;
+        Vector3 scale;
+        Vector4 color;
+        float outerRadius;
+        float innerRadius;
+        uint32_t divisions;
+        float uvScrollSpeedU;
+        float uvScrollSpeedV;
+        std::string description;
+    };
+
+    std::vector<EffectSettings> effectSettings_;
+};
