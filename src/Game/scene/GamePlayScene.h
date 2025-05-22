@@ -1,7 +1,10 @@
 #pragma once
 #include "UnoEngine.h"
+#include "ParticleEmitter.h"
+#include <memory>
+#include <vector>
 
-// シンプルなゲームプレイシーン（青い画面表示のみ）
+// パーティクルエフェクトのGamePlayScene
 class GamePlayScene : public IScene {
 public:
     // コンストラクタ・デストラクタ
@@ -17,4 +20,16 @@ public:
 protected:
     // 初期化済みフラグ
     bool initialized_ = false;
+
+    // パーティクルエミッタ
+    std::vector<std::unique_ptr<ParticleEmitter>> particleEmitters_;
+
+    // エフェクト制御用
+    float effectTimer_ = 0.0f;
+    int currentEffect_ = 0;
+    bool keyPressed_ = false;
+
+    // エフェクト作成・制御関数
+    void CreateEffectEmitters();
+    void HandleEffectSwitching();
 };

@@ -413,32 +413,86 @@ void ParticleManager::Emit(
     auto it = particleGroups.find(name);
     assert(it != particleGroups.end());
 
+    // パラメータのバリデーション（最小値 <= 最大値であることを確認）
+    auto clampMinMax = [](float& min, float& max) {
+        if (min > max) {
+            std::swap(min, max);
+        }
+    };
+    
+    // ローカル変数でコピーしてバリデーション
+    Vector3 validVelocityMin = velocityMin;
+    Vector3 validVelocityMax = velocityMax;
+    Vector3 validAccelMin = accelMin;
+    Vector3 validAccelMax = accelMax;
+    Vector4 validStartColorMin = startColorMin;
+    Vector4 validStartColorMax = startColorMax;
+    Vector4 validEndColorMin = endColorMin;
+    Vector4 validEndColorMax = endColorMax;
+    
+    float validStartSizeMin = startSizeMin;
+    float validStartSizeMax = startSizeMax;
+    float validEndSizeMin = endSizeMin;
+    float validEndSizeMax = endSizeMax;
+    float validRotationMin = rotationMin;
+    float validRotationMax = rotationMax;
+    float validRotationVelocityMin = rotationVelocityMin;
+    float validRotationVelocityMax = rotationVelocityMax;
+    float validLifeTimeMin = lifeTimeMin;
+    float validLifeTimeMax = lifeTimeMax;
+    
+    // バリデーションと修正
+    clampMinMax(validVelocityMin.x, validVelocityMax.x);
+    clampMinMax(validVelocityMin.y, validVelocityMax.y);
+    clampMinMax(validVelocityMin.z, validVelocityMax.z);
+    
+    clampMinMax(validAccelMin.x, validAccelMax.x);
+    clampMinMax(validAccelMin.y, validAccelMax.y);
+    clampMinMax(validAccelMin.z, validAccelMax.z);
+    
+    clampMinMax(validStartSizeMin, validStartSizeMax);
+    clampMinMax(validEndSizeMin, validEndSizeMax);
+    
+    clampMinMax(validStartColorMin.x, validStartColorMax.x);
+    clampMinMax(validStartColorMin.y, validStartColorMax.y);
+    clampMinMax(validStartColorMin.z, validStartColorMax.z);
+    clampMinMax(validStartColorMin.w, validStartColorMax.w);
+    
+    clampMinMax(validEndColorMin.x, validEndColorMax.x);
+    clampMinMax(validEndColorMin.y, validEndColorMax.y);
+    clampMinMax(validEndColorMin.z, validEndColorMax.z);
+    clampMinMax(validEndColorMin.w, validEndColorMax.w);
+    
+    clampMinMax(validRotationMin, validRotationMax);
+    clampMinMax(validRotationVelocityMin, validRotationVelocityMax);
+    clampMinMax(validLifeTimeMin, validLifeTimeMax);
+
     // 均等分布乱数生成器
-    std::uniform_real_distribution<float> velocityDistX(velocityMin.x, velocityMax.x);
-    std::uniform_real_distribution<float> velocityDistY(velocityMin.y, velocityMax.y);
-    std::uniform_real_distribution<float> velocityDistZ(velocityMin.z, velocityMax.z);
+    std::uniform_real_distribution<float> velocityDistX(validVelocityMin.x, validVelocityMax.x);
+    std::uniform_real_distribution<float> velocityDistY(validVelocityMin.y, validVelocityMax.y);
+    std::uniform_real_distribution<float> velocityDistZ(validVelocityMin.z, validVelocityMax.z);
 
-    std::uniform_real_distribution<float> accelDistX(accelMin.x, accelMax.x);
-    std::uniform_real_distribution<float> accelDistY(accelMin.y, accelMax.y);
-    std::uniform_real_distribution<float> accelDistZ(accelMin.z, accelMax.z);
+    std::uniform_real_distribution<float> accelDistX(validAccelMin.x, validAccelMax.x);
+    std::uniform_real_distribution<float> accelDistY(validAccelMin.y, validAccelMax.y);
+    std::uniform_real_distribution<float> accelDistZ(validAccelMin.z, validAccelMax.z);
 
-    std::uniform_real_distribution<float> startSizeDist(startSizeMin, startSizeMax);
-    std::uniform_real_distribution<float> endSizeDist(endSizeMin, endSizeMax);
+    std::uniform_real_distribution<float> startSizeDist(validStartSizeMin, validStartSizeMax);
+    std::uniform_real_distribution<float> endSizeDist(validEndSizeMin, validEndSizeMax);
 
-    std::uniform_real_distribution<float> startColorDistR(startColorMin.x, startColorMax.x);
-    std::uniform_real_distribution<float> startColorDistG(startColorMin.y, startColorMax.y);
-    std::uniform_real_distribution<float> startColorDistB(startColorMin.z, startColorMax.z);
-    std::uniform_real_distribution<float> startColorDistA(startColorMin.w, startColorMax.w);
+    std::uniform_real_distribution<float> startColorDistR(validStartColorMin.x, validStartColorMax.x);
+    std::uniform_real_distribution<float> startColorDistG(validStartColorMin.y, validStartColorMax.y);
+    std::uniform_real_distribution<float> startColorDistB(validStartColorMin.z, validStartColorMax.z);
+    std::uniform_real_distribution<float> startColorDistA(validStartColorMin.w, validStartColorMax.w);
 
-    std::uniform_real_distribution<float> endColorDistR(endColorMin.x, endColorMax.x);
-    std::uniform_real_distribution<float> endColorDistG(endColorMin.y, endColorMax.y);
-    std::uniform_real_distribution<float> endColorDistB(endColorMin.z, endColorMax.z);
-    std::uniform_real_distribution<float> endColorDistA(endColorMin.w, endColorMax.w);
+    std::uniform_real_distribution<float> endColorDistR(validEndColorMin.x, validEndColorMax.x);
+    std::uniform_real_distribution<float> endColorDistG(validEndColorMin.y, validEndColorMax.y);
+    std::uniform_real_distribution<float> endColorDistB(validEndColorMin.z, validEndColorMax.z);
+    std::uniform_real_distribution<float> endColorDistA(validEndColorMin.w, validEndColorMax.w);
 
-    std::uniform_real_distribution<float> rotationDist(rotationMin, rotationMax);
-    std::uniform_real_distribution<float> rotationVelocityDist(rotationVelocityMin, rotationVelocityMax);
+    std::uniform_real_distribution<float> rotationDist(validRotationMin, validRotationMax);
+    std::uniform_real_distribution<float> rotationVelocityDist(validRotationVelocityMin, validRotationVelocityMax);
 
-    std::uniform_real_distribution<float> lifeTimeDist(lifeTimeMin, lifeTimeMax);
+    std::uniform_real_distribution<float> lifeTimeDist(validLifeTimeMin, validLifeTimeMax);
 
     // 指定された数のパーティクルを生成
     for (uint32_t i = 0; i < count; ++i) {
