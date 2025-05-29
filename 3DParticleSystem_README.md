@@ -40,6 +40,13 @@ effect.objファイルを使用した3Dモデルベースのヒットエフェ�
 - **寿命**: 0.8～1.8秒
 - **速度範囲**: ±8.0f
 
+### 5. Lightning（雷撃）
+- **色**: 薄い青白 → 青
+- **パーティクル数**: 20個
+- **寿命**: 0.2～0.6秒
+- **速度範囲**: ±10.0f
+- **特徴**: 縦長のスケール（電撃のような見た目）
+
 ## 使用方法
 
 ### 基本的な使用例
@@ -64,6 +71,9 @@ EffectManager3D::GetInstance()->PlayImpactHit(hitPosition);
 
 // 爆発エフェクト
 EffectManager3D::GetInstance()->PlayExplosion(hitPosition);
+
+// 雷撃エフェクト
+EffectManager3D::GetInstance()->PlayLightningHit(hitPosition);
 
 // カスタムエフェクト
 EffectManager3D::GetInstance()->TriggerHitEffect(hitPosition, HitEffect3D::EffectType::Critical);
@@ -114,7 +124,8 @@ public:
 - **2キー**: Critical Hit エフェクト  
 - **3キー**: Impact Hit エフェクト
 - **4キー**: Explosion エフェクト
-- **スペースキー**: 選択されたエフェクトを発生
+- **5キー**: Lightning Hit エフェクト
+- **スペースキー**: ランダムエフェクトを発生
 - **Escキー**: 全エフェクト停止
 
 ## ImGuiコントロール

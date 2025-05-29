@@ -1,6 +1,8 @@
 #include "EffectManager3D.h"
 #include <algorithm>
 #include <sstream>
+#include <random>
+#include <cmath>
 
 void EffectManager3D::Initialize() {
     // エフェクトプールの初期化
@@ -47,6 +49,10 @@ void EffectManager3D::PlayImpactHit(const Vector3& position) {
 
 void EffectManager3D::PlayExplosion(const Vector3& position) {
     TriggerHitEffect(position, HitEffect3D::EffectType::Explosion);
+}
+
+void EffectManager3D::PlayLightningHit(const Vector3& position) {
+    TriggerHitEffect(position, HitEffect3D::EffectType::Lightning);
 }
 
 void EffectManager3D::StopAllEffects() {
@@ -116,3 +122,4 @@ HitEffect3D* EffectManager3D::GetAvailableEffect() {
 
     return effect;
 }
+

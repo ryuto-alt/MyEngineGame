@@ -14,9 +14,9 @@ void HitEffect3D::Initialize() {
     InitializeEffectSettings();
 
     // エフェクトタイプ分のエミッターを作成
-    emitters_.resize(static_cast<size_t>(EffectType::Explosion) + 1);
+    emitters_.resize(static_cast<size_t>(EffectType::Lightning) + 1);
     
-    for (int i = 0; i <= static_cast<int>(EffectType::Explosion); ++i) {
+    for (int i = 0; i <= static_cast<int>(EffectType::Lightning); ++i) {
         EffectType type = static_cast<EffectType>(i);
         const auto& settings = effectSettings_[i];
         
@@ -137,7 +137,7 @@ void HitEffect3D::SetEffectSettings(EffectType type, const Vector3& velocityRang
 }
 
 void HitEffect3D::InitializeEffectSettings() {
-    effectSettings_.resize(static_cast<size_t>(EffectType::Explosion) + 1);
+    effectSettings_.resize(static_cast<size_t>(EffectType::Lightning) + 1);
 
     // Normal（通常ヒット）
     {
@@ -146,12 +146,12 @@ void HitEffect3D::InitializeEffectSettings() {
         settings.velocityMax = Vector3{2.0f, 3.0f, 2.0f};
         settings.accelMin = Vector3{0.0f, -9.8f, 0.0f};
         settings.accelMax = Vector3{0.0f, -9.8f, 0.0f};
-        settings.startScaleMin = Vector3{0.3f, 0.3f, 0.3f};
-        settings.startScaleMax = Vector3{0.6f, 0.6f, 0.6f};
-        settings.endScaleMin = Vector3{0.1f, 0.1f, 0.1f};
-        settings.endScaleMax = Vector3{0.2f, 0.2f, 0.2f};
-        settings.startColorMin = Vector4{1.0f, 0.8f, 0.0f, 1.0f};  // 黄色
-        settings.startColorMax = Vector4{1.0f, 1.0f, 0.2f, 1.0f};
+        settings.startScaleMin = Vector3{0.1f, 0.1f, 0.1f};     // 小さく開始
+        settings.startScaleMax = Vector3{0.2f, 0.2f, 0.2f};     // 小さく開始
+        settings.endScaleMin = Vector3{0.3f, 0.3f, 0.3f};
+        settings.endScaleMax = Vector3{0.6f, 0.6f, 0.6f};
+        settings.startColorMin = Vector4{1.0f, 0.8f, 0.0f, 0.5f};  // 半透明から開始
+        settings.startColorMax = Vector4{1.0f, 1.0f, 0.2f, 0.5f};
         settings.endColorMin = Vector4{1.0f, 0.3f, 0.0f, 0.0f};    // オレンジでフェードアウト
         settings.endColorMax = Vector4{1.0f, 0.5f, 0.0f, 0.0f};
         settings.rotationVelocityMin = Vector3{-3.14f, -3.14f, -3.14f};
@@ -229,5 +229,28 @@ void HitEffect3D::InitializeEffectSettings() {
         settings.lifeTimeMax = 1.8f;
         settings.particleCount = 25;
         settings.emitRate = 100.0f;  // バーストモード
+    }
+
+    // Lightning（雷撃）
+    {
+        auto& settings = effectSettings_[static_cast<int>(EffectType::Lightning)];
+        settings.velocityMin = Vector3{-6.0f, 0.0f, -6.0f};     // 横方向の拡散
+        settings.velocityMax = Vector3{6.0f, 1.0f, 6.0f};       // ほぼ横に広がる
+        settings.accelMin = Vector3{0.0f, -1.0f, 0.0f};         // 軽い重力
+        settings.accelMax = Vector3{0.0f, -1.0f, 0.0f};
+        settings.startScaleMin = Vector3{0.001f, 0.001f, 0.001f};  // 完全に見えないサイズから
+        settings.startScaleMax = Vector3{0.001f, 0.001f, 0.001f};  // 完全に見えないサイズから
+        settings.endScaleMin = Vector3{0.2f, 2.0f, 0.2f};       // 細長い電撃に成長
+        settings.endScaleMax = Vector3{0.4f, 4.0f, 0.4f};       // 縦長の電撃に成長
+        settings.startColorMin = Vector4{1.0f, 1.0f, 1.0f, 0.0f};   // 完全に透明から
+        settings.startColorMax = Vector4{1.0f, 1.0f, 1.0f, 0.0f};   // 完全に透明から
+        settings.endColorMin = Vector4{0.6f, 0.8f, 1.0f, 0.8f};     // 青白い電撃色
+        settings.endColorMax = Vector4{0.8f, 0.9f, 1.0f, 1.0f};     // 明るい電撃色
+        settings.rotationVelocityMin = Vector3{-10.0f, -10.0f, -10.0f};
+        settings.rotationVelocityMax = Vector3{10.0f, 10.0f, 10.0f};
+        settings.lifeTimeMin = 0.15f; // 短めの寿命
+        settings.lifeTimeMax = 0.4f;
+        settings.particleCount = 12;  // パーティクル数を調整
+        settings.emitRate = 100.0f;   // バーストモード
     }
 }

@@ -20,9 +20,9 @@ void GamePlayScene::Initialize() {
     assert(spriteCommon_);
     assert(camera_);
 
-    // カメラの初期設定
-    camera_->SetTranslate({ 0.0f, 0.0f, -10.0f });
-    camera_->SetRotate({ 0.0f, 0.0f, 0.0f });
+    // カメラの初期設定（もっと引いた位置に）
+    camera_->SetTranslate({ 0.0f, 5.0f, -20.0f });
+    camera_->SetRotate({ 0.1f, 0.0f, 0.0f });  // 少し下を向く
     camera_->Update();
 
     // 2Dパーティクルグループの作成
@@ -41,8 +41,8 @@ void GamePlayScene::Initialize() {
     // エフェクトエミッタの作成
     CreateEffectEmitters();
 
-    // 3Dエフェクトの初期位置設定
-    hitPosition3D_ = Vector3{0.0f, 2.0f, 0.0f};
+    // 3Dエフェクトの初期位置設定（カメラ中心付近）
+    hitPosition3D_ = Vector3{0.0f, 0.0f, 0.0f};
 
     // 初期化完了
     initialized_ = true;
@@ -327,11 +327,11 @@ void GamePlayScene::Draw() {
         ImGui::Text("F2キー - Critical Hit");
         ImGui::Text("F3キー - Impact Hit");
         ImGui::Text("F4キー - Explosion");
-        ImGui::Text("F5キー - ランダムエフェクト");
+        ImGui::Text("F5キー - Lightning Hit");
+        ImGui::Text("F6キー - ランダムエフェクト");
         
-        // 3Dエフェクトの位置制御
-        ImGui::Text("3Dエフェクト位置:");
-        ImGui::SliderFloat3("Position", &hitPosition3D_.x, -5.0f, 5.0f);
+        // 3Dエフェクトの位置表示（固定）
+        ImGui::Text("3Dエフェクト位置: (%.1f, %.1f, %.1f)", hitPosition3D_.x, hitPosition3D_.y, hitPosition3D_.z);
         
         // 3Dエフェクト状態
         uint32_t activeCount = EffectManager3D::GetInstance()->GetActiveEffectCount();
@@ -343,9 +343,10 @@ void GamePlayScene::Draw() {
             "Normal Hit",
             "Critical Hit",
             "Impact Hit",
-            "Explosion"
+            "Explosion",
+            "Lightning Hit"
         };
-        if (current3DEffect_ < 4) {
+        if (current3DEffect_ < 5) {
             ImGui::Text("現在の3Dエフェクト: %s", effect3DNames[current3DEffect_]);
         }
         
@@ -364,6 +365,10 @@ void GamePlayScene::Draw() {
         ImGui::SameLine();
         if (ImGui::Button("Explosion")) {
             EffectManager3D::GetInstance()->PlayExplosion(hitPosition3D_);
+        }
+        
+        if (ImGui::Button("Lightning Hit")) {
+            EffectManager3D::GetInstance()->PlayLightningHit(hitPosition3D_);
         }
         
         if (ImGui::Button("Stop All 3D Effects")) {
@@ -407,8 +412,9 @@ void GamePlayScene::Handle3DEffectSwitching() {
     bool keyF3Pressed = input_->PushKey(DIK_F3);
     bool keyF4Pressed = input_->PushKey(DIK_F4);
     bool keyF5Pressed = input_->PushKey(DIK_F5);
+    bool keyF6Pressed = input_->PushKey(DIK_F6);
 
-    bool anyKey3DPressed = keyF1Pressed || keyF2Pressed || keyF3Pressed || keyF4Pressed || keyF5Pressed;
+    bool anyKey3DPressed = keyF1Pressed || keyF2Pressed || keyF3Pressed || keyF4Pressed || keyF5Pressed || keyF6Pressed;
 
     if (anyKey3DPressed && !key3DPressed_) {
         if (keyF1Pressed) {
@@ -428,7 +434,11 @@ void GamePlayScene::Handle3DEffectSwitching() {
             current3DEffect_ = 3;
             EffectManager3D::GetInstance()->PlayExplosion(hitPosition3D_);
         } else if (keyF5Pressed) {
-            // F5キー: ランダムエフェクト
+            // F5キー: Lightning Hit
+            current3DEffect_ = 4;
+            EffectManager3D::GetInstance()->PlayLightningHit(hitPosition3D_);
+        } else if (keyF6Pressed) {
+            // F6キー: ランダムエフェクト
             TriggerRandom3DEffects();
         }
 
@@ -446,7 +456,7 @@ void GamePlayScene::Handle3DEffectSwitching() {
 
 void GamePlayScene::TriggerRandom3DEffects() {
     // ランダムなエフェクトタイプを選択
-    int randomType = rand() % 4;
+    int randomType = rand() % 5;  // Lightningを含む
     current3DEffect_ = randomType;
     
     // ランダムな位置でエフェクト発生

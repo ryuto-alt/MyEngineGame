@@ -26,7 +26,7 @@ void Particle3DDemo::DrawImGui() {
 
         // エフェクトタイプの選択
         ImGui::Text("Effect Type:");
-        const char* effectTypes[] = { "Normal", "Critical", "Impact", "Explosion" };
+        const char* effectTypes[] = { "Normal", "Critical", "Impact", "Explosion", "Lightning" };
         int currentType = static_cast<int>(selectedEffectType_);
         if (ImGui::Combo("Type", &currentType, effectTypes, IM_ARRAYSIZE(effectTypes))) {
             selectedEffectType_ = static_cast<HitEffect3D::EffectType>(currentType);
@@ -61,6 +61,10 @@ void Particle3DDemo::DrawImGui() {
         ImGui::SameLine();
         if (ImGui::Button("Explosion (F4)")) {
             EffectManager3D::GetInstance()->PlayExplosion(effectPosition_);
+        }
+
+        if (ImGui::Button("Lightning Hit (F5)")) {
+            EffectManager3D::GetInstance()->PlayLightningHit(effectPosition_);
         }
 
         ImGui::Separator();
@@ -100,8 +104,8 @@ void Particle3DDemo::DrawImGui() {
 
         // 操作説明
         ImGui::Text("Controls:");
-        ImGui::Text("F1-F4: Trigger specific effects");
-        ImGui::Text("F5: Random effects");
+        ImGui::Text("F1-F5: Trigger specific effects");
+        ImGui::Text("Space: Random effects");
     }
     ImGui::End();
 }
@@ -120,7 +124,7 @@ void Particle3DDemo::UpdateAutoTrigger() {
 
     if (autoTriggerTimer_ >= autoTriggerInterval_) {
         // ランダムなエフェクトタイプを選択
-        int randomType = rand() % 4;
+        int randomType = rand() % 5;  // Lightningを含む
         HitEffect3D::EffectType type = static_cast<HitEffect3D::EffectType>(randomType);
         
         // ランダムな位置でエフェクト発生

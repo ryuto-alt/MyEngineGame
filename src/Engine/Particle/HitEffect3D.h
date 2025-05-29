@@ -13,7 +13,8 @@ public:
         Normal,     // 通常のヒット
         Critical,   // クリティカルヒット
         Impact,     // 衝撃
-        Explosion   // 爆発
+        Explosion,  // 爆発
+        Lightning   // 雷撃
     };
 
     // コンストラクタ

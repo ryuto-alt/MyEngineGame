@@ -40,6 +40,7 @@ public:
     void PlayCriticalHit(const Vector3& position);
     void PlayImpactHit(const Vector3& position);
     void PlayExplosion(const Vector3& position);
+    void PlayLightningHit(const Vector3& position);
 
     // エフェクトの強制停止
     void StopAllEffects();
@@ -52,6 +53,8 @@ public:
 
     // デバッグ情報の取得
     std::string GetDebugInfo() const;
+
+    // 特別な雷撃エフェクトは削除し、通常のPlayLightningHitのみ使用
 
 private:
     // ヒットエフェクトのプール

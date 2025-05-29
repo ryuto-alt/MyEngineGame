@@ -67,6 +67,11 @@ void Particle3DManager::Update(const Camera* camera) {
                 continue;
             }
 
+            // 最初のフレームの場合はisDeadをfalseにして表示開始
+            if (it->isDead) {
+                it->isDead = false;
+            }
+            
             // パーティクルの更新
             // 速度に加速度を加算
             it->velocity.x += it->accel.x / 60.0f;
@@ -134,7 +139,8 @@ void Particle3DManager::Draw(const Camera* camera) {
 
         // 各パーティクルの描画
         for (auto& particle : group.particles) {
-            if (particle.object3d) {
+            // isDead（最初のフレーム）の場合は描画をスキップ
+            if (!particle.isDead && particle.object3d) {
                 particle.object3d->Draw();
             }
         }
@@ -297,7 +303,13 @@ void Particle3DManager::Emit3D(
         particle.endScale.y = endScaleDistY(randomEngine_);
         particle.endScale.z = endScaleDistZ(randomEngine_);
 
-        particle.scale = particle.startScale;
+        // Lightningエフェクトの場合は極小スケールから開始
+        if (particle.startScale.x < 0.01f && particle.startScale.y < 0.01f && particle.startScale.z < 0.01f) {
+            particle.scale = particle.startScale;
+        } else {
+            // その他のエフェクトは通常のstartScale
+            particle.scale = particle.startScale;
+        }
 
         // 色（ランダム）
         particle.startColor.x = startColorDistR(randomEngine_);
@@ -324,6 +336,9 @@ void Particle3DManager::Emit3D(
         // 寿命（ランダム）
         particle.lifeTimeMax = lifeTimeDist(randomEngine_);
         particle.lifeTime = 0.0f;
+        
+        // 最初のフレームは描画しないフラグ（初期化完了まで非表示）
+        particle.isDead = true;
 
         // Object3Dの作成（正しい引数でInitialize）
         particle.object3d = std::make_unique<Object3d>();
@@ -331,9 +346,9 @@ void Particle3DManager::Emit3D(
         particle.object3d->SetModel(it->second.model.get());
         particle.object3d->SetPosition(particle.position);
         particle.object3d->SetRotation(particle.rotation);
+        // スケールを設定
         particle.object3d->SetScale(particle.scale);
         particle.object3d->SetColor(particle.color);
-        // カメラを設定しないとUpdate()が動作しないため、コメントアウト
-        // particle.object3d->SetCamera(camera);
+        // カメラはUpdateメソッドで設定される
     }
 }
