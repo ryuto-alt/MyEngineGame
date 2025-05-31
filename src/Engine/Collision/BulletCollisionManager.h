@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 
+#ifdef USE_BULLET_PHYSICS
 namespace Collision {
 
     // BulletPhysicsを使用した衝突管理クラス
@@ -83,3 +84,4 @@ namespace Collision {
     };
 
 } // namespace Collision
+#endif // USE_BULLET_PHYSICS

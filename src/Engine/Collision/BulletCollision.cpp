@@ -1,6 +1,7 @@
 #include "BulletCollision.h"
 #include <algorithm>
 
+#ifdef USE_BULLET_PHYSICS
 namespace Collision {
 
     // コンストラクタ
@@ -248,3 +249,4 @@ namespace Collision {
     }
 
 } // namespace Collision
+#endif // USE_BULLET_PHYSICS

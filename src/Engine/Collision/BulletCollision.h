@@ -1,6 +1,9 @@
 #pragma once
+// Bullet3ヘッダーの条件付きインクルード
+#ifdef USE_BULLET_PHYSICS
 #include "../../bullet3/btBulletCollisionCommon.h"
 #include "../../bullet3/btBulletDynamicsCommon.h"
+#endif
 #include "../Math/Vector3.h"
 #include "CollisionPrimitive.h"
 #include "CollisionUtility.h"
@@ -23,6 +26,7 @@ namespace Collision {
     // 衝突コールバック定義
     using CollisionCallback = std::function<void(const CollisionInfo&)>;
 
+#ifdef USE_BULLET_PHYSICS
     // Bullet3を使用した衝突検出クラス
     class BulletCollisionSystem {
     private:
@@ -71,5 +75,6 @@ namespace Collision {
         // ゲームの座標系からBulletの座標系への変換
         static btVector3 Vector3ToBt(const Vector3& vec);
     };
+#endif // USE_BULLET_PHYSICS
 
 } // namespace Collision
