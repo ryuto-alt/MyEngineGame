@@ -147,6 +147,11 @@ void UnoEngine::Draw() {
         // 3Dパーティクルの描画
         Particle3DManager::GetInstance()->Draw(camera_.get());
 
+        // ImGui描画前にデスクリプタヒープを再設定
+        if (srvManager_) {
+            srvManager_->PreDraw();
+        }
+
         // ImGuiの準備と描画
         ImGui::Render();
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());

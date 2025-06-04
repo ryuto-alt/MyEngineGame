@@ -2,6 +2,8 @@
 #include "Object3d.h"
 #include "DirectXCommon.h"
 #include "SpriteCommon.h"
+#include "SRVManager.h"
+#include "../UnoEngine.h"
 #include "Math.h"
 #include "TextureManager.h"
 
@@ -142,8 +144,14 @@ void Object3d::Draw() {
     assert(dxCommon_);
     assert(model_);
 
-    // 共通描画設定
+    // 共通描画設定（RootSignatureとPipelineStateの設定）
     spriteCommon_->CommonDraw();
+    
+    // CommonDrawの後にデスクリプタヒープを再設定
+    auto unoEngine = UnoEngine::GetInstance();
+    if (unoEngine && unoEngine->GetSrvManager()) {
+        unoEngine->GetSrvManager()->PreDraw();
+    }
 
     // モデルの頂点バッファをセット
     dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &model_->GetVBView());

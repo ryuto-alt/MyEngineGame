@@ -1,5 +1,7 @@
 #pragma once
 #include "UnoEngine.h"
+#include "../StageEditor.h"
+#include <memory>
 
 // GamePlayScene
 class GamePlayScene : public IScene {
@@ -17,4 +19,13 @@ public:
 protected:
     // 初期化済みフラグ
     bool initialized_ = false;
+    
+    // ステージエディター
+    std::unique_ptr<StageEditor> stageEditor_;
+    
+#ifdef _DEBUG
+    bool isDebugMode_ = true;
+#else
+    bool isDebugMode_ = false;
+#endif
 };

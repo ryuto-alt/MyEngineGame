@@ -101,21 +101,21 @@ private:
     Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
 
     // 頂点バッファビュー
-    D3D12_VERTEX_BUFFER_VIEW vbView;
+    D3D12_VERTEX_BUFFER_VIEW vbView{};
 
     // 頂点リソース
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 
     // マテリアル用リソース
     Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
-    Material* materialData;
+    Material* materialData = nullptr;
 
     // ディレクショナルライト用リソース
     Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
-    DirectionalLight* directionalLightData;
+    DirectionalLight* directionalLightData = nullptr;
 
     // ビルボード行列
-    Matrix4x4 billboardMatrix;
+    Matrix4x4 billboardMatrix{};
 
     // コピー禁止
     ParticleManager(const ParticleManager&) = delete;
