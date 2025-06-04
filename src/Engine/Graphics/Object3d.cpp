@@ -147,12 +147,6 @@ void Object3d::Draw() {
     // 共通描画設定（RootSignatureとPipelineStateの設定）
     spriteCommon_->CommonDraw();
     
-    // CommonDrawの後にデスクリプタヒープを再設定
-    auto unoEngine = UnoEngine::GetInstance();
-    if (unoEngine && unoEngine->GetSrvManager()) {
-        unoEngine->GetSrvManager()->PreDraw();
-    }
-
     // モデルの頂点バッファをセット
     dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &model_->GetVBView());
 

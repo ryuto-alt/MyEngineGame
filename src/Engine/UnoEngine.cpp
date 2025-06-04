@@ -100,11 +100,6 @@ void UnoEngine::Update() {
         // 入力更新
         input_->Update();
 
-        // SRVヒープを描画前に明示的に設定
-        if (srvManager_) {
-            srvManager_->PreDraw();
-        }
-
         // カメラの更新
         camera_->Update();
 
@@ -130,13 +125,8 @@ void UnoEngine::Update() {
 
 void UnoEngine::Draw() {
     try {
-        // DirectXの描画準備
-        dxCommon_->Begin();
-
-        // SRVヒープを描画前に明示的に設定
-        if (srvManager_) {
-            srvManager_->PreDraw();
-        }
+        // DirectXの描画準備（ディスクリプタヒープの設定も含む）
+        dxCommon_->Begin(srvManager_.get());
 
         // シーンマネージャーの描画
         SceneManager::GetInstance()->Draw();
@@ -147,9 +137,10 @@ void UnoEngine::Draw() {
         // 3Dパーティクルの描画
         Particle3DManager::GetInstance()->Draw(camera_.get());
 
-        // ImGui描画前にデスクリプタヒープを再設定
+        // ImGui描画前にディスクリプタヒープを再設定
         if (srvManager_) {
-            srvManager_->PreDraw();
+            ID3D12DescriptorHeap* descriptorHeaps[] = { srvManager_->GetDescriptorHeap().Get() };
+            dxCommon_->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
         }
 
         // ImGuiの準備と描画
@@ -188,6 +179,11 @@ void UnoEngine::Finalize() {
 
         // オーディオマネージャの解放（必要に応じて）
         AudioManager::GetInstance()->Finalize();
+
+        // DirectXCommonの終了処理
+        if (dxCommon_) {
+            dxCommon_->Finalize();
+        }
 
         // 各リソースはunique_ptrにより自動的に解放される
         // 明示的にnullptrを設定
@@ -248,6 +244,12 @@ void UnoEngine::InitializeImGui() {
     try {
         // ImGui初期化
         IMGUI_CHECKVERSION();
+        
+        // 既存のコンテキストがある場合は破棄
+        if (ImGui::GetCurrentContext() != nullptr) {
+            ImGui::DestroyContext();
+        }
+        
         ImGui::CreateContext();
         ImGui::StyleColorsDark();
 
@@ -305,17 +307,23 @@ void UnoEngine::InitializeImGui() {
         // フォントテクスチャをビルド
         io.Fonts->Build();
 
-        ImGui_ImplWin32_Init(winApp_->GetHwnd());
+        // プラットフォームバックエンドが初期化されていない場合のみ初期化
+        if (io.BackendPlatformUserData == nullptr) {
+            ImGui_ImplWin32_Init(winApp_->GetHwnd());
+        }
 
-        // SrvManagerのディスクリプタヒープを使用
-        ImGui_ImplDX12_Init(
-            dxCommon_->GetDevice(),
-            2, // SwapChainのバッファ数
-            DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-            srvManager_->GetDescriptorHeap().Get(),
-            srvManager_->GetCPUDescriptorHandle(0), // ImGui用に0番を使用
-            srvManager_->GetGPUDescriptorHandle(0)
-        );
+        // レンダラーバックエンドが初期化されていない場合のみ初期化
+        if (io.BackendRendererUserData == nullptr) {
+            // SrvManagerのディスクリプタヒープを使用
+            ImGui_ImplDX12_Init(
+                dxCommon_->GetDevice(),
+                2, // SwapChainのバッファ数
+                DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+                srvManager_->GetDescriptorHeap().Get(),
+                srvManager_->GetCPUDescriptorHandle(0), // ImGui用に0番を使用
+                srvManager_->GetGPUDescriptorHandle(0)
+            );
+        }
 
         // デバッグ出力
         OutputDebugStringA("UnoEngine: ImGui initialized successfully\n");

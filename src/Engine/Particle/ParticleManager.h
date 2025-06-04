@@ -152,8 +152,8 @@ public:
 
     // 終了処理
     static void Finalize() {
-        // Meyer'sシングルトンパターンでは何もする必要がない
-        // インスタンスは自動的に破棄される
+        // particleGroupsをクリア
+        GetInstance()->particleGroups.clear();
     }
 
     // 初期化

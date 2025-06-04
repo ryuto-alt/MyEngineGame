@@ -24,11 +24,6 @@ void SceneManager::Initialize(SceneFactory* sceneFactory) {
 }
 
 void SceneManager::Update() {
-    // SRVヒープを毎フレーム設定（これが重要）
-    if (srvManager_) {
-        srvManager_->PreDraw();
-    }
-
     // シーン切り替えチェック
     if (!nextScene_.empty()) {
         // デバッグ出力

@@ -36,8 +36,10 @@ class DirectXCommon
 public:
 	//初期化
 	void Initialize(WinApp* winApp);
+	//終了処理
+	void Finalize();
 	//描画前処理
-	void Begin();
+	void Begin(class SrvManager* srvManager);
 	//描画後処理
 	void End();
 

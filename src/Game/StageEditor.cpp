@@ -336,12 +336,6 @@ void StageEditor::DrawImGui() {
 }
 
 void StageEditor::DrawObjects() {
-    // 各オブジェクトの描画前にPreDrawを呼び出す
-    auto unoEngine = UnoEngine::GetInstance();
-    if (unoEngine && unoEngine->GetSrvManager()) {
-        unoEngine->GetSrvManager()->PreDraw();
-    }
-    
     for (auto& obj : gameObjects_) {
         // カメラを設定
         obj->object->SetCamera(camera_);

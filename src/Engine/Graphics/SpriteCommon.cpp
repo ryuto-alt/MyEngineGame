@@ -146,4 +146,8 @@ void SpriteCommon::GraphicsPipelineInitialize()
 	HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
+	
+	// シェーダーBlobを解放
+	vertexshaderBlob->Release();
+	pixelShaderBlob->Release();
 }

@@ -16,6 +16,9 @@ TextureManager* TextureManager::GetInstance()
 
 void TextureManager::Finalize()
 {
+    // テクスチャデータのクリア
+    textureDatas.clear();
+    
     delete instance;
     instance = nullptr;
 }
