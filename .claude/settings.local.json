@@ -3,7 +3,10 @@
     "allow": [
       "Bash(msbuild:*)",
       "Bash(grep:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(MSBuild.exe:*)",
+      "mcp__brave-search__brave_web_search",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

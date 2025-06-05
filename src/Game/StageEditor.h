@@ -1,6 +1,9 @@
 #pragma once
 #include "Model.h"
 #include "Object3d.h"
+#include "AnimatedObject3d.h"
+#include "FBXModel.h"
+#include "AnimatedRenderingPipeline.h"
 #include "Camera.h"
 #include "Input.h"
 #include <vector>
@@ -10,7 +13,11 @@
 
 struct GameObject {
     std::unique_ptr<Object3d> object;
+    std::unique_ptr<AnimatedObject3d> animatedObject;
+    std::shared_ptr<FBXModel> fbxModel;
     std::string name;
+    std::string modelPath;
+    bool isAnimated = false;
     bool hasCollision = true;
     bool hasGravity = true;
     Vector3 position = {0.0f, 0.0f, 0.0f};
@@ -111,6 +118,9 @@ private:
     DirectXCommon* dxCommon_ = nullptr;
     SpriteCommon* spriteCommon_ = nullptr;
     
+    // アニメーションパイプライン
+    std::unique_ptr<AnimatedRenderingPipeline> animatedPipeline_;
+    
     bool isEnabled_ = false;
     std::vector<std::unique_ptr<GameObject>> gameObjects_;
     
@@ -125,7 +135,8 @@ private:
         "Resources/Models/cube/cube.obj",
         "Resources/Models/sphere.obj",
         "Resources/Models/Cylinder/Cylinder.obj",
-        "Resources/06_02/plane.obj"
+        "Resources/06_02/plane.obj",
+        "Resources/Models/spider/Spider_3.fbx"
     };
     
     int selectedModelIndex_ = 0;

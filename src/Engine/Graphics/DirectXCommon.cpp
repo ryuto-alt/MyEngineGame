@@ -507,17 +507,20 @@ IDxcBlob* DirectXCommon::CompileShader(const std::wstring& filePath, const wchar
 
 	//警告・エラーがでていないか確認する
 	IDxcBlobUtf8* shaderError = nullptr;
-	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
+	IDxcBlobUtf16* shaderName = nullptr;
+	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), &shaderName);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 		Logger::Log(shaderError->GetStringPointer());
 		//警告。エラーダメ
 		shaderError->Release();
+		if (shaderName) shaderName->Release();
 		assert(false);
 	}
 
 	//コンパイル結果から実行用のバイナリ部分を取得
 	IDxcBlob* shaderBlob = nullptr;
-	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
+	IDxcBlobUtf16* objectName = nullptr;
+	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), &objectName);
 	assert(SUCCEEDED(hr));
 	//成功したログ
 	Logger::Log(StringUtility::ConvertString(std::format(L"Compile Succeeded,path:{}, profile:{}\n", filePath, profile)));
@@ -526,6 +529,12 @@ IDxcBlob* DirectXCommon::CompileShader(const std::wstring& filePath, const wchar
 	shaderResult->Release();
 	if (shaderError) {
 		shaderError->Release();
+	}
+	if (shaderName) {
+		shaderName->Release();
+	}
+	if (objectName) {
+		objectName->Release();
 	}
 	//実行用のバイナリ返却
 	return shaderBlob;

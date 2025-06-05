@@ -27,6 +27,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 
     // マテリアルリソースの作成
     materialResource_ = dxCommon_->CreateBufferResource(sizeof(Material));
+    materialConstBuffer_ = materialResource_;
     // マテリアルデータの書き込み
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
     materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -35,6 +36,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 
     // 変換行列リソースの作成
     transformationMatrixResource_ = dxCommon_->CreateBufferResource(sizeof(TransformationMatrix));
+    transformationMatrixConstBuffer_ = transformationMatrixResource_;
     // 変換行列データの書き込み
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
     transformationMatrixData_->WVP = MakeIdentity4x4();
@@ -42,6 +44,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 
     // ライトリソースの作成
     directionalLightResource_ = dxCommon_->CreateBufferResource(sizeof(DirectionalLight));
+    directionalLightConstBuffer_ = directionalLightResource_;
     // ライトデータの書き込み
     directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
     directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };

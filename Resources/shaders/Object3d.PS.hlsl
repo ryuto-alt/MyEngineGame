@@ -1,34 +1,31 @@
 #include "object3d.hlsli"
 
-struct Material
+cbuffer Material : register(b0)
 {
-    float32_t4 color;
-    int32_t enableLighting;
-    float32_t4x4 uvTransform;
+    float4 color;
+    int enableLighting;
+    float4x4 uvTransform;
 };
 
-struct DirectionalLight
+cbuffer DirectionalLight : register(b1)
 {
-    float32_t4 color;
-    float32_t3 direction;
-    float intensity;
+    float4 lightColor;
+    float3 lightDirection;
+    float lightIntensity;
 };
-
-ConstantBuffer<Material> gMaterial : register(b0);
-Texture2D<float32_t4> gTexture : register(t0);
+Texture2D<float4> gTexture : register(t0);
 SamplerState gSample : register(s0);
 
-ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 
 struct PixelShaderOutput
 {
-    float32_t4 color : SV_TARGET0;
+    float4 color : SV_TARGET0;
 };
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
-    float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
-    float32_t4 textureColor = gTexture.Sample(gSample, transformedUV.xy);
+    float4 transformedUV = mul(float4(input.texcoord, 0.0f, 1.0f), uvTransform);
+    float4 textureColor = gTexture.Sample(gSample, transformedUV.xy);
     
     // アルファ値が閾値未満の場合、そのピクセルを描画しない
     if (textureColor.a < 0.1f)
@@ -41,10 +38,10 @@ PixelShaderOutput main(VertexShaderOutput input)
     // 正規化された法線を使用（念のため再度正規化）
     float3 normal = normalize(input.normal);
     
-    if (gMaterial.enableLighting != 0)
+    if (enableLighting != 0)
     {
         // 半球ライティングを採用
-        float3 lightDir = normalize(-gDirectionalLight.direction);
+        float3 lightDir = normalize(-lightDirection);
         float NdotL = dot(normal, lightDir);
         
         // 滑らかなシェーディングのための改良されたライティング計算
@@ -56,15 +53,15 @@ PixelShaderOutput main(VertexShaderOutput input)
         rim = pow(rim, 3.0f) * 0.3f; // リム効果を調整
         
         // 最終的なライティング計算
-        float3 lighting = gDirectionalLight.color.rgb * diffuse * gDirectionalLight.intensity;
-        lighting += rim * gDirectionalLight.color.rgb; // リムライトを追加
+        float3 lighting = lightColor.rgb * diffuse * lightIntensity;
+        lighting += rim * lightColor.rgb; // リムライトを追加
         
-        output.color.rgb = gMaterial.color.rgb * textureColor.rgb * lighting;
-        output.color.a = gMaterial.color.a * textureColor.a;
+        output.color.rgb = color.rgb * textureColor.rgb * lighting;
+        output.color.a = color.a * textureColor.a;
     }
     else
     {
-        output.color = gMaterial.color * textureColor;
+        output.color = color * textureColor;
     }
     
     return output;

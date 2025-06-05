@@ -11,6 +11,13 @@ void StageEditor::Initialize(Camera* camera, Input* input, DirectXCommon* dxComm
     input_ = input;
     dxCommon_ = dxCommon;
     spriteCommon_ = spriteCommon;
+    
+    // アニメーションパイプラインの初期化
+    animatedPipeline_ = std::make_unique<AnimatedRenderingPipeline>();
+    animatedPipeline_->Initialize(dxCommon_);
+    
+    // デフォルトテクスチャを事前にロード
+    TextureManager::GetInstance()->LoadTexture("Resources/white.png");
 }
 
 void StageEditor::Update() {
@@ -59,7 +66,12 @@ void StageEditor::HandleInput() {
             GameObject& obj = *gameObjects_[selectedObjectIndex_];
             // prevStateの保存はコマンド登録時に行う
             obj.position = newPos;
-            obj.object->SetPosition(newPos);
+            
+            if (obj.isAnimated && obj.animatedObject) {
+                obj.animatedObject->SetPosition(newPos);
+            } else if (obj.object) {
+                obj.object->SetPosition(newPos);
+            }
         }
     } else {
         if (isDragging_ && selectedObjectIndex_ >= 0) {
@@ -75,27 +87,74 @@ void StageEditor::HandleInput() {
 
 void StageEditor::AddObject(const std::string& modelPath) {
     auto newObj = std::make_unique<GameObject>();
-    newObj->name = "Object_" + std::to_string(gameObjects_.size());
-    newObj->object = std::make_unique<Object3d>();
     
-    // Object3dの初期化
-    newObj->object->Initialize(dxCommon_, spriteCommon_);
+    // ファイル名から拡張子を除いたものを名前に使用
+    size_t lastSlash = modelPath.find_last_of("/\\");
+    size_t lastDot = modelPath.find_last_of(".");
+    std::string baseName = modelPath.substr(lastSlash + 1, lastDot - lastSlash - 1);
+    newObj->name = baseName + "_" + std::to_string(gameObjects_.size());
+    newObj->modelPath = modelPath;
     
-    // Modelの作成と読み込み
-    Model* model = new Model();
-    model->Initialize(dxCommon_);
-    
-    // ファイルパスからディレクトリとファイル名を分離
-    size_t lastSlash = modelPath.find_last_of("/");
-    std::string directory = modelPath.substr(0, lastSlash + 1);
-    std::string filename = modelPath.substr(lastSlash + 1);
-    
-    model->LoadFromObj(directory, filename);
-    newObj->object->SetModel(model);
-    
-    newObj->object->SetPosition(newObj->position);
-    newObj->object->SetScale(newObj->scale);
-    newObj->object->SetRotation(newObj->rotation);
+    // FBXファイルかOBJファイルかチェック
+    if (modelPath.find(".fbx") != std::string::npos || modelPath.find(".FBX") != std::string::npos) {
+        // FBXファイルの場合
+        newObj->isAnimated = true;
+        newObj->animatedObject = std::make_unique<AnimatedObject3d>();
+        newObj->animatedObject->Initialize(dxCommon_, spriteCommon_);
+        
+        // FBXモデルの読み込み
+        newObj->fbxModel = std::make_shared<FBXModel>();
+        newObj->fbxModel->Initialize(dxCommon_);
+        
+        if (newObj->fbxModel->LoadFromFile(modelPath)) {
+            OutputDebugStringA(("StageEditor: FBX model loaded successfully: " + modelPath + "\n").c_str());
+            newObj->animatedObject->SetFBXModel(newObj->fbxModel);
+            
+            // テクスチャを事前にロード
+            const auto& materials = newObj->fbxModel->GetMaterials();
+            OutputDebugStringA(("StageEditor: Material count: " + std::to_string(materials.size()) + "\n").c_str());
+            for (const auto& material : materials) {
+                if (!material.diffuseTexture.empty()) {
+                    OutputDebugStringA(("StageEditor: Loading texture: " + material.diffuseTexture + "\n").c_str());
+                    TextureManager::GetInstance()->LoadTexture(material.diffuseTexture);
+                }
+            }
+            
+            // アニメーションがあれば自動再生
+            newObj->animatedObject->PlayAnimation("Walk", true);
+        } else {
+            OutputDebugStringA(("StageEditor: Failed to load FBX model: " + modelPath + "\n").c_str());
+        }
+        
+        newObj->animatedObject->SetPosition(newObj->position);
+        // Spiderモデルはデフォルトサイズのまま
+        newObj->animatedObject->SetScale(newObj->scale);
+        newObj->animatedObject->SetRotation(newObj->rotation);
+        newObj->animatedObject->SetCamera(camera_);
+        
+    } else {
+        // OBJファイルの場合
+        newObj->isAnimated = false;
+        newObj->object = std::make_unique<Object3d>();
+        newObj->object->Initialize(dxCommon_, spriteCommon_);
+        
+        // Modelの作成と読み込み
+        Model* model = new Model();
+        model->Initialize(dxCommon_);
+        
+        // ファイルパスからディレクトリとファイル名を分離
+        size_t lastSlash = modelPath.find_last_of("/");
+        std::string directory = modelPath.substr(0, lastSlash + 1);
+        std::string filename = modelPath.substr(lastSlash + 1);
+        
+        model->LoadFromObj(directory, filename);
+        newObj->object->SetModel(model);
+        
+        newObj->object->SetPosition(newObj->position);
+        newObj->object->SetScale(newObj->scale);
+        newObj->object->SetRotation(newObj->rotation);
+        newObj->object->SetCamera(camera_);
+    }
     
     newObj->hasCollision = newObjectHasCollision_;
     newObj->hasGravity = newObjectHasGravity_;
@@ -151,9 +210,16 @@ void StageEditor::TransformObject(size_t index, const Vector3& position, const V
     obj.position = position;
     obj.rotation = rotation;
     obj.scale = scale;
-    obj.object->SetPosition(position);
-    obj.object->SetRotation(rotation);
-    obj.object->SetScale(scale);
+    
+    if (obj.isAnimated && obj.animatedObject) {
+        obj.animatedObject->SetPosition(position);
+        obj.animatedObject->SetRotation(rotation);
+        obj.animatedObject->SetScale(scale);
+    } else if (obj.object) {
+        obj.object->SetPosition(position);
+        obj.object->SetRotation(rotation);
+        obj.object->SetScale(scale);
+    }
     
     PushCommand(std::move(cmd));
 }
@@ -179,7 +245,11 @@ void StageEditor::Undo() {
                 obj.position = cmd->previousState.position;
                 obj.rotation = cmd->previousState.rotation;
                 obj.scale = cmd->previousState.scale;
-                if (obj.object) {
+                if (obj.isAnimated && obj.animatedObject) {
+                    obj.animatedObject->SetPosition(cmd->previousState.position);
+                    obj.animatedObject->SetRotation(cmd->previousState.rotation);
+                    obj.animatedObject->SetScale(cmd->previousState.scale);
+                } else if (obj.object) {
                     obj.object->SetPosition(cmd->previousState.position);
                     obj.object->SetRotation(cmd->previousState.rotation);
                     obj.object->SetScale(cmd->previousState.scale);
@@ -214,7 +284,11 @@ void StageEditor::Redo() {
                 obj.position = cmd->newState.position;
                 obj.rotation = cmd->newState.rotation;
                 obj.scale = cmd->newState.scale;
-                if (obj.object) {
+                if (obj.isAnimated && obj.animatedObject) {
+                    obj.animatedObject->SetPosition(cmd->newState.position);
+                    obj.animatedObject->SetRotation(cmd->newState.rotation);
+                    obj.animatedObject->SetScale(cmd->newState.scale);
+                } else if (obj.object) {
                     obj.object->SetPosition(cmd->newState.position);
                     obj.object->SetRotation(cmd->newState.rotation);
                     obj.object->SetScale(cmd->newState.scale);
@@ -315,10 +389,27 @@ void StageEditor::DrawImGui() {
             ImGui::Checkbox("Collision", &obj.hasCollision);
             ImGui::Checkbox("Gravity", &obj.hasGravity);
             
+            if (obj.isAnimated) {
+                ImGui::Text("Type: Animated (FBX)");
+                if (obj.animatedObject && obj.animatedObject->IsAnimationPlaying()) {
+                    ImGui::Text("Animation: Playing");
+                } else {
+                    ImGui::Text("Animation: Stopped");
+                }
+            } else {
+                ImGui::Text("Type: Static (OBJ)");
+            }
+            
             if (changed) {
-                obj.object->SetPosition(obj.position);
-                obj.object->SetRotation(obj.rotation);
-                obj.object->SetScale(obj.scale);
+                if (obj.isAnimated && obj.animatedObject) {
+                    obj.animatedObject->SetPosition(obj.position);
+                    obj.animatedObject->SetRotation(obj.rotation);
+                    obj.animatedObject->SetScale(obj.scale);
+                } else if (obj.object) {
+                    obj.object->SetPosition(obj.position);
+                    obj.object->SetRotation(obj.rotation);
+                    obj.object->SetScale(obj.scale);
+                }
             }
             
             if (ImGui::Button(("Delete##" + std::to_string(i)).c_str())) {
@@ -336,12 +427,41 @@ void StageEditor::DrawImGui() {
 }
 
 void StageEditor::DrawObjects() {
+    // まず通常のオブジェクトを描画
     for (auto& obj : gameObjects_) {
-        // カメラを設定
-        obj->object->SetCamera(camera_);
-        // Update()を呼んで変換行列を更新
-        obj->object->Update();
-        // 描画
-        obj->object->Draw();
+        if (!obj->isAnimated && obj->object) {
+            // カメラを設定
+            obj->object->SetCamera(camera_);
+            // Update()を呼んで変換行列を更新
+            obj->object->Update();
+            // 描画
+            obj->object->Draw();
+        }
+    }
+    
+    // アニメーションオブジェクトは専用パイプラインで描画
+    bool hasAnimatedObjects = false;
+    for (auto& obj : gameObjects_) {
+        if (obj->isAnimated) {
+            hasAnimatedObjects = true;
+            break;
+        }
+    }
+    
+    if (hasAnimatedObjects && animatedPipeline_) {
+        OutputDebugStringA("StageEditor: Drawing animated objects\n");
+        animatedPipeline_->Bind();
+        
+        for (auto& obj : gameObjects_) {
+            if (obj->isAnimated && obj->animatedObject) {
+                OutputDebugStringA(("StageEditor: Drawing animated object: " + obj->name + "\n").c_str());
+                // カメラを設定
+                obj->animatedObject->SetCamera(camera_);
+                // Update()を呼んで変換行列を更新
+                obj->animatedObject->Update();
+                // 描画
+                obj->animatedObject->Draw();
+            }
+        }
     }
 }

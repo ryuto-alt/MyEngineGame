@@ -21,6 +21,46 @@ void GamePlayScene::Initialize() {
     camera_->SetRotate({ 0.1f, 0.0f, 0.0f });
     camera_->Update();
     
+    // デバッグモードでない場合のみ独自のスパイダーを作成
+    if (!isDebugMode_) {
+        // アニメーションパイプラインの初期化
+        animatedPipeline_ = std::make_unique<AnimatedRenderingPipeline>();
+        animatedPipeline_->Initialize(dxCommon_);
+        
+        // Spider_3.fbxモデルの読み込み
+        spiderModel_ = std::make_shared<FBXModel>();
+        spiderModel_->Initialize(dxCommon_);
+        if (spiderModel_->LoadFromFile("Resources/Models/spider/Spider_3.fbx")) {
+            OutputDebugStringA("Spider_3.fbx loaded successfully\n");
+            
+            // スパイダーオブジェクトの作成と初期化
+            spiderObject_ = std::make_unique<AnimatedObject3d>();
+            spiderObject_->Initialize(dxCommon_, spriteCommon_);
+            spiderObject_->SetFBXModel(spiderModel_);
+            spiderObject_->SetPosition({ 0.0f, 0.0f, 0.0f });
+            spiderObject_->SetScale({ 1.0f, 1.0f, 1.0f });
+            spiderObject_->SetCamera(camera_);
+            
+            // デフォルトテクスチャを事前にロード
+            OutputDebugStringA("Pre-loading default white texture\n");
+            TextureManager::GetInstance()->LoadTexture("Resources/white.png");
+            
+            // スパイダーのテクスチャを事前にロード
+            const auto& materials = spiderModel_->GetMaterials();
+            for (const auto& material : materials) {
+                if (!material.diffuseTexture.empty()) {
+                    OutputDebugStringA(("Pre-loading texture: " + material.diffuseTexture + "\n").c_str());
+                    TextureManager::GetInstance()->LoadTexture(material.diffuseTexture);
+                }
+            }
+            
+            // アニメーションの再生開始
+            spiderObject_->PlayAnimation("Walk", true);
+        } else {
+            OutputDebugStringA("Failed to load Spider_3.fbx\n");
+        }
+    }
+    
     // ステージエディターの初期化
     if (isDebugMode_) {
         OutputDebugStringA("GamePlayScene: Debug mode is ON, initializing StageEditor\n");
@@ -59,6 +99,11 @@ void GamePlayScene::Update() {
         }
     }
     
+    // スパイダーアニメーションの更新
+    if (spiderObject_) {
+        spiderObject_->Update();
+    }
+    
     // ステージエディターの更新
     if (stageEditor_) {
         stageEditor_->Update();
@@ -75,6 +120,12 @@ void GamePlayScene::Draw() {
     // ステージエディターのオブジェクト描画
     if (stageEditor_) {
         stageEditor_->DrawObjects();
+    }
+    
+    // デバッグモードでない場合のみGamePlaySceneのスパイダーを描画
+    if (!isDebugMode_ && animatedPipeline_ && spiderObject_) {
+        animatedPipeline_->Bind();
+        spiderObject_->Draw();
     }
 
     // ImGuiでシーン情報のみ表示
@@ -98,6 +149,12 @@ void GamePlayScene::Draw() {
     ImGui::Text("回転: (%.2f, %.2f, %.2f)", camRot.x, camRot.y, camRot.z);
     ImGui::Separator();
     
+    ImGui::Text("スパイダーアニメーション:");
+    if (spiderObject_) {
+        ImGui::Text("状態: %s", spiderObject_->IsAnimationPlaying() ? "再生中" : "停止");
+    }
+    ImGui::Separator();
+    
     ImGui::Text("操作説明:");
     if (!stageEditor_ || !stageEditor_->IsEnabled()) {
         ImGui::Text("ESC - タイトルに戻る");
@@ -112,6 +169,9 @@ void GamePlayScene::Draw() {
 }
 
 void GamePlayScene::Finalize() {
+    spiderObject_.reset();
+    spiderModel_.reset();
+    animatedPipeline_.reset();
     stageEditor_.reset();
     OutputDebugStringA("GamePlayScene: 終了処理完了\n");
 }

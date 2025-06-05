@@ -1,7 +1,8 @@
 #pragma once
 #include "Model.h"
-#include "Matrix4x4.h"
-#include "Vector3.h"
+#include "Math/Matrix4x4.h"
+#include "Math/Vector3.h"
+#include "Math/Mymath.h"
 #include "math.h"
 #include "Camera.h"
 
@@ -61,14 +62,23 @@ public:
     void SetDirectionalLight(const DirectionalLight& light) { *directionalLightData_ = light; }
     const DirectionalLight& GetDirectionalLight() const { return *directionalLightData_; }
 
-private:
-    // モデル
-    Model* model_;
+protected:
+    // マテリアルリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> materialConstBuffer_;
+    // 変換行列リソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixConstBuffer_;
+    // ライトリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightConstBuffer_;
 
+protected:
     // DirectXCommon
     DirectXCommon* dxCommon_;
     // SpriteCommon
     SpriteCommon* spriteCommon_;
+
+private:
+    // モデル
+    Model* model_;
 
     // マテリアルリソース
     Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;

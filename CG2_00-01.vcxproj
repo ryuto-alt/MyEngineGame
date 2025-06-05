@@ -116,6 +116,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="src\Engine\Graphics\DirectXCommon.cpp" />
     <ClCompile Include="src\Engine\Graphics\Model.cpp" />
     <ClCompile Include="src\Engine\Graphics\Object3d.cpp" />
+    <ClCompile Include="src\Engine\Graphics\FBXModel.cpp" />
+    <ClCompile Include="src\Engine\Graphics\AnimatedObject3d.cpp" />
+    <ClCompile Include="src\Engine\Graphics\AnimatedRenderingPipeline.cpp" />
     <ClCompile Include="src\Engine\Graphics\RenderingPipeline.cpp" />
     <ClCompile Include="src\Engine\Graphics\Sprite.cpp" />
     <ClCompile Include="src\Engine\Graphics\SpriteCommon.cpp" />
@@ -166,6 +169,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="src\Engine\Graphics\DirectXCommon.h" />
     <ClInclude Include="src\Engine\Graphics\Model.h" />
     <ClInclude Include="src\Engine\Graphics\Object3d.h" />
+    <ClInclude Include="src\Engine\Graphics\FBXModel.h" />
+    <ClInclude Include="src\Engine\Graphics\AnimatedObject3d.h" />
+    <ClInclude Include="src\Engine\Graphics\AnimatedRenderingPipeline.h" />
     <ClInclude Include="src\Engine\Graphics\RenderingPipeline.h" />
     <ClInclude Include="src\Engine\Graphics\ResourceObject.h" />
     <ClInclude Include="src\Engine\Graphics\Sprite.h" />
@@ -226,6 +232,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Object3d.VS.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\AnimatedObject3d.VS.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
