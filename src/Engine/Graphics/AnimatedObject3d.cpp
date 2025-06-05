@@ -114,6 +114,9 @@ void AnimatedObject3d::Draw() {
     OutputDebugStringA("AnimatedObject3d::Draw - Starting draw\n");
     auto commandList = dxCommon_->GetCommandList();
     
+    // 親クラスのUpdateを呼び出して変換行列を更新
+    Object3d::Update();
+    
     // マテリアル定数バッファの更新（デフォルト値）
     Material* materialData = nullptr;
     materialConstBuffer_->Map(0, nullptr, reinterpret_cast<void**>(&materialData));

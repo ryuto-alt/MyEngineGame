@@ -16,9 +16,9 @@ void GamePlayScene::Initialize() {
     assert(spriteCommon_);
     assert(camera_);
 
-    // カメラの初期設定
-    camera_->SetTranslate({ 0.0f, 5.0f, -20.0f });
-    camera_->SetRotate({ 0.1f, 0.0f, 0.0f });
+    // カメラの初期設定（より近くから見る）
+    camera_->SetTranslate({ 0.0f, 50.0f, -100.0f });  // より遠くから見る
+    camera_->SetRotate({ 0.3f, 0.0f, 0.0f });  // 少し下向きに
     camera_->Update();
     
     // デバッグモードでない場合のみ独自のスパイダーを作成
@@ -27,18 +27,22 @@ void GamePlayScene::Initialize() {
         animatedPipeline_ = std::make_unique<AnimatedRenderingPipeline>();
         animatedPipeline_->Initialize(dxCommon_);
         
-        // Spider_3.fbxモデルの読み込み
+        // Spider.fbxモデルの読み込み
         spiderModel_ = std::make_shared<FBXModel>();
         spiderModel_->Initialize(dxCommon_);
-        if (spiderModel_->LoadFromFile("Resources/Models/spider/Spider_3.fbx")) {
-            OutputDebugStringA("Spider_3.fbx loaded successfully\n");
+        if (spiderModel_->LoadFromFile("Resources/Models/spider/Spider_2.fbx")) {
+            OutputDebugStringA("Spider_2.fbx loaded successfully\n");
+            
+            // メッシュとアニメーション情報のログ出力
+            OutputDebugStringA(("GamePlayScene: Spider model - Meshes: " + std::to_string(spiderModel_->GetMeshes().size()) + 
+                               ", Animations: " + std::to_string(spiderModel_->GetAnimations().size()) + "\n").c_str());
             
             // スパイダーオブジェクトの作成と初期化
             spiderObject_ = std::make_unique<AnimatedObject3d>();
             spiderObject_->Initialize(dxCommon_, spriteCommon_);
             spiderObject_->SetFBXModel(spiderModel_);
-            spiderObject_->SetPosition({ 0.0f, 0.0f, 0.0f });
-            spiderObject_->SetScale({ 1.0f, 1.0f, 1.0f });
+            spiderObject_->SetPosition({ 0.0f, 0.0f, 0.0f });  // カメラの正面に配置
+            spiderObject_->SetScale({ 5.0f, 5.0f, 5.0f });  // スケールを大きく
             spiderObject_->SetCamera(camera_);
             
             // デフォルトテクスチャを事前にロード
@@ -50,14 +54,51 @@ void GamePlayScene::Initialize() {
             for (const auto& material : materials) {
                 if (!material.diffuseTexture.empty()) {
                     OutputDebugStringA(("Pre-loading texture: " + material.diffuseTexture + "\n").c_str());
-                    TextureManager::GetInstance()->LoadTexture(material.diffuseTexture);
+                    // テクスチャパスを修正（バックスラッシュをフォワードスラッシュに変換）
+                    std::string texturePath = material.diffuseTexture;
+                    std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
+                    
+                    // Resources/Models/spider/以下のテクスチャを探す
+                    std::string basePath = "Resources/Models/spider/";
+                    size_t pos = texturePath.find_last_of("/");
+                    if (pos != std::string::npos) {
+                        texturePath = basePath + texturePath.substr(pos + 1);
+                    } else {
+                        texturePath = basePath + texturePath;
+                    }
+                    
+                    OutputDebugStringA(("Trying to load texture from: " + texturePath + "\n").c_str());
+                    TextureManager::GetInstance()->LoadTexture(texturePath);
                 }
             }
             
             // アニメーションの再生開始
-            spiderObject_->PlayAnimation("Walk", true);
+            // FBXファイルにアニメーションが含まれていれば自動的に再生される
+            if (!spiderModel_->IsAnimationPlaying()) {
+                // アニメーションが自動再生されていない場合、手動で開始
+                const auto& animations = spiderModel_->GetAnimations();
+                if (!animations.empty()) {
+                    // 歩行アニメーションを優先的に選択
+                    std::string animName = "";
+                    if (animations.find("walk_ani_vor") != animations.end()) {
+                        animName = "walk_ani_vor";
+                    } else if (animations.find("walk_ani_back") != animations.end()) {
+                        animName = "walk_ani_back";
+                    } else if (animations.find("walk_left") != animations.end()) {
+                        animName = "walk_left";
+                    } else if (animations.find("walk_right") != animations.end()) {
+                        animName = "walk_right";
+                    } else {
+                        animName = animations.begin()->first;
+                    }
+                    spiderObject_->PlayAnimation(animName, true);
+                    OutputDebugStringA(("GamePlayScene: Playing animation '" + animName + "'\n").c_str());
+                } else {
+                    OutputDebugStringA("GamePlayScene: No animations found in FBX file\n");
+                }
+            }
         } else {
-            OutputDebugStringA("Failed to load Spider_3.fbx\n");
+            OutputDebugStringA("Failed to load Spider_2.fbx\n");
         }
     }
     

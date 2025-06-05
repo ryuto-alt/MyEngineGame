@@ -32,7 +32,7 @@ protected:
     std::unique_ptr<AnimatedObject3d> spiderObject_;
     
 #ifdef _DEBUG
-    bool isDebugMode_ = true;
+    bool isDebugMode_ = false;  // FBXアニメーションを表示するために無効化
 #else
     bool isDebugMode_ = false;
 #endif

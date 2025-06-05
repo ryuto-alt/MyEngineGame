@@ -6,7 +6,15 @@
       "Bash(find:*)",
       "Bash(MSBuild.exe:*)",
       "mcp__brave-search__brave_web_search",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(rm:*)",
+      "Bash(Build /m)",
+      "Bash(/mnt/c/Program\\ Files/Microsoft\\ Visual\\ Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /m)",
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /m)",
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /m /t:Build)",
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /m /t:Clean)",
+      "Bash(Build)",
+      "Bash(./CG2_00-01.exe)"
     ],
     "deny": []
   }

@@ -27,20 +27,30 @@ VertexShaderOutput main(VertexShaderInput input) {
     uint idx2 = min(input.boneIndices.z, 127);
     uint idx3 = min(input.boneIndices.w, 127);
     
-    float4x4 skinMatrix = 
-        bones[idx0] * input.weight.x +
-        bones[idx1] * input.weight.y +
-        bones[idx2] * input.weight.z +
-        bones[idx3] * input.weight.w;
+    // ウェイトの合計が0の場合は、デフォルトのボーン（0番）を使用
+    float totalWeight = input.weight.x + input.weight.y + input.weight.z + input.weight.w;
+    if (totalWeight < 0.01f) {
+        // スキニングなしの場合
+        output.position = mul(WVP, input.position);
+        output.normal = normalize(mul((float3x3)World, input.normal));
+    } else {
+        // スキニングありの場合
+        float4x4 skinMatrix = 
+            bones[idx0] * input.weight.x +
+            bones[idx1] * input.weight.y +
+            bones[idx2] * input.weight.z +
+            bones[idx3] * input.weight.w;
+        
+        // スキニングされた頂点位置
+        float4 skinnedPos = mul(skinMatrix, input.position);
+        output.position = mul(WVP, skinnedPos);
+        
+        // スキニングされた法線
+        float3 skinnedNormal = mul((float3x3)skinMatrix, input.normal);
+        output.normal = normalize(mul((float3x3)World, skinnedNormal));
+    }
     
-    // スキニングされた頂点位置
-    float4 skinnedPos = mul(skinMatrix, input.position);
-    output.position = mul(WVP, skinnedPos);
     output.texcoord = input.texcoord;
-    
-    // スキニングされた法線
-    float3 skinnedNormal = mul((float3x3)skinMatrix, input.normal);
-    output.normal = normalize(mul((float3x3)World, skinnedNormal));
     
     return output;
 }

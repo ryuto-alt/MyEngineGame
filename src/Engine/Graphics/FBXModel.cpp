@@ -2,6 +2,18 @@
 #include "DirectXCommon.h"
 #include "TextureManager.h"
 #include "Math/Mymath.h"
+
+// FBX SDKが利用可能な場合はFBXLoaderを使用
+// 注: FBX SDKがインストールされていない場合はコメントアウトしてください
+#define USE_FBX_SDK
+
+#ifdef USE_FBX_SDK
+#include "FBXLoader.h"
+#else
+#include "SimpleFBXLoader.h"
+#endif
+
+
 #include <fstream>
 #include <sstream>
 #include <algorithm>
@@ -25,6 +37,7 @@ void FBXModel::Initialize(DirectXCommon* dxCommon) {
 }
 
 bool FBXModel::LoadFromFile(const std::string& filename) {
+    // FBX SDKが利用可能かチェック
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open()) {
         return false;
@@ -34,6 +47,62 @@ bool FBXModel::LoadFromFile(const std::string& filename) {
     file.read(header, 23);
     file.close();
 
+    // FBXファイルの場合、FBXLoaderを使用
+    if (std::string(header, 21) == "Kaydara FBX Binary  " || filename.find(".fbx") != std::string::npos) {
+#ifdef USE_FBX_SDK
+        // FBX SDKを使用して読み込み
+        auto loader = FBXLoader::GetInstance();
+#else
+        // SimpleFBXLoaderを使用して読み込み
+        auto loader = SimpleFBXLoader::GetInstance();
+#endif
+        if (!loader->Initialize()) {
+            OutputDebugStringA("Failed to initialize FBX Loader\n");
+            return ParseFBXBinary(filename); // フォールバック
+        }
+        
+        auto loadedModel = loader->LoadModelFromFile(filename);
+        if (loadedModel) {
+            // データをコピー
+            meshes = std::move(loadedModel->meshes);
+            materials = std::move(loadedModel->materials);
+            bones = std::move(loadedModel->bones);
+            animations = std::move(loadedModel->animations);
+            
+            // ボーン行列を初期化（単位行列で初期化）
+            boneMatrices.resize(bones.size());
+            for (size_t i = 0; i < bones.size(); i++) {
+                // 初期状態は単位行列を使用
+                boneMatrices[i] = Matrix4x4::MakeIdentity();
+            }
+            
+            // デフォルトアニメーションを設定
+            if (!animations.empty()) {
+                OutputDebugStringA("FBXModel: Available animations:\n");
+                for (const auto& anim : animations) {
+                    OutputDebugStringA(("  - " + anim.first + " (duration: " + 
+                                      std::to_string(anim.second.duration) + "s)\n").c_str());
+                }
+                currentAnimation = animations.begin()->first;
+                isPlaying = true;
+                isLooping = true;
+                OutputDebugStringA(("FBXModel: Default animation set to '" + currentAnimation + "'\n").c_str());
+            } else {
+                OutputDebugStringA("FBXModel: No animations found in the FBX file\n");
+            }
+            
+            if (dxCommon_) {
+                CreateBuffers();
+            }
+            
+            loader->Finalize();
+            return true;
+        }
+        
+        loader->Finalize();
+    }
+    
+    // FBXLoaderが失敗した場合、従来の方法を使用
     if (std::string(header, 21) == "Kaydara FBX Binary  ") {
         return ParseFBXBinary(filename);
     } else {
@@ -496,17 +565,38 @@ void FBXModel::UpdateAnimation(float deltaTime) {
 }
 
 void FBXModel::CalculateBoneTransforms() {
+    // デバッグ: ボーン行列計算の確認
+    static int frameCount = 0;
+    bool debugThisFrame = (frameCount++ % 60 == 0);  // 1秒ごとにデバッグ
+    
+    if (debugThisFrame) {
+        OutputDebugStringA(("FBXModel::CalculateBoneTransforms - Calculating transforms for " + 
+                          std::to_string(bones.size()) + " bones\n").c_str());
+    }
+    
+    // 各ボーンのグローバル変換を計算
+    std::vector<Matrix4x4> globalTransforms(bones.size());
+    
     for (size_t i = 0; i < bones.size(); i++) {
-        Matrix4x4 parentTransform = Matrix4x4::MakeIdentity();
-        if (bones[i].parentIndex >= 0) {
-            parentTransform = boneMatrices[bones[i].parentIndex];
+        if (bones[i].parentIndex >= 0 && bones[i].parentIndex < static_cast<int>(bones.size())) {
+            // 親のグローバル変換 * 自身のローカル変換
+            globalTransforms[i] = bones[i].currentTransform * globalTransforms[bones[i].parentIndex];
+        } else {
+            // ルートボーンの場合
+            globalTransforms[i] = bones[i].currentTransform;
         }
         
-        // ボーンの最終変換 = アニメーション変換 * 親の変換
-        Matrix4x4 globalTransform = bones[i].currentTransform * parentTransform;
+        // スキニング行列 = グローバル変換 * オフセット行列
+        boneMatrices[i] = globalTransforms[i] * bones[i].offsetMatrix;
         
-        // スキニング行列 = グローバル変換 * バインドポーズの逆行列
-        boneMatrices[i] = globalTransform * bones[i].offsetMatrix;
+        // デバッグ: 最初のボーンの行列を確認
+        if (debugThisFrame && i == 0) {
+            OutputDebugStringA(("FBXModel::CalculateBoneTransforms - Bone[0] matrix [0][0]: " + 
+                              std::to_string(boneMatrices[i].m[0][0]) + " [1][1]: " +
+                              std::to_string(boneMatrices[i].m[1][1]) + " [2][2]: " +
+                              std::to_string(boneMatrices[i].m[2][2]) + " [3][3]: " +
+                              std::to_string(boneMatrices[i].m[3][3]) + "\n").c_str());
+        }
     }
 }
 
@@ -537,10 +627,68 @@ Matrix4x4 FBXModel::InterpolateTransform(const AnimationChannel& channel, float 
     Vector4 rot = Vector4::Lerp(key1.rotation, key2.rotation, factor);
     Vector3 scale = Vector3::Lerp(key1.scale, key2.scale, factor);
     
-    // 回転行列を作成（簡易的にY軸回転のみ）
-    float angle = rot.w;  // wに角度を格納
-    Vector3 rotateEuler(0, angle, 0);  // Y軸回転
+    // クォータニオンを正規化
+    float length = sqrtf(rot.x * rot.x + rot.y * rot.y + rot.z * rot.z + rot.w * rot.w);
+    if (length > 0.0f) {
+        rot.x /= length;
+        rot.y /= length;
+        rot.z /= length;
+        rot.w /= length;
+    }
     
-    // MakeAffineMatrixを使って変換行列を作成
-    return MakeAffineMatrix(scale, rotateEuler, pos);
+    // クォータニオンから回転行列を作成
+    Matrix4x4 rotMatrix;
+    float xx = rot.x * rot.x;
+    float xy = rot.x * rot.y;
+    float xz = rot.x * rot.z;
+    float xw = rot.x * rot.w;
+    float yy = rot.y * rot.y;
+    float yz = rot.y * rot.z;
+    float yw = rot.y * rot.w;
+    float zz = rot.z * rot.z;
+    float zw = rot.z * rot.w;
+    
+    rotMatrix.m[0][0] = 1.0f - 2.0f * (yy + zz);
+    rotMatrix.m[0][1] = 2.0f * (xy + zw);
+    rotMatrix.m[0][2] = 2.0f * (xz - yw);
+    rotMatrix.m[0][3] = 0.0f;
+    
+    rotMatrix.m[1][0] = 2.0f * (xy - zw);
+    rotMatrix.m[1][1] = 1.0f - 2.0f * (xx + zz);
+    rotMatrix.m[1][2] = 2.0f * (yz + xw);
+    rotMatrix.m[1][3] = 0.0f;
+    
+    rotMatrix.m[2][0] = 2.0f * (xz + yw);
+    rotMatrix.m[2][1] = 2.0f * (yz - xw);
+    rotMatrix.m[2][2] = 1.0f - 2.0f * (xx + yy);
+    rotMatrix.m[2][3] = 0.0f;
+    
+    rotMatrix.m[3][0] = 0.0f;
+    rotMatrix.m[3][1] = 0.0f;
+    rotMatrix.m[3][2] = 0.0f;
+    rotMatrix.m[3][3] = 1.0f;
+    
+    // スケール行列
+    Matrix4x4 scaleMatrix = Matrix4x4::MakeScale(scale);
+    
+    // 移動行列
+    Matrix4x4 transMatrix = Matrix4x4::MakeTranslation(pos);
+    
+    // 変換行列 = スケール * 回転 * 移動
+    return scaleMatrix * rotMatrix * transMatrix;
+}
+
+int FBXModel::GetBoneIndex(const std::string& boneName) const {
+    for (size_t i = 0; i < bones.size(); i++) {
+        if (bones[i].name == boneName) {
+            return static_cast<int>(i);
+        }
+    }
+    return -1;
+}
+
+void FBXModel::SetBoneOffsetMatrix(int boneIndex, const Matrix4x4& matrix) {
+    if (boneIndex >= 0 && boneIndex < static_cast<int>(bones.size())) {
+        bones[boneIndex].offsetMatrix = matrix;
+    }
 }

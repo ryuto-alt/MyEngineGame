@@ -15,6 +15,23 @@ struct Matrix4x4 {
 		return result;
 	}
 	
+	static Matrix4x4 MakeScale(const Vector3& scale) {
+		Matrix4x4 result = {};
+		result.m[0][0] = scale.x;
+		result.m[1][1] = scale.y;
+		result.m[2][2] = scale.z;
+		result.m[3][3] = 1.0f;
+		return result;
+	}
+	
+	static Matrix4x4 MakeTranslation(const Vector3& translate) {
+		Matrix4x4 result = MakeIdentity();
+		result.m[3][0] = translate.x;
+		result.m[3][1] = translate.y;
+		result.m[3][2] = translate.z;
+		return result;
+	}
+	
 	static Matrix4x4 MakeAffineTransform(const Vector3& scale, const Vector4& rotation, const Vector3& translate) {
 		Matrix4x4 result = MakeIdentity();
 		
