@@ -8,7 +8,9 @@ Camera::Camera() :
     fovY_(0.45f),
     aspectRatio_(16.0f / 9.0f),
     nearClip_(0.1f),
-    farClip_(100.0f)
+    farClip_(100.0f),
+    mouseSensitivity_(0.003f),
+    cameraMode_(0)
 {
     // トランスフォームの初期設定
     transform_.scale = { 1.0f, 1.0f, 1.0f };
@@ -104,6 +106,80 @@ float Camera::GetNearClip() const {
 
 float Camera::GetFarClip() const {
     return farClip_;
+}
+
+// マウス視点移動関連
+void Camera::ProcessMouseInput(float deltaX, float deltaY) {
+    if (cameraMode_ == 0) { // フリーカメラモード
+        // Y軸回転 (水平回転)
+        transform_.rotate.y += deltaX * mouseSensitivity_;
+        
+        // X軸回転 (垂直回転) - 制限あり
+        transform_.rotate.x += deltaY * mouseSensitivity_;
+        
+        // X軸回転を-90度から50度に制限
+        const float maxPitch = 1.57f;  // 90度
+        if (transform_.rotate.x > maxPitch) {
+            transform_.rotate.x = maxPitch;
+        }
+        if (transform_.rotate.x < -maxPitch) {
+            transform_.rotate.x = -maxPitch;
+        }
+    }
+}
+
+void Camera::SetMouseSensitivity(float sensitivity) {
+    mouseSensitivity_ = sensitivity;
+}
+
+void Camera::SetCameraMode(int mode) {
+    cameraMode_ = mode;
+}
+
+int Camera::GetCameraMode() const {
+    return cameraMode_;
+}
+
+void Camera::ToggleCameraMode() {
+    cameraMode_ = (cameraMode_ + 1) % 2;  // 0と 1を切り替え
+}
+
+// カメラ移動関連（フリーカメラモード用）
+void Camera::MoveForward(float distance) {
+    Vector3 forward = GetForwardVector();
+    transform_.translate.x += forward.x * distance;
+    transform_.translate.y += forward.y * distance;
+    transform_.translate.z += forward.z * distance;
+}
+
+void Camera::MoveRight(float distance) {
+    Vector3 right = GetRightVector();
+    transform_.translate.x += right.x * distance;
+    transform_.translate.y += right.y * distance;
+    transform_.translate.z += right.z * distance;
+}
+
+void Camera::MoveUp(float distance) {
+    Vector3 up = GetUpVector();
+    transform_.translate.x += up.x * distance;
+    transform_.translate.y += up.y * distance;
+    transform_.translate.z += up.z * distance;
+}
+
+Vector3 Camera::GetForwardVector() const {
+    // カメラのワールド行列からZ軸方向（前方向）を取得
+    // DirectXは左手座標系でZ+が前方向
+    return { worldMatrix_.m[2][0], worldMatrix_.m[2][1], worldMatrix_.m[2][2] };
+}
+
+Vector3 Camera::GetRightVector() const {
+    // カメラのワールド行列からX軸方向（右方向）を取得
+    return { worldMatrix_.m[0][0], worldMatrix_.m[0][1], worldMatrix_.m[0][2] };
+}
+
+Vector3 Camera::GetUpVector() const {
+    // カメラのワールド行列からY軸方向（上方向）を取得
+    return { worldMatrix_.m[1][0], worldMatrix_.m[1][1], worldMatrix_.m[1][2] };
 }
 
 // デフォルトカメラの設定・取得

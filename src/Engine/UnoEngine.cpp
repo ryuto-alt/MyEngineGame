@@ -282,8 +282,11 @@ bool UnoEngine::LoadAudio(const std::string& name, const std::string& filePath) 
     return false;
 }
 
-void UnoEngine::PlayAudio(const std::string& name, bool loop) {
+void UnoEngine::PlayAudio(const std::string& name, bool loop, float volume) {
     AudioManager::GetInstance()->Play(name, loop);
+    if (volume != 1.0f) {
+        AudioManager::GetInstance()->SetVolume(name, volume);
+    }
 }
 
 void UnoEngine::StopAudio(const std::string& name) {

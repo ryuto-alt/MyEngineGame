@@ -12,7 +12,9 @@
       "Bash(make:*)",
       "Bash(powershell.exe:*)",
       "Bash(timeout:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(./CG2_00-01.exe)",
+      "Bash(ls:*)"
     ],
     "deny": []
   }

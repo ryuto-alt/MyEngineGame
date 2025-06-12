@@ -87,15 +87,34 @@ public:
     // === 入力システム ===
     bool IsKeyPressed(int key) const { return input_->PushKey(key); }
     bool IsKeyTriggered(int key) const { return input_->TriggerKey(key); }
+    void GetMouseMovement(float& deltaX, float& deltaY) { input_->GetMouseMovement(deltaX, deltaY); }
+    void SetMouseCursor(bool visible) { input_->SetMouseCursor(visible); }
+    void ResetMouseCenter() { input_->ResetMouseCenter(); }
     
     // === カメラシステム ===
     void SetCameraPosition(const Vector3& position) { camera_->SetTranslate(position); }
     void SetCameraRotation(const Vector3& rotation) { camera_->SetRotate(rotation); }
     Vector3 GetCameraPosition() const { return camera_->GetTranslate(); }
+    Vector3 GetCameraRotation() const { return camera_->GetRotate(); }
+    void ProcessCameraMouseInput(float deltaX, float deltaY) { camera_->ProcessMouseInput(deltaX, deltaY); }
+    void SetCameraMouseSensitivity(float sensitivity) { camera_->SetMouseSensitivity(sensitivity); }
+    void SetCameraMode(int mode) { camera_->SetCameraMode(mode); }
+    int GetCameraMode() const { return camera_->GetCameraMode(); }
+    void ToggleCameraMode() { camera_->ToggleCameraMode(); }
+    
+    // カメラ移動（フリーカメラモード用）
+    void MoveCameraForward(float distance) { camera_->MoveForward(distance); }
+    void MoveCameraRight(float distance) { camera_->MoveRight(distance); }
+    void MoveCameraUp(float distance) { camera_->MoveUp(distance); }
+    
+    // カメラの方向ベクトル取得
+    Vector3 GetCameraForwardVector() const { return camera_->GetForwardVector(); }
+    Vector3 GetCameraRightVector() const { return camera_->GetRightVector(); }
+    Vector3 GetCameraUpVector() const { return camera_->GetUpVector(); }
     
     // === オーディオシステム ===
     bool LoadAudio(const std::string& name, const std::string& filePath);
-    void PlayAudio(const std::string& name, bool loop = false);
+    void PlayAudio(const std::string& name, bool loop = false, float volume = 1.0f);
     void StopAudio(const std::string& name);
     void SetAudioVolume(const std::string& name, float volume);
     bool IsAudioPlaying(const std::string& name);

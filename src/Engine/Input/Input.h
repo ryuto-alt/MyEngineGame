@@ -26,6 +26,10 @@ public:
 	// マウス関連の追加機能
 	HRESULT GetMouseState(DIMOUSESTATE* mouseState);
 	void SetMouseCursor(bool visible);
+	
+	// マウス移動量取得
+	void GetMouseMovement(float& deltaX, float& deltaY);
+	void ResetMouseCenter(); // マウスをウィンドウ中央にリセット
 
 private:
 	BYTE key[256] = {};
@@ -34,4 +38,9 @@ private:
 	ComPtr<IDirectInputDevice8>mouse;      // マウスデバイスを追加
 	ComPtr<IDirectInput8>directInput = nullptr;
 	WinApp* winApp_ = nullptr;
+	
+	// マウス移動量管理
+	DIMOUSESTATE mouseState_;
+	DIMOUSESTATE previousMouseState_;
+	POINT windowCenter_; // ウィンドウ中央座標
 };

@@ -48,7 +48,7 @@ private:
     float CalculateDistanceAttenuation(float distance) const;
     
     // パンニング計算（左右の音の配分）
-    void CalculatePanning(const Vector3& directionToSource, float& leftVolume, float& rightVolume) const;
+    void CalculatePanning(const Vector3& directionToSource, const Vector3& listenerForward, float& leftVolume, float& rightVolume) const;
 
 private:
     std::string audioName_;                 // 使用するオーディオファイル名
@@ -64,6 +64,7 @@ private:
     float dopplerScale_;                    // ドップラー効果スケール
 
     float distanceToListener_;              // リスナーまでの距離
+    Vector3 lastListenerForward_;           // 最後に更新されたリスナーの前方向
     bool isInitialized_;                    // 初期化済みフラグ
     bool isPlaying_;                        // 再生状態
 };

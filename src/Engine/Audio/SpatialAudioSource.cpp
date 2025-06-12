@@ -13,6 +13,7 @@ SpatialAudioSource::SpatialAudioSource()
     , minDistance_(1.0f)
     , dopplerScale_(1.0f)
     , distanceToListener_(0.0f)
+    , lastListenerForward_(Vector3{0.0f, 0.0f, 1.0f})
     , isInitialized_(false)
     , isPlaying_(false)
 {
@@ -48,7 +49,7 @@ void SpatialAudioSource::Update(const Vector3& listenerPosition, const Vector3& 
         };
         
         float leftVolume, rightVolume;
-        CalculatePanning(directionToSource, leftVolume, rightVolume);
+        CalculatePanning(directionToSource, lastListenerForward_, leftVolume, rightVolume);
         
         // 距離減衰を左右の音量に適用
         leftVolume *= currentVolume_;
@@ -127,6 +128,9 @@ bool SpatialAudioSource::IsPlaying() const {
 }
 
 void SpatialAudioSource::Calculate3DAudio(const Vector3& listenerPosition, const Vector3& listenerForward) {
+    // リスナーの前方向を保存
+    lastListenerForward_ = listenerForward;
+    
     // リスナーからエミッタへのベクトル
     Vector3 directionToSource = {
         position_.x - listenerPosition.x,
@@ -170,7 +174,7 @@ float SpatialAudioSource::CalculateDistanceAttenuation(float distance) const {
     return (attenuation < 0.0f) ? 0.0f : (attenuation > 1.0f) ? 1.0f : attenuation;
 }
 
-void SpatialAudioSource::CalculatePanning(const Vector3& directionToSource, float& leftVolume, float& rightVolume) const {
+void SpatialAudioSource::CalculatePanning(const Vector3& directionToSource, const Vector3& listenerForward, float& leftVolume, float& rightVolume) const {
     // 正規化
     float length = sqrtf(
         directionToSource.x * directionToSource.x +
@@ -185,9 +189,30 @@ void SpatialAudioSource::CalculatePanning(const Vector3& directionToSource, floa
             directionToSource.z / length
         };
 
-        // X軸（左右）成分でパンニングを計算
-        // -1.0f（左）から +1.0f（右）の範囲
-        float pan = normalizedDirection.x;
+        // リスナーの右方向ベクトルを計算（左手座標系）
+        Vector3 listenerRight = {
+            listenerForward.z * 0.0f - listenerForward.y * 0.0f,  // Y成分は0と仮定
+            listenerForward.x * 0.0f - listenerForward.z * 0.0f,  // 外積
+            listenerForward.y * 0.0f - listenerForward.x * 0.0f
+        };
+        
+        // 簡単な右方向ベクトル計算（Y=0と仮定）
+        listenerRight.x = -listenerForward.z;
+        listenerRight.y = 0.0f;
+        listenerRight.z = listenerForward.x;
+        
+        // 正規化
+        float rightLength = sqrtf(listenerRight.x * listenerRight.x + listenerRight.z * listenerRight.z);
+        if (rightLength > 0.0f) {
+            listenerRight.x /= rightLength;
+            listenerRight.z /= rightLength;
+        }
+
+        // リスナーから見た相対的な左右位置を内積で計算
+        float pan = normalizedDirection.x * listenerRight.x + normalizedDirection.z * listenerRight.z;
+        
+        // パンニングを反転（左右を正しくする）
+        pan = -pan;
 
         // パンニングから左右の音量を計算
         float leftVol = 0.5f - pan * 0.5f;

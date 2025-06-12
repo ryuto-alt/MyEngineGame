@@ -36,6 +36,16 @@ void Input::Initialize(WinApp* winApp)
 	//排他制御レベルのセット
 	hr = mouse->SetCooperativeLevel(winApp->GetHwnd(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	assert(SUCCEEDED(hr));
+	
+	// ウィンドウ中央座標を計算
+	RECT windowRect;
+	GetClientRect(winApp->GetHwnd(), &windowRect);
+	windowCenter_.x = (windowRect.right - windowRect.left) / 2;
+	windowCenter_.y = (windowRect.bottom - windowRect.top) / 2;
+	
+	// マウス状態の初期化
+	memset(&mouseState_, 0, sizeof(mouseState_));
+	memset(&previousMouseState_, 0, sizeof(previousMouseState_));
 }
 
 void Input::Update()
@@ -47,8 +57,11 @@ void Input::Update()
 	//全キーボード入力情報を取得
 	keyboard->GetDeviceState(sizeof(key), key);
 
+	// 前回のマウス状態を保存
+	memcpy(&previousMouseState_, &mouseState_, sizeof(mouseState_));
 	//マウス情報の取得
 	mouse->Acquire();
+	mouse->GetDeviceState(sizeof(mouseState_), &mouseState_);
 }
 
 void Input::Finalize()
@@ -98,5 +111,28 @@ HRESULT Input::GetMouseState(DIMOUSESTATE* mouseState)
 
 void Input::SetMouseCursor(bool visible)
 {
-	ShowCursor(visible);
+	if (visible) {
+		// マウスカーソルを表示
+		while (ShowCursor(TRUE) < 0) {}
+		SetCursor(LoadCursor(NULL, IDC_ARROW));
+	} else {
+		// マウスカーソルを完全に非表示
+		while (ShowCursor(FALSE) >= 0) {}
+		SetCursor(NULL);
+	}
+}
+
+void Input::GetMouseMovement(float& deltaX, float& deltaY)
+{
+	// DirectInputのマウス移動量を取得
+	deltaX = static_cast<float>(mouseState_.lX);
+	deltaY = static_cast<float>(mouseState_.lY);
+}
+
+void Input::ResetMouseCenter()
+{
+	// マウスカーソルをウィンドウ中央に移動
+	POINT centerPoint = windowCenter_;
+	ClientToScreen(winApp_->GetHwnd(), &centerPoint);
+	SetCursorPos(centerPoint.x, centerPoint.y);
 }

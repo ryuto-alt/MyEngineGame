@@ -21,6 +21,21 @@ public:
     void SetNearClip(float nearClip);
     void SetFarClip(float farClip);
 
+    // マウス視点移動関連
+    void ProcessMouseInput(float deltaX, float deltaY);
+    void SetMouseSensitivity(float sensitivity);
+    void SetCameraMode(int mode);
+    int GetCameraMode() const;
+    void ToggleCameraMode();
+    
+    // カメラ移動関連（フリーカメラモード用）
+    void MoveForward(float distance);
+    void MoveRight(float distance);
+    void MoveUp(float distance);
+    Vector3 GetForwardVector() const;
+    Vector3 GetRightVector() const;
+    Vector3 GetUpVector() const;
+
     // ゲッター
     const Matrix4x4& GetWorldMatrix() const;
     const Matrix4x4& GetViewMatrix() const;
@@ -48,6 +63,10 @@ private:
 
     // 合成行列 - ビュー行列とプロジェクション行列の積
     Matrix4x4 viewProjectionMatrix_;
+
+    // マウス視点移動関連
+    float mouseSensitivity_;    // マウス感度
+    int cameraMode_;            // カメラモード (0: フリーカメラ, 1: 固定カメラ)
 };
 
 // 静的なデフォルトカメラの定義
