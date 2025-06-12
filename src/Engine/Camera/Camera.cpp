@@ -5,7 +5,7 @@
 Camera* Object3dCommon::defaultCamera_ = nullptr;
 
 Camera::Camera() :
-    fovY_(0.45f),
+    fovY_(1.57f), // 90度（π/2ラジアン）
     aspectRatio_(16.0f / 9.0f),
     nearClip_(0.1f),
     farClip_(100.0f),

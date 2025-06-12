@@ -112,6 +112,9 @@ public:
     Vector3 GetCameraRightVector() const { return camera_->GetRightVector(); }
     Vector3 GetCameraUpVector() const { return camera_->GetUpVector(); }
     
+    // カメラの視野角設定
+    void SetCameraFovY(float fovY) { camera_->SetFovY(fovY); }
+    
     // === オーディオシステム ===
     bool LoadAudio(const std::string& name, const std::string& filePath);
     void PlayAudio(const std::string& name, bool loop = false, float volume = 1.0f);

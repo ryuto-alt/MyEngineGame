@@ -19,6 +19,7 @@ void GamePlayScene::Initialize() {
 
 	// カメラの初期設定（統合APIを使用）
 	engine_->SetCameraPosition(Vector3{ 0.0f, 0.0f, -10.0f });
+	engine_->SetCameraFovY(1.37f); // 90度の視野角を設定
 
 	// ゲームリソースの読み込み（統合APIを使用）
 	// BGMの読み込み（失敗してもエラーにしない）
@@ -63,12 +64,7 @@ void GamePlayScene::Update() {
 		engine_->ChangeScene("Title");
 	}
 
-	// キューブの回転（統合APIを使用）
-	if (engine_->IsKeyPressed(DIK_SPACE)) {
-		static float rotation = 0.0f;
-		rotation += 0.02f;
-		cubeObject_->SetRotation(Vector3{ 0.0f, rotation, 0.0f });
-	}
+	// キューブの回転機能を削除しました
 
 	// パーティクル発生（統合APIを使用）
 	if (engine_->IsKeyTriggered(DIK_F)) {
@@ -120,11 +116,34 @@ void GamePlayScene::Update() {
 	const float moveSpeed = 0.1f;
 
 	if (engine_->GetCameraMode() == 0) {
-		// フリーカメラモード: カメラの向いている方向に移動
-		if (engine_->IsKeyPressed(DIK_W)) engine_->MoveCameraForward(moveSpeed);
-		if (engine_->IsKeyPressed(DIK_S)) engine_->MoveCameraForward(-moveSpeed);
-		if (engine_->IsKeyPressed(DIK_A)) engine_->MoveCameraRight(-moveSpeed);
-		if (engine_->IsKeyPressed(DIK_D)) engine_->MoveCameraRight(moveSpeed);
+		// フリーカメラモード: 水平移動のみ、上下はSHIFT/SPACE
+		Vector3 currentPos = engine_->GetCameraPosition();
+		Vector3 forward = engine_->GetCameraForwardVector();
+		Vector3 right = engine_->GetCameraRightVector();
+		
+		// 水平移動のみ（Y軸を固定）
+		if (engine_->IsKeyPressed(DIK_W)) {
+			currentPos.x += forward.x * moveSpeed;
+			currentPos.z += forward.z * moveSpeed;
+		}
+		if (engine_->IsKeyPressed(DIK_S)) {
+			currentPos.x -= forward.x * moveSpeed;
+			currentPos.z -= forward.z * moveSpeed;
+		}
+		if (engine_->IsKeyPressed(DIK_A)) {
+			currentPos.x -= right.x * moveSpeed;
+			currentPos.z -= right.z * moveSpeed;
+		}
+		if (engine_->IsKeyPressed(DIK_D)) {
+			currentPos.x += right.x * moveSpeed;
+			currentPos.z += right.z * moveSpeed;
+		}
+		
+		// 上下移動はSHIFTとSPACEのみ
+		if (engine_->IsKeyPressed(DIK_SPACE)) currentPos.y += moveSpeed;  // 上昇
+		if (engine_->IsKeyPressed(DIK_LSHIFT) || engine_->IsKeyPressed(DIK_RSHIFT)) currentPos.y -= moveSpeed; // 下降
+		
+		engine_->SetCameraPosition(currentPos);
 	}
 	else {
 		// 固定カメラモード: ワールド座標軸で移動（従来通り）
