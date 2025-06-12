@@ -80,7 +80,7 @@ public:
 private:
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;
-	HRESULT hr;
+	HRESULT hr = S_OK;
 
 	Microsoft::WRL::ComPtr< IDXGIFactory7> dxgiFactory = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Device> device = nullptr;
@@ -94,17 +94,17 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource;
 
-	uint32_t descriptorSizeRTV;
-	uint32_t descriptorSizeDSV;
+	uint32_t descriptorSizeRTV = 0;
+	uint32_t descriptorSizeDSV = 0;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;
 
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStarHandle;
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 2> rtvHandles;
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvStarHandle{};
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 2> rtvHandles{};
 
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence = nullptr;
-	HANDLE fenceEvent;
+	HANDLE fenceEvent = nullptr;
 	uint64_t fenceValue = 0;
 
 	D3D12_VIEWPORT viewport{};

@@ -1,6 +1,8 @@
 #include "UnoEngine.h"
 #include "GameSceneFactory.h" // 具象クラスはcppファイルでインクルード
 #include <cassert>
+#include <algorithm>
+#include <cctype>
 
 // 静的メンバ変数の実体化
 UnoEngine* UnoEngine::instance_ = nullptr;
@@ -237,6 +239,165 @@ void UnoEngine::SetSceneFactory(SceneFactory* sceneFactory) {
 
     // シーンマネージャーの初期化
     SceneManager::GetInstance()->Initialize(sceneFactory_.get());
+}
+
+// === 統合API実装 ===
+
+// === オーディオシステム ===
+bool UnoEngine::LoadAudio(const std::string& name, const std::string& filePath) {
+    auto* audioManager = AudioManager::GetInstance();
+    
+    // ファイル拡張子を確認して適切な読み込み関数を選択
+    std::string extension = filePath.substr(filePath.find_last_of(".") + 1);
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
+    
+    if (extension == "wav") {
+        return audioManager->LoadWAV(name, filePath);
+    } else if (extension == "mp3") {
+        return audioManager->LoadMP3(name, filePath);
+    }
+    
+    OutputDebugStringA(("警告: サポートされていないオーディオ形式です: " + filePath + "\n").c_str());
+    return false;
+}
+
+void UnoEngine::PlayAudio(const std::string& name, bool loop) {
+    AudioManager::GetInstance()->Play(name, loop);
+}
+
+void UnoEngine::StopAudio(const std::string& name) {
+    AudioManager::GetInstance()->Stop(name);
+}
+
+void UnoEngine::SetAudioVolume(const std::string& name, float volume) {
+    AudioManager::GetInstance()->SetVolume(name, volume);
+}
+
+bool UnoEngine::IsAudioPlaying(const std::string& name) {
+    return AudioManager::GetInstance()->IsPlaying(name);
+}
+
+// === パーティクルシステム ===
+bool UnoEngine::CreateParticleEffect(const std::string& name, const std::string& texturePath) {
+    ParticleManager::GetInstance()->CreateParticleGroup(name, texturePath);
+    return true; // TODO: エラーハンドリングの改善
+}
+
+void UnoEngine::PlayParticle(const std::string& name, const Vector3& position, int count) {
+    ParticleManager::GetInstance()->Emit(name, position, count);
+}
+
+void UnoEngine::PlayParticle(const std::string& name, const Vector3& position, int count,
+                            const Vector3& velocity, float lifeTime) {
+    // より詳細なパラメータでパーティクルを発生
+    ParticleManager::GetInstance()->Emit(
+        name, position, count,
+        velocity, velocity, // 速度の最小・最大を同じに
+        Vector3{0.0f, 0.0f, 0.0f}, Vector3{0.0f, 0.0f, 0.0f}, // 加速度なし
+        0.5f, 1.0f, // サイズ
+        0.0f, 0.3f, // 終了サイズ
+        Vector4{1.0f, 1.0f, 1.0f, 1.0f}, Vector4{1.0f, 1.0f, 1.0f, 1.0f}, // 開始色
+        Vector4{1.0f, 1.0f, 1.0f, 0.0f}, Vector4{1.0f, 1.0f, 1.0f, 0.0f}, // 終了色
+        0.0f, 0.0f, // 回転
+        0.0f, 0.0f, // 回転速度
+        lifeTime, lifeTime // 寿命
+    );
+}
+
+// === 3Dオブジェクト作成システム ===
+std::unique_ptr<Object3d> UnoEngine::CreateObject3D() {
+    auto object = std::make_unique<Object3d>();
+    object->Initialize(dxCommon_.get(), spriteCommon_.get());
+    object->SetCamera(camera_.get());
+    return object;
+}
+
+std::unique_ptr<Model> UnoEngine::LoadModel(const std::string& modelPath) {
+    auto model = std::make_unique<Model>();
+    
+    // Modelを初期化（DirectXCommonを渡す）
+    model->Initialize(dxCommon_.get());
+    
+    // パスの解析
+    size_t lastSlash = modelPath.find_last_of("/\\");
+    std::string directoryPath = (lastSlash != std::string::npos) ? 
+        modelPath.substr(0, lastSlash + 1) : "";
+    std::string filename = (lastSlash != std::string::npos) ? 
+        modelPath.substr(lastSlash + 1) : modelPath;
+    
+    model->LoadFromObj(directoryPath, filename);
+    return model;
+}
+
+// === 2Dスプライト作成システム ===
+std::unique_ptr<Sprite> UnoEngine::CreateSprite(const std::string& texturePath) {
+    // テクスチャを読み込み
+    LoadTexture(texturePath);
+    
+    auto sprite = std::make_unique<Sprite>();
+    sprite->Initialize(spriteCommon_.get(), texturePath);
+    return sprite;
+}
+
+// === テクスチャ読み込み ===
+uint32_t UnoEngine::LoadTexture(const std::string& filePath) {
+    // テクスチャを読み込んでSRVインデックスを取得
+    TextureManager::GetInstance()->LoadTexture(filePath);
+    return TextureManager::GetInstance()->GetSrvIndex(filePath);
+}
+
+// === 衝突判定システム ===
+bool UnoEngine::CheckCollision(const Vector3& pos1, float radius1, const Vector3& pos2, float radius2) {
+    // 2つの球の衝突判定
+    Collision::Sphere sphere1;
+    sphere1.center = pos1;
+    sphere1.radius = radius1;
+    
+    Collision::Sphere sphere2;
+    sphere2.center = pos2;
+    sphere2.radius = radius2;
+    
+    auto result = Collision::CollisionDetector::CheckSphereToSphere(sphere1, sphere2);
+    return result.isColliding;
+}
+
+// === シーン管理 ===
+void UnoEngine::ChangeScene(const std::string& sceneName) {
+    SceneManager::GetInstance()->ChangeScene(sceneName);
+}
+
+// === デバッグ情報 ===
+void UnoEngine::ShowDebugInfo() {
+    ImGui::Begin("UnoEngine デバッグ情報");
+    
+    // FPS情報
+    ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+    
+    // カメラ情報
+    Vector3 cameraPos = camera_->GetTranslate();
+    ImGui::Text("カメラ位置: (%.2f, %.2f, %.2f)", cameraPos.x, cameraPos.y, cameraPos.z);
+    
+    // メモリ使用量（概算）
+    // 全パーティクルグループのパーティクル数を合計
+    uint32_t totalParticles = 0;
+    auto* particleManager = ParticleManager::GetInstance();
+    // 基本的なパーティクルグループの数をチェック
+    totalParticles += particleManager->GetParticleCount("explosion");
+    totalParticles += particleManager->GetParticleCount("smoke");
+    ImGui::Text("アクティブパーティクル数: %d", totalParticles);
+    
+    // 入力状態
+    if (ImGui::TreeNode("入力状態")) {
+        ImGui::Text("ESC: %s", input_->PushKey(DIK_ESCAPE) ? "押下中" : "未押下");
+        ImGui::Text("SPACE: %s", input_->PushKey(DIK_SPACE) ? "押下中" : "未押下");
+        ImGui::Text("W: %s", input_->PushKey(DIK_W) ? "押下中" : "未押下");
+        ImGui::Text("A: %s", input_->PushKey(DIK_A) ? "押下中" : "未押下");
+        ImGui::Text("S: %s", input_->PushKey(DIK_S) ? "押下中" : "未押下");
+        ImGui::Text("D: %s", input_->PushKey(DIK_D) ? "押下中" : "未押下");
+        ImGui::TreePop();
+    }
+    
+    ImGui::End();
 }
 
 void UnoEngine::InitializeImGui() {

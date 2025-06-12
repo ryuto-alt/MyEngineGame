@@ -1,7 +1,7 @@
 #pragma once
 #include "UnoEngine.h"
 
-// シンプルなGamePlayScene
+// 統合APIを使用したGamePlayScene
 class GamePlayScene : public IScene {
 public:
     // コンストラクタ・デストラクタ
@@ -17,4 +17,12 @@ public:
 protected:
     // 初期化済みフラグ
     bool initialized_ = false;
+    
+    // UnoEngineインスタンス
+    UnoEngine* engine_ = nullptr;
+    
+    // ゲームオブジェクト
+    std::unique_ptr<Object3d> cubeObject_;
+    std::unique_ptr<Model> cubeModel_;
+    std::unique_ptr<Sprite> titleSprite_;
 };

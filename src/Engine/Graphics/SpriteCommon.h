@@ -22,7 +22,7 @@ private:
 	void GraphicsPipelineInitialize();
 
 private:
-	DirectXCommon* dxCommon_;
+	DirectXCommon* dxCommon_ = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState = nullptr;
 };

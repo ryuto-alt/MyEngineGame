@@ -79,7 +79,50 @@ public:
     bool IsEndRequested() const { return endRequest_; }
     void RequestEnd() { endRequest_ = true; }
 
-    // 各コンポーネントのアクセサ
+    // === 統一された直感的API ===
+    
+    // === 入力システム ===
+    bool IsKeyPressed(int key) const { return input_->PushKey(key); }
+    bool IsKeyTriggered(int key) const { return input_->TriggerKey(key); }
+    
+    // === カメラシステム ===
+    void SetCameraPosition(const Vector3& position) { camera_->SetTranslate(position); }
+    void SetCameraRotation(const Vector3& rotation) { camera_->SetRotate(rotation); }
+    Vector3 GetCameraPosition() const { return camera_->GetTranslate(); }
+    
+    // === オーディオシステム ===
+    bool LoadAudio(const std::string& name, const std::string& filePath);
+    void PlayAudio(const std::string& name, bool loop = false);
+    void StopAudio(const std::string& name);
+    void SetAudioVolume(const std::string& name, float volume);
+    bool IsAudioPlaying(const std::string& name);
+    
+    // === パーティクルシステム ===
+    bool CreateParticleEffect(const std::string& name, const std::string& texturePath);
+    void PlayParticle(const std::string& name, const Vector3& position, int count = 10);
+    void PlayParticle(const std::string& name, const Vector3& position, int count,
+                     const Vector3& velocity, float lifeTime = 3.0f);
+    
+    // === 3Dオブジェクト作成システム ===
+    std::unique_ptr<Object3d> CreateObject3D();
+    std::unique_ptr<Model> LoadModel(const std::string& modelPath);
+    
+    // === 2Dスプライト作成システム ===
+    std::unique_ptr<Sprite> CreateSprite(const std::string& texturePath);
+    
+    // === テクスチャ読み込み ===
+    uint32_t LoadTexture(const std::string& filePath);
+    
+    // === 衝突判定システム ===
+    bool CheckCollision(const Vector3& pos1, float radius1, const Vector3& pos2, float radius2);
+    
+    // === シーン管理 ===
+    void ChangeScene(const std::string& sceneName);
+    
+    // === デバッグ情報 ===
+    void ShowDebugInfo();
+    
+    // === 従来のアクセサ（上級者向け・必要時のみ使用） ===
     WinApp* GetWinApp() const { return winApp_.get(); }
     DirectXCommon* GetDirectXCommon() const { return dxCommon_.get(); }
     Input* GetInput() const { return input_.get(); }
@@ -87,23 +130,11 @@ public:
     SpriteCommon* GetSpriteCommon() const { return spriteCommon_.get(); }
     SrvManager* GetSrvManager() const { return srvManager_.get(); }
     SceneManager* GetSceneManager() const { return SceneManager::GetInstance(); }
-
-    // テクスチャマネージャーのアクセサ（シングルトン）
     TextureManager* GetTextureManager() const { return TextureManager::GetInstance(); }
-
-    // パーティクルマネージャーのアクセサ（シングルトン）
     ParticleManager* GetParticleManager() const { return ParticleManager::GetInstance(); }
-
-    // 3Dパーティクルマネージャーのアクセサ（シングルトン）
     Particle3DManager* GetParticle3DManager() const { return Particle3DManager::GetInstance(); }
-
-    // 3Dエフェクトマネージャーのアクセサ（シングルトン）
     EffectManager3D* GetEffectManager3D() const { return EffectManager3D::GetInstance(); }
-
-    // オーディオマネージャーのアクセサ（シングルトン）
     AudioManager* GetAudioManager() const { return AudioManager::GetInstance(); }
-
-    // 衝突判定マネージャーのアクセサ（シングルトン）（追加）
     Collision::CollisionManager* GetCollisionManager() const { return Collision::CollisionManager::GetInstance(); }
 
     // シーンファクトリーのセッター
