@@ -5,6 +5,11 @@ class SpriteCommon
 {
 
 public:
+	// コンストラクタ
+	SpriteCommon() = default;
+	// デストラクタ
+	~SpriteCommon();
+
 	// 初期化
 	void Initialize(DirectXCommon* dxCommon);
 

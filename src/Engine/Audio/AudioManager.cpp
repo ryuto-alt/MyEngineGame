@@ -72,6 +72,14 @@ void AudioManager::Finalize() {
     // XAudio2インターフェイスの解放は自動で行われる（ComPtr）
 }
 
+void AudioManager::DestroyInstance() {
+    if (instance) {
+        instance->Finalize();
+        delete instance;
+        instance = nullptr;
+    }
+}
+
 void AudioManager::Update() {
     // 再生が終了したソースを検出して再生リストから削除
     auto it = playingSources.begin();

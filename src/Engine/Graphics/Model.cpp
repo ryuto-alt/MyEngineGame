@@ -9,7 +9,12 @@
 
 Model::Model() : dxCommon_(nullptr) {}
 
-Model::~Model() {}
+Model::~Model() {
+    // 頂点リソースの解放（Unmapは不要 - 頂点データは永続的にマップされていない）
+    if (vertexResource_) {
+        vertexResource_.Reset();
+    }
+}
 
 void Model::Initialize(DirectXCommon* dxCommon) {
     assert(dxCommon);
@@ -91,6 +96,7 @@ void Model::LoadFromObj(const std::string& directoryPath, const std::string& fil
     VertexData* vertexData = nullptr;
     vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
     std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+    vertexResource_->Unmap(0, nullptr);
 
     // デバッグ情報
     OutputDebugStringA(("Model: Loaded " + std::to_string(modelData_.vertices.size()) + " vertices from " + filename + "\n").c_str());

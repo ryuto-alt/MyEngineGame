@@ -16,6 +16,14 @@ TextureManager* TextureManager::GetInstance()
 
 void TextureManager::Finalize()
 {
+    // 全テクスチャリソースを明示的に解放
+    for (auto& [path, textureData] : textureDatas) {
+        if (textureData.resource) {
+            textureData.resource.Reset();
+        }
+    }
+    textureDatas.clear();
+    
     delete instance;
     instance = nullptr;
 }

@@ -15,7 +15,23 @@ camera_(nullptr) {
     transform_.translate = { 0.0f, 0.0f, 0.0f };
 }
 
-Object3d::~Object3d() {}
+Object3d::~Object3d() {
+    // ComPtrリソースの解放（Unmapは不要 - これらは永続的にマップされている）
+    if (materialResource_) {
+        materialResource_.Reset();
+    }
+    if (transformationMatrixResource_) {
+        transformationMatrixResource_.Reset();
+    }
+    if (directionalLightResource_) {
+        directionalLightResource_.Reset();
+    }
+    
+    // データポインタをnullptrに設定（安全のため）
+    materialData_ = nullptr;
+    transformationMatrixData_ = nullptr;
+    directionalLightData_ = nullptr;
+}
 
 void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
     assert(dxCommon);

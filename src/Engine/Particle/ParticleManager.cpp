@@ -6,6 +6,43 @@
 
 // Meyer's Singletonパターンでは、静的メンバ変数やGetInstance、Finalizeの実装は不要になります
 
+ParticleManager::~ParticleManager() {
+    // 全パーティクルグループのリソース解放
+    for (auto& [name, group] : particleGroups) {
+        if (group.instanceResource && group.instanceData) {
+            group.instanceResource->Unmap(0, nullptr);
+            group.instanceData = nullptr;
+        }
+        group.instanceResource.Reset();
+    }
+    particleGroups.clear();
+
+    // その他のマップされたリソースの解放
+    if (materialResource && materialData) {
+        materialResource->Unmap(0, nullptr);
+        materialData = nullptr;
+        materialResource.Reset();
+    }
+    
+    if (directionalLightResource && directionalLightData) {
+        directionalLightResource->Unmap(0, nullptr);
+        directionalLightData = nullptr;
+        directionalLightResource.Reset();
+    }
+
+    if (vertexResource) {
+        vertexResource.Reset();
+    }
+
+    // パイプラインステートとルートシグネチャの解放
+    if (pipelineState) {
+        pipelineState.Reset();
+    }
+    if (rootSignature) {
+        rootSignature.Reset();
+    }
+}
+
 void ParticleManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager) {
     // nullptrチェック
     assert(dxCommon);

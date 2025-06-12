@@ -140,7 +140,7 @@ private:
     // コンストラクタ（シングルトン）
     ParticleManager() = default;
     // デストラクタ
-    ~ParticleManager() = default;
+    ~ParticleManager();
 
 public:
     // シングルトンインスタンスの取得
@@ -152,8 +152,60 @@ public:
 
     // 終了処理
     static void Finalize() {
-        // Meyer'sシングルトンパターンでは何もする必要がない
-        // インスタンスは自動的に破棄される
+        // Meyer'sシングルトンのリソースを強制的にクリア
+        ParticleManager* instance = GetInstance();
+        instance->ForceReleaseResources();
+    }
+
+    // リソースの強制解放
+    void ForceReleaseResources() {
+        OutputDebugStringA("ParticleManager::ForceReleaseResources - Starting resource cleanup\n");
+        
+        // 全パーティクルグループのリソース解放
+        for (auto& [name, group] : particleGroups) {
+            OutputDebugStringA(("ParticleManager: Releasing particle group - " + name + "\n").c_str());
+            if (group.instanceResource && group.instanceData) {
+                group.instanceResource->Unmap(0, nullptr);
+                group.instanceData = nullptr;
+            }
+            group.instanceResource.Reset();
+        }
+        particleGroups.clear();
+        OutputDebugStringA("ParticleManager: All particle groups cleared\n");
+
+        // その他のマップされたリソースの解放
+        if (materialResource && materialData) {
+            materialResource->Unmap(0, nullptr);
+            materialData = nullptr;
+            OutputDebugStringA("ParticleManager: Material resource unmapped\n");
+        }
+        materialResource.Reset();
+        OutputDebugStringA("ParticleManager: Material resource reset\n");
+        
+        if (directionalLightResource && directionalLightData) {
+            directionalLightResource->Unmap(0, nullptr);
+            directionalLightData = nullptr;
+            OutputDebugStringA("ParticleManager: DirectionalLight resource unmapped\n");
+        }
+        directionalLightResource.Reset();
+        OutputDebugStringA("ParticleManager: DirectionalLight resource reset\n");
+
+        if (vertexResource) {
+            vertexResource.Reset();
+            OutputDebugStringA("ParticleManager: Vertex resource reset\n");
+        }
+
+        // パイプラインステートとルートシグネチャの解放
+        if (pipelineState) {
+            pipelineState.Reset();
+            OutputDebugStringA("ParticleManager: Pipeline state reset\n");
+        }
+        if (rootSignature) {
+            rootSignature.Reset();
+            OutputDebugStringA("ParticleManager: Root signature reset\n");
+        }
+        
+        OutputDebugStringA("ParticleManager::ForceReleaseResources - Resource cleanup completed\n");
     }
 
     // 初期化

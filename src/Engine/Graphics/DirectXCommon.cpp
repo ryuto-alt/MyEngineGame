@@ -12,6 +12,48 @@ using namespace Microsoft::WRL;
 using namespace Logger;
 using namespace StringUtility;
 
+DirectXCommon::~DirectXCommon() {
+    // フェンスイベントの解放
+    if (fenceEvent) {
+        CloseHandle(fenceEvent);
+        fenceEvent = nullptr;
+    }
+    
+    // DXCコンパイラリソースの解放
+    if (includeHandler) {
+        includeHandler->Release();
+        includeHandler = nullptr;
+    }
+    if (dxcCompiler) {
+        dxcCompiler->Release();
+        dxcCompiler = nullptr;
+    }
+    if (dxcUtils) {
+        dxcUtils->Release();
+        dxcUtils = nullptr;
+    }
+    
+    // ComPtrリソースの明示的な解放
+    fence.Reset();
+    dsvDescriptorHeap.Reset();
+    rtvDescriptorHeap.Reset();
+    depthStencilResource.Reset();
+    
+    // SwapChainリソースの解放
+    for (auto& resource : swapChainResources) {
+        if (resource) {
+            resource.Reset();
+        }
+    }
+    
+    swapChain.Reset();
+    commandQueue.Reset();
+    commandList.Reset();
+    commandAllocator.Reset();
+    device.Reset();
+    dxgiFactory.Reset();
+}
+
 void DirectXCommon::DeviceInitialize()
 {
 #ifdef _DEBUG

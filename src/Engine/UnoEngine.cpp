@@ -171,42 +171,53 @@ void UnoEngine::Draw() {
 
 void UnoEngine::Finalize() {
     try {
-        // シーンマネージャーの終了処理
+        // 3D空間オーディオの解放（最初に）
+        spatialAudioSources_.clear();
+        audioListener_.reset();
+
+        // シーンマネージャーの終了処理（オブジェクトやスプライトを解放）
         SceneManager::GetInstance()->Finalize();
 
-        // パーティクルマネージャーの終了処理
-        ParticleManager::GetInstance()->Finalize();
+        // パーティクルマネージャーの終了処理（シーンの直後に強制解放）
+        ParticleManager::Finalize();
 
-        // 3Dパーティクルマネージャの終了処理
+        // 3Dパーティクルマネージャの終了処理（シーンの直後に強制解放）
         Particle3DManager::Finalize();
 
-        // 衝突判定マネージャの終了処理
-        Collision::CollisionManager::GetInstance()->ClearColliders();
+        // カメラの解放（シーンの後）
+        camera_.reset();
 
-        // ImGuiの解放
+        // ImGuiの解放（DirectX12リソースを使用しているため早めに）
         ImGui_ImplDX12_Shutdown();
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
 
-        // テクスチャマネージャの解放
+        // テクスチャマネージャの解放（シングルトンを強制破棄）
         TextureManager::GetInstance()->Finalize();
 
-        // オーディオマネージャの解放（必要に応じて）
-        AudioManager::GetInstance()->Finalize();
-        
-        // 3D空間オーディオの解放
-        spatialAudioSources_.clear();
-        audioListener_.reset();
+        // オーディオマネージャの解放（シングルトンを強制破棄）
+        AudioManager::DestroyInstance();
 
-        // 各リソースはunique_ptrにより自動的に解放される
-        // 明示的にnullptrを設定
-        camera_.reset();
+        // 衝突判定マネージャの終了処理
+        Collision::CollisionManager::GetInstance()->ClearColliders();
+
+        // スプライト共通部分の解放
         spriteCommon_.reset();
-        input_.reset();
+
+        // SRVマネージャの解放（DirectX12リソースを解放）
         srvManager_.reset();
-        sceneFactory_.reset();
+
+        // 入力の解放
+        input_.reset();
+
+        // DirectXCommonの解放（最後にDirectX12デバイスを解放）
         dxCommon_.reset();
+
+        // ウィンドウアプリの解放
         winApp_.reset();
+
+        // シーンファクトリーの解放
+        sceneFactory_.reset();
 
         // シングルトンインスタンスの解放
         delete instance_;

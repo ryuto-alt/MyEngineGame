@@ -56,6 +56,9 @@ public:
 
     // 終了処理
     void Finalize();
+    
+    // シングルトンインスタンスの破棄（メモリリーク対策）
+    static void DestroyInstance();
 
     // 更新処理
     void Update();

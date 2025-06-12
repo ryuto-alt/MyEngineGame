@@ -1,6 +1,16 @@
 #include "SpriteCommon.h"
 #include "Logger.h"
 
+SpriteCommon::~SpriteCommon() {
+	// パイプラインステートとルートシグネチャの明示的な解放
+	if (graphicsPipelineState) {
+		graphicsPipelineState.Reset();
+	}
+	if (rootSignature) {
+		rootSignature.Reset();
+	}
+}
+
 void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 {
 	dxCommon_ = dxCommon;

@@ -141,7 +141,15 @@ public:
 
     // 終了処理
     static void Finalize() {
-        // Meyer'sシングルトンパターンでは何もする必要がない
+        // Meyer'sシングルトンのリソースを強制的にクリア
+        Particle3DManager* instance = GetInstance();
+        instance->ForceReleaseResources();
+    }
+
+    // リソースの強制解放
+    void ForceReleaseResources() {
+        // 全3Dパーティクルグループのクリア
+        particle3DGroups.clear();
     }
 
     // 初期化
