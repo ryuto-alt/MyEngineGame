@@ -242,6 +242,33 @@ void AudioManager::SetVolume(const std::string& name, float volume) {
     it->second->SetVolume(volume);
 }
 
+void AudioManager::SetPanning(const std::string& name, float pan) {
+    // 指定された名前のオーディオソースを検索
+    auto it = audioSources.find(name);
+    if (it == audioSources.end()) {
+        return; // 見つからない
+    }
+
+    // パンニング設定（-1.0f（左）～ 1.0f（右））
+    // 左右の音量を計算
+    float leftVolume = (pan <= 0.0f) ? 1.0f : (1.0f - pan);
+    float rightVolume = (pan >= 0.0f) ? 1.0f : (1.0f + pan);
+    
+    // AudioSourceにパンニングを適用（実装依存）
+    it->second->SetPanning(pan);
+}
+
+void AudioManager::SetLeftRightVolume(const std::string& name, float leftVolume, float rightVolume) {
+    // 指定された名前のオーディオソースを検索
+    auto it = audioSources.find(name);
+    if (it == audioSources.end()) {
+        return; // 見つからない
+    }
+
+    // 左右の音量を個別設定
+    it->second->SetLeftRightVolume(leftVolume, rightVolume);
+}
+
 void AudioManager::SetMasterVolume(float volume) {
     if (masteringVoice) {
         // マスターボリューム設定

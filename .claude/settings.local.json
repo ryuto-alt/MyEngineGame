@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(\"./x64/Debug/CG2_00-01.exe\")"
+      "Bash(\"./x64/Debug/CG2_00-01.exe\")",
+      "mcp__brave-search__brave_web_search",
+      "WebFetch(domain:github.com)",
+      "Bash(grep:*)",
+      "Bash(MSBuild.exe:*)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64)",
+      "Bash(./x64/Debug/CG2_00-01.exe)",
+      "Bash(./x64/Release/CG2_00-01.exe)"
     ],
     "deny": []
   }

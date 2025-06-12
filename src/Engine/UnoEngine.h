@@ -27,6 +27,8 @@
 
 // オーディオ関連
 #include "AudioManager.h"
+#include "SpatialAudioSource.h"
+#include "SpatialAudioListener.h"
 
 // シーン管理
 #include "SceneManager.h"
@@ -49,6 +51,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 // UnoEngineクラス - DirectX12ゲームエンジン統合クラス
 class UnoEngine {
@@ -96,6 +99,12 @@ public:
     void StopAudio(const std::string& name);
     void SetAudioVolume(const std::string& name, float volume);
     bool IsAudioPlaying(const std::string& name);
+    
+    // === 3D空間オーディオシステム ===
+    std::unique_ptr<SpatialAudioSource> CreateSpatialAudioSource(const std::string& audioName, const Vector3& position);
+    void SetAudioListenerPosition(const Vector3& position);
+    void SetAudioListenerOrientation(const Vector3& forward, const Vector3& up = Vector3{0.0f, 1.0f, 0.0f});
+    void UpdateSpatialAudio();  // 毎フレーム呼び出して3Dオーディオを更新
     
     // === パーティクルシステム ===
     bool CreateParticleEffect(const std::string& name, const std::string& texturePath);
@@ -161,6 +170,10 @@ private:
 
     // シーンファクトリー (SceneFactoryへのポインタとして保存)
     std::unique_ptr<SceneFactory> sceneFactory_;
+    
+    // 3D空間オーディオ関連
+    std::unique_ptr<SpatialAudioListener> audioListener_;
+    std::vector<std::unique_ptr<SpatialAudioSource>> spatialAudioSources_;
 
     // ImGuiの初期化
     void InitializeImGui();

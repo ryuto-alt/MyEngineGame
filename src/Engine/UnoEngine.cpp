@@ -44,6 +44,9 @@ void UnoEngine::Initialize() {
         input_ = std::make_unique<Input>();
         input_->Initialize(winApp_.get());
 
+        // オーディオマネージャの初期化
+        AudioManager::GetInstance()->Initialize();
+
         // スプライト共通部分の初期化
         spriteCommon_ = std::make_unique<SpriteCommon>();
         spriteCommon_->Initialize(dxCommon_.get());
@@ -68,6 +71,10 @@ void UnoEngine::Initialize() {
 
         // 衝突判定マネージャの初期化（特別な初期化は不要）
         // すでにシングルトンパターンで実装されているため、呼び出すだけで初期化される
+        
+        // 3D空間オーディオリスナーの初期化
+        audioListener_ = std::make_unique<SpatialAudioListener>();
+        audioListener_->SetPosition(Vector3{0.0f, 0.0f, 0.0f});
 
         // シーンマネージャーの取得と初期化
         SceneManager* sceneManager = SceneManager::GetInstance();
@@ -83,8 +90,6 @@ void UnoEngine::Initialize() {
             sceneManager->Initialize(sceneFactory_.get());
         }
 
-        // デバッグ出力
-        OutputDebugStringA("UnoEngine: Successfully initialized\n");
     }
     catch (const std::exception& e) {
         OutputDebugStringA(("ERROR: Exception in UnoEngine::Initialize: " + std::string(e.what()) + "\n").c_str());
@@ -121,6 +126,9 @@ void UnoEngine::Update() {
 
         // 衝突判定マネージャの更新
         Collision::CollisionManager::GetInstance()->Update(1.0f / 60.0f); // 60FPS想定
+        
+        // 3D空間オーディオの更新
+        UpdateSpatialAudio();
 
         // シーンマネージャーの更新
         SceneManager::GetInstance()->Update();
@@ -185,6 +193,10 @@ void UnoEngine::Finalize() {
 
         // オーディオマネージャの解放（必要に応じて）
         AudioManager::GetInstance()->Finalize();
+        
+        // 3D空間オーディオの解放
+        spatialAudioSources_.clear();
+        audioListener_.reset();
 
         // 各リソースはunique_ptrにより自動的に解放される
         // 明示的にnullptrを設定
@@ -200,8 +212,6 @@ void UnoEngine::Finalize() {
         delete instance_;
         instance_ = nullptr;
 
-        // デバッグ出力
-        OutputDebugStringA("UnoEngine: Successfully finalized\n");
     }
     catch (const std::exception& e) {
         OutputDebugStringA(("ERROR: Exception in UnoEngine::Finalize: " + std::string(e.what()) + "\n").c_str());
@@ -400,6 +410,40 @@ void UnoEngine::ShowDebugInfo() {
     ImGui::End();
 }
 
+// === 3D空間オーディオシステム実装 ===
+std::unique_ptr<SpatialAudioSource> UnoEngine::CreateSpatialAudioSource(const std::string& audioName, const Vector3& position) {
+    auto spatialSource = std::make_unique<SpatialAudioSource>();
+    
+    if (spatialSource->Initialize(audioName, position)) {
+        return spatialSource;
+    }
+    
+    return nullptr;
+}
+
+void UnoEngine::SetAudioListenerPosition(const Vector3& position) {
+    if (audioListener_) {
+        audioListener_->SetPosition(position);
+    }
+}
+
+void UnoEngine::SetAudioListenerOrientation(const Vector3& forward, const Vector3& up) {
+    if (audioListener_) {
+        audioListener_->SetOrientation(forward, up);
+    }
+}
+
+void UnoEngine::UpdateSpatialAudio() {
+    if (!audioListener_) return;
+    
+    // 全ての3D空間オーディオソースを更新
+    for (auto& spatialSource : spatialAudioSources_) {
+        if (spatialSource) {
+            spatialSource->Update(audioListener_->GetPosition(), audioListener_->GetForward());
+        }
+    }
+}
+
 void UnoEngine::InitializeImGui() {
     try {
         // ImGui初期化
@@ -454,9 +498,6 @@ void UnoEngine::InitializeImGui() {
                 }
             }
         }
-        else {
-            OutputDebugStringA("日本語フォントが正常に読み込まれました。\n");
-        }
 
         // フォントテクスチャをビルド
         io.Fonts->Build();
@@ -473,8 +514,6 @@ void UnoEngine::InitializeImGui() {
             srvManager_->GetGPUDescriptorHandle(0)
         );
 
-        // デバッグ出力
-        OutputDebugStringA("UnoEngine: ImGui initialized successfully\n");
     }
     catch (const std::exception& e) {
         OutputDebugStringA(("ERROR: Failed to initialize ImGui: " + std::string(e.what()) + "\n").c_str());

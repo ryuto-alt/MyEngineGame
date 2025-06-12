@@ -58,6 +58,12 @@ public:
     // ボリューム設定（0.0f ～ 1.0f）
     void SetVolume(float volume);
 
+    // パンニング設定（-1.0f（左）～ 1.0f（右））
+    void SetPanning(float pan);
+
+    // 左右の音量を個別設定
+    void SetLeftRightVolume(float leftVolume, float rightVolume);
+
     // 再生中かどうか
     bool IsPlaying() const;
 

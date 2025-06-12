@@ -149,6 +149,65 @@ void AudioSource::SetVolume(float volume) {
     }
 }
 
+void AudioSource::SetPanning(float pan) {
+    if (!sourceVoice) {
+        return;
+    }
+
+    // パンニング設定（-1.0f（左）～ 1.0f（右））
+    // XAudio2では出力マトリックスを使用してパンニングを実現
+    // ステレオ出力の場合、2x2マトリックス
+    float outputMatrix[4];
+    
+    // パンの値を制限
+    pan = (pan < -1.0f) ? -1.0f : (pan > 1.0f) ? 1.0f : pan;
+    
+    // 左チャンネル（入力）から左スピーカー（出力）への音量
+    outputMatrix[0] = (pan <= 0.0f) ? 1.0f : (1.0f - pan);
+    // 左チャンネル（入力）から右スピーカー（出力）への音量
+    outputMatrix[1] = 0.0f;
+    // 右チャンネル（入力）から左スピーカー（出力）への音量
+    outputMatrix[2] = 0.0f;
+    // 右チャンネル（入力）から右スピーカー（出力）への音量
+    outputMatrix[3] = (pan >= 0.0f) ? 1.0f : (1.0f + pan);
+    
+    // モノラル音源の場合の調整
+    if (waveFormat.nChannels == 1) {
+        outputMatrix[1] = (pan >= 0.0f) ? pan : 0.0f;
+        outputMatrix[2] = (pan <= 0.0f) ? -pan : 0.0f;
+        outputMatrix[3] = outputMatrix[0];
+    }
+    
+    sourceVoice->SetOutputMatrix(nullptr, waveFormat.nChannels, 2, outputMatrix);
+}
+
+void AudioSource::SetLeftRightVolume(float leftVolume, float rightVolume) {
+    if (!sourceVoice) {
+        return;
+    }
+
+    // 音量の制限
+    leftVolume = (leftVolume < 0.0f) ? 0.0f : (leftVolume > 1.0f) ? 1.0f : leftVolume;
+    rightVolume = (rightVolume < 0.0f) ? 0.0f : (rightVolume > 1.0f) ? 1.0f : rightVolume;
+    
+    // 出力マトリックス設定
+    float outputMatrix[4];
+    
+    if (waveFormat.nChannels == 1) {
+        // モノラル音源の場合
+        outputMatrix[0] = leftVolume;   // モノラル入力 -> 左出力
+        outputMatrix[1] = rightVolume;  // モノラル入力 -> 右出力
+        sourceVoice->SetOutputMatrix(nullptr, 1, 2, outputMatrix);
+    } else {
+        // ステレオ音源の場合
+        outputMatrix[0] = leftVolume;   // 左入力 -> 左出力
+        outputMatrix[1] = 0.0f;         // 左入力 -> 右出力
+        outputMatrix[2] = 0.0f;         // 右入力 -> 左出力
+        outputMatrix[3] = rightVolume;  // 右入力 -> 右出力
+        sourceVoice->SetOutputMatrix(nullptr, 2, 2, outputMatrix);
+    }
+}
+
 bool AudioSource::IsPlaying() const {
     return isPlaying;
 }
