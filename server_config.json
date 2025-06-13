@@ -1,0 +1,25 @@
+{
+    "server": {
+        "host": "localhost",
+        "port": 8080,
+        "directory": "x64/Release"
+    },
+    "mime_types": {
+        ".obj": "model/obj",
+        ".mtl": "model/mtl",
+        ".fbx": "model/vnd.fbx",
+        ".png": "image/png",
+        ".jpg": "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".wav": "audio/wav",
+        ".mp3": "audio/mpeg",
+        ".hlsl": "text/plain",
+        ".ini": "text/plain"
+    },
+    "cors": {
+        "enabled": true,
+        "allow_origin": "*",
+        "allow_methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"]
+    }
+}
