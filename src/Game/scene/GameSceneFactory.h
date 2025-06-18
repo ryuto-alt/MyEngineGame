@@ -14,3 +14,4 @@ public:
     // シーン生成メソッドのオーバーライド
     std::unique_ptr<IScene> CreateScene(const std::string& sceneName) override;
 };
+
