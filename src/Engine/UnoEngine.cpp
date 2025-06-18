@@ -342,14 +342,24 @@ std::unique_ptr<Model> UnoEngine::LoadModel(const std::string& modelPath) {
     // Modelを初期化（DirectXCommonを渡す）
     model->Initialize(dxCommon_.get());
     
-    // パスの解析
-    size_t lastSlash = modelPath.find_last_of("/\\");
-    std::string directoryPath = (lastSlash != std::string::npos) ? 
-        modelPath.substr(0, lastSlash + 1) : "";
-    std::string filename = (lastSlash != std::string::npos) ? 
-        modelPath.substr(lastSlash + 1) : modelPath;
+    // ファイル拡張子を取得
+    std::string extension = modelPath.substr(modelPath.find_last_of(".") + 1);
+    std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
     
-    model->LoadFromObj(directoryPath, filename);
+    if (extension == "glb" || extension == "gltf") {
+        // GLB/GLTFファイルの読み込み
+        model->LoadFromGLB(modelPath);
+    } else {
+        // OBJファイルの読み込み（既存の処理）
+        size_t lastSlash = modelPath.find_last_of("/\\");
+        std::string directoryPath = (lastSlash != std::string::npos) ? 
+            modelPath.substr(0, lastSlash + 1) : "";
+        std::string filename = (lastSlash != std::string::npos) ? 
+            modelPath.substr(lastSlash + 1) : modelPath;
+        
+        model->LoadFromObj(directoryPath, filename);
+    }
+    
     return model;
 }
 

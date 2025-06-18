@@ -23,6 +23,9 @@ public:
 
     // モデルの読み込み
     void LoadFromObj(const std::string& directoryPath, const std::string& filename);
+    
+    // GLBファイルの読み込み
+    void LoadFromGLB(const std::string& filePath);
 
     // アクセサ
     const std::vector<VertexData>& GetVertices() const { return modelData_.vertices; }
@@ -40,6 +43,12 @@ private:
     ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
     // マテリアルデータの読み込み
     MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+    
+    // GLBモデルデータの読み込み
+    ModelData LoadGLBFile(const std::string& filePath);
+    
+    // 頂点バッファの作成
+    void CreateVertexBuffer();
 
     // モデルデータ
     ModelData modelData_;

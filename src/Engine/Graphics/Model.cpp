@@ -6,6 +6,25 @@
 #include <cassert>
 #include <unordered_map>
 #include <cmath>
+#include <functional>
+
+// tinygltf implementation
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+// Disable warnings for external library
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4100) // unreferenced formal parameter
+#pragma warning(disable: 4189) // local variable is initialized but not referenced
+#pragma warning(disable: 4244) // conversion from 'type1' to 'type2', possible loss of data
+#pragma warning(disable: 4267) // conversion from 'size_t' to 'type', possible loss of data
+#pragma warning(disable: 4996) // deprecated functions
+#endif
+#include "../../../externals/tinygltf/tiny_gltf.h"
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 Model::Model() : dxCommon_(nullptr) {}
 
@@ -445,4 +464,490 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
     }
 
     return materialData;
+}
+
+void Model::LoadFromGLB(const std::string& filePath) {
+    // GLBモデルデータの読み込み
+    modelData_ = LoadGLBFile(filePath);
+    
+    // テクスチャの読み込み（埋め込みテクスチャが保存された後）
+    if (!modelData_.material.textureFilePath.empty()) {
+        OutputDebugStringA(("Model::LoadFromGLB - Loading texture: " + modelData_.material.textureFilePath + "\n").c_str());
+        
+        // テクスチャが存在するかチェック
+        DWORD fileAttributes = GetFileAttributesA(modelData_.material.textureFilePath.c_str());
+        if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
+            // テクスチャが存在する場合のみ読み込み
+            TextureManager::GetInstance()->LoadTexture(modelData_.material.textureFilePath);
+            OutputDebugStringA(("Model::LoadFromGLB - Texture loaded: " + modelData_.material.textureFilePath + "\n").c_str());
+        } else {
+            OutputDebugStringA(("WARNING: Texture file not found: " + modelData_.material.textureFilePath + "\n").c_str());
+        }
+    }
+    
+    // 頂点バッファの作成
+    CreateVertexBuffer();
+}
+
+void Model::CreateVertexBuffer() {
+    if (modelData_.vertices.empty()) {
+        return;
+    }
+    
+    // 頂点バッファの作成
+    vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
+    
+    // 頂点バッファビューの設定
+    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+    
+    // 頂点データの書き込み
+    VertexData* vertexData = nullptr;
+    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+    std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+    vertexResource_->Unmap(0, nullptr);
+    
+    // デバッグ情報
+    OutputDebugStringA(("Model: Created vertex buffer with " + std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+}
+
+ModelData Model::LoadGLBFile(const std::string& filePath) {
+    ModelData result = {};
+    
+    tinygltf::Model gltfModel;
+    tinygltf::TinyGLTF loader;
+    std::string err;
+    std::string warn;
+    
+    // GLBファイルを読み込む
+    OutputDebugStringA(("Loading GLB file: " + filePath + "\n").c_str());
+    bool success = loader.LoadBinaryFromFile(&gltfModel, &err, &warn, filePath);
+    
+    if (!warn.empty()) {
+        OutputDebugStringA(("GLTF Warning: " + warn + "\n").c_str());
+    }
+    
+    if (!err.empty()) {
+        OutputDebugStringA(("GLTF Error: " + err + "\n").c_str());
+    }
+    
+    if (!success) {
+        OutputDebugStringA("Failed to load GLB file\n");
+        return result;
+    }
+    
+    // デフォルトシーンを取得
+    if (gltfModel.defaultScene < 0 || gltfModel.defaultScene >= static_cast<int>(gltfModel.scenes.size())) {
+        OutputDebugStringA("No default scene found in GLB file\n");
+        return result;
+    }
+    
+    // ノード変換行列を計算する関数
+    std::function<Matrix4x4(int)> getNodeTransform;
+    getNodeTransform = [&](int nodeIdx) -> Matrix4x4 {
+        if (nodeIdx < 0 || nodeIdx >= static_cast<int>(gltfModel.nodes.size())) {
+            return MakeIdentity4x4();
+        }
+        
+        const tinygltf::Node& node = gltfModel.nodes[nodeIdx];
+        Matrix4x4 localTransform = MakeIdentity4x4();
+        
+        // 変換行列が直接指定されている場合
+        if (node.matrix.size() == 16) {
+            // Column-major to row-major conversion
+            for (int i = 0; i < 4; ++i) {
+                for (int j = 0; j < 4; ++j) {
+                    localTransform.m[i][j] = static_cast<float>(node.matrix[j * 4 + i]);
+                }
+            }
+        } else {
+            // TRS (Translation, Rotation, Scale) から行列を構築
+            Vector3 translation = {0.0f, 0.0f, 0.0f};
+            Vector3 scale = {1.0f, 1.0f, 1.0f};
+            Vector4 rotation = {0.0f, 0.0f, 0.0f, 1.0f}; // Quaternion as Vector4 (x,y,z,w)
+            
+            if (node.translation.size() == 3) {
+                translation.x = static_cast<float>(node.translation[0]);
+                translation.y = static_cast<float>(node.translation[1]);
+                translation.z = static_cast<float>(node.translation[2]);
+            }
+            
+            if (node.scale.size() == 3) {
+                scale.x = static_cast<float>(node.scale[0]);
+                scale.y = static_cast<float>(node.scale[1]);
+                scale.z = static_cast<float>(node.scale[2]);
+            }
+            
+            if (node.rotation.size() == 4) {
+                rotation.x = static_cast<float>(node.rotation[0]);
+                rotation.y = static_cast<float>(node.rotation[1]);
+                rotation.z = static_cast<float>(node.rotation[2]);
+                rotation.w = static_cast<float>(node.rotation[3]);
+            }
+            
+            // TRSから行列を作成
+            Matrix4x4 T = MakeTranslateMatrix(translation);
+            
+            // クォータニオンから回転行列を作成
+            Matrix4x4 R = MakeIdentity4x4();
+            float x = rotation.x, y = rotation.y, z = rotation.z, w = rotation.w;
+            R.m[0][0] = 1.0f - 2.0f * (y * y + z * z);
+            R.m[0][1] = 2.0f * (x * y - w * z);
+            R.m[0][2] = 2.0f * (x * z + w * y);
+            R.m[1][0] = 2.0f * (x * y + w * z);
+            R.m[1][1] = 1.0f - 2.0f * (x * x + z * z);
+            R.m[1][2] = 2.0f * (y * z - w * x);
+            R.m[2][0] = 2.0f * (x * z - w * y);
+            R.m[2][1] = 2.0f * (y * z + w * x);
+            R.m[2][2] = 1.0f - 2.0f * (x * x + y * y);
+            
+            Matrix4x4 S = MakeScaleMatrix(scale);
+            
+            // 正しい順序で合成: T * R * S
+            localTransform = Multiply(T, Multiply(R, S));
+        }
+        
+        return localTransform;
+    };
+    
+    // シーン内の最初のノードを探す
+    const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene];
+    Matrix4x4 nodeTransform = MakeIdentity4x4();
+    int meshIndex = -1;
+    
+    // メッシュを持つノードを探す
+    for (int nodeIdx : scene.nodes) {
+        const tinygltf::Node& node = gltfModel.nodes[nodeIdx];
+        if (node.mesh >= 0) {
+            meshIndex = node.mesh;
+            nodeTransform = getNodeTransform(nodeIdx);
+            OutputDebugStringA(("Found mesh in node: " + node.name + "\n").c_str());
+            OutputDebugStringA(("Node transform scale: " + 
+                std::to_string(nodeTransform.m[0][0]) + ", " +
+                std::to_string(nodeTransform.m[1][1]) + ", " +
+                std::to_string(nodeTransform.m[2][2]) + "\n").c_str());
+            break;
+        }
+    }
+    
+    if (meshIndex < 0 || meshIndex >= static_cast<int>(gltfModel.meshes.size())) {
+        OutputDebugStringA("No mesh found in scene nodes\n");
+        return result;
+    }
+    
+    const tinygltf::Mesh& mesh = gltfModel.meshes[meshIndex];
+    OutputDebugStringA(("Processing mesh: " + mesh.name + " with " + std::to_string(mesh.primitives.size()) + " primitives\n").c_str());
+    
+    // 最初のプリミティブを処理
+    if (mesh.primitives.empty()) {
+        OutputDebugStringA("No primitives found in mesh\n");
+        return result;
+    }
+    
+    const tinygltf::Primitive& primitive = mesh.primitives[0];
+    
+    // 頂点データの取得
+    std::vector<Vector3> positions;
+    std::vector<Vector3> normals;
+    std::vector<Vector2> texcoords;
+    std::vector<uint32_t> indices;
+    
+    // POSITION属性を取得
+    auto posIt = primitive.attributes.find("POSITION");
+    if (posIt != primitive.attributes.end()) {
+        const tinygltf::Accessor& accessor = gltfModel.accessors[posIt->second];
+        const tinygltf::BufferView& bufferView = gltfModel.bufferViews[accessor.bufferView];
+        const tinygltf::Buffer& buffer = gltfModel.buffers[bufferView.buffer];
+        
+        const float* posData = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
+        
+        for (size_t i = 0; i < accessor.count; ++i) {
+            Vector3 pos;
+            pos.x = posData[i * 3 + 0];
+            pos.y = posData[i * 3 + 1];
+            pos.z = posData[i * 3 + 2];
+            positions.push_back(pos);
+        }
+    }
+    
+    // NORMAL属性を取得
+    auto normIt = primitive.attributes.find("NORMAL");
+    if (normIt != primitive.attributes.end()) {
+        const tinygltf::Accessor& accessor = gltfModel.accessors[normIt->second];
+        const tinygltf::BufferView& bufferView = gltfModel.bufferViews[accessor.bufferView];
+        const tinygltf::Buffer& buffer = gltfModel.buffers[bufferView.buffer];
+        
+        const float* normData = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
+        
+        for (size_t i = 0; i < accessor.count; ++i) {
+            Vector3 norm;
+            norm.x = normData[i * 3 + 0];
+            norm.y = normData[i * 3 + 1];
+            norm.z = normData[i * 3 + 2];
+            normals.push_back(norm);
+        }
+    }
+    
+    // TEXCOORD_0属性を取得
+    auto texIt = primitive.attributes.find("TEXCOORD_0");
+    if (texIt != primitive.attributes.end()) {
+        const tinygltf::Accessor& accessor = gltfModel.accessors[texIt->second];
+        const tinygltf::BufferView& bufferView = gltfModel.bufferViews[accessor.bufferView];
+        const tinygltf::Buffer& buffer = gltfModel.buffers[bufferView.buffer];
+        
+        const float* texData = reinterpret_cast<const float*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
+        
+        for (size_t i = 0; i < accessor.count; ++i) {
+            Vector2 tex;
+            tex.x = texData[i * 2 + 0];
+            tex.y = texData[i * 2 + 1];
+            texcoords.push_back(tex);
+        }
+    }
+    
+    // インデックスの取得
+    if (primitive.indices >= 0) {
+        const tinygltf::Accessor& accessor = gltfModel.accessors[primitive.indices];
+        const tinygltf::BufferView& bufferView = gltfModel.bufferViews[accessor.bufferView];
+        const tinygltf::Buffer& buffer = gltfModel.buffers[bufferView.buffer];
+        
+        if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+            const uint16_t* indexData = reinterpret_cast<const uint16_t*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
+            for (size_t i = 0; i < accessor.count; ++i) {
+                indices.push_back(static_cast<uint32_t>(indexData[i]));
+            }
+        } else if (accessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) {
+            const uint32_t* indexData = reinterpret_cast<const uint32_t*>(&buffer.data[bufferView.byteOffset + accessor.byteOffset]);
+            for (size_t i = 0; i < accessor.count; ++i) {
+                indices.push_back(indexData[i]);
+            }
+        }
+    }
+    
+    // 法線変換用の行列を計算（スケールの影響を除去）
+    Matrix4x4 normalTransform = nodeTransform;
+    // 正規化してスケールの影響を除去
+    for (int i = 0; i < 3; ++i) {
+        float length = std::sqrt(
+            normalTransform.m[i][0] * normalTransform.m[i][0] +
+            normalTransform.m[i][1] * normalTransform.m[i][1] +
+            normalTransform.m[i][2] * normalTransform.m[i][2]
+        );
+        if (length > 0.0f) {
+            normalTransform.m[i][0] /= length;
+            normalTransform.m[i][1] /= length;
+            normalTransform.m[i][2] /= length;
+        }
+    }
+    
+    // 頂点データの構築
+    if (!indices.empty()) {
+        // インデックスを使用して頂点データを構築
+        for (uint32_t idx : indices) {
+            VertexData vertex = {};
+            
+            if (idx < positions.size()) {
+                // 頂点位置にノード変換を適用
+                Vector4 pos = Vector4(positions[idx].x, positions[idx].y, positions[idx].z, 1.0f);
+                // Vector4と行列の乗算
+                Vector4 transformedPos;
+                transformedPos.x = pos.x * nodeTransform.m[0][0] + pos.y * nodeTransform.m[1][0] + pos.z * nodeTransform.m[2][0] + pos.w * nodeTransform.m[3][0];
+                transformedPos.y = pos.x * nodeTransform.m[0][1] + pos.y * nodeTransform.m[1][1] + pos.z * nodeTransform.m[2][1] + pos.w * nodeTransform.m[3][1];
+                transformedPos.z = pos.x * nodeTransform.m[0][2] + pos.y * nodeTransform.m[1][2] + pos.z * nodeTransform.m[2][2] + pos.w * nodeTransform.m[3][2];
+                transformedPos.w = pos.x * nodeTransform.m[0][3] + pos.y * nodeTransform.m[1][3] + pos.z * nodeTransform.m[2][3] + pos.w * nodeTransform.m[3][3];
+                vertex.position = transformedPos;
+            }
+            
+            if (idx < normals.size()) {
+                // 法線にノード変換を適用（回転のみ）
+                Vector3 norm = normals[idx];
+                Vector4 norm4 = Vector4(norm.x, norm.y, norm.z, 0.0f);
+                // Vector4と行列の乗算
+                Vector4 transformedNorm;
+                transformedNorm.x = norm4.x * normalTransform.m[0][0] + norm4.y * normalTransform.m[1][0] + norm4.z * normalTransform.m[2][0] + norm4.w * normalTransform.m[3][0];
+                transformedNorm.y = norm4.x * normalTransform.m[0][1] + norm4.y * normalTransform.m[1][1] + norm4.z * normalTransform.m[2][1] + norm4.w * normalTransform.m[3][1];
+                transformedNorm.z = norm4.x * normalTransform.m[0][2] + norm4.y * normalTransform.m[1][2] + norm4.z * normalTransform.m[2][2] + norm4.w * normalTransform.m[3][2];
+                // 法線を正規化
+                Vector3 transformedNorm3 = Vector3(transformedNorm.x, transformedNorm.y, transformedNorm.z);
+                float length = std::sqrt(transformedNorm3.x * transformedNorm3.x + transformedNorm3.y * transformedNorm3.y + transformedNorm3.z * transformedNorm3.z);
+                if (length > 0.0f) {
+                    transformedNorm3.x /= length;
+                    transformedNorm3.y /= length;
+                    transformedNorm3.z /= length;
+                }
+                vertex.normal = transformedNorm3;
+            } else {
+                vertex.normal = Vector3(0.0f, 1.0f, 0.0f);  // デフォルト法線
+            }
+            
+            if (idx < texcoords.size()) {
+                vertex.texcoord = texcoords[idx];
+            } else {
+                vertex.texcoord = Vector2(0.0f, 0.0f);  // デフォルトUV
+            }
+            
+            result.vertices.push_back(vertex);
+        }
+    } else {
+        // インデックスがない場合は頂点を直接使用
+        for (size_t i = 0; i < positions.size(); ++i) {
+            VertexData vertex = {};
+            
+            // 頂点位置にノード変換を適用
+            Vector4 pos = Vector4(positions[i].x, positions[i].y, positions[i].z, 1.0f);
+            // Vector4と行列の乗算
+            Vector4 transformedPos;
+            transformedPos.x = pos.x * nodeTransform.m[0][0] + pos.y * nodeTransform.m[1][0] + pos.z * nodeTransform.m[2][0] + pos.w * nodeTransform.m[3][0];
+            transformedPos.y = pos.x * nodeTransform.m[0][1] + pos.y * nodeTransform.m[1][1] + pos.z * nodeTransform.m[2][1] + pos.w * nodeTransform.m[3][1];
+            transformedPos.z = pos.x * nodeTransform.m[0][2] + pos.y * nodeTransform.m[1][2] + pos.z * nodeTransform.m[2][2] + pos.w * nodeTransform.m[3][2];
+            transformedPos.w = pos.x * nodeTransform.m[0][3] + pos.y * nodeTransform.m[1][3] + pos.z * nodeTransform.m[2][3] + pos.w * nodeTransform.m[3][3];
+            vertex.position = transformedPos;
+            
+            if (i < normals.size()) {
+                // 法線にノード変換を適用（回転のみ）
+                Vector3 norm = normals[i];
+                Vector4 norm4 = Vector4(norm.x, norm.y, norm.z, 0.0f);
+                // Vector4と行列の乗算
+                Vector4 transformedNorm;
+                transformedNorm.x = norm4.x * normalTransform.m[0][0] + norm4.y * normalTransform.m[1][0] + norm4.z * normalTransform.m[2][0] + norm4.w * normalTransform.m[3][0];
+                transformedNorm.y = norm4.x * normalTransform.m[0][1] + norm4.y * normalTransform.m[1][1] + norm4.z * normalTransform.m[2][1] + norm4.w * normalTransform.m[3][1];
+                transformedNorm.z = norm4.x * normalTransform.m[0][2] + norm4.y * normalTransform.m[1][2] + norm4.z * normalTransform.m[2][2] + norm4.w * normalTransform.m[3][2];
+                // 法線を正規化
+                Vector3 transformedNorm3 = Vector3(transformedNorm.x, transformedNorm.y, transformedNorm.z);
+                float length = std::sqrt(transformedNorm3.x * transformedNorm3.x + transformedNorm3.y * transformedNorm3.y + transformedNorm3.z * transformedNorm3.z);
+                if (length > 0.0f) {
+                    transformedNorm3.x /= length;
+                    transformedNorm3.y /= length;
+                    transformedNorm3.z /= length;
+                }
+                vertex.normal = transformedNorm3;
+            } else {
+                vertex.normal = Vector3(0.0f, 1.0f, 0.0f);
+            }
+            
+            if (i < texcoords.size()) {
+                vertex.texcoord = texcoords[i];
+            } else {
+                vertex.texcoord = Vector2(0.0f, 0.0f);
+            }
+            
+            result.vertices.push_back(vertex);
+        }
+    }
+    
+    // デフォルトマテリアルの設定
+    result.material.diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);  // 白色
+    result.material.alpha = 1.0f;  // 不透明
+    result.material.ambient = Vector4(0.2f, 0.2f, 0.2f, 1.0f);
+    
+    // マテリアルの処理
+    if (primitive.material >= 0 && primitive.material < static_cast<int>(gltfModel.materials.size())) {
+        const tinygltf::Material& material = gltfModel.materials[primitive.material];
+        
+        OutputDebugStringA(("Processing material: " + material.name + "\n").c_str());
+        OutputDebugStringA(("  Material has " + std::to_string(gltfModel.textures.size()) + " textures\n").c_str());
+        OutputDebugStringA(("  Material has " + std::to_string(gltfModel.images.size()) + " images\n").c_str());
+        
+        // PBRメタリックラフネスモデルのベースカラーを取得
+        const auto& pbr = material.pbrMetallicRoughness;
+        if (pbr.baseColorFactor.size() >= 4) {
+            result.material.diffuse = Vector4(
+                static_cast<float>(pbr.baseColorFactor[0]),
+                static_cast<float>(pbr.baseColorFactor[1]),
+                static_cast<float>(pbr.baseColorFactor[2]),
+                static_cast<float>(pbr.baseColorFactor[3])
+            );
+            // アルファ値も設定
+            result.material.alpha = static_cast<float>(pbr.baseColorFactor[3]);
+        }
+        
+        // ベースカラーテクスチャの処理
+        if (pbr.baseColorTexture.index >= 0) {
+            const tinygltf::Texture& texture = gltfModel.textures[pbr.baseColorTexture.index];
+            if (texture.source >= 0) {
+                const tinygltf::Image& image = gltfModel.images[texture.source];
+                
+                // テクスチャファイルのパスを設定
+                if (!image.uri.empty()) {
+                    // 相対パスの場合、GLBファイルのディレクトリを基準にする
+                    std::string directory = filePath;
+                    size_t lastSlash = directory.find_last_of("/\\");
+                    if (lastSlash != std::string::npos) {
+                        directory = directory.substr(0, lastSlash + 1);
+                    }
+                    result.material.textureFilePath = directory + image.uri;
+                } else if (!image.image.empty()) {
+                    // 埋め込み画像の場合
+                    OutputDebugStringA(("Processing embedded texture in GLB - size: " + std::to_string(image.image.size()) + " bytes\n").c_str());
+                    OutputDebugStringA(("Image dimensions: " + std::to_string(image.width) + "x" + std::to_string(image.height) + "\n").c_str());
+                    OutputDebugStringA(("Image components: " + std::to_string(image.component) + "\n").c_str());
+                    OutputDebugStringA(("Image pixel type: " + std::to_string(image.pixel_type) + "\n").c_str());
+                    
+                    // mimeTypeを確認
+                    std::string extension = ".png";
+                    if (image.mimeType == "image/jpeg") {
+                        extension = ".jpg";
+                    } else if (image.mimeType == "image/png") {
+                        extension = ".png";
+                    }
+                    
+                    // 一時ファイル名を生成
+                    std::string tempFilename = "Resources/textures/glb_embedded_" + 
+                        std::to_string(texture.source) + "_" + 
+                        std::to_string(std::hash<std::string>{}(filePath)) + extension;
+                    
+                    // 画像がすでにデコードされているかチェック
+                    if (image.width > 0 && image.height > 0 && image.component > 0) {
+                        // デコード済みの生データをPNG形式で保存
+                        int writeResult = stbi_write_png(tempFilename.c_str(), 
+                            image.width, image.height, image.component, 
+                            image.image.data(), image.width * image.component);
+                        
+                        if (writeResult != 0) {
+                            result.material.textureFilePath = tempFilename;
+                            OutputDebugStringA(("Embedded texture saved as PNG to: " + tempFilename + "\n").c_str());
+                        } else {
+                            OutputDebugStringA("Failed to write embedded texture as PNG\n");
+                        }
+                    } else {
+                        // エンコードされたデータをそのまま保存
+                        std::ofstream file(tempFilename, std::ios::binary);
+                        if (file.is_open()) {
+                            file.write(reinterpret_cast<const char*>(image.image.data()), image.image.size());
+                            file.close();
+                            
+                            result.material.textureFilePath = tempFilename;
+                            OutputDebugStringA(("Embedded texture saved directly to: " + tempFilename + "\n").c_str());
+                        } else {
+                            OutputDebugStringA("Failed to save embedded texture to file\n");
+                        }
+                    }
+                }
+            }
+        }
+        
+        // エミッシブカラー
+        if (material.emissiveFactor.size() >= 3) {
+            // エミッシブをアンビエントとして使用
+            result.material.ambient = Vector4(
+                static_cast<float>(material.emissiveFactor[0]),
+                static_cast<float>(material.emissiveFactor[1]),
+                static_cast<float>(material.emissiveFactor[2]),
+                1.0f
+            );
+        }
+    }
+    
+    // デバッグ情報の出力
+    OutputDebugStringA(("GLB loaded: " + std::to_string(result.vertices.size()) + " vertices\n").c_str());
+    OutputDebugStringA(("Material diffuse: " + 
+        std::to_string(result.material.diffuse.x) + ", " +
+        std::to_string(result.material.diffuse.y) + ", " +
+        std::to_string(result.material.diffuse.z) + ", " +
+        std::to_string(result.material.diffuse.w) + "\n").c_str());
+    OutputDebugStringA(("Material alpha: " + std::to_string(result.material.alpha) + "\n").c_str());
+    OutputDebugStringA(("Texture path: " + (result.material.textureFilePath.empty() ? "None" : result.material.textureFilePath) + "\n").c_str());
+    
+    return result;
 }

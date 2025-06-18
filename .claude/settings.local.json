@@ -16,7 +16,11 @@
       "Bash(./CG2_00-01.exe)",
       "Bash(ls:*)",
       "Bash(cmd.exe:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(mkdir:*)",
+      "Bash(curl:*)",
+      "Bash(python:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

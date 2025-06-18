@@ -30,7 +30,8 @@ void GamePlayScene::Initialize() {
 
 	// 3Dオブジェクトの作成
 	cubeObject_ = engine_->CreateObject3D();
-	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.obj");
+	// GLBファイルを読み込む
+	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.glb");
 	cubeObject_->SetModel(cubeModel_.get());
 
 	// キューブの初期位置を設定
