@@ -14,11 +14,24 @@ struct DirectionalLight
     float intensity;
 };
 
+struct SpotLight
+{
+    float32_t3 position;       // スポットライトの位置
+    float range;               // ライトの最大範囲
+    float32_t3 direction;      // スポットライトの方向（正規化済み）
+    float innerCone;           // 内側コーンのcos値（完全な明るさ）
+    float32_t4 color;          // ライトの色
+    float outerCone;           // 外側コーンのcos値（減衰開始）
+    float intensity;           // ライトの強度
+    float32_t2 attenuation;    // 減衰係数 (linear, quadratic)
+};
+
 ConstantBuffer<Material> gMaterial : register(b0);
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSample : register(s0);
 
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+ConstantBuffer<SpotLight> gSpotLight : register(b2);
 
 struct PixelShaderOutput
 {
@@ -30,7 +43,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float32_t4 textureColor = gTexture.Sample(gSample, transformedUV.xy);
     
-    // アルファ値が閾値未満の場合、そのピクセルを描画しない
+    // アルファ値が闾値未満の場合、そのピクセルを描画しない
     if (textureColor.a < 0.1f)
     {
         discard; // このピクセルの処理を中止
@@ -43,23 +56,73 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     if (gMaterial.enableLighting != 0)
     {
-        // 半球ライティングを採用
-        float3 lightDir = normalize(-gDirectionalLight.direction);
-        float NdotL = dot(normal, lightDir);
+        // 基本の環境光
+        float3 ambient = float3(0.05f, 0.05f, 0.05f);  // モードによって変更される
+        float3 finalColor = gMaterial.color.rgb * textureColor.rgb * ambient;
         
-        // 滑らかなシェーディングのための改良されたライティング計算
-        float diffuse = saturate(NdotL * 0.5f + 0.5f); // 半球ライティング
+        // enableLightingがライティングモードを表す
+        // 1 = ディレクショナルライトのみ
+        // 2 = スポットライトのみ
+        // 3 = 両方
         
-        // リムライトを追加（輪郭を強調）
-        float3 viewDir = float3(0.0f, 0.0f, -1.0f); // カメラ方向（適宜調整）
-        float rim = 1.0f - saturate(dot(normal, viewDir));
-        rim = pow(rim, 3.0f) * 0.3f; // リム効果を調整
+        // ディレクショナルライト
+        if (gMaterial.enableLighting == 1 || gMaterial.enableLighting == 3)
+        {
+            float3 lightDir = normalize(-gDirectionalLight.direction);
+            float NdotL = max(0.0f, dot(normal, lightDir));
+            float3 directionalContribution = gDirectionalLight.color.rgb * gDirectionalLight.intensity * NdotL;
+            finalColor += gMaterial.color.rgb * textureColor.rgb * directionalContribution;
+        }
         
-        // 最終的なライティング計算
-        float3 lighting = gDirectionalLight.color.rgb * diffuse * gDirectionalLight.intensity;
-        lighting += rim * gDirectionalLight.color.rgb; // リムライトを追加
+        // スポットライト
+        if (gMaterial.enableLighting == 2 || gMaterial.enableLighting == 3)
+        {
+            // スポットライトモードの場合は環境光を非常に暗くする
+            if (gMaterial.enableLighting == 2)
+            {
+                // ホラーゲーム風の暗さにリセット
+                finalColor = gMaterial.color.rgb * textureColor.rgb * float3(0.01f, 0.01f, 0.01f);
+            }
+            
+            float3 lightVector = gSpotLight.position - input.worldPosition;
+            float distance = length(lightVector);
+            
+            // 範囲チェック
+            if (distance <= gSpotLight.range)
+            {
+                // ライトベクトルを正規化
+                lightVector = normalize(lightVector);
+                
+                // スポットライトのコーン内かチェック
+                float cosAngle = dot(gSpotLight.direction, -lightVector);
+                
+                // 外側コーンの範囲内か？
+                if (cosAngle > gSpotLight.outerCone)
+                {
+                    // コーンの減衰を計算
+                    float spotAttenuation = 1.0f;
+                    if (cosAngle < gSpotLight.innerCone)
+                    {
+                        spotAttenuation = smoothstep(gSpotLight.outerCone, gSpotLight.innerCone, cosAngle);
+                    }
+                    
+                    // 距離による減衰
+                    float distanceAttenuation = 1.0f / (1.0f + gSpotLight.attenuation.x * distance + 
+                                                       gSpotLight.attenuation.y * distance * distance);
+                    
+                    // ランバートの拡散反射
+                    float NdotL = max(0.0f, dot(normal, lightVector));
+                    
+                    // 最終的なライトの強度
+                    float3 lightContribution = gSpotLight.color.rgb * gSpotLight.intensity * 
+                                             NdotL * spotAttenuation * distanceAttenuation;
+                    
+                    finalColor += gMaterial.color.rgb * textureColor.rgb * lightContribution;
+                }
+            }
+        }
         
-        output.color.rgb = gMaterial.color.rgb * textureColor.rgb * lighting;
+        output.color.rgb = finalColor;
         output.color.a = gMaterial.color.a * textureColor.a;
     }
     else

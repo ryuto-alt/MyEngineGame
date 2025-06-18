@@ -48,6 +48,13 @@ void GamePlayScene::Initialize() {
 	
 	// キューブのスケールを大きくして見やすくする
 	cubeObject_->SetScale(Vector3{ 2.0f, 2.0f, 2.0f });
+	
+	// ディレクショナルライトの設定（デフォルト）
+	DirectionalLight defaultLight;
+	defaultLight.color = { 1.0f, 1.0f, 1.0f, 1.0f };  // 白色光
+	defaultLight.direction = { 0.0f, -1.0f, 0.0f };   // 上から下へ
+	defaultLight.intensity = 1.0f;  // 標準の強さ
+	cubeObject_->SetDirectionalLight(defaultLight);
 
 	// 2Dスプライトの作成
 	titleSprite_ = engine_->CreateSprite("Resources/textures/title_logo.png");
@@ -233,6 +240,29 @@ void GamePlayScene::Update() {
 	// カメラの更新（先に更新する）
 	camera_->Update();
 	
+	// ライティングモードに応じてマテリアルのライティングフラグを設定
+	if (lightingMode_ == LIGHTING_NONE) {
+		cubeObject_->SetEnableLighting(false);
+	} else {
+		cubeObject_->SetEnableLighting(true);
+		// enableLightingにモードを設定
+		cubeObject_->GetMaterialData()->enableLighting = lightingMode_;
+	}
+	
+	// スポットライトをカメラの位置と向きに同期（懐中電灯効果）
+	SpotLight spotLight;
+	spotLight.position = engine_->GetCameraPosition();
+	spotLight.range = 20.0f;  // 懐中電灯の有効範囲
+	spotLight.direction = engine_->GetCameraForwardVector();  // カメラの前方向
+	spotLight.innerCone = 0.95f;  // cos(18度) - 中心部の完全な明るさ
+	spotLight.color = { 1.0f, 0.95f, 0.8f, 1.0f };  // 暖かい白色光（懐中電灯風）
+	spotLight.outerCone = 0.82f;  // cos(35度) - 外側の減衰開始角度
+	spotLight.intensity = 3.0f;  // 光の強度
+	spotLight.attenuation = { 0.09f, 0.032f };  // 線形と1/r^2の減衰係数
+	
+	// スポットライトを設定
+	cubeObject_->SetSpotLight(spotLight);
+	
 	// オブジェクトの更新
 	cubeObject_->Update();
 	titleSprite_->Update();
@@ -252,9 +282,17 @@ void GamePlayScene::Draw() {
 
 	ImGui::Text("統合APIを使用したGamePlaySceneです");
 	ImGui::Separator();
+	
+	// ライティングモードの選択
+	ImGui::Text("ライティングモード:");
+	ImGui::RadioButton("ライティングなし", &lightingMode_, LIGHTING_NONE);
+	ImGui::RadioButton("ディレクショナルライトのみ", &lightingMode_, LIGHTING_DIRECTIONAL);
+	ImGui::RadioButton("スポットライトのみ（ホラーゲーム風）", &lightingMode_, LIGHTING_SPOTLIGHT);
+	ImGui::RadioButton("両方のライト", &lightingMode_, LIGHTING_BOTH);
+	ImGui::Separator();
 
 	ImGui::Text("操作方法:");
-	ImGui::Text("SPACE - キューブ回転");
+	ImGui::Text("TAB - カメラモード切り替え");
 	ImGui::Text("F - パーティクル発生");
 	ImGui::Text("B - BGM ON/OFF");
 	ImGui::Text("C - bgm.wav再生/停止（3D空間オーディオ）");

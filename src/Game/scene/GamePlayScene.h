@@ -31,4 +31,13 @@ protected:
     
     // キューブの位置
     Vector3 cubePosition_ = Vector3{0.0f, 0.0f, 0.0f};
+    
+    // ライティングモード
+    enum LightingMode {
+        LIGHTING_NONE = 0,           // ライティングなし
+        LIGHTING_DIRECTIONAL = 1,    // ディレクショナルライトのみ
+        LIGHTING_SPOTLIGHT = 2,      // スポットライトのみ
+        LIGHTING_BOTH = 3            // 両方
+    };
+    int lightingMode_ = LIGHTING_SPOTLIGHT;  // デフォルトはスポットライト
 };

@@ -50,6 +50,17 @@ struct DirectionalLight {
     float intensity;
 };
 
+struct SpotLight {
+    Vector3 position;       // スポットライトの位置
+    float range;            // ライトの最大範囲
+    Vector3 direction;      // スポットライトの方向（正規化済み）
+    float innerCone;        // 内側コーンのcos値（完全な明るさ）
+    Vector4 color;          // ライトの色
+    float outerCone;        // 外側コーンのcos値（減衰開始）
+    float intensity;        // ライトの強度
+    Vector2 attenuation;    // 減衰係数 (linear, quadratic)
+};
+
 struct Transform {
     Vector3 scale;
     Vector3 rotate;

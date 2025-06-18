@@ -8,7 +8,7 @@
 
 Object3d::Object3d() : model_(nullptr), dxCommon_(nullptr), spriteCommon_(nullptr),
 materialData_(nullptr), transformationMatrixData_(nullptr), directionalLightData_(nullptr),
-camera_(nullptr) {
+spotLightData_(nullptr), camera_(nullptr) {
     // 初期値設定
     transform_.scale = { 1.0f, 1.0f, 1.0f };
     transform_.rotate = { 0.0f, 0.0f, 0.0f };
@@ -26,11 +26,15 @@ Object3d::~Object3d() {
     if (directionalLightResource_) {
         directionalLightResource_.Reset();
     }
+    if (spotLightResource_) {
+        spotLightResource_.Reset();
+    }
     
     // データポインタをnullptrに設定（安全のため）
     materialData_ = nullptr;
     transformationMatrixData_ = nullptr;
     directionalLightData_ = nullptr;
+    spotLightData_ = nullptr;
 }
 
 void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
@@ -61,6 +65,19 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
     directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
     directionalLightData_->direction = { 0.0f, -1.0f, 0.0f };
     directionalLightData_->intensity = 1.0f;
+    
+    // スポットライトリソースの作成
+    spotLightResource_ = dxCommon_->CreateBufferResource(sizeof(SpotLight));
+    // スポットライトデータの書き込み
+    spotLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData_));
+    spotLightData_->position = { 0.0f, 2.0f, -8.0f };  // カメラの初期位置に合わせる
+    spotLightData_->range = 20.0f;  // 懐中電灯の範囲
+    spotLightData_->direction = { 0.0f, 0.0f, 1.0f };  // 前方向
+    spotLightData_->innerCone = 0.95f;  // cos(18度) - 完全な明るさの範囲
+    spotLightData_->color = { 1.0f, 0.95f, 0.8f, 1.0f };  // 暖かい白色光
+    spotLightData_->outerCone = 0.85f;  // cos(32度) - 減衰開始の範囲
+    spotLightData_->intensity = 3.0f;  // 光の強度
+    spotLightData_->attenuation = { 0.09f, 0.032f };  // 線形と二乗の減衰係数
 }
 
 void Object3d::SetModel(Model* model) {
@@ -229,6 +246,9 @@ void Object3d::Draw() {
 
     // ライトCBufferの場所を設定
     dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+    
+    // スポットライトCBufferの場所を設定
+    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(4, spotLightResource_->GetGPUVirtualAddress());
 
     // デバッグ出力
     OutputDebugStringA(("Object3d::Draw - Drawing " + std::to_string(model_->GetVertexCount()) + " vertices\n").c_str());

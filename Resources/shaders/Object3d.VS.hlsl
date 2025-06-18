@@ -25,5 +25,8 @@ VertexShaderOutput main(VertexShaderInput input)
     float32_t3 worldNormal = mul(input.normal, (float32_t3x3) gTransformationMatrix.World);
     output.normal = normalize(worldNormal);
     
+    // ワールド座標を計算
+    output.worldPosition = mul(input.position, gTransformationMatrix.World).xyz;
+    
     return output;
 }

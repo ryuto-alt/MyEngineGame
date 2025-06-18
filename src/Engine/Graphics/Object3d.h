@@ -2,6 +2,7 @@
 #include "Model.h"
 #include "Matrix4x4.h"
 #include "Vector3.h"
+#include "Vector4.h"
 #include "math.h"
 #include "Camera.h"
 
@@ -60,6 +61,14 @@ public:
     // ライトの設定
     void SetDirectionalLight(const DirectionalLight& light) { *directionalLightData_ = light; }
     const DirectionalLight& GetDirectionalLight() const { return *directionalLightData_; }
+    
+    // スポットライトの設定
+    void SetSpotLight(const SpotLight& light) { *spotLightData_ = light; }
+    const SpotLight& GetSpotLight() const { return *spotLightData_; }
+    
+    // マテリアルデータへのアクセス
+    Material* GetMaterialData() { return materialData_; }
+    const Material* GetMaterialData() const { return materialData_; }
 
 private:
     // モデル
@@ -84,6 +93,11 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_;
     // ライトデータ
     DirectionalLight* directionalLightData_;
+    
+    // スポットライトリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource_;
+    // スポットライトデータ
+    SpotLight* spotLightData_;
 
     // トランスフォーム
     Transform transform_;

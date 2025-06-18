@@ -23,7 +23,10 @@
       "Bash(rm:*)",
       "Bash(msbuild:*)",
       "Bash(git config:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(./build.bat)",
+      "WebFetch(domain:zenn.dev)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
