@@ -1,12 +1,13 @@
-# Blender 4.1.1 MTL File: 'None'
+# Blender 4.4.0 MTL File: 'None'
 # www.blender.org
 
-newmtl Material.001
-Ns 324.000031
+newmtl Gravel
 Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd cube.jpg
+map_Ns ../../../blenderkit_data/materials/gravel_5c6783e3-d959-4c0c-ac66-36d8be3cc974/Gravel_Roughness.jpg
+map_Bump -bm 1.000000 ../../../blenderkit_data/materials/gravel_5c6783e3-d959-4c0c-ac66-36d8be3cc974/Gravel_Normal.jpg

@@ -13,6 +13,21 @@ using namespace Logger;
 using namespace StringUtility;
 
 DirectXCommon::~DirectXCommon() {
+    // GPUの処理が完了するまで待機
+    if (commandQueue && fence) {
+        // Fenceの値を更新
+        fenceValue++;
+        // GPUがここまでたどりついた時に、Fenceの値を指定した値に代入するようにSignalを送る
+        commandQueue->Signal(fence.Get(), fenceValue);
+        // Fenceの値が指定したSignal値にたどり着いているか確認する
+        if (fence->GetCompletedValue() < fenceValue) {
+            // 指定したSignalにたどりついていないので、たどり着くまで待つようにイベントを設定する
+            fence->SetEventOnCompletion(fenceValue, fenceEvent);
+            // イベントを待つ
+            WaitForSingleObject(fenceEvent, INFINITE);
+        }
+    }
+    
     // フェンスイベントの解放
     if (fenceEvent) {
         CloseHandle(fenceEvent);

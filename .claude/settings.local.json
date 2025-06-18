@@ -14,7 +14,9 @@
       "Bash(timeout:*)",
       "Bash(find:*)",
       "Bash(./CG2_00-01.exe)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(cmd.exe:*)",
+      "Bash(rg:*)"
     ],
     "deny": []
   }
