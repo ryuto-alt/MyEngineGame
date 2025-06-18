@@ -30,16 +30,28 @@ void GamePlayScene::Initialize() {
 
 	// 3Dオブジェクトの作成
 	cubeObject_ = engine_->CreateObject3D();
-	// GLBファイルを読み込む
-	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.glb");
-	if (cubeModel_) {
-		OutputDebugStringA("GamePlayScene: cube.glb loaded successfully\n");
-		cubeObject_->SetModel(cubeModel_.get());
+	
+	// 複数のモデルを読み込む（domeは別途読み込むので除外）
+	modelNames_ = {"cube.glb", "delta.glb", "jett.glb"};
+	
+	for (const auto& modelName : modelNames_) {
+		std::string fullPath = "Resources/Models/cube/" + modelName;
+		auto model = engine_->LoadModel(fullPath);
 		
-		// デバッグ用：モデルの頂点数を表示
-		OutputDebugStringA(("GamePlayScene: Model vertex count: " + std::to_string(cubeModel_->GetVertexCount()) + "\n").c_str());
-	} else {
-		OutputDebugStringA("ERROR: Failed to load cube.glb\n");
+		if (model) {
+			OutputDebugStringA(("GamePlayScene: " + modelName + " loaded successfully\n").c_str());
+			OutputDebugStringA(("  Vertex count: " + std::to_string(model->GetVertexCount()) + "\n").c_str());
+			models_.push_back(std::move(model));
+		} else {
+			OutputDebugStringA(("ERROR: Failed to load " + modelName + "\n").c_str());
+			// 空のモデルを追加してインデックスを保持
+			models_.push_back(nullptr);
+		}
+	}
+	
+	// 最初のモデルを設定
+	if (!models_.empty() && models_[0]) {
+		cubeObject_->SetModel(models_[0].get());
 	}
 
 	// キューブの初期位置を設定
@@ -55,6 +67,21 @@ void GamePlayScene::Initialize() {
 	defaultLight.direction = { 0.0f, -1.0f, 0.0f };   // 上から下へ
 	defaultLight.intensity = 1.0f;  // 標準の強さ
 	cubeObject_->SetDirectionalLight(defaultLight);
+	
+	// domeモデルの設定
+	domeObject_ = engine_->CreateObject3D();
+	domeModel_ = engine_->LoadModel("Resources/Models/cube/dome.glb");
+	if (domeModel_) {
+		OutputDebugStringA("GamePlayScene: dome.glb loaded successfully\n");
+		OutputDebugStringA(("  Dome vertex count: " + std::to_string(domeModel_->GetVertexCount()) + "\n").c_str());
+		domeObject_->SetModel(domeModel_.get());
+		// domeの位置とスケールを設定
+		domeObject_->SetPosition(Vector3{ 0.0f, 0.0f, 0.0f });
+		domeObject_->SetScale(Vector3{ 10.0f, 10.0f, 10.0f });  // 大きくして空のように
+		domeObject_->SetDirectionalLight(defaultLight);
+	} else {
+		OutputDebugStringA("ERROR: Failed to load dome.glb\n");
+	}
 
 	// 2Dスプライトの作成
 	titleSprite_ = engine_->CreateSprite("Resources/textures/title_logo.png");
@@ -83,7 +110,22 @@ void GamePlayScene::Update() {
 		engine_->ChangeScene("Title");
 	}
 
-	// キューブの回転機能を削除しました
+	// モデルの切り替え（数字キー1、4）
+	if (engine_->IsKeyTriggered(DIK_1) && models_.size() > 0 && models_[0]) {
+		currentModelIndex_ = 0;
+		cubeObject_->SetModel(models_[0].get());
+		OutputDebugStringA(("Switched to model: " + modelNames_[0] + "\n").c_str());
+	}
+	if (engine_->IsKeyTriggered(DIK_2) && models_.size() > 1 && models_[1]) {
+		currentModelIndex_ = 1;
+		cubeObject_->SetModel(models_[1].get());
+		OutputDebugStringA(("Switched to model: " + modelNames_[1] + "\n").c_str());
+	}
+	if (engine_->IsKeyTriggered(DIK_3) && models_.size() > 2 && models_[2]) {
+		currentModelIndex_ = 2;
+		cubeObject_->SetModel(models_[2].get());
+		OutputDebugStringA(("Switched to model: " + modelNames_[2] + "\n").c_str());
+	}
 
 	// パーティクル発生（統合APIを使用）
 	if (engine_->IsKeyTriggered(DIK_F)) {
@@ -243,10 +285,13 @@ void GamePlayScene::Update() {
 	// ライティングモードに応じてマテリアルのライティングフラグを設定
 	if (lightingMode_ == LIGHTING_NONE) {
 		cubeObject_->SetEnableLighting(false);
+		if (domeObject_) domeObject_->SetEnableLighting(false);
 	} else {
 		cubeObject_->SetEnableLighting(true);
+		if (domeObject_) domeObject_->SetEnableLighting(true);
 		// enableLightingにモードを設定
 		cubeObject_->GetMaterialData()->enableLighting = lightingMode_;
+		if (domeObject_) domeObject_->GetMaterialData()->enableLighting = lightingMode_;
 	}
 	
 	// スポットライトをカメラの位置と向きに同期（懐中電灯効果）
@@ -262,9 +307,11 @@ void GamePlayScene::Update() {
 	
 	// スポットライトを設定
 	cubeObject_->SetSpotLight(spotLight);
+	if (domeObject_) domeObject_->SetSpotLight(spotLight);
 	
 	// オブジェクトの更新
 	cubeObject_->Update();
+	if (domeObject_) domeObject_->Update();
 	titleSprite_->Update();
 }
 
@@ -272,6 +319,9 @@ void GamePlayScene::Draw() {
 	if (!initialized_) return;
 
 	// 3Dオブジェクトの描画
+	// domeを先に描画（背景として）
+	if (domeObject_) domeObject_->Draw();
+	// 切り替え可能なモデルを描画
 	cubeObject_->Draw();
 
 	// 2Dスプライトの描画
@@ -291,13 +341,32 @@ void GamePlayScene::Draw() {
 	ImGui::RadioButton("両方のライト", &lightingMode_, LIGHTING_BOTH);
 	ImGui::Separator();
 
+	// モデル情報
+	ImGui::Text("モデル情報:");
+	ImGui::Text("現在のモデル: %s", 
+		(currentModelIndex_ < modelNames_.size()) ? modelNames_[currentModelIndex_].c_str() : "None");
+	if (currentModelIndex_ < models_.size() && models_[currentModelIndex_]) {
+		ImGui::Text("頂点数: %zu", models_[currentModelIndex_]->GetVertexCount());
+	}
+	
+	// 利用可能なモデルのリスト
+	ImGui::Text("");
+	ImGui::Text("利用可能なモデル:");
+	for (size_t i = 0; i < modelNames_.size(); ++i) {
+		bool isLoaded = (i < models_.size() && models_[i]);
+		ImGui::Text("%zu. %s %s", i + 1, modelNames_[i].c_str(), 
+			isLoaded ? "[読み込み成功]" : "[読み込み失敗]");
+	}
+	ImGui::Separator();
+	
 	ImGui::Text("操作方法:");
+	ImGui::Text("1-3 - モデル切り替え");
 	ImGui::Text("TAB - カメラモード切り替え");
 	ImGui::Text("F - パーティクル発生");
 	ImGui::Text("B - BGM ON/OFF");
 	ImGui::Text("C - bgm.wav再生/停止（3D空間オーディオ）");
-	ImGui::Text("WASD - カメラ移動");
-	ImGui::Text("↑↓←→ - キューブ移動（音源移動）");
+	ImGui::Text("WASD/SPACE/SHIFT - カメラ移動");
+	ImGui::Text("↑↓←→ - モデル移動");
 	ImGui::Text("ESC - タイトルに戻る");
 
 	ImGui::Separator();

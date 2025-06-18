@@ -26,6 +26,15 @@ protected:
     std::unique_ptr<Model> cubeModel_;
     std::unique_ptr<Sprite> titleSprite_;
     
+    // 複数のモデルを管理
+    std::vector<std::unique_ptr<Model>> models_;
+    std::vector<std::string> modelNames_;
+    int currentModelIndex_ = 0;
+    
+    // dome用の別オブジェクト
+    std::unique_ptr<Object3d> domeObject_;
+    std::unique_ptr<Model> domeModel_;
+    
     // 3D空間オーディオ
     std::unique_ptr<SpatialAudioSource> cubeSpatialAudio_;
     
