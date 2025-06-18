@@ -8,6 +8,8 @@ public:
     // コンストラクタ
     GameSceneFactory() = default;
 
+
+
     // デストラクタ
     ~GameSceneFactory() override = default;
 
