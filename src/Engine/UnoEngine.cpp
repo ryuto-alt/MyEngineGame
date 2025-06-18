@@ -337,6 +337,8 @@ std::unique_ptr<Object3d> UnoEngine::CreateObject3D() {
 }
 
 std::unique_ptr<Model> UnoEngine::LoadModel(const std::string& modelPath) {
+    OutputDebugStringA(("UnoEngine::LoadModel - Loading model: " + modelPath + "\n").c_str());
+    
     auto model = std::make_unique<Model>();
     
     // Modelを初期化（DirectXCommonを渡す）
@@ -346,7 +348,10 @@ std::unique_ptr<Model> UnoEngine::LoadModel(const std::string& modelPath) {
     std::string extension = modelPath.substr(modelPath.find_last_of(".") + 1);
     std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
     
+    OutputDebugStringA(("UnoEngine::LoadModel - File extension: " + extension + "\n").c_str());
+    
     if (extension == "glb" || extension == "gltf") {
+        OutputDebugStringA("UnoEngine::LoadModel - Loading as GLB/GLTF file\n");
         // GLB/GLTFファイルの読み込み
         model->LoadFromGLB(modelPath);
     } else {

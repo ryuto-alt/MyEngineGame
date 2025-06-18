@@ -470,6 +470,8 @@ void Model::LoadFromGLB(const std::string& filePath) {
     // GLBモデルデータの読み込み
     modelData_ = LoadGLBFile(filePath);
     
+    OutputDebugStringA(("Model::LoadFromGLB - Loaded " + std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+    
     // テクスチャの読み込み（埋め込みテクスチャが保存された後）
     if (!modelData_.material.textureFilePath.empty()) {
         OutputDebugStringA(("Model::LoadFromGLB - Loading texture: " + modelData_.material.textureFilePath + "\n").c_str());
@@ -522,6 +524,14 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
     
     // GLBファイルを読み込む
     OutputDebugStringA(("Loading GLB file: " + filePath + "\n").c_str());
+    
+    // ファイルの存在確認
+    DWORD fileAttributes = GetFileAttributesA(filePath.c_str());
+    if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
+        OutputDebugStringA(("ERROR: GLB file not found: " + filePath + "\n").c_str());
+        return result;
+    }
+    
     bool success = loader.LoadBinaryFromFile(&gltfModel, &err, &warn, filePath);
     
     if (!warn.empty()) {
@@ -537,10 +547,21 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
         return result;
     }
     
+    OutputDebugStringA(("GLB file loaded successfully. Scenes: " + std::to_string(gltfModel.scenes.size()) + 
+                       ", Meshes: " + std::to_string(gltfModel.meshes.size()) + 
+                       ", Materials: " + std::to_string(gltfModel.materials.size()) + 
+                       ", Textures: " + std::to_string(gltfModel.textures.size()) + "\n").c_str());
+    
     // デフォルトシーンを取得
     if (gltfModel.defaultScene < 0 || gltfModel.defaultScene >= static_cast<int>(gltfModel.scenes.size())) {
-        OutputDebugStringA("No default scene found in GLB file\n");
-        return result;
+        OutputDebugStringA("No default scene found in GLB file, using scene 0\n");
+        // デフォルトシーンがない場合は最初のシーンを使用
+        if (!gltfModel.scenes.empty()) {
+            gltfModel.defaultScene = 0;
+        } else {
+            OutputDebugStringA("ERROR: No scenes found in GLB file\n");
+            return result;
+        }
     }
     
     // ノード変換行列を計算する関数
@@ -613,12 +634,16 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
     
     // シーン内の最初のノードを探す
     const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene];
+    OutputDebugStringA(("Scene has " + std::to_string(scene.nodes.size()) + " nodes\n").c_str());
+    
     Matrix4x4 nodeTransform = MakeIdentity4x4();
     int meshIndex = -1;
     
     // メッシュを持つノードを探す
     for (int nodeIdx : scene.nodes) {
         const tinygltf::Node& node = gltfModel.nodes[nodeIdx];
+        OutputDebugStringA(("Checking node " + std::to_string(nodeIdx) + ": " + node.name + ", mesh index: " + std::to_string(node.mesh) + "\n").c_str());
+        
         if (node.mesh >= 0) {
             meshIndex = node.mesh;
             nodeTransform = getNodeTransform(nodeIdx);
@@ -631,21 +656,37 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
         }
     }
     
+    // シーンにノードがない場合、メッシュを直接探す
+    if (meshIndex < 0 && !gltfModel.meshes.empty()) {
+        OutputDebugStringA("No mesh found in scene nodes, using first mesh directly\n");
+        meshIndex = 0;
+    }
+    
     if (meshIndex < 0 || meshIndex >= static_cast<int>(gltfModel.meshes.size())) {
-        OutputDebugStringA("No mesh found in scene nodes\n");
+        OutputDebugStringA("ERROR: No valid mesh found in GLB file\n");
         return result;
     }
     
     const tinygltf::Mesh& mesh = gltfModel.meshes[meshIndex];
     OutputDebugStringA(("Processing mesh: " + mesh.name + " with " + std::to_string(mesh.primitives.size()) + " primitives\n").c_str());
     
-    // 最初のプリミティブを処理
+    // 全てのプリミティブを処理
     if (mesh.primitives.empty()) {
         OutputDebugStringA("No primitives found in mesh\n");
         return result;
     }
     
-    const tinygltf::Primitive& primitive = mesh.primitives[0];
+    // デフォルトマテリアルの設定（全体で共通）
+    result.material.diffuse = Vector4(0.8f, 0.8f, 0.8f, 1.0f);  // 薄いグレー
+    result.material.alpha = 1.0f;  // 不透明
+    result.material.ambient = Vector4(0.3f, 0.3f, 0.3f, 1.0f);
+    result.material.specular = Vector4(0.5f, 0.5f, 0.5f, 1.0f);
+    result.material.shininess = 30.0f;
+    
+    // 各プリミティブを処理
+    for (size_t primIdx = 0; primIdx < mesh.primitives.size(); ++primIdx) {
+        const tinygltf::Primitive& primitive = mesh.primitives[primIdx];
+        OutputDebugStringA(("Processing primitive " + std::to_string(primIdx) + "\n").c_str());
     
     // 頂点データの取得
     std::vector<Vector3> positions;
@@ -741,15 +782,26 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
         }
     }
     
+    // デバッグ出力
+    OutputDebugStringA(("Vertex data: positions=" + std::to_string(positions.size()) + 
+                       ", normals=" + std::to_string(normals.size()) + 
+                       ", texcoords=" + std::to_string(texcoords.size()) + 
+                       ", indices=" + std::to_string(indices.size()) + "\n").c_str());
+
     // 頂点データの構築
     if (!indices.empty()) {
-        // インデックスを使用して頂点データを構築
-        for (uint32_t idx : indices) {
+        OutputDebugStringA("Building vertex data from indices\n");
+        // インデックスを使用して頂点データを構築（3つずつ処理して面の向きを反転）
+        for (size_t i = 0; i < indices.size(); i += 3) {
+            // 三角形の頂点を逆順で追加（右手座標系から左手座標系への変換）
+            for (int j = 2; j >= 0; j--) {
+                if (i + j >= indices.size()) continue;
+                uint32_t idx = indices[i + j];
             VertexData vertex = {};
             
             if (idx < positions.size()) {
-                // 頂点位置にノード変換を適用
-                Vector4 pos = Vector4(positions[idx].x, positions[idx].y, positions[idx].z, 1.0f);
+                // 頂点位置にノード変換を適用（X軸を反転して左手座標系に変換）
+                Vector4 pos = Vector4(-positions[idx].x, positions[idx].y, positions[idx].z, 1.0f);
                 // Vector4と行列の乗算
                 Vector4 transformedPos;
                 transformedPos.x = pos.x * nodeTransform.m[0][0] + pos.y * nodeTransform.m[1][0] + pos.z * nodeTransform.m[2][0] + pos.w * nodeTransform.m[3][0];
@@ -760,9 +812,9 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
             }
             
             if (idx < normals.size()) {
-                // 法線にノード変換を適用（回転のみ）
+                // 法線にノード変換を適用（回転のみ、X軸を反転）
                 Vector3 norm = normals[idx];
-                Vector4 norm4 = Vector4(norm.x, norm.y, norm.z, 0.0f);
+                Vector4 norm4 = Vector4(-norm.x, norm.y, norm.z, 0.0f);
                 // Vector4と行列の乗算
                 Vector4 transformedNorm;
                 transformedNorm.x = norm4.x * normalTransform.m[0][0] + norm4.y * normalTransform.m[1][0] + norm4.z * normalTransform.m[2][0] + norm4.w * normalTransform.m[3][0];
@@ -788,14 +840,16 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
             }
             
             result.vertices.push_back(vertex);
+            }
         }
     } else {
+        OutputDebugStringA("No indices found, using vertices directly\n");
         // インデックスがない場合は頂点を直接使用
         for (size_t i = 0; i < positions.size(); ++i) {
             VertexData vertex = {};
             
-            // 頂点位置にノード変換を適用
-            Vector4 pos = Vector4(positions[i].x, positions[i].y, positions[i].z, 1.0f);
+            // 頂点位置にノード変換を適用（X軸を反転して左手座標系に変換）
+            Vector4 pos = Vector4(-positions[i].x, positions[i].y, positions[i].z, 1.0f);
             // Vector4と行列の乗算
             Vector4 transformedPos;
             transformedPos.x = pos.x * nodeTransform.m[0][0] + pos.y * nodeTransform.m[1][0] + pos.z * nodeTransform.m[2][0] + pos.w * nodeTransform.m[3][0];
@@ -805,9 +859,9 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
             vertex.position = transformedPos;
             
             if (i < normals.size()) {
-                // 法線にノード変換を適用（回転のみ）
+                // 法線にノード変換を適用（回転のみ、X軸を反転）
                 Vector3 norm = normals[i];
-                Vector4 norm4 = Vector4(norm.x, norm.y, norm.z, 0.0f);
+                Vector4 norm4 = Vector4(-norm.x, norm.y, norm.z, 0.0f);
                 // Vector4と行列の乗算
                 Vector4 transformedNorm;
                 transformedNorm.x = norm4.x * normalTransform.m[0][0] + norm4.y * normalTransform.m[1][0] + norm4.z * normalTransform.m[2][0] + norm4.w * normalTransform.m[3][0];
@@ -836,12 +890,7 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
         }
     }
     
-    // デフォルトマテリアルの設定
-    result.material.diffuse = Vector4(1.0f, 1.0f, 1.0f, 1.0f);  // 白色
-    result.material.alpha = 1.0f;  // 不透明
-    result.material.ambient = Vector4(0.2f, 0.2f, 0.2f, 1.0f);
-    
-    // マテリアルの処理
+    // マテリアルの処理（プリミティブごと）
     if (primitive.material >= 0 && primitive.material < static_cast<int>(gltfModel.materials.size())) {
         const tinygltf::Material& material = gltfModel.materials[primitive.material];
         
@@ -897,8 +946,16 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                         std::to_string(texture.source) + "_" + 
                         std::to_string(std::hash<std::string>{}(filePath)) + extension;
                     
-                    // 画像がすでにデコードされているかチェック
-                    if (image.width > 0 && image.height > 0 && image.component > 0) {
+                    // ファイルが既に存在するかチェック
+                    DWORD fileAttributes = GetFileAttributesA(tempFilename.c_str());
+                    if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
+                        // ファイルが既に存在する場合は再利用
+                        result.material.textureFilePath = tempFilename;
+                        OutputDebugStringA(("Reusing existing embedded texture: " + tempFilename + "\n").c_str());
+                    } else {
+                        // ファイルが存在しない場合は保存
+                        // 画像がすでにデコードされているかチェック
+                        if (image.width > 0 && image.height > 0 && image.component > 0) {
                         // デコード済みの生データをPNG形式で保存
                         int writeResult = stbi_write_png(tempFilename.c_str(), 
                             image.width, image.height, image.component, 
@@ -923,6 +980,7 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                             OutputDebugStringA("Failed to save embedded texture to file\n");
                         }
                     }
+                    }
                 }
             }
         }
@@ -938,6 +996,7 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
             );
         }
     }
+    } // プリミティブループの終了
     
     // デバッグ情報の出力
     OutputDebugStringA(("GLB loaded: " + std::to_string(result.vertices.size()) + " vertices\n").c_str());

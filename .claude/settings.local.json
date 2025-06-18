@@ -20,7 +20,8 @@
       "Bash(mkdir:*)",
       "Bash(curl:*)",
       "Bash(python:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(msbuild:*)"
     ],
     "deny": []
   }

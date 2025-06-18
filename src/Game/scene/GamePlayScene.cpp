@@ -18,7 +18,7 @@ void GamePlayScene::Initialize() {
 	engine_ = UnoEngine::GetInstance();
 
 	// カメラの初期設定（統合APIを使用）
-	engine_->SetCameraPosition(Vector3{ 0.0f, 0.0f, -10.0f });
+	engine_->SetCameraPosition(Vector3{ 0.0f, 2.0f, -8.0f });
 	engine_->SetCameraFovY(1.37f); // 90度の視野角を設定
 
 	// ゲームリソースの読み込み（統合APIを使用）
@@ -32,11 +32,22 @@ void GamePlayScene::Initialize() {
 	cubeObject_ = engine_->CreateObject3D();
 	// GLBファイルを読み込む
 	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.glb");
-	cubeObject_->SetModel(cubeModel_.get());
+	if (cubeModel_) {
+		OutputDebugStringA("GamePlayScene: cube.glb loaded successfully\n");
+		cubeObject_->SetModel(cubeModel_.get());
+		
+		// デバッグ用：モデルの頂点数を表示
+		OutputDebugStringA(("GamePlayScene: Model vertex count: " + std::to_string(cubeModel_->GetVertexCount()) + "\n").c_str());
+	} else {
+		OutputDebugStringA("ERROR: Failed to load cube.glb\n");
+	}
 
 	// キューブの初期位置を設定
 	cubePosition_ = Vector3{ 0.0f, 0.0f, 0.0f };
 	cubeObject_->SetPosition(cubePosition_);
+	
+	// キューブのスケールを大きくして見やすくする
+	cubeObject_->SetScale(Vector3{ 2.0f, 2.0f, 2.0f });
 
 	// 2Dスプライトの作成
 	titleSprite_ = engine_->CreateSprite("Resources/textures/title_logo.png");
@@ -219,12 +230,12 @@ void GamePlayScene::Update() {
 	// 3D空間オーディオシステム全体を更新
 	engine_->UpdateSpatialAudio();
 
+	// カメラの更新（先に更新する）
+	camera_->Update();
+	
 	// オブジェクトの更新
 	cubeObject_->Update();
 	titleSprite_->Update();
-
-	// カメラの更新
-	camera_->Update();
 }
 
 void GamePlayScene::Draw() {

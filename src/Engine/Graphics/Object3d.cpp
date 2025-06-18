@@ -158,6 +158,18 @@ void Object3d::Draw() {
     assert(dxCommon_);
     assert(model_);
 
+    // デバッグ出力
+    OutputDebugStringA("Object3d::Draw - Start drawing\n");
+    OutputDebugStringA(("Object3d::Draw - Model vertex count: " + std::to_string(model_->GetVertexCount()) + "\n").c_str());
+    OutputDebugStringA(("Object3d::Draw - Position: (" + 
+        std::to_string(transform_.translate.x) + ", " +
+        std::to_string(transform_.translate.y) + ", " +
+        std::to_string(transform_.translate.z) + ")\n").c_str());
+    OutputDebugStringA(("Object3d::Draw - Scale: (" + 
+        std::to_string(transform_.scale.x) + ", " +
+        std::to_string(transform_.scale.y) + ", " +
+        std::to_string(transform_.scale.z) + ")\n").c_str());
+
     // 共通描画設定
     spriteCommon_->CommonDraw();
 
@@ -218,6 +230,11 @@ void Object3d::Draw() {
     // ライトCBufferの場所を設定
     dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
+    // デバッグ出力
+    OutputDebugStringA(("Object3d::Draw - Drawing " + std::to_string(model_->GetVertexCount()) + " vertices\n").c_str());
+
     // 描画
     dxCommon_->GetCommandList()->DrawInstanced(model_->GetVertexCount(), 1, 0, 0);
+    
+    OutputDebugStringA("Object3d::Draw - Draw call completed\n");
 }
