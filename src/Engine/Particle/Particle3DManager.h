@@ -5,6 +5,8 @@
 #include <list>
 #include <random>
 #include <memory>
+#include <queue>
+#include <vector>
 #include "DirectXCommon.h"
 #include "SRVManager.h"
 #include "Vector3.h"
@@ -19,35 +21,37 @@ class SpriteCommon;
 // 3Dパーティクル1粒の情報
 struct Particle3D {
     // 座標
-    Vector3 position;
+    Vector3 position = { 0.0f, 0.0f, 0.0f };
     // 速度
-    Vector3 velocity;
+    Vector3 velocity = { 0.0f, 0.0f, 0.0f };
     // 加速度
-    Vector3 accel;
+    Vector3 accel = { 0.0f, 0.0f, 0.0f };
     // 回転
-    Vector3 rotation;
+    Vector3 rotation = { 0.0f, 0.0f, 0.0f };
     // 回転速度
-    Vector3 rotationVelocity;
+    Vector3 rotationVelocity = { 0.0f, 0.0f, 0.0f };
     // スケール
-    Vector3 scale;
+    Vector3 scale = { 1.0f, 1.0f, 1.0f };
     // 初期スケール
-    Vector3 startScale;
+    Vector3 startScale = { 1.0f, 1.0f, 1.0f };
     // 最終スケール
-    Vector3 endScale;
+    Vector3 endScale = { 1.0f, 1.0f, 1.0f };
     // 色
-    Vector4 color;
+    Vector4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
     // 初期色
-    Vector4 startColor;
+    Vector4 startColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     // 最終色
-    Vector4 endColor;
+    Vector4 endColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     // 経過時間
-    float lifeTime;
+    float lifeTime = 0.0f;
     // 寿命
-    float lifeTimeMax;
+    float lifeTimeMax = 1.0f;
     // 生存フラグ
     bool isDead = false;
-    // Object3D
-    std::unique_ptr<Object3d> object3d;
+    // Object3D（プールから借用するため生ポインタ）
+    Object3d* object3d = nullptr;
+    // プールインデックス（返却時に使用）
+    size_t poolIndex = 0;
 
     // デフォルトコンストラクタ
     Particle3D() = default;
@@ -58,21 +62,23 @@ struct Particle3D {
 
     // ムーブコンストラクタとムーブ代入演算子
     Particle3D(Particle3D&& other) noexcept
-        : position(other.position)
-        , velocity(other.velocity)
-        , accel(other.accel)
-        , rotation(other.rotation)
-        , rotationVelocity(other.rotationVelocity)
-        , scale(other.scale)
-        , startScale(other.startScale)
-        , endScale(other.endScale)
-        , color(other.color)
-        , startColor(other.startColor)
-        , endColor(other.endColor)
+        : position(std::move(other.position))
+        , velocity(std::move(other.velocity))
+        , accel(std::move(other.accel))
+        , rotation(std::move(other.rotation))
+        , rotationVelocity(std::move(other.rotationVelocity))
+        , scale(std::move(other.scale))
+        , startScale(std::move(other.startScale))
+        , endScale(std::move(other.endScale))
+        , color(std::move(other.color))
+        , startColor(std::move(other.startColor))
+        , endColor(std::move(other.endColor))
         , lifeTime(other.lifeTime)
         , lifeTimeMax(other.lifeTimeMax)
         , isDead(other.isDead)
-        , object3d(std::move(other.object3d)) {
+        , object3d(other.object3d)
+        , poolIndex(other.poolIndex) {
+        other.object3d = nullptr;
     }
 
     Particle3D& operator=(Particle3D&& other) noexcept {
@@ -91,7 +97,9 @@ struct Particle3D {
             lifeTime = other.lifeTime;
             lifeTimeMax = other.lifeTimeMax;
             isDead = other.isDead;
-            object3d = std::move(other.object3d);
+            object3d = other.object3d;
+            poolIndex = other.poolIndex;
+            other.object3d = nullptr;
         }
         return *this;
     }
@@ -103,6 +111,10 @@ struct Particle3DGroup {
     std::shared_ptr<Model> model;
     // パーティクルのリスト
     std::list<Particle3D> particles;
+    // Object3Dのプール（再利用用）
+    std::vector<std::unique_ptr<Object3d>> objectPool;
+    // 利用可能なObject3Dのインデックス
+    std::queue<size_t> availableIndices;
 };
 
 // 3Dパーティクルマネージャクラス

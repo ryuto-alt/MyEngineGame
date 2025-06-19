@@ -7,8 +7,8 @@ HitEffect3D::HitEffect3D()
 }
 
 void HitEffect3D::Initialize() {
-    // 3Dパーティクルグループの作成（effect.objを使用）
-    Particle3DManager::GetInstance()->CreateParticle3DGroup("HitEffect", "effect.obj");
+    // 3Dパーティクルグループの作成（Models/effectディレクトリのモデルを使用）
+    Particle3DManager::GetInstance()->CreateParticle3DGroup("HitEffect", "Resources/Models/effect/effect.obj");
 
     // エフェクト設定の初期化
     InitializeEffectSettings();

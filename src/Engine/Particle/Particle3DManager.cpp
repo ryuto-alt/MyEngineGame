@@ -37,9 +37,19 @@ void Particle3DManager::CreateParticle3DGroup(const std::string& name, const std
     group.model = std::make_shared<Model>();
     group.model->Initialize(dxCommon_);
     
-    // モデルファイルの読み込み（Resources/particle/から読み込み）
+    // モデルファイルの読み込み
     try {
-        group.model->LoadFromObj("Resources/particle", modelFilePath);
+        // modelFilePathからディレクトリとファイル名を分離
+        size_t lastSlash = modelFilePath.find_last_of("/\\");
+        std::string directory = "";
+        std::string filename = modelFilePath;
+        
+        if (lastSlash != std::string::npos) {
+            directory = modelFilePath.substr(0, lastSlash);
+            filename = modelFilePath.substr(lastSlash + 1);
+        }
+        
+        group.model->LoadFromObj(directory, filename);
         OutputDebugStringA(("Particle3DManager: Model loaded successfully - " + modelFilePath + "\n").c_str());
     }
     catch (const std::exception& e) {
@@ -47,11 +57,24 @@ void Particle3DManager::CreateParticle3DGroup(const std::string& name, const std
         return;
     }
 
+    // オブジェクトプールの初期化（50個事前作成）
+    const size_t poolSize = 50;
+    group.objectPool.reserve(poolSize);
+    
+    for (size_t i = 0; i < poolSize; ++i) {
+        auto obj = std::make_unique<Object3d>();
+        obj->Initialize(dxCommon_, spriteCommon_);
+        obj->SetModel(group.model.get());
+        group.objectPool.push_back(std::move(obj));
+        group.availableIndices.push(i);
+    }
+    
     // 3Dパーティクルグループを登録
     particle3DGroups[name] = std::move(group);
 
     // 登録成功をデバッグ出力
-    OutputDebugStringA(("Particle3DManager: Created 3D particle group - " + name + "\n").c_str());
+    OutputDebugStringA(("Particle3DManager: Created 3D particle group - " + name + " with " + 
+                       std::to_string(poolSize) + " pooled objects\n").c_str());
 }
 
 void Particle3DManager::Update(const Camera* camera) {
@@ -62,6 +85,11 @@ void Particle3DManager::Update(const Camera* camera) {
             // 寿命チェック
             it->lifeTime += 1.0f / 60.0f; // 60FPS想定
             if (it->lifeTime >= it->lifeTimeMax) {
+                // Object3dをプールに返却
+                if (it->object3d) {
+                    group.availableIndices.push(it->poolIndex);
+                    it->object3d = nullptr;
+                }
                 // 寿命が尽きたら削除
                 it = group.particles.erase(it);
                 continue;
@@ -275,8 +303,22 @@ void Particle3DManager::Emit3D(
 
     std::uniform_real_distribution<float> lifeTimeDist(validLifeTimeMin, validLifeTimeMax);
 
+    // パーティクル数の上限チェック（メモリ負荷軽減）
+    const size_t maxParticlesPerGroup = 50;  // グループごとの最大パーティクル数（軽量化のため減らす）
+    size_t currentCount = it->second.particles.size();
+    
+    // 既にパーティクルが多すぎる場合は生成をスキップ
+    if (currentCount >= maxParticlesPerGroup) {
+        OutputDebugStringA(("Particle3DManager: Skipping emission - too many particles (" + 
+                          std::to_string(currentCount) + "/" + std::to_string(maxParticlesPerGroup) + ")\n").c_str());
+        return;
+    }
+    
+    // 生成可能な数を計算（上限を超えないように）
+    uint32_t actualCount = (std::min)(count, static_cast<uint32_t>(maxParticlesPerGroup - currentCount));
+    
     // 指定された数の3Dパーティクルを生成
-    for (uint32_t i = 0; i < count; ++i) {
+    for (uint32_t i = 0; i < actualCount; ++i) {
         // パーティクルを直接リストに構築（emplace_backを使用）
         it->second.particles.emplace_back();
         Particle3D& particle = it->second.particles.back();
@@ -340,15 +382,25 @@ void Particle3DManager::Emit3D(
         // 最初のフレームは描画しないフラグ（初期化完了まで非表示）
         particle.isDead = true;
 
-        // Object3Dの作成（正しい引数でInitialize）
-        particle.object3d = std::make_unique<Object3d>();
-        particle.object3d->Initialize(dxCommon_, spriteCommon_); // SpriteCommonを渡す
-        particle.object3d->SetModel(it->second.model.get());
-        particle.object3d->SetPosition(particle.position);
-        particle.object3d->SetRotation(particle.rotation);
-        // スケールを設定
-        particle.object3d->SetScale(particle.scale);
-        particle.object3d->SetColor(particle.color);
-        // カメラはUpdateメソッドで設定される
+        // Object3Dをプールから取得
+        if (!it->second.availableIndices.empty()) {
+            size_t index = it->second.availableIndices.front();
+            it->second.availableIndices.pop();
+            
+            // プールからObject3dを借用
+            particle.object3d = it->second.objectPool[index].get();
+            particle.poolIndex = index;
+            
+            // Object3dの設定
+            particle.object3d->SetPosition(particle.position);
+            particle.object3d->SetRotation(particle.rotation);
+            particle.object3d->SetScale(particle.scale);
+            particle.object3d->SetColor(particle.color);
+        } else {
+            // プールが空の場合はパーティクル生成をスキップ
+            it->second.particles.pop_back();
+            OutputDebugStringA("Particle3DManager: No available objects in pool\n");
+            break;
+        }
     }
 }

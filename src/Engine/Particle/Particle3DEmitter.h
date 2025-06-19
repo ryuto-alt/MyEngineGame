@@ -44,10 +44,15 @@ public:
     void SetEmitting(bool isEmitting) { 
         isEmitting_ = isEmitting;
         if (isEmitting) {
-            // 発生開始時にタイマーをリセット
+            // 発生開始時にタイマーとバーストフラグをリセット
             currentTime_ = 0.0f;
-            burstFired_ = false; // バーストフラグをリセット
+            burstFired_ = false;
         }
+    }
+    
+    // バーストをリセット（再度発生可能にする）
+    void ResetBurst() {
+        burstFired_ = false;
     }
 
     // 発生フラグ取得
