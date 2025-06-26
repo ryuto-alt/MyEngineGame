@@ -21,12 +21,7 @@ void GamePlayScene::Initialize() {
 	engine_->SetCameraPosition(Vector3{ 0.0f, 2.0f, -8.0f });
 	engine_->SetCameraFovY(1.37f); // 90度の視野角を設定
 
-	// ゲームリソースの読み込み（統合APIを使用）
-	// BGMの読み込み（失敗してもエラーにしない）
-	if (!engine_->LoadAudio("bgm", "Resources/Audio/bgm.mp3")) {
-		OutputDebugStringA("警告: BGMファイルの読み込みに失敗しました。BGM機能は無効になります。\n");
-	}
-	engine_->CreateParticleEffect("explosion", "Resources/particle/explosion.png");
+	// パーティクルと音声の読み込みを削除
 
 	// 3Dオブジェクトの作成
 	cubeObject_ = engine_->CreateObject3D();
@@ -56,20 +51,9 @@ void GamePlayScene::Initialize() {
 	defaultLight.intensity = 1.0f;  // 標準の強さ
 	cubeObject_->SetDirectionalLight(defaultLight);
 
-	// 2Dスプライトの作成
-	titleSprite_ = engine_->CreateSprite("Resources/textures/title_logo.png");
-	titleSprite_->SetPosition({ 100.0f, 50.0f });
-	titleSprite_->SetSize({ 200.0f, 100.0f });
+	// 2Dスプライトの作成を削除
 
-	// 3D空間オーディオの作成（キューブの位置に音源を配置）
-	if (engine_->LoadAudio("cube_bgm", "Resources/Audio/bgm.mp3")) {
-		cubeSpatialAudio_ = engine_->CreateSpatialAudioSource("cube_bgm", cubePosition_);
-		if (cubeSpatialAudio_) {
-			cubeSpatialAudio_->SetMaxDistance(20.0f);  // 20ユニット以内で聞こえる
-			cubeSpatialAudio_->SetMinDistance(2.0f);   // 2ユニット以内では減衰なし
-			cubeSpatialAudio_->SetVolume(0.7f);        // 音量70%
-		}
-	}
+	// 3D空間オーディオの作成を削除
 
 	// 初期化完了
 	initialized_ = true;
@@ -85,25 +69,7 @@ void GamePlayScene::Update() {
 
 	// キューブの回転機能を削除しました
 
-	// パーティクル発生（統合APIを使用）
-	if (engine_->IsKeyTriggered(DIK_F)) {
-		engine_->PlayParticle("explosion", Vector3{ 0.0f, 2.0f, 0.0f }, 50);
-	}
-
-	// BGM制御（統合APIを使用）
-	if (engine_->IsKeyTriggered(DIK_B)) {
-		try {
-			if (engine_->IsAudioPlaying("bgm")) {
-				engine_->StopAudio("bgm");
-			}
-			else {
-				engine_->PlayAudio("bgm", true, 0.3f);
-			}
-		}
-		catch (...) {
-			// BGMの操作でエラーが発生しても続行
-		}
-	}
+	// パーティクルとBGM制御を削除
 
 	// TABキーでカメラモード切り替え
 	if (engine_->IsKeyTriggered(DIK_TAB)) {
@@ -204,38 +170,7 @@ void GamePlayScene::Update() {
 	engine_->SetAudioListenerPosition(cameraPos);
 	engine_->SetAudioListenerOrientation(cameraForward, cameraUp);
 
-	// 3D空間オーディオソースの操作
-	if (cubeSpatialAudio_) {
-		// Cキーで3D音源再生/停止
-		if (engine_->IsKeyTriggered(DIK_C)) {
-			if (cubeSpatialAudio_->IsPlaying()) {
-				cubeSpatialAudio_->Stop();
-			}
-			else {
-				cubeSpatialAudio_->Play(true); // ループ再生
-			}
-		}
-
-		// キューブの位置に音源を更新
-		cubeSpatialAudio_->SetPosition(cubePosition_);
-
-		// 3D空間オーディオを更新（カメラの向きを反映）
-		cubeSpatialAudio_->Update(cameraPos, cameraForward);
-	}
-	else {
-		// 3D空間オーディオが無効な場合は直接再生
-		if (engine_->IsKeyTriggered(DIK_C)) {
-			if (engine_->IsAudioPlaying("cube_bgm")) {
-				engine_->StopAudio("cube_bgm");
-			}
-			else {
-				engine_->PlayAudio("cube_bgm", true, 2.5f);
-			}
-		}
-	}
-
-	// 3D空間オーディオシステム全体を更新
-	engine_->UpdateSpatialAudio();
+	// 3D空間オーディオの操作を削除
 
 	// カメラの更新（先に更新する）
 	camera_->Update();
@@ -265,7 +200,7 @@ void GamePlayScene::Update() {
 	
 	// オブジェクトの更新
 	cubeObject_->Update();
-	titleSprite_->Update();
+	// スプライトの更新を削除
 }
 
 void GamePlayScene::Draw() {
@@ -274,8 +209,7 @@ void GamePlayScene::Draw() {
 	// 3Dオブジェクトの描画
 	cubeObject_->Draw();
 
-	// 2Dスプライトの描画
-	titleSprite_->Draw();
+	// 2Dスプライトの描画を削除
 
 	// GamePlayScene用のImGuiウィンドウ
 	ImGui::Begin("GamePlayScene - 統合API版");
@@ -293,11 +227,8 @@ void GamePlayScene::Draw() {
 
 	ImGui::Text("操作方法:");
 	ImGui::Text("TAB - カメラモード切り替え");
-	ImGui::Text("F - パーティクル発生");
-	ImGui::Text("B - BGM ON/OFF");
-	ImGui::Text("C - bgm.wav再生/停止（3D空間オーディオ）");
 	ImGui::Text("WASD - カメラ移動");
-	ImGui::Text("↑↓←→ - キューブ移動（音源移動）");
+	ImGui::Text("↑↓←→ - キューブ移動");
 	ImGui::Text("ESC - タイトルに戻る");
 
 	ImGui::Separator();
@@ -310,27 +241,7 @@ void GamePlayScene::Draw() {
 
 	ImGui::Separator();
 
-	// 3D空間オーディオ情報
-	ImGui::Text("3D空間オーディオ:");
-	ImGui::Text("cubeSpatialAudio_: %s", cubeSpatialAudio_ ? "有効" : "NULL");
-
-	if (cubeSpatialAudio_) {
-		Vector3 cubePos = cubeSpatialAudio_->GetPosition();
-		Vector3 cameraPos = engine_->GetCameraPosition();
-		float distance = cubeSpatialAudio_->GetDistanceToListener();
-
-		ImGui::Text("キューブ音源位置: (%.1f, %.1f, %.1f)", cubePosition_.x, cubePosition_.y, cubePosition_.z);
-		ImGui::Text("カメラ位置: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
-		ImGui::Text("リスナー距離: %.2f", distance);
-		ImGui::Text("bgm.wav再生中: %s", cubeSpatialAudio_->IsPlaying() ? "Yes" : "No");
-		ImGui::Text("最大距離: %.1f, 最小距離: %.1f", 20.0f, 2.0f);
-		ImGui::Text("カメラとキューブの距離が近いほどbgm.wavが大きく聞こえます");
-		ImGui::Text("十字キーでキューブを移動して音の位置変化をテスト");
-	}
-	else {
-		ImGui::Text("3D音源なし - 初期化失敗の可能性");
-		ImGui::Text("音楽ファイルの読み込みまたは音源作成に失敗");
-	}
+	// 3D空間オーディオ情報を削除
 
 	ImGui::End();
 
@@ -339,13 +250,6 @@ void GamePlayScene::Draw() {
 }
 
 void GamePlayScene::Finalize() {
-	// 3D空間オーディオの停止と解放
-	if (cubeSpatialAudio_) {
-		cubeSpatialAudio_->Stop();
-		cubeSpatialAudio_.reset();
-	}
-
 	cubeObject_.reset();
 	cubeModel_.reset();
-	titleSprite_.reset();
 }

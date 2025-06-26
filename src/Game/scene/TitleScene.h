@@ -18,13 +18,5 @@ private:
     // 初期化済みフラグ
     bool initialized_ = false;
 
-    // タイトルロゴ
-    std::unique_ptr<Sprite> titleLogo_;
-
-    // 3Dオブジェクト（背景用）
-    std::unique_ptr<Model> sphereModel_;
-    std::unique_ptr<Object3d> sphereObject_;
-
-    // 回転アニメーション用
-    float rotationAngle_ = 0.0f;
+    // 不要なメンバ変数を削除
 };
