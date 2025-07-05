@@ -66,7 +66,15 @@ struct MaterialData {
     float alpha = 1.0f;                          // 透明度(d)
 };
 
+// ノードデータ構造体（アニメーション用）
+struct Node {
+    std::string name;           // ノード名
+    Matrix4x4 localMatrix;     // ローカル変換行列
+    std::vector<Node> children; // 子ノード
+};
+
 struct ModelData {
     std::vector<VertexData>vertices;
     MaterialData material;
+    Node rootNode;              // ルートノード（アニメーション用）
 };

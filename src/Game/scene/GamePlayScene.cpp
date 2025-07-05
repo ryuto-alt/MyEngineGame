@@ -1,5 +1,6 @@
 #include "GamePlayScene.h"
 #include "Vector3.h"
+#include "imgui.h"
 
 GamePlayScene::GamePlayScene() {
 }
@@ -30,8 +31,27 @@ void GamePlayScene::Initialize() {
 
 	// 3Dオブジェクトの作成
 	cubeObject_ = engine_->CreateObject3D();
+	
+	// 通常のモデルを読み込み
 	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.obj");
-	cubeObject_->SetModel(cubeModel_.get());
+	
+	// アニメーション付きモデルの作成（AnimatedCube.gltfを使用）
+	animatedCubeModel_ = std::make_unique<AnimatedModel>();
+	animatedCubeModel_->Initialize(dxCommon_);
+	animatedCubeModel_->LoadFromFile("Resources/Models/AnimatedCube", "AnimatedCube.gltf");
+	animatedCubeModel_->PlayAnimation();  // アニメーション開始
+	
+	cubeObject_->SetModel(animatedCubeModel_.get());
+	
+	// マテリアル情報を手動で再適用（確実にマテリアルを適用するため）
+	OutputDebugStringA("GamePlayScene: Manually applying material data\n");
+	if (animatedCubeModel_) {
+		const MaterialData& material = animatedCubeModel_->GetMaterial();
+		cubeObject_->SetColor(material.diffuse);
+		
+		std::string texturePath = animatedCubeModel_->GetTextureFilePath();
+		OutputDebugStringA(("GamePlayScene: AnimatedModel texture path: " + texturePath + "\n").c_str());
+	}
 
 	// キューブの初期位置を設定
 	cubePosition_ = Vector3{ 0.0f, 0.0f, 0.0f };
@@ -218,6 +238,13 @@ void GamePlayScene::Update() {
 	// 3D空間オーディオシステム全体を更新
 	engine_->UpdateSpatialAudio();
 
+	// アニメーションの更新
+	animatedCubeModel_->Update(1.0f / 60.0f);  // 60FPSで更新
+	
+	// アニメーション行列を取得してオブジェクトに適用
+	Matrix4x4 animationMatrix = animatedCubeModel_->GetAnimationLocalMatrix();
+	cubeObject_->SetAnimationMatrix(animationMatrix);
+	
 	// オブジェクトの更新
 	cubeObject_->Update();
 	titleSprite_->Update();
@@ -297,5 +324,6 @@ void GamePlayScene::Finalize() {
 
 	cubeObject_.reset();
 	cubeModel_.reset();
+	animatedCubeModel_.reset();
 	titleSprite_.reset();
 }

@@ -102,6 +102,33 @@ void Model::LoadFromObj(const std::string& directoryPath, const std::string& fil
     OutputDebugStringA(("Model: Loaded " + std::to_string(modelData_.vertices.size()) + " vertices from " + filename + "\n").c_str());
 }
 
+// 頂点バッファの作成（継承クラス用）
+void Model::CreateVertexBuffer() {
+    assert(dxCommon_);
+    
+    if (modelData_.vertices.empty()) {
+        OutputDebugStringA("Model::CreateVertexBuffer - Warning: No vertices to create buffer\n");
+        return;
+    }
+    
+    // 頂点バッファの作成
+    vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
+    
+    // 頂点バッファビューの設定
+    vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+    vertexBufferView_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * modelData_.vertices.size());
+    vertexBufferView_.StrideInBytes = sizeof(VertexData);
+    
+    // 頂点データの書き込み
+    VertexData* vertexData = nullptr;
+    vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+    std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+    vertexResource_->Unmap(0, nullptr);
+    
+    OutputDebugStringA(("Model::CreateVertexBuffer - Created buffer for " + 
+                       std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+}
+
 // UV球などの表示品質を向上させるためのモデルデータ最適化関数
 void Model::OptimizeTriangles(ModelData& modelData, const std::string& filename) {
     // 最適化前の頂点数を保存

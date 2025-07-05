@@ -2,7 +2,7 @@
 #include "Object3d.h"
 #include "DirectXCommon.h"
 #include "SpriteCommon.h"
-#include "Math.h"
+#include "Mymath.h"
 #include "TextureManager.h"
 
 
@@ -13,6 +13,9 @@ camera_(nullptr) {
     transform_.scale = { 1.0f, 1.0f, 1.0f };
     transform_.rotate = { 0.0f, 0.0f, 0.0f };
     transform_.translate = { 0.0f, 0.0f, 0.0f };
+    
+    // アニメーション行列を単位行列で初期化
+    animationMatrix_ = MakeIdentity4x4();
 }
 
 Object3d::~Object3d() {
@@ -66,8 +69,13 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 void Object3d::SetModel(Model* model) {
     model_ = model;
 
+    OutputDebugStringA("Object3d::SetModel - Called\n");
+    OutputDebugStringA(("Object3d::SetModel - model_ is " + std::string(model_ ? "not null" : "null") + "\n").c_str());
+    OutputDebugStringA(("Object3d::SetModel - materialData_ is " + std::string(materialData_ ? "not null" : "null") + "\n").c_str());
+
     // モデルのマテリアル情報をシェーダーに設定
     if (model_ && materialData_) {
+        OutputDebugStringA("Object3d::SetModel - Applying material data\n");
         const MaterialData& modelMaterial = model_->GetMaterial();
 
         // マテリアルデータをシェーダーのMaterial構造体に反映
@@ -103,6 +111,11 @@ void Object3d::SetModel(Model* model) {
             std::to_string(materialData_->color.z) + ", " +
             std::to_string(materialData_->color.w) + "\n").c_str());
         OutputDebugStringA(("  - Texture: " + (texturePath.empty() ? "None" : texturePath) + "\n").c_str());
+    } else {
+        OutputDebugStringA("Object3d::SetModel - materialData_ is null, cannot apply material\n");
+        if (!materialData_) {
+            OutputDebugStringA("Object3d::SetModel - ERROR: materialData_ is null - Object3d may not be properly initialized\n");
+        }
     }
 }
 
@@ -112,13 +125,16 @@ void Object3d::Update(const Matrix4x4& viewMatrix, const Matrix4x4& projectionMa
 
     // ワールド行列の計算
     Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+    
+    // アニメーション行列とワールド行列を合成
+    Matrix4x4 finalWorldMatrix = Multiply(animationMatrix_, worldMatrix);
 
     // WVP行列の計算
-    Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+    Matrix4x4 worldViewProjectionMatrix = Multiply(finalWorldMatrix, Multiply(viewMatrix, projectionMatrix));
 
     // 行列の更新
     transformationMatrixData_->WVP = worldViewProjectionMatrix;
-    transformationMatrixData_->World = worldMatrix;
+    transformationMatrixData_->World = finalWorldMatrix;
 }
 
 // カメラセッター
@@ -145,13 +161,16 @@ void Object3d::Update() {
 
     // ワールド行列の計算
     Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+    
+    // アニメーション行列とワールド行列を合成
+    Matrix4x4 finalWorldMatrix = Multiply(animationMatrix_, worldMatrix);
 
     // WVP行列の計算（カメラからビュープロジェクション行列を取得）
-    Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, useCamera->GetViewProjectionMatrix());
+    Matrix4x4 worldViewProjectionMatrix = Multiply(finalWorldMatrix, useCamera->GetViewProjectionMatrix());
 
     // 行列の更新
     transformationMatrixData_->WVP = worldViewProjectionMatrix;
-    transformationMatrixData_->World = worldMatrix;
+    transformationMatrixData_->World = finalWorldMatrix;
 }
 
 void Object3d::Draw() {
