@@ -16,7 +16,12 @@
       "Bash(./CG2_00-01.exe)",
       "Bash(ls:*)",
       "Bash(cmd.exe:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "Bash(ls:*)",
+      "Bash(start CG2_00-01.sln)",
+      "Bash(mkdir:*)",
+      "Bash(rg:*)",
+      "Bash(msbuild:*)"
     ],
     "deny": []
   }

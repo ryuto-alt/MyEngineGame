@@ -31,6 +31,14 @@ public:
     const std::string& GetTextureFilePath() const { return modelData_.material.textureFilePath; }
     const D3D12_VERTEX_BUFFER_VIEW& GetVBView() const { return vertexBufferView_; }
     ID3D12Resource* GetVertexResource() const { return vertexResource_.Get(); }
+    const ModelData& GetModelData() const { return modelData_; }
+
+protected:
+    // モデルデータアクセサ（継承クラス用）
+    ModelData& GetModelDataInternal() { return modelData_; }
+    
+    // 頂点バッファの作成（継承クラス用）
+    void CreateVertexBuffer();
 
 private:
     // モデルデータの最適化（UV球など改善のため）

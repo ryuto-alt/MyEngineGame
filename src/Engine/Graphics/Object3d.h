@@ -60,6 +60,10 @@ public:
     // ライトの設定
     void SetDirectionalLight(const DirectionalLight& light) { *directionalLightData_ = light; }
     const DirectionalLight& GetDirectionalLight() const { return *directionalLightData_; }
+    
+    // アニメーション行列の設定
+    void SetAnimationMatrix(const Matrix4x4& animationMatrix) { animationMatrix_ = animationMatrix; }
+    const Matrix4x4& GetAnimationMatrix() const { return animationMatrix_; }
 
 private:
     // モデル
@@ -87,6 +91,9 @@ private:
 
     // トランスフォーム
     Transform transform_;
+    
+    // アニメーション行列
+    Matrix4x4 animationMatrix_;
 
     // カメラへの参照
     Camera* camera_ = nullptr;
