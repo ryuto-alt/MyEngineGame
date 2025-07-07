@@ -23,7 +23,9 @@
       "Bash(rg:*)",
       "Bash(msbuild:*)",
       "Bash(copy:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run:*)"
     ],
     "deny": []
   }
