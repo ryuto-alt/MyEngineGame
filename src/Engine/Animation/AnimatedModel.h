@@ -19,14 +19,7 @@ public:
     // 初期化
     void Initialize(DirectXCommon* dxCommon);
     
-    // モデルとアニメーションの読み込み
     void LoadFromFile(const std::string& directoryPath, const std::string& filename);
-    
-    // GLTFファイルからの読み込み
-    void LoadFromGLTF(const std::string& directoryPath, const std::string& filename);
-    
-    // アニメーションの読み込み
-    void LoadAnimation(const std::string& directoryPath, const std::string& filename);
     
   
     void Update(float deltaTime);
@@ -45,19 +38,10 @@ public:
     void SetAnimationLoop(bool loop);
 
 private:
-    // assimpを使用したGLTFローダー
-    void LoadFromGLTFWithAssimp(const std::string& directoryPath, const std::string& filename);
-    
-    // assimpシーンからモデルデータを作成
+    void LoadWithAssimp(const std::string& directoryPath, const std::string& filename);
     void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath);
-    
-    // assimpメッシュからジオメトリデータを作成
     void ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene);
-    
-    // assimpマテリアルからマテリアルデータを作成
     void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath);
-    
-    // assimpノードからアニメーションデータを作成
     void ProcessAssimpAnimation(const aiScene* scene);
 
     AnimationPlayer animationPlayer_;  // アニメーションプレイヤー
