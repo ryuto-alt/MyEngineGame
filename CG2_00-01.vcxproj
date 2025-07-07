@@ -60,13 +60,15 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;$(ProjectDir)externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4049 /ignore:4098 %(AdditionalOptions)</AdditionalOptions>
       <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll" &amp;&amp; copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
@@ -84,7 +86,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;$(ProjectDir)externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -92,6 +94,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalOptions>/ignore:4049 /ignore:4048 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalLibraryDirectories>$(ProjectDir)externals\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll" &amp;&amp; copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
