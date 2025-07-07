@@ -3,6 +3,9 @@
 #include "Animation.h"
 #include "AnimationPlayer.h"
 #include "AnimationUtility.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 // アニメーション付きモデルクラス
 class AnimatedModel : public Model {
@@ -25,7 +28,7 @@ public:
     // アニメーションの読み込み
     void LoadAnimation(const std::string& directoryPath, const std::string& filename);
     
-    // 更新（アニメーション時刻を進める）
+  
     void Update(float deltaTime);
     
     // アニメーションのローカル変換行列を取得
@@ -42,7 +45,24 @@ public:
     void SetAnimationLoop(bool loop);
 
 private:
+    // assimpを使用したGLTFローダー
+    void LoadFromGLTFWithAssimp(const std::string& directoryPath, const std::string& filename);
+    
+    // assimpシーンからモデルデータを作成
+    void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath);
+    
+    // assimpメッシュからジオメトリデータを作成
+    void ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene);
+    
+    // assimpマテリアルからマテリアルデータを作成
+    void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath);
+    
+    // assimpノードからアニメーションデータを作成
+    void ProcessAssimpAnimation(const aiScene* scene);
+
     AnimationPlayer animationPlayer_;  // アニメーションプレイヤー
-    Animation animation_;              // アニメーションデータ
+    Animation animation_;              // アニメーション格納するでーた　
     std::string rootNodeName_;         // ルートノード名
+    
+    Assimp::Importer assimpImporter_;  // assimpインポーター
 };
