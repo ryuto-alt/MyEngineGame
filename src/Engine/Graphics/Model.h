@@ -9,6 +9,9 @@
 #include <wrl.h>
 #include "DirectXCommon.h"
 #include "Mymath.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 // モデルデータクラス
 class Model {
@@ -41,13 +44,12 @@ protected:
     void CreateVertexBuffer();
 
 private:
-    // モデルデータの最適化（UV球など改善のため）
-    void OptimizeTriangles(ModelData& modelData, const std::string& filename);
-
-    // モデルデータの読み込み
-    ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
-    // マテリアルデータの読み込み
-    MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+    void LoadWithAssimp(const std::string& directoryPath, const std::string& filename);
+    void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath, const std::string& objFileName = "");
+    void ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene);
+    void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName = "");
+    std::string FindTextureInDirectory(const std::string& directoryPath);
+    std::string ParseMTLFile(const std::string& directoryPath, const std::string& objFileName);
 
     // モデルデータ
     ModelData modelData_;
@@ -57,4 +59,6 @@ private:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     // DirectXCommon
     DirectXCommon* dxCommon_;
+    // assimpインポーター
+    Assimp::Importer assimpImporter_;
 };

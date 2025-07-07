@@ -39,10 +39,12 @@ public:
 
 private:
     void LoadWithAssimp(const std::string& directoryPath, const std::string& filename);
-    void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath);
+    void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath, const std::string& objFileName = "");
     void ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene);
-    void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath);
+    void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName = "");
     void ProcessAssimpAnimation(const aiScene* scene);
+    std::string FindTextureInDirectory(const std::string& directoryPath);
+    std::string ParseMTLFile(const std::string& directoryPath, const std::string& objFileName);
 
     AnimationPlayer animationPlayer_;  // アニメーションプレイヤー
     Animation animation_;              // アニメーション格納するでーた　

@@ -1,7 +1,10 @@
 #include "AnimatedModel.h"
 #include "Mymath.h"
+#include "TextureManager.h"
 #include <algorithm>
 #include <cctype>
+#include <fstream>
+#include <sstream>
 
 // コンストラクタ
 AnimatedModel::AnimatedModel() : rootNodeName_("root") {
@@ -25,6 +28,8 @@ void AnimatedModel::LoadWithAssimp(const std::string& directoryPath, const std::
     
     std::string fullPath = directoryPath + "/" + filename;
     
+    OutputDebugStringA(("AnimatedModel: Loading file: " + fullPath + "\n").c_str());
+    
     const aiScene* scene = assimpImporter_.ReadFile(fullPath,
         aiProcess_Triangulate |
         aiProcess_FlipUVs |
@@ -44,8 +49,28 @@ void AnimatedModel::LoadWithAssimp(const std::string& directoryPath, const std::
                        std::to_string(scene->mNumMaterials) + " materials, " +
                        std::to_string(scene->mNumAnimations) + " animations\n").c_str());
     
+    for (unsigned int i = 0; i < scene->mNumMaterials; i++) {
+        const aiMaterial* material = scene->mMaterials[i];
+        if (material) {
+            aiString materialName;
+            if (material->Get(AI_MATKEY_NAME, materialName) == AI_SUCCESS) {
+                OutputDebugStringA(("AnimatedModel: Material " + std::to_string(i) + " name: " + materialName.C_Str() + "\n").c_str());
+            }
+            
+            OutputDebugStringA(("AnimatedModel: Material " + std::to_string(i) + " has " + 
+                               std::to_string(material->GetTextureCount(aiTextureType_DIFFUSE)) + " diffuse textures\n").c_str());
+            
+            for (unsigned int j = 0; j < material->GetTextureCount(aiTextureType_DIFFUSE); j++) {
+                aiString texturePath;
+                if (material->GetTexture(aiTextureType_DIFFUSE, j, &texturePath) == AI_SUCCESS) {
+                    OutputDebugStringA(("AnimatedModel: Diffuse texture " + std::to_string(j) + ": " + texturePath.C_Str() + "\n").c_str());
+                }
+            }
+        }
+    }
+    
     // シーンの処理
-    ProcessAssimpScene(scene, directoryPath);
+    ProcessAssimpScene(scene, directoryPath, filename);
     
     // 頂点バッファを作成
     CreateVertexBuffer();
@@ -81,7 +106,7 @@ void AnimatedModel::SetAnimationLoop(bool loop) {
 }
 
 // assimpシーンからモデルデータを作成
-void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath) {
+void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath, const std::string& objFileName) {
     if (!scene) {
         OutputDebugStringA("AnimatedModel: Invalid scene data\n");
         return;
@@ -96,9 +121,9 @@ void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& 
     }
     
     if (scene->mNumMaterials > 0 && scene->mMaterials[0]) {
-        ProcessAssimpMaterial(scene->mMaterials[0], directoryPath);
+        ProcessAssimpMaterial(scene->mMaterials[0], directoryPath, objFileName);
     } else {
-        ProcessAssimpMaterial(nullptr, directoryPath);
+        ProcessAssimpMaterial(nullptr, directoryPath, objFileName);
     }
     
     if (scene->mRootNode) {
@@ -198,27 +223,123 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
 }
 
 // assimpマテリアルからマテリアルデータを作成
-void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath) {
+void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName) {
     ModelData& modelData = GetModelDataInternal();
     
     modelData.material.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
     modelData.material.ambient = {0.2f, 0.2f, 0.2f, 1.0f};
     modelData.material.specular = {0.5f, 0.5f, 0.5f, 1.0f};
     modelData.material.alpha = 1.0f;
-    modelData.material.textureFilePath = "Resources/uvChecker.png";
+    modelData.material.textureFilePath = "";
     
     if (!material) {
         OutputDebugStringA("AnimatedModel: No material data, using defaults\n");
+        modelData.material.textureFilePath = "Resources/uvChecker.png";
         return;
     }
     
-    if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-        aiString texturePath;
-        if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
-            std::string textureFileName = texturePath.C_Str();
-            if (!textureFileName.empty()) {
-                modelData.material.textureFilePath = directoryPath + "/" + textureFileName;
-                OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
+    OutputDebugStringA(("AnimatedModel: Processing material with " + std::to_string(material->GetTextureCount(aiTextureType_DIFFUSE)) + " diffuse textures\n").c_str());
+    
+    aiTextureType textureTypes[] = {aiTextureType_DIFFUSE, aiTextureType_BASE_COLOR, aiTextureType_UNKNOWN};
+    std::string textureFileName;
+    
+    for (const auto& textureType : textureTypes) {
+        if (material->GetTextureCount(textureType) > 0) {
+            aiString texturePath;
+            if (material->GetTexture(textureType, 0, &texturePath) == AI_SUCCESS) {
+                textureFileName = texturePath.C_Str();
+                if (!textureFileName.empty()) {
+                    OutputDebugStringA(("AnimatedModel: Found texture in material: " + textureFileName + "\n").c_str());
+                    break;
+                }
+            }
+        }
+    }
+    
+    if (!textureFileName.empty()) {
+        std::string originalFileName = textureFileName;
+        
+        size_t lastSlash = textureFileName.find_last_of("/\\");
+        std::string filenameOnly = (lastSlash != std::string::npos) ? textureFileName.substr(lastSlash + 1) : textureFileName;
+        
+        std::vector<std::string> possiblePaths = {
+            directoryPath + "/" + textureFileName,
+            directoryPath + "/" + filenameOnly,
+            "Resources/" + textureFileName,
+            "Resources/" + filenameOnly,
+            "Resources/textures/" + filenameOnly,
+            "Resources/models/" + filenameOnly,
+            "Resources/Models/" + filenameOnly,
+            "Resources/CG2/Resources/" + filenameOnly,
+            "GitHub/CG2/Resources/" + filenameOnly,
+            "CG2/Resources/" + filenameOnly
+        };
+        
+        bool found = false;
+        for (const auto& path : possiblePaths) {
+            OutputDebugStringA(("AnimatedModel: Checking texture path: " + path + "\n").c_str());
+            if (GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+                modelData.material.textureFilePath = path;
+                OutputDebugStringA(("AnimatedModel: Texture found at: " + path + "\n").c_str());
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
+            OutputDebugStringA(("AnimatedModel: Texture not found - Original: " + originalFileName + ", Filename: " + filenameOnly + "\n").c_str());
+            OutputDebugStringA("AnimatedModel: Checked paths:\n");
+            for (const auto& path : possiblePaths) {
+                OutputDebugStringA(("  - " + path + "\n").c_str());
+            }
+            OutputDebugStringA("AnimatedModel: Using default texture\n");
+            modelData.material.textureFilePath = "Resources/uvChecker.png";
+        }
+    } else {
+        OutputDebugStringA("AnimatedModel: No texture found in material via assimp, searching manually\n");
+        std::string mtlTexture = ParseMTLFile(directoryPath, objFileName);
+        
+        if (!mtlTexture.empty()) {
+            size_t lastSlash = mtlTexture.find_last_of("/\\");
+            std::string filenameOnly = (lastSlash != std::string::npos) ? mtlTexture.substr(lastSlash + 1) : mtlTexture;
+            
+            std::vector<std::string> possiblePaths = {
+                directoryPath + "/" + mtlTexture,
+                directoryPath + "/" + filenameOnly,
+                "Resources/" + filenameOnly,
+                "Resources/Models/" + filenameOnly
+            };
+            
+            bool found = false;
+            for (const auto& path : possiblePaths) {
+                if (GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+                    modelData.material.textureFilePath = path;
+                    OutputDebugStringA(("AnimatedModel: MTL texture found at: " + path + "\n").c_str());
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                OutputDebugStringA("AnimatedModel: MTL texture not found, searching directory for PNG files\n");
+                std::string autoTexture = FindTextureInDirectory(directoryPath);
+                if (!autoTexture.empty()) {
+                    modelData.material.textureFilePath = autoTexture;
+                    OutputDebugStringA(("AnimatedModel: Auto-detected texture: " + autoTexture + "\n").c_str());
+                } else {
+                    OutputDebugStringA("AnimatedModel: No PNG files found, using default\n");
+                    modelData.material.textureFilePath = "Resources/uvChecker.png";
+                }
+            }
+        } else {
+            OutputDebugStringA("AnimatedModel: No MTL texture info, searching directory for PNG files\n");
+            std::string autoTexture = FindTextureInDirectory(directoryPath);
+            if (!autoTexture.empty()) {
+                modelData.material.textureFilePath = autoTexture;
+                OutputDebugStringA(("AnimatedModel: Auto-detected texture: " + autoTexture + "\n").c_str());
+            } else {
+                OutputDebugStringA("AnimatedModel: No PNG files found, using default\n");
+                modelData.material.textureFilePath = "Resources/uvChecker.png";
             }
         }
     }
@@ -226,6 +347,7 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std:
     aiColor3D color;
     if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) {
         modelData.material.diffuse = {color.r, color.g, color.b, 1.0f};
+        OutputDebugStringA(("AnimatedModel: Diffuse color: " + std::to_string(color.r) + ", " + std::to_string(color.g) + ", " + std::to_string(color.b) + "\n").c_str());
     }
     
     if (material->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) {
@@ -239,6 +361,10 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std:
     float opacity;
     if (material->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS && opacity > 0.0f) {
         modelData.material.alpha = opacity;
+    }
+    
+    if (!modelData.material.textureFilePath.empty()) {
+        TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
     }
 }
 
@@ -310,4 +436,59 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
     animationPlayer_.SetLoop(true);
     
     OutputDebugStringA(("AnimatedModel: Animation setup complete, duration: " + std::to_string(animation_.duration) + "s\n").c_str());
+}
+
+std::string AnimatedModel::FindTextureInDirectory(const std::string& directoryPath) {
+    WIN32_FIND_DATAA findData;
+    std::string searchPath = directoryPath + "/*.png";
+    HANDLE hFind = FindFirstFileA(searchPath.c_str(), &findData);
+    
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            if (!(findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+                std::string foundTexture = directoryPath + "/" + findData.cFileName;
+                OutputDebugStringA(("AnimatedModel: Found PNG in directory: " + foundTexture + "\n").c_str());
+                FindClose(hFind);
+                return foundTexture;
+            }
+        } while (FindNextFileA(hFind, &findData));
+        FindClose(hFind);
+    }
+    
+    return "";
+}
+
+std::string AnimatedModel::ParseMTLFile(const std::string& directoryPath, const std::string& objFileName) {
+    std::string mtlFileName = objFileName;
+    size_t dotPos = mtlFileName.find_last_of('.');
+    if (dotPos != std::string::npos) {
+        mtlFileName = mtlFileName.substr(0, dotPos) + ".mtl";
+    } else {
+        mtlFileName += ".mtl";
+    }
+    
+    std::string mtlPath = directoryPath + "/" + mtlFileName;
+    std::ifstream mtlFile(mtlPath);
+    
+    if (!mtlFile.is_open()) {
+        OutputDebugStringA(("AnimatedModel: Cannot open MTL file: " + mtlPath + "\n").c_str());
+        return "";
+    }
+    
+    std::string line;
+    while (std::getline(mtlFile, line)) {
+        if (line.find("map_Kd") == 0) {
+            size_t spacePos = line.find(' ');
+            if (spacePos != std::string::npos) {
+                std::string texturePath = line.substr(spacePos + 1);
+                while (!texturePath.empty() && (texturePath.back() == '\r' || texturePath.back() == '\n' || texturePath.back() == ' ')) {
+                    texturePath.pop_back();
+                }
+                OutputDebugStringA(("AnimatedModel: Found map_Kd in MTL: " + texturePath + "\n").c_str());
+                return texturePath;
+            }
+        }
+    }
+    
+    return "";
 }

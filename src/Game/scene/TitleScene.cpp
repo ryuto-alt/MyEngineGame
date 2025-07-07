@@ -21,7 +21,7 @@ void TitleScene::Initialize() {
     // 3Dモデルの初期化
     sphereModel_ = std::make_unique<Model>();
     sphereModel_->Initialize(dxCommon_);
-    sphereModel_->LoadFromObj("Resources/models", "sphere.obj");
+    sphereModel_->LoadFromObj("Resources/Models/sphere", "sphere.obj");
 
     // 3Dオブジェクトの初期化
     sphereObject_ = std::make_unique<Object3d>();
