@@ -35,10 +35,10 @@ void GamePlayScene::Initialize() {
 	// 通常のモデルを読み込み
 	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.obj");
 	
-	// アニメーション付きモデルの作成（AnimatedCube.gltfを使用）
+	// アニメーション付きモデルの作成（walk.gltfを使用）
 	animatedCubeModel_ = std::make_unique<AnimatedModel>();
 	animatedCubeModel_->Initialize(dxCommon_);
-	animatedCubeModel_->LoadFromFile("Resources/Models/AnimatedCube", "AnimatedCube.gltf");
+	animatedCubeModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
 	animatedCubeModel_->PlayAnimation();  // アニメーション開始
 	
 	cubeObject_->SetModel(animatedCubeModel_.get());
@@ -72,6 +72,10 @@ void GamePlayScene::Initialize() {
 		}
 	}
 
+	// LineRendererは一時的に無効化（DirectX競合問題解決のため）
+	// lineRenderer_ = std::make_unique<LineRenderer>();
+	// lineRenderer_->Initialize(dxCommon_, spriteCommon_);
+
 	// 初期化完了
 	initialized_ = true;
 }
@@ -104,6 +108,11 @@ void GamePlayScene::Update() {
 		catch (...) {
 			// BGMの操作でエラーが発生しても続行
 		}
+	}
+
+	// Sキーでスケルトン表示切り替え
+	if (engine_->IsKeyTriggered(DIK_S)) {
+		showSkeleton_ = !showSkeleton_;
 	}
 
 	// TABキーでカメラモード切り替え
@@ -262,6 +271,11 @@ void GamePlayScene::Draw() {
 	// 2Dスプライトの描画
 	titleSprite_->Draw();
 
+	// スケルトンのデバッグ描画は一時的に無効化（DirectX競合問題解決のため）
+	// if (showSkeleton_ && animatedCubeModel_ && animatedCubeModel_->HasSkeleton()) {
+	//     // スケルトン描画処理をここに実装予定
+	// }
+
 	// GamePlayScene用のImGuiウィンドウ
 	ImGui::Begin("GamePlayScene - 統合API版");
 
@@ -269,7 +283,7 @@ void GamePlayScene::Draw() {
 	ImGui::Separator();
 
 	ImGui::Text("操作方法:");
-	ImGui::Text("SPACE - キューブ回転");
+	ImGui::Text("S - スケルトン表示切り替え (現在: %s)", showSkeleton_ ? "ON" : "OFF");
 	ImGui::Text("F - パーティクル発生");
 	ImGui::Text("B - BGM ON/OFF");
 	ImGui::Text("C - bgm.wav再生/停止（3D空間オーディオ）");
@@ -284,6 +298,31 @@ void GamePlayScene::Draw() {
 	Vector3 enemyPos = Vector3{ 1.0f, 0.0f, 0.0f };
 	bool collision = engine_->CheckCollision(playerPos, 0.5f, enemyPos, 0.5f);
 	ImGui::Text("衝突判定テスト: %s", collision ? "衝突中" : "衝突していません");
+
+	ImGui::Separator();
+	
+	// スケルトン情報
+	ImGui::Text("スケルトン情報:");
+	if (animatedCubeModel_ && animatedCubeModel_->HasSkeleton()) {
+		const Skeleton& skeleton = animatedCubeModel_->GetSkeleton();
+		ImGui::Text("ジョイント数: %d", (int)skeleton.joints.size());
+		ImGui::Text("ルートジョイント: %d", skeleton.root);
+		
+		if (ImGui::TreeNode("ジョイント一覧")) {
+			for (const Joint& joint : skeleton.joints) {
+				ImGui::Text("ID %d: %s", joint.index, joint.name.c_str());
+				ImGui::SameLine();
+				if (joint.parent) {
+					ImGui::Text("(親: %d)", *joint.parent);
+				} else {
+					ImGui::Text("(ルート)");
+				}
+			}
+			ImGui::TreePop();
+		}
+	} else {
+		ImGui::Text("スケルトンが見つかりません");
+	}
 
 	ImGui::Separator();
 
@@ -326,4 +365,5 @@ void GamePlayScene::Finalize() {
 	cubeModel_.reset();
 	animatedCubeModel_.reset();
 	titleSprite_.reset();
+	// lineRenderer_.reset();
 }

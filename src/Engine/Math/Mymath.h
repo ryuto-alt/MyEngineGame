@@ -9,13 +9,20 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <optional>
+#include <map>
 
 //float Cot(float theta);
+
+// Quaternion型の定義
+using Quaternion = Vector4;
 
 Matrix4x4 MakeIdentity4x4();
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 MakeRotateMatrix(const Vector3& rotate);
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 Matrix4x4 Inverse(const Matrix4x4& m);
 //Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 //Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearclip, float farclip);
@@ -50,6 +57,18 @@ struct DirectionalLight {
     float intensity;
 };
 
+struct EulerTransform {
+    Vector3 scale;
+    Vector3 rotate;
+    Vector3 translate;
+};
+
+struct QuaternionTransform {
+    Vector3 scale;
+    Quaternion rotate;
+    Vector3 translate;
+};
+
 struct Transform {
     Vector3 scale;
     Vector3 rotate;
@@ -69,9 +88,33 @@ struct MaterialData {
 // ノードデータ構造体（アニメーション用）
 struct Node {
     std::string name;           // ノード名
+    QuaternionTransform transform; // Transform情報
     Matrix4x4 localMatrix;     // ローカル変換行列
     std::vector<Node> children; // 子ノード
 };
+
+// Joint構造体（スケルトンアニメーション用）
+struct Joint {
+    QuaternionTransform transform;   // Transform情報
+    Matrix4x4 localMatrix;          // localMatrix
+    Matrix4x4 skeletonSpaceMatrix;  // skeletonSpaceでの変換行列
+    std::string name;               // 名前
+    std::vector<int32_t> children;  // 子JointのIndexのリスト
+    int32_t index;                  // 自身のIndex
+    std::optional<int32_t> parent;  // 親JointのIndex（いなければnull）
+};
+
+// Skeleton構造体（スケルトンアニメーション用）
+struct Skeleton {
+    int32_t root;                                // RootJointのIndex
+    std::map<std::string, int32_t> jointMap;     // Joint名とIndexとの辞書
+    std::vector<Joint> joints;                   // 所属しているジョイント
+};
+
+// スケルトンアニメーション関数の宣言
+Skeleton CreateSkeleton(const Node& rootNode);
+int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
+void UpdateSkeleton(Skeleton& skeleton);
 
 struct ModelData {
     std::vector<VertexData>vertices;

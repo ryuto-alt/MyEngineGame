@@ -1,6 +1,7 @@
 #pragma once
 #include "UnoEngine.h"
 #include "AnimatedModel.h"
+// #include "LineRenderer.h"  // 一時的に無効化
 
 // 統合APIを使用したGamePlayScene
 class GamePlayScene : public IScene {
@@ -30,6 +31,10 @@ protected:
     
     // 3D空間オーディオ
     std::unique_ptr<SpatialAudioSource> cubeSpatialAudio_;
+    
+    // デバッグ描画
+    // std::unique_ptr<LineRenderer> lineRenderer_;  // 一時的に無効化
+    bool showSkeleton_ = true;
     
     // キューブの位置
     Vector3 cubePosition_ = Vector3{0.0f, 0.0f, 0.0f};

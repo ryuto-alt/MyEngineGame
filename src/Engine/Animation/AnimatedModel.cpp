@@ -7,7 +7,7 @@
 #include <sstream>
 
 // コンストラクタ
-AnimatedModel::AnimatedModel() : rootNodeName_("root") {
+AnimatedModel::AnimatedModel() : rootNodeName_("root"), hasSkeleton_(false) {
 }
 
 // デストラクタ
@@ -80,6 +80,11 @@ void AnimatedModel::LoadWithAssimp(const std::string& directoryPath, const std::
 // 更新（アニメーション時刻を進める）
 void AnimatedModel::Update(float deltaTime) {
     animationPlayer_.Update(deltaTime);
+    
+    // スケルトンがある場合は更新する
+    if (hasSkeleton_) {
+        UpdateSkeleton(skeleton_);
+    }
 }
 
 // アニメーションのローカル変換行列を取得
@@ -155,6 +160,26 @@ void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& 
     }
     
     ProcessAssimpAnimation(scene);
+    
+    // スケルトンを作成
+    if (scene->mRootNode) {
+        OutputDebugStringA("AnimatedModel: Creating skeleton from node hierarchy\n");
+        
+        // assimpのノード階層をEngineのNode階層に変換
+        Node rootNode;
+        ProcessAssimpNode(scene->mRootNode, rootNode);
+        
+        // Skeletonを作成
+        skeleton_ = CreateSkeleton(rootNode);
+        hasSkeleton_ = true;
+        
+        OutputDebugStringA(("AnimatedModel: Created skeleton with " + std::to_string(skeleton_.joints.size()) + " joints\n").c_str());
+        
+        // 各ジョイントの名前をデバッグ出力
+        for (const Joint& joint : skeleton_.joints) {
+            OutputDebugStringA(("AnimatedModel: Joint " + std::to_string(joint.index) + ": " + joint.name + "\n").c_str());
+        }
+    }
 }
 
 // assimpメッシュからジオメトリデータを作成
@@ -491,4 +516,91 @@ std::string AnimatedModel::ParseMTLFile(const std::string& directoryPath, const 
     }
     
     return "";
+}
+
+// AssimpのノードをEngineのNodeに変換する関数
+void AnimatedModel::ProcessAssimpNode(const aiNode* assimpNode, Node& engineNode) {
+    if (!assimpNode) {
+        return;
+    }
+    
+    // ノード名を設定
+    engineNode.name = assimpNode->mName.C_Str();
+    if (engineNode.name.empty()) {
+        engineNode.name = "UnnamedNode";
+    }
+    
+    // 変換行列を設定
+    aiMatrix4x4 assimpMatrix = assimpNode->mTransformation;
+    
+    // assimpの行列をEngineの行列に変換
+    Matrix4x4 transformMatrix;
+    transformMatrix.m[0][0] = assimpMatrix.a1; transformMatrix.m[0][1] = assimpMatrix.a2; transformMatrix.m[0][2] = assimpMatrix.a3; transformMatrix.m[0][3] = assimpMatrix.a4;
+    transformMatrix.m[1][0] = assimpMatrix.b1; transformMatrix.m[1][1] = assimpMatrix.b2; transformMatrix.m[1][2] = assimpMatrix.b3; transformMatrix.m[1][3] = assimpMatrix.b4;
+    transformMatrix.m[2][0] = assimpMatrix.c1; transformMatrix.m[2][1] = assimpMatrix.c2; transformMatrix.m[2][2] = assimpMatrix.c3; transformMatrix.m[2][3] = assimpMatrix.c4;
+    transformMatrix.m[3][0] = assimpMatrix.d1; transformMatrix.m[3][1] = assimpMatrix.d2; transformMatrix.m[3][2] = assimpMatrix.d3; transformMatrix.m[3][3] = assimpMatrix.d4;
+    
+    // 座標系変換（右手座標系から左手座標系へ）
+    Matrix4x4 coordinateConversion = MakeIdentity4x4();
+    coordinateConversion.m[2][2] = -1.0f;
+    
+    engineNode.localMatrix = Multiply(coordinateConversion, transformMatrix);
+    
+    // assimpの行列分解機能を使ってSRTを抽出
+    aiVector3D scale, translation;
+    aiQuaternion rotation;
+    assimpMatrix.Decompose(scale, rotation, translation);
+    
+    // QuaternionTransformに設定
+    engineNode.transform.scale = {scale.x, scale.y, scale.z};
+    engineNode.transform.rotate = {-rotation.x, -rotation.y, -rotation.z, rotation.w};  // 座標系変換
+    engineNode.transform.translate = {translation.x, translation.y, -translation.z};  // Z軸反転
+    
+    // 子ノードを処理
+    engineNode.children.resize(assimpNode->mNumChildren);
+    for (unsigned int i = 0; i < assimpNode->mNumChildren; i++) {
+        ProcessAssimpNode(assimpNode->mChildren[i], engineNode.children[i]);
+    }
+}
+
+// スケルトンのデバッグ描画用ライン生成
+std::vector<std::pair<Vector3, Vector3>> AnimatedModel::GenerateSkeletonLines(const Matrix4x4& worldMatrix) const {
+    std::vector<std::pair<Vector3, Vector3>> lines;
+    
+    if (!hasSkeleton_) {
+        return lines;
+    }
+    
+    // 各ジョイントからラインを生成
+    for (const Joint& joint : skeleton_.joints) {
+        // ジョイントの位置を取得（ワールド座標変換）
+        Matrix4x4 jointWorldMatrix = Multiply(worldMatrix, joint.skeletonSpaceMatrix);
+        Vector3 jointPos = {jointWorldMatrix.m[3][0], jointWorldMatrix.m[3][1], jointWorldMatrix.m[3][2]};
+        
+        // 親ジョイントとの間にラインを生成
+        if (joint.parent) {
+            const Joint& parentJoint = skeleton_.joints[*joint.parent];
+            Matrix4x4 parentWorldMatrix = Multiply(worldMatrix, parentJoint.skeletonSpaceMatrix);
+            Vector3 parentPos = {parentWorldMatrix.m[3][0], parentWorldMatrix.m[3][1], parentWorldMatrix.m[3][2]};
+            
+            // 親子ジョイント間のラインを登録
+            lines.push_back({parentPos, jointPos});
+        }
+        
+        // ジョイント位置に小さな十字を生成
+        float crossSize = 0.05f;
+        Vector3 right = {jointPos.x + crossSize, jointPos.y, jointPos.z};
+        Vector3 left = {jointPos.x - crossSize, jointPos.y, jointPos.z};
+        Vector3 up = {jointPos.x, jointPos.y + crossSize, jointPos.z};
+        Vector3 down = {jointPos.x, jointPos.y - crossSize, jointPos.z};
+        Vector3 forward = {jointPos.x, jointPos.y, jointPos.z + crossSize};
+        Vector3 back = {jointPos.x, jointPos.y, jointPos.z - crossSize};
+        
+        // ジョイントを表す十字のラインを登録
+        lines.push_back({left, right});
+        lines.push_back({down, up});
+        lines.push_back({back, forward});
+    }
+    
+    return lines;
 }
