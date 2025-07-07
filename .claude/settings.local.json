@@ -21,7 +21,9 @@
       "Bash(start CG2_00-01.sln)",
       "Bash(mkdir:*)",
       "Bash(rg:*)",
-      "Bash(msbuild:*)"
+      "Bash(msbuild:*)",
+      "Bash(copy:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }
