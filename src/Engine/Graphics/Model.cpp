@@ -10,6 +10,9 @@ Model::~Model() {
     if (vertexResource_) {
         vertexResource_.Reset();
     }
+    if (indexResource_) {
+        indexResource_.Reset();
+    }
 }
 
 void Model::Initialize(DirectXCommon* dxCommon) {
@@ -21,6 +24,7 @@ void Model::LoadFromObj(const std::string& directoryPath, const std::string& fil
     OutputDebugStringA(("Model: Loading " + directoryPath + "/" + filename + " with Assimp\n").c_str());
     LoadWithAssimp(directoryPath, filename);
     CreateVertexBuffer();
+    CreateIndexBuffer();
 }
 
 void Model::CreateVertexBuffer() {
@@ -44,6 +48,29 @@ void Model::CreateVertexBuffer() {
     
     OutputDebugStringA(("Model: Created vertex buffer with " + 
                        std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+}
+
+void Model::CreateIndexBuffer() {
+    assert(dxCommon_);
+    
+    if (modelData_.indices.empty()) {
+        OutputDebugStringA("Model::CreateIndexBuffer - Warning: No indices to create buffer\n");
+        return;
+    }
+    
+    indexResource_ = dxCommon_->CreateBufferResource(sizeof(uint32_t) * modelData_.indices.size());
+    
+    indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+    indexBufferView_.SizeInBytes = static_cast<UINT>(sizeof(uint32_t) * modelData_.indices.size());
+    indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+    
+    uint32_t* indexData = nullptr;
+    indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
+    std::memcpy(indexData, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+    indexResource_->Unmap(0, nullptr);
+    
+    OutputDebugStringA(("Model: Created index buffer with " + 
+                       std::to_string(modelData_.indices.size()) + " indices\n").c_str());
 }
 
 void Model::LoadWithAssimp(const std::string& directoryPath, const std::string& filename) {
@@ -144,60 +171,31 @@ void Model::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) {
     }
     
     modelData_.vertices.clear();
-    modelData_.vertices.reserve(mesh->mNumFaces * 3);
+    modelData_.vertices.resize(mesh->mNumVertices);
     
     OutputDebugStringA(("Model: Processing mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces\n").c_str());
     
-    for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++) {
-        const aiFace& face = mesh->mFaces[faceIndex];
+    for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
+        aiVector3D& position = mesh->mVertices[vertexIndex];
+        aiVector3D& normal = mesh->mNormals[vertexIndex];
+        aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
         
-        if (face.mNumIndices != 3) {
-            continue;
-        }
+        modelData_.vertices[vertexIndex].position = { -position.x, position.y, position.z, 1.0f };
+        modelData_.vertices[vertexIndex].normal = { -normal.x, normal.y, normal.z };
+        modelData_.vertices[vertexIndex].texcoord = { texcoord.x, texcoord.y };
+    }
+    
+    for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+        aiFace& face = mesh->mFaces[faceIndex];
+        assert(face.mNumIndices == 3);
         
-        unsigned int indices[3] = { face.mIndices[0], face.mIndices[2], face.mIndices[1] };
-        
-        for (int i = 0; i < 3; i++) {
-            unsigned int vertexIndex = indices[i];
-            
-            if (vertexIndex >= mesh->mNumVertices) {
-                OutputDebugStringA(("Model: Invalid vertex index: " + std::to_string(vertexIndex) + "\n").c_str());
-                continue;
-            }
-            
-            VertexData vertex{};
-            
-            vertex.position = {
-                mesh->mVertices[vertexIndex].x,
-                mesh->mVertices[vertexIndex].y,
-                -mesh->mVertices[vertexIndex].z,
-                1.0f
-            };
-            
-            if (mesh->HasNormals()) {
-                vertex.normal = {
-                    mesh->mNormals[vertexIndex].x,
-                    mesh->mNormals[vertexIndex].y,
-                    -mesh->mNormals[vertexIndex].z
-                };
-            } else {
-                vertex.normal = {0.0f, 1.0f, 0.0f};
-            }
-            
-            if (mesh->mTextureCoords[0] && vertexIndex < mesh->mNumVertices) {
-                vertex.texcoord = {
-                    mesh->mTextureCoords[0][vertexIndex].x,
-                    mesh->mTextureCoords[0][vertexIndex].y
-                };
-            } else {
-                vertex.texcoord = {0.0f, 0.0f};
-            }
-            
-            modelData_.vertices.push_back(vertex);
+        for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+            uint32_t vertexIndex = face.mIndices[element];
+            modelData_.indices.push_back(vertexIndex);
         }
     }
     
-    OutputDebugStringA(("Model: Created " + std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+    OutputDebugStringA(("Model: Created " + std::to_string(modelData_.vertices.size()) + " vertices and " + std::to_string(modelData_.indices.size()) + " indices\n").c_str());
 }
 
 void Model::ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName) {

@@ -74,6 +74,8 @@ void AnimatedModel::LoadWithAssimp(const std::string& directoryPath, const std::
     
     // 頂点バッファを作成
     CreateVertexBuffer();
+    // インデックスバッファを作成
+    CreateIndexBuffer();
 }
 
 
@@ -191,60 +193,31 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
     
     ModelData& modelData = GetModelDataInternal();
     modelData.vertices.clear();
-    modelData.vertices.reserve(mesh->mNumFaces * 3);
+    modelData.vertices.resize(mesh->mNumVertices);
     
     OutputDebugStringA(("AnimatedModel: Processing mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces\n").c_str());
     
-    for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++) {
-        const aiFace& face = mesh->mFaces[faceIndex];
+    for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
+        aiVector3D& position = mesh->mVertices[vertexIndex];
+        aiVector3D& normal = mesh->mNormals[vertexIndex];
+        aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
         
-        if (face.mNumIndices != 3) {
-            continue;
-        }
+        modelData.vertices[vertexIndex].position = { -position.x, position.y, position.z, 1.0f };
+        modelData.vertices[vertexIndex].normal = { -normal.x, normal.y, normal.z };
+        modelData.vertices[vertexIndex].texcoord = { texcoord.x, texcoord.y };
+    }
+    
+    for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+        aiFace& face = mesh->mFaces[faceIndex];
+        assert(face.mNumIndices == 3);
         
-        unsigned int indices[3] = { face.mIndices[0], face.mIndices[2], face.mIndices[1] };
-        
-        for (int i = 0; i < 3; i++) {
-            unsigned int vertexIndex = indices[i];
-            
-            if (vertexIndex >= mesh->mNumVertices) {
-                OutputDebugStringA(("AnimatedModel: Invalid vertex index: " + std::to_string(vertexIndex) + "\n").c_str());
-                continue;
-            }
-            
-            VertexData vertex{};
-            
-            vertex.position = {
-                mesh->mVertices[vertexIndex].x,
-                mesh->mVertices[vertexIndex].y,
-                -mesh->mVertices[vertexIndex].z,
-                1.0f
-            };
-            
-            if (mesh->HasNormals()) {
-                vertex.normal = {
-                    mesh->mNormals[vertexIndex].x,
-                    mesh->mNormals[vertexIndex].y,
-                    -mesh->mNormals[vertexIndex].z
-                };
-            } else {
-                vertex.normal = {0.0f, 1.0f, 0.0f};
-            }
-            
-            if (mesh->mTextureCoords[0] && vertexIndex < mesh->mNumVertices) {
-                vertex.texcoord = {
-                    mesh->mTextureCoords[0][vertexIndex].x,
-                    mesh->mTextureCoords[0][vertexIndex].y
-                };
-            } else {
-                vertex.texcoord = {0.0f, 0.0f};
-            }
-            
-            modelData.vertices.push_back(vertex);
+        for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+            uint32_t vertexIndex = face.mIndices[element];
+            modelData.indices.push_back(vertexIndex);
         }
     }
     
-    OutputDebugStringA(("AnimatedModel: Created " + std::to_string(modelData.vertices.size()) + " vertices\n").c_str());
+    OutputDebugStringA(("AnimatedModel: Created " + std::to_string(modelData.vertices.size()) + " vertices and " + std::to_string(modelData.indices.size()) + " indices\n").c_str());
 }
 
 // assimpマテリアルからマテリアルデータを作成

@@ -29,11 +29,15 @@ public:
 
     // アクセサ
     const std::vector<VertexData>& GetVertices() const { return modelData_.vertices; }
+    const std::vector<uint32_t>& GetIndices() const { return modelData_.indices; }
     uint32_t GetVertexCount() const { return static_cast<uint32_t>(modelData_.vertices.size()); }
+    uint32_t GetIndexCount() const { return static_cast<uint32_t>(modelData_.indices.size()); }
     const MaterialData& GetMaterial() const { return modelData_.material; }
     const std::string& GetTextureFilePath() const { return modelData_.material.textureFilePath; }
     const D3D12_VERTEX_BUFFER_VIEW& GetVBView() const { return vertexBufferView_; }
+    const D3D12_INDEX_BUFFER_VIEW& GetIBView() const { return indexBufferView_; }
     ID3D12Resource* GetVertexResource() const { return vertexResource_.Get(); }
+    ID3D12Resource* GetIndexResource() const { return indexResource_.Get(); }
     const ModelData& GetModelData() const { return modelData_; }
 
 protected:
@@ -42,6 +46,8 @@ protected:
     
     // 頂点バッファの作成（継承クラス用）
     void CreateVertexBuffer();
+    // インデックスバッファの作成（継承クラス用）
+    void CreateIndexBuffer();
 
 private:
     void LoadWithAssimp(const std::string& directoryPath, const std::string& filename);
@@ -57,6 +63,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
     // 頂点バッファビュー
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
+    // インデックスバッファ
+    Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_;
+    // インデックスバッファビュー
+    D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
     // DirectXCommon
     DirectXCommon* dxCommon_;
     // assimpインポーター

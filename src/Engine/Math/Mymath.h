@@ -118,6 +118,7 @@ void UpdateSkeleton(Skeleton& skeleton);
 
 struct ModelData {
     std::vector<VertexData>vertices;
+    std::vector<uint32_t> indices;
     MaterialData material;
     Node rootNode;              // ルートノード（アニメーション用）
 };

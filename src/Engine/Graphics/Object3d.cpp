@@ -182,6 +182,9 @@ void Object3d::Draw() {
 
     // モデルの頂点バッファをセット
     dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &model_->GetVBView());
+    
+    // モデルのインデックスバッファをセット
+    dxCommon_->GetCommandList()->IASetIndexBuffer(&model_->GetIBView());
 
     // マテリアルCBufferの場所を設定
     dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -238,5 +241,5 @@ void Object3d::Draw() {
     dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
     // 描画
-    dxCommon_->GetCommandList()->DrawInstanced(model_->GetVertexCount(), 1, 0, 0);
+    dxCommon_->GetCommandList()->DrawIndexedInstanced(model_->GetIndexCount(), 1, 0, 0, 0);
 }
