@@ -211,10 +211,10 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         aiFace& face = mesh->mFaces[faceIndex];
         assert(face.mNumIndices == 3);
         
-        for (uint32_t element = 0; element < face.mNumIndices; ++element) {
-            uint32_t vertexIndex = face.mIndices[element];
-            modelData.indices.push_back(vertexIndex);
-        }
+        // DirectX左手座標系に合わせて巻き順を調整（0,2,1の順序）
+        modelData.indices.push_back(face.mIndices[0]);
+        modelData.indices.push_back(face.mIndices[2]);
+        modelData.indices.push_back(face.mIndices[1]);
     }
     
     OutputDebugStringA(("AnimatedModel: Created " + std::to_string(modelData.vertices.size()) + " vertices and " + std::to_string(modelData.indices.size()) + " indices\n").c_str());
