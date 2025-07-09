@@ -372,3 +372,106 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
 
 	return ans;
 }
+
+// Quaternionから回転行列を作成する関数
+Matrix4x4 MakeRotateMatrix(const Quaternion& quaternion) {
+	float x = quaternion.x;
+	float y = quaternion.y;
+	float z = quaternion.z;
+	float w = quaternion.w;
+
+	Matrix4x4 result = {};
+	result.m[0][0] = w * w + x * x - y * y - z * z;
+	result.m[0][1] = 2 * (x * y + w * z);
+	result.m[0][2] = 2 * (x * z - w * y);
+	result.m[0][3] = 0;
+
+	result.m[1][0] = 2 * (x * y - w * z);
+	result.m[1][1] = w * w - x * x + y * y - z * z;
+	result.m[1][2] = 2 * (y * z + w * x);
+	result.m[1][3] = 0;
+
+	result.m[2][0] = 2 * (x * z + w * y);
+	result.m[2][1] = 2 * (y * z - w * x);
+	result.m[2][2] = w * w - x * x - y * y + z * z;
+	result.m[2][3] = 0;
+
+	result.m[3][0] = 0;
+	result.m[3][1] = 0;
+	result.m[3][2] = 0;
+	result.m[3][3] = 1;
+
+	return result;
+}
+
+// Quaternionを使ったアフィン変換行列の作成
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
+	Matrix4x4 result = {};
+
+	result.m[0][0] = scale.x * rotateMatrix.m[0][0];
+	result.m[0][1] = scale.x * rotateMatrix.m[0][1];
+	result.m[0][2] = scale.x * rotateMatrix.m[0][2];
+	result.m[0][3] = 0;
+
+	result.m[1][0] = scale.y * rotateMatrix.m[1][0];
+	result.m[1][1] = scale.y * rotateMatrix.m[1][1];
+	result.m[1][2] = scale.y * rotateMatrix.m[1][2];
+	result.m[1][3] = 0;
+
+	result.m[2][0] = scale.z * rotateMatrix.m[2][0];
+	result.m[2][1] = scale.z * rotateMatrix.m[2][1];
+	result.m[2][2] = scale.z * rotateMatrix.m[2][2];
+	result.m[2][3] = 0;
+
+	result.m[3][0] = translate.x;
+	result.m[3][1] = translate.y;
+	result.m[3][2] = translate.z;
+	result.m[3][3] = 1;
+
+	return result;
+}
+
+// NodeからJointを作成する再帰関数
+int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints) {
+	Joint joint;
+	joint.name = node.name;
+	joint.localMatrix = node.localMatrix;
+	joint.skeletonSpaceMatrix = MakeIdentity4x4();
+	joint.transform = node.transform;
+	joint.index = int32_t(joints.size());
+	joint.parent = parent;
+
+	joints.push_back(joint);
+
+	for (const Node& child : node.children) {
+		int32_t childIndex = CreateJoint(child, joint.index, joints);
+		joints[joint.index].children.push_back(childIndex);
+	}
+
+	return joint.index;
+}
+
+// NodeからSkeletonを作成する関数
+Skeleton CreateSkeleton(const Node& rootNode) {
+	Skeleton skeleton;
+	skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
+
+	for (const Joint& joint : skeleton.joints) {
+		skeleton.jointMap.emplace(joint.name, joint.index);
+	}
+
+	return skeleton;
+}
+
+// Skeletonを更新する関数
+void UpdateSkeleton(Skeleton& skeleton) {
+	for (Joint& joint : skeleton.joints) {
+		joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+		if (joint.parent) {
+			joint.skeletonSpaceMatrix = Multiply(skeleton.joints[*joint.parent].skeletonSpaceMatrix, joint.localMatrix);
+		} else {
+			joint.skeletonSpaceMatrix = joint.localMatrix;
+		}
+	}
+}

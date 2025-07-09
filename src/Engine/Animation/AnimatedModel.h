@@ -3,6 +3,7 @@
 #include "Animation.h"
 #include "AnimationPlayer.h"
 #include "AnimationUtility.h"
+#include "Mymath.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -19,14 +20,7 @@ public:
     // 初期化
     void Initialize(DirectXCommon* dxCommon);
     
-    // モデルとアニメーションの読み込み
     void LoadFromFile(const std::string& directoryPath, const std::string& filename);
-    
-    // GLTFファイルからの読み込み
-    void LoadFromGLTF(const std::string& directoryPath, const std::string& filename);
-    
-    // アニメーションの読み込み
-    void LoadAnimation(const std::string& directoryPath, const std::string& filename);
     
   
     void Update(float deltaTime);
@@ -43,26 +37,30 @@ public:
     void StopAnimation();
     void PauseAnimation();
     void SetAnimationLoop(bool loop);
+    
+    // スケルトン機能
+    const Skeleton& GetSkeleton() const { return skeleton_; }
+    bool HasSkeleton() const { return hasSkeleton_; }
+    
+    // デバッグ描画用のライン生成
+    std::vector<std::pair<Vector3, Vector3>> GenerateSkeletonLines(const Matrix4x4& worldMatrix = MakeIdentity4x4()) const;
 
 private:
-    // assimpを使用したGLTFローダー
-    void LoadFromGLTFWithAssimp(const std::string& directoryPath, const std::string& filename);
-    
-    // assimpシーンからモデルデータを作成
-    void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath);
-    
-    // assimpメッシュからジオメトリデータを作成
+    void LoadWithAssimp(const std::string& directoryPath, const std::string& filename);
+    void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath, const std::string& objFileName = "");
     void ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene);
-    
-    // assimpマテリアルからマテリアルデータを作成
-    void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath);
-    
-    // assimpノードからアニメーションデータを作成
+    void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName = "");
     void ProcessAssimpAnimation(const aiScene* scene);
+    void ProcessAssimpNode(const aiNode* assimpNode, Node& engineNode);
+    std::string FindTextureInDirectory(const std::string& directoryPath);
+    std::string ParseMTLFile(const std::string& directoryPath, const std::string& objFileName);
 
     AnimationPlayer animationPlayer_;  // アニメーションプレイヤー
     Animation animation_;              // アニメーション格納するでーた　
     std::string rootNodeName_;         // ルートノード名
+    
+    Skeleton skeleton_;                // スケルトン
+    bool hasSkeleton_;                 // スケルトンを持っているかどうか
     
     Assimp::Importer assimpImporter_;  // assimpインポーター
 };

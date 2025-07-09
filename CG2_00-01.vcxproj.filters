@@ -54,6 +54,9 @@
     <Filter Include="src\engine\Collision">
       <UniqueIdentifier>{25a72859-924c-402d-b8ec-1f83be6bbaec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\engine\Animation">
+      <UniqueIdentifier>{f2e8c7a5-3b4d-4e5f-9876-1234567890ab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -81,6 +84,9 @@
       <Filter>src\engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Graphics\DirectXCommon.cpp">
+      <Filter>src\engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\LineRenderer.cpp">
       <Filter>src\engine\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Graphics\Model.cpp">
@@ -188,6 +194,21 @@
     <ClCompile Include="src\Engine\Particle\Particle3DManager.cpp">
       <Filter>src\engine\Particle</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Animation\AnimatedModel.cpp">
+      <Filter>src\engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Animation\AnimationPlayer.cpp">
+      <Filter>src\engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Animation\AnimationUtility.cpp">
+      <Filter>src\engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\SpatialAudioListener.cpp">
+      <Filter>src\engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\SpatialAudioSource.cpp">
+      <Filter>src\engine\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -218,6 +239,9 @@
       <Filter>src\engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Graphics\DirectXCommon.h">
+      <Filter>src\engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\LineRenderer.h">
       <Filter>src\engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Graphics\Model.h">
@@ -348,6 +372,33 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Particle\Particle3DManager.h">
       <Filter>src\engine\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\Animation.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\AnimatedModel.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\AnimationPlayer.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\AnimationUtility.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\SpatialAudioListener.h">
+      <Filter>src\engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h">
+      <Filter>src\engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\GraphicsManager.h">
+      <Filter>src\engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Input\InputManager.h">
+      <Filter>src\engine\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Core\Scene.h">
+      <Filter>src\engine\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
