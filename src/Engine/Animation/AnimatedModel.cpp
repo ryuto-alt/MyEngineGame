@@ -91,8 +91,17 @@ void AnimatedModel::Update(float deltaTime) {
 
 // アニメーションのローカル変換行列を取得
 Matrix4x4 AnimatedModel::GetAnimationLocalMatrix() {
-    // GLTFファイルの場合はAnimatedCubeノード、それ以外はrootノードを使用
-    return animationPlayer_.GetLocalMatrix(rootNodeName_);
+    // まずrootNodeName_を試す
+    Matrix4x4 matrix = animationPlayer_.GetLocalMatrix(rootNodeName_);
+    
+    // もしrootNodeName_で取得できない場合は、AnimatedCubeノードを試す
+    if (matrix.m[0][0] == 1.0f && matrix.m[1][1] == 1.0f && matrix.m[2][2] == 1.0f && 
+        matrix.m[3][3] == 1.0f && matrix.m[0][1] == 0.0f && matrix.m[0][2] == 0.0f) {
+        // 単位行列の場合は、AnimatedCubeノードを試す
+        matrix = animationPlayer_.GetLocalMatrix("AnimatedCube");
+    }
+    
+    return matrix;
 }
 
 // アニメーション再生制御

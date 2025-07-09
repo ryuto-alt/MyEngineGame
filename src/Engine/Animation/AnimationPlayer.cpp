@@ -75,14 +75,25 @@ Matrix4x4 AnimationPlayer::GetLocalMatrix(const std::string& nodeName) {
     }
     
     // クォータニオンをオイラー角に変換してからMatrix4x4を作成
-    // 簡易的な変換（完全な実装ではないが、基本的な回転に対応）
     Vector3 rotateEuler = { 0.0f, 0.0f, 0.0f };
     
-    // Y軸回転のクォータニオンからY軸回転角を抽出（簡易版）
-    // 実際にはクォータニオンからオイラー角への変換は複雑
-    if (rotate.w != 0.0f || rotate.y != 0.0f) {
-        rotateEuler.y = 2.0f * std::atan2(rotate.y, rotate.w);
-    }
+    // クォータニオンからオイラー角への正確な変換
+    // X軸（ピッチ）
+    float sinr_cosp = 2 * (rotate.w * rotate.x + rotate.y * rotate.z);
+    float cosr_cosp = 1 - 2 * (rotate.x * rotate.x + rotate.y * rotate.y);
+    rotateEuler.x = std::atan2(sinr_cosp, cosr_cosp);
+
+    // Y軸（ヨー）
+    float sinp = 2 * (rotate.w * rotate.y - rotate.z * rotate.x);
+    if (std::abs(sinp) >= 1)
+        rotateEuler.y = std::copysign(1.5707963f, sinp); // π/2をクランプ（ジンバルロック）
+    else
+        rotateEuler.y = std::asin(sinp);
+
+    // Z軸（ロール）
+    float siny_cosp = 2 * (rotate.w * rotate.z + rotate.x * rotate.y);
+    float cosy_cosp = 1 - 2 * (rotate.y * rotate.y + rotate.z * rotate.z);
+    rotateEuler.z = std::atan2(siny_cosp, cosy_cosp);
     
     // アフィン変換行列を生成
     return MakeAffineMatrix(scale, rotateEuler, translate);
