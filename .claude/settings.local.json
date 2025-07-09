@@ -25,7 +25,8 @@
       "Bash(copy:*)",
       "Bash(cp:*)",
       "Bash(npm run dev:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
