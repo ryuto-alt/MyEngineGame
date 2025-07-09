@@ -54,4 +54,7 @@ struct SkinCluster {
 		Skeleton* skeleton, const ModelData* modelData);
 
 	void Update(Skeleton* skeleton);
+	
+	// CPUスキニング（簡易実装）
+	void UpdateVertices(Skeleton* skeleton, const ModelData* originalModelData, VertexData* outputVertices);
 };

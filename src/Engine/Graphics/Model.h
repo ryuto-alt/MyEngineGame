@@ -51,9 +51,11 @@ protected:
     void CreateVertexBuffer();
     // インデックスバッファの作成（継承クラス用）
     void CreateIndexBuffer();
+    
+    // Assimpを使用したモデル読み込み（継承クラス用）
+    void LoadWithAssimp(const std::string& directoryPath, const std::string& filename);
 
 private:
-    void LoadWithAssimp(const std::string& directoryPath, const std::string& filename);
     void ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath, const std::string& objFileName = "");
     void ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene);
     void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName = "");

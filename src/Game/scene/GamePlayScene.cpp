@@ -36,8 +36,9 @@ void GamePlayScene::Initialize() {
 	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.obj");
 	
 	// アニメーション付きモデルの作成（walk.gltfを使用）
-	walkModel_ = engine_->LoadModel("Resources/Models/human/walk.gltf");
-	cubeObject_->SetModel(walkModel_.get());
+	animatedModel_ = std::make_unique<AnimatedModel>();
+	animatedModel_->Initialize(dxCommon_, "Resources/Models/human/walk.gltf");
+	cubeObject_->SetModel(animatedModel_.get());
 	
 	// アニメーション関連の初期化
 	animator_ = std::make_unique<Animator>();
@@ -46,37 +47,14 @@ void GamePlayScene::Initialize() {
 	// 最初のアニメーションを使用
 	walkAnimation_ = animator_->FindAnimation("walk.gltf", "");
 	
-	// スケルトンの初期化
-	skeleton_ = std::make_unique<Skeleton>();
-	skeleton_->Create(walkModel_->GetModelData().rootNode);
-	
-	// SkinClusterの初期化（必要なデバイスとSRVManagerを取得）
-	skinCluster_ = std::make_unique<SkinCluster>();
-	if (walkModel_) {
-		// DirectXCommonとSrvManagerを取得
-		ID3D12Device* device = dxCommon_->GetDevice();
-		SrvManager* srvManager = engine_->GetSrvManager();
-		
-		// SkinClusterを作成
-		skinCluster_->Create(
-			Microsoft::WRL::ComPtr<ID3D12Device>(device),
-			srvManager,
-			skeleton_.get(),
-			&walkModel_->GetModelData()
-		);
-		
-		// Object3dにSkinClusterを設定
-		cubeObject_->SetSkinCluster(skinCluster_.get());
-	}
-	
 	// マテリアル情報を手動で再適用（確実にマテリアルを適用するため）
 	OutputDebugStringA("GamePlayScene: Manually applying material data\n");
-	if (walkModel_) {
-		const MaterialData& material = walkModel_->GetMaterial();
+	if (animatedModel_) {
+		const MaterialData& material = animatedModel_->GetMaterial();
 		cubeObject_->SetColor(material.diffuse);
 		
-		std::string texturePath = walkModel_->GetTextureFilePath();
-		OutputDebugStringA(("GamePlayScene: WalkModel texture path: " + texturePath + "\n").c_str());
+		std::string texturePath = animatedModel_->GetTextureFilePath();
+		OutputDebugStringA(("GamePlayScene: AnimatedModel texture path: " + texturePath + "\n").c_str());
 	}
 
 	// キューブの初期位置を設定
@@ -274,26 +252,17 @@ void GamePlayScene::Update() {
 	engine_->UpdateSpatialAudio();
 
 	// アニメーションの更新
-	if (walkAnimation_ && skeleton_) {
+	if (walkAnimation_ && animatedModel_) {
 		animationTime_ += 1.0f / 60.0f;
 		if (animationTime_ >= walkAnimation_->duration) {
 			animationTime_ = 0.0f;
 		}
 		
-		// スケルトンにアニメーションを適用
-		skeleton_->ApplyAnimation(walkAnimation_, animationTime_);
-		skeleton_->Update();
+		// AnimatedModelのアニメーション更新
+		animatedModel_->Update(walkAnimation_, animationTime_);
 		
-		// SkinClusterを更新
-		if (skinCluster_) {
-			skinCluster_->Update(skeleton_.get());
-		}
-	}
-	else if (!walkAnimation_) {
-		// アニメーションが見つからない場合、スケルトンのみ更新
-		if (skeleton_) {
-			skeleton_->Update();
-		}
+		// アニメーション行列を単位行列に設定（GPU上でスキニング処理）
+		cubeObject_->SetAnimationMatrix(MakeIdentity4x4());
 	}
 	
 	// オブジェクトの更新
@@ -307,12 +276,14 @@ void GamePlayScene::Update() {
 void GamePlayScene::Draw() {
 	if (!initialized_) return;
 
-	// TakeCEngine-engineの描画方法を適用
-	// 1. コンピュートシェーダーでスキニング処理
+	// TakeCEngine-engineスタイルの描画
+	// 1. スキニング処理（Dispatch）
+	if (animatedModel_) {
+		animatedModel_->Dispatch();
+	}
 	cubeObject_->Dispatch();
 	
-	// 2. 描画前処理はSpriteCommon->CommonDraw()内で実行される
-	// 3. 実際の描画
+	// 2. 実際の描画
 	cubeObject_->Draw();
 
 	// 2Dスプライトの描画
@@ -350,12 +321,13 @@ void GamePlayScene::Draw() {
 	
 	// スケルトン情報
 	ImGui::Text("スケルトン情報:");
-	if (skeleton_) {
-		ImGui::Text("ジョイント数: %d", (int)skeleton_->GetJoints().size());
-		ImGui::Text("ルートジョイント: %d", skeleton_->GetRoot());
+	if (animatedModel_ && animatedModel_->GetSkeleton()) {
+		Skeleton* skeleton = animatedModel_->GetSkeleton();
+		ImGui::Text("ジョイント数: %d", (int)skeleton->GetJoints().size());
+		ImGui::Text("ルートジョイント: %d", skeleton->GetRoot());
 		
 		if (ImGui::TreeNode("ジョイント一覧")) {
-			for (const Joint& joint : skeleton_->GetJoints()) {
+			for (const Joint& joint : skeleton->GetJoints()) {
 				ImGui::Text("ID %d: %s", joint.index, joint.name.c_str());
 				ImGui::SameLine();
 				if (joint.parent) {
@@ -409,7 +381,7 @@ void GamePlayScene::Finalize() {
 
 	cubeObject_.reset();
 	cubeModel_.reset();
-	walkModel_.reset();
+	animatedModel_.reset();
 	titleSprite_.reset();
 	// lineRenderer_.reset();
 }

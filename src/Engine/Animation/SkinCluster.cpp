@@ -108,3 +108,43 @@ void SkinCluster::Update(Skeleton* skeleton) {
 			Inverse(mappedPalette[jointIndex].skeletonSpaceMatrix);
 	}
 }
+
+void SkinCluster::UpdateVertices(Skeleton* skeleton, const ModelData* originalModelData, VertexData* outputVertices) {
+	// 簡易実装：ルートボーンの変換を全頂点に適用
+	if (skeleton->GetJoints().empty()) {
+		// スケルトンがない場合は元データをコピー
+		for (size_t i = 0; i < originalModelData->vertices.size(); ++i) {
+			outputVertices[i] = originalModelData->vertices[i];
+		}
+		return;
+	}
+	
+	const Joint& rootJoint = skeleton->GetJoints()[skeleton->GetRoot()];
+	Matrix4x4 transform = rootJoint.skeletonSpaceMatrix;
+	
+	for (size_t i = 0; i < originalModelData->vertices.size(); ++i) {
+		const VertexData& original = originalModelData->vertices[i];
+		
+		// 位置を変換
+		Vector4 pos = { original.position.x, original.position.y, original.position.z, 1.0f };
+		Vector4 transformedPos = {
+			transform.m[0][0] * pos.x + transform.m[0][1] * pos.y + transform.m[0][2] * pos.z + transform.m[0][3] * pos.w,
+			transform.m[1][0] * pos.x + transform.m[1][1] * pos.y + transform.m[1][2] * pos.z + transform.m[1][3] * pos.w,
+			transform.m[2][0] * pos.x + transform.m[2][1] * pos.y + transform.m[2][2] * pos.z + transform.m[2][3] * pos.w,
+			transform.m[3][0] * pos.x + transform.m[3][1] * pos.y + transform.m[3][2] * pos.z + transform.m[3][3] * pos.w
+		};
+		
+		// 法線を変換
+		Vector3 normal = { original.normal.x, original.normal.y, original.normal.z };
+		Vector3 transformedNormal = {
+			transform.m[0][0] * normal.x + transform.m[0][1] * normal.y + transform.m[0][2] * normal.z,
+			transform.m[1][0] * normal.x + transform.m[1][1] * normal.y + transform.m[1][2] * normal.z,
+			transform.m[2][0] * normal.x + transform.m[2][1] * normal.y + transform.m[2][2] * normal.z
+		};
+		
+		// 出力頂点に設定
+		outputVertices[i] = original;
+		outputVertices[i].position = { transformedPos.x, transformedPos.y, transformedPos.z, 1.0f };
+		outputVertices[i].normal = transformedNormal;
+	}
+}

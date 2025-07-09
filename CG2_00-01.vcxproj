@@ -123,6 +123,7 @@
     <ClCompile Include="src\Engine\Graphics\DirectXCommon.cpp" />
     <ClCompile Include="src\Engine\Graphics\LineRenderer.cpp" />
     <ClCompile Include="src\Engine\Graphics\Model.cpp" />
+    <ClCompile Include="src\Engine\Graphics\AnimatedModel.cpp" />
     <ClCompile Include="src\Engine\Graphics\Object3d.cpp" />
     <ClCompile Include="src\Engine\Graphics\RenderingPipeline.cpp" />
     <ClCompile Include="src\Engine\Graphics\Sprite.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="src\Engine\Graphics\DirectXCommon.h" />
     <ClInclude Include="src\Engine\Graphics\LineRenderer.h" />
     <ClInclude Include="src\Engine\Graphics\Model.h" />
+    <ClInclude Include="src\Engine\Graphics\AnimatedModel.h" />
     <ClInclude Include="src\Engine\Graphics\Object3d.h" />
     <ClInclude Include="src\Engine\Graphics\RenderingPipeline.h" />
     <ClInclude Include="src\Engine\Graphics\ResourceObject.h" />
