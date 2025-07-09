@@ -1,6 +1,7 @@
 #pragma once
 #include "UnoEngine.h"
 #include "AnimatedModel.h"
+#include "AnimatedHumanController.h"
 
 // 統合APIを使用したGamePlayScene
 class GamePlayScene : public IScene {
@@ -27,6 +28,9 @@ protected:
     std::unique_ptr<Model> cubeModel_;
     std::unique_ptr<AnimatedModel> animatedCubeModel_;  // アニメーション付きモデル
     std::unique_ptr<Sprite> titleSprite_;
+    
+    // アニメーション付きヒューマンモデル
+    std::unique_ptr<AnimatedHumanController> humanController_;
     
     // 3D空間オーディオ
     std::unique_ptr<SpatialAudioSource> cubeSpatialAudio_;

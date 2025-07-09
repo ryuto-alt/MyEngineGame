@@ -54,6 +54,9 @@
     <Filter Include="src\engine\Collision">
       <UniqueIdentifier>{25a72859-924c-402d-b8ec-1f83be6bbaec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\engine\Animation">
+      <UniqueIdentifier>{a1b2c3d4-5e6f-7890-abcd-ef1234567890}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Particle\Particle3DManager.cpp">
       <Filter>src\engine\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Animation\AnimatedHumanController.cpp">
+      <Filter>src\engine\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -348,6 +354,9 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Particle\Particle3DManager.h">
       <Filter>src\engine\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\AnimatedHumanController.h">
+      <Filter>src\engine\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
