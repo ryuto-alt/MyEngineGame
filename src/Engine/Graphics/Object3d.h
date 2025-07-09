@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "math.h"
 #include "Camera.h"
+#include "Animation.h"
 
 #include <d3d12.h>
 #include <wrl.h>
@@ -64,6 +65,15 @@ public:
     // アニメーション行列の設定
     void SetAnimationMatrix(const Matrix4x4& animationMatrix) { animationMatrix_ = animationMatrix; }
     const Matrix4x4& GetAnimationMatrix() const { return animationMatrix_; }
+    
+    // スキニング関連メソッド
+    void SkeletonUpdate(Skeleton& skeleton);
+    void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
+    void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
+    
+    // アニメーション補間メソッド
+    Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
+    Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
 
 private:
     // モデル
@@ -94,6 +104,9 @@ private:
     
     // アニメーション行列
     Matrix4x4 animationMatrix_;
+    
+    // スキニング関連
+    std::vector<Matrix4x4> skeletonPose_;
 
     // カメラへの参照
     Camera* camera_ = nullptr;

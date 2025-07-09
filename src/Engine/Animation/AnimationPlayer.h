@@ -30,6 +30,10 @@ public:
     // アニメーションの長さを取得
     float GetDuration() const;
     
+    // アニメーションを取得
+    Animation& GetAnimation() { return animation_; }
+    const Animation& GetAnimation() const { return animation_; }
+    
     // アニメーションがループするかを設定
     void SetLoop(bool loop) { isLoop_ = loop; }
     

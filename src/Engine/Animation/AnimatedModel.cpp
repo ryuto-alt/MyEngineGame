@@ -14,6 +14,7 @@ AnimatedModel::~AnimatedModel() {
 // 初期化
 void AnimatedModel::Initialize(DirectXCommon* dxCommon) {
     Model::Initialize(dxCommon);
+    dxCommon_ = dxCommon;
 }
 
 // モデルとアニメーションの読み込み
@@ -46,14 +47,7 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
         }
         
         // ルートノード名を設定
-        ModelData& modelDataInternal = GetModelDataInternal();
-        if (!modelDataInternal.rootNode.name.empty()) {
-            rootNodeName_ = modelDataInternal.rootNode.name;
-        } else {
-            modelDataInternal.rootNode.name = "root";
-            modelDataInternal.rootNode.localMatrix = MakeIdentity4x4();
-            rootNodeName_ = "root";
-        }
+        rootNodeName_ = "root";
     }
     
     OutputDebugStringA(("AnimatedModel: Root node name set to: " + rootNodeName_ + "\n").c_str());
@@ -88,6 +82,11 @@ void AnimatedModel::LoadFromGLTFWithAssimp(const std::string& directoryPath, con
     
     // シーンの処理
     ProcessAssimpScene(scene, directoryPath);
+    
+    // スキニング処理を初期化
+    Node rootNode = ReadNode(scene->mRootNode);
+    skeleton_ = CreateSkeleton(rootNode);
+    skinCluster_ = CreateSkinCluster();
     
     // 頂点バッファを作成
     CreateVertexBuffer();
@@ -131,6 +130,92 @@ void AnimatedModel::SetAnimationLoop(bool loop) {
     animationPlayer_.SetLoop(loop);
 }
 
+
+Node AnimatedModel::ReadNode(aiNode* node)
+{
+    Node result;
+    aiVector3D scale, translate;
+    aiQuaternion rotation;
+
+    node->mTransformation.Decompose(scale, rotation, translate);
+    result.transform.scale = { scale.x, scale.y, scale.z };
+    result.transform.rotate = { rotation.x, -rotation.y, -rotation.z, rotation.w };
+    result.transform.translate = { translate.x, translate.y, translate.z };
+    result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
+    result.name = node->mName.C_Str();
+    result.children.resize(node->mNumChildren);
+    for (uint32_t childIndex = 0; childIndex < node->mNumChildren; ++childIndex) {
+        result.children[childIndex] = ReadNode(node->mChildren[childIndex]);
+    }
+    return result;
+}
+
+Skeleton AnimatedModel::CreateSkeleton(const Node& rootNode)
+{
+    Skeleton skeleton;
+    skeleton.root = CreateJoint(rootNode, {}, skeleton.joints);
+    for (const Joint& joint : skeleton.joints) {
+        skeleton.jointMap.emplace(joint.name, joint.index);
+    }
+    return skeleton;
+}
+
+int32_t AnimatedModel::CreateJoint(const Node& node, std::optional<int32_t> parent, std::vector<Joint>& joints)
+{
+    Joint joint;
+    joint.name = node.name;
+    joint.localMatrix = node.localMatrix;
+    joint.skeletonSpaceMatrix = MakeIdentity4x4();
+    joint.transform.scale = node.transform.scale;
+    joint.transform.rotate = node.transform.rotate;
+    joint.transform.translate = node.transform.translate;
+    joint.index = int32_t(joints.size());
+    joint.parent = parent;
+
+    joints.push_back(joint);
+
+    for (const Node& child : node.children) {
+        int32_t childIndex = CreateJoint(child, joint.index, joints);
+        joints[joint.index].children.push_back(childIndex);
+    }
+
+    return joint.index;
+}
+
+SkinCluster AnimatedModel::CreateSkinCluster()
+{
+    SkinCluster skinCluster;
+    
+    // palette用のリソースを作成
+    skinCluster.paletteResource = dxCommon_->CreateBufferResource(sizeof(WellForGPU) * skeleton_.joints.size());
+    WellForGPU* mappedPalette = nullptr;
+    skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
+    skinCluster.mappedPalette = { mappedPalette, skeleton_.joints.size() };
+    
+    // SRVを作成（簡易実装）
+    skinCluster.paletteSrvHandle.first = {};
+    skinCluster.paletteSrvHandle.second = {};
+    
+    // Influence用のリソースを作成
+    const ModelData& modelData = GetModelData();
+    skinCluster.influenceResource = dxCommon_->CreateBufferResource(sizeof(VertexInfluence) * modelData.vertices.size());
+    VertexInfluence* mappedInfluence = nullptr;
+    skinCluster.influenceResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedInfluence));
+    std::memset(mappedInfluence, 0, sizeof(VertexInfluence) * modelData.vertices.size());
+    skinCluster.mappedInfluence = { mappedInfluence, modelData.vertices.size() };
+    
+    // Influence用のVBVを作成
+    skinCluster.influenceBufferView.BufferLocation = skinCluster.influenceResource->GetGPUVirtualAddress();
+    skinCluster.influenceBufferView.SizeInBytes = UINT(sizeof(VertexInfluence) * modelData.vertices.size());
+    skinCluster.influenceBufferView.StrideInBytes = sizeof(VertexInfluence);
+    
+    // InverseBindPoseMatrixを格納する場所を作成して、単位行列で埋める
+    skinCluster.inverseBindPoseMatrices.resize(skeleton_.joints.size());
+    std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), [] { return MakeIdentity4x4(); });
+    
+    return skinCluster;
+}
+
 // assimpシーンからモデルデータを作成
 void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath) {
     ModelData& modelData = GetModelDataInternal();
@@ -147,26 +232,7 @@ void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& 
     
     // ルートノードの設定
     if (scene->mRootNode) {
-        modelData.rootNode.name = scene->mRootNode->mName.C_Str();
-        rootNodeName_ = modelData.rootNode.name;
-        
-        // ルートノードの変換行列を設定（座標系変換を適用）
-        aiMatrix4x4 assimpMatrix = scene->mRootNode->mTransformation;
-        
-        // assimpの行列をDirectX形式に変換（右手座標系→左手座標系）
-        Matrix4x4 transformMatrix;
-        transformMatrix.m[0][0] = assimpMatrix.a1; transformMatrix.m[0][1] = assimpMatrix.a2; transformMatrix.m[0][2] = assimpMatrix.a3; transformMatrix.m[0][3] = assimpMatrix.a4;
-        transformMatrix.m[1][0] = assimpMatrix.b1; transformMatrix.m[1][1] = assimpMatrix.b2; transformMatrix.m[1][2] = assimpMatrix.b3; transformMatrix.m[1][3] = assimpMatrix.b4;
-        transformMatrix.m[2][0] = assimpMatrix.c1; transformMatrix.m[2][1] = assimpMatrix.c2; transformMatrix.m[2][2] = assimpMatrix.c3; transformMatrix.m[2][3] = assimpMatrix.c4;
-        transformMatrix.m[3][0] = assimpMatrix.d1; transformMatrix.m[3][1] = assimpMatrix.d2; transformMatrix.m[3][2] = assimpMatrix.d3; transformMatrix.m[3][3] = assimpMatrix.d4;
-        
-        // 座標系変換行列を作成（Z軸反転）
-        Matrix4x4 coordinateConversion = MakeIdentity4x4();
-        coordinateConversion.m[2][2] = -1.0f;  // Z軸を反転
-        
-        // 座標系変換を適用
-        modelData.rootNode.localMatrix = Multiply(coordinateConversion, transformMatrix);
-        
+        rootNodeName_ = scene->mRootNode->mName.C_Str();
         OutputDebugStringA(("AnimatedModel: Root node name: " + rootNodeName_ + "\n").c_str());
     }
     

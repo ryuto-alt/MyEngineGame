@@ -4,6 +4,7 @@
 #include "SpriteCommon.h"
 #include "Mymath.h"
 #include "TextureManager.h"
+#include "Animation.h"
 
 
 Object3d::Object3d() : model_(nullptr), dxCommon_(nullptr), spriteCommon_(nullptr),
@@ -239,4 +240,92 @@ void Object3d::Draw() {
 
     // 描画
     dxCommon_->GetCommandList()->DrawInstanced(model_->GetVertexCount(), 1, 0, 0);
+}
+
+void Object3d::SkeletonUpdate(Skeleton& skeleton)
+{
+    // ← ここでサイズを合わせるのが絶対必要！！
+    skeletonPose_.resize(skeleton.joints.size());
+    //すべてのjointを更新。親が若いので通常ループで処理可能になっている
+    for (Joint& joint : skeleton.joints)
+    {
+        joint.localMatrix = MakeAffineMatrix(joint.transform.scale, joint.transform.rotate, joint.transform.translate);
+        if (joint.parent)
+        {
+            joint.skeletonSpaceMatrix = Multiply(joint.localMatrix, skeleton.joints[*joint.parent].skeletonSpaceMatrix);
+
+        } else
+        {
+            joint.skeletonSpaceMatrix = joint.localMatrix;
+        }
+        skeletonPose_[joint.index] = joint.skeletonSpaceMatrix;
+    }
+    
+}
+
+void Object3d::ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime)
+{
+    for (Joint& joint : skeleton.joints) {
+        // 対象のJointのAnimationがあれば、値の適用を行う。
+        // 下記のif文はC++17から可能になった初期化付きif文。
+        if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
+            const NodeAnimation& nodeAnimation = it->second;
+
+            joint.transform.translate = CalculateValue(nodeAnimation.translate, animationTime);
+            joint.transform.rotate = CalculateValue(nodeAnimation.rotate, animationTime);
+            joint.transform.scale = CalculateValue(nodeAnimation.scale, animationTime);
+        }
+    }
+}
+
+void Object3d::SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton)
+{
+    for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex)
+    {
+        assert(jointIndex < skinCluster.inverseBindPoseMatrices.size());
+        skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix =
+            Multiply(skinCluster.inverseBindPoseMatrices[jointIndex], skeleton.joints[jointIndex].skeletonSpaceMatrix);
+        skinCluster.mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
+            Transpose(Inverse(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
+    }
+}
+
+Vector3 Object3d::CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time)
+{
+    assert(!keyframes.empty());
+    if (keyframes.size() == 1 || time <= keyframes[0].time) {
+        return keyframes[0].value;
+    }
+
+    for (size_t index = 0; index < keyframes.size() - 1; ++index) {
+        size_t nextIndex = index + 1;
+        //indexとnextIndexの2つのキーフレームを取得して範囲内に時刻があるか判定する
+        if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+            //補間する
+            float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
+            return Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
+        }
+    }
+    //ここまで来た場合は一番後の時刻よりも後の時刻なので最後の値を返す
+    return keyframes.back().value;
+}
+
+Quaternion Object3d::CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time)
+{
+    assert(!keyframes.empty());
+    if (keyframes.size() == 1 || time <= keyframes[0].time) {
+        return keyframes[0].value;
+    }
+
+    for (size_t index = 0; index < keyframes.size() - 1; ++index) {
+        size_t nextIndex = index + 1;
+        //indexとnextIndexの2つのキーフレームを取得して範囲内に時刻があるか判定する
+        if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
+            //補間する
+            float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
+            return Slerp(keyframes[index].value, keyframes[nextIndex].value, t);
+        }
+    }
+    //ここまで来た場合は一番後の時刻よりも後の時刻なので最後の値を返す
+    return keyframes.back().value;
 }

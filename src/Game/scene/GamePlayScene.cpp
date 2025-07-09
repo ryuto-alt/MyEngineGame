@@ -1,6 +1,7 @@
 #include "GamePlayScene.h"
 #include "Vector3.h"
 #include "imgui.h"
+#include "SpriteCommon.h"
 
 GamePlayScene::GamePlayScene() {
 }
@@ -22,12 +23,19 @@ void GamePlayScene::Initialize() {
 	engine_->SetCameraPosition(Vector3{ 0.0f, 0.0f, -10.0f });
 	engine_->SetCameraFovY(1.37f);
 
-	// アニメーション付きヒューマンモデルの初期化
-	humanController_ = std::make_unique<AnimatedHumanController>();
-	humanController_->Initialize(dxCommon_);
-	humanController_->SetPosition(Vector3{ 0.0f, 0.0f, 0.0f });
-	humanController_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
-	humanController_->SetColor(Vector4{ 1.0f, 1.0f, 1.0f, 1.0f });
+	
+	humanAnimatedModel_ = std::make_unique<AnimatedModel>();
+	humanAnimatedModel_->Initialize(dxCommon_);
+	humanAnimatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
+	humanAnimatedModel_->PlayAnimation();
+
+
+	humanObject3d_ = engine_->CreateObject3D();
+	humanObject3d_->SetModel(static_cast<Model*>(humanAnimatedModel_.get()));
+	humanObject3d_->SetPosition(Vector3{ 0.0f, 0.0f, 0.0f });
+	humanObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
+	humanObject3d_->SetColor(Vector4{ 1.0f, 1.0f, 1.0f, 1.0f });
+	humanObject3d_->SetEnableLighting(true);
 
 	// 初期化完了
 	initialized_ = true;
@@ -42,40 +50,59 @@ void GamePlayScene::Update() {
 	}
 
 	// WASD + SPACE/SHIFT でカメラ移動
-	const float moveSpeed = 0.1f;
 	Vector3 currentPos = engine_->GetCameraPosition();
-
-	if (engine_->IsKeyPressed(DIK_W)) currentPos.z += moveSpeed;
-	if (engine_->IsKeyPressed(DIK_S)) currentPos.z -= moveSpeed;
-	if (engine_->IsKeyPressed(DIK_A)) currentPos.x -= moveSpeed;
-	if (engine_->IsKeyPressed(DIK_D)) currentPos.x += moveSpeed;
-	if (engine_->IsKeyPressed(DIK_SPACE)) currentPos.y += moveSpeed;
-	if (engine_->IsKeyPressed(DIK_LSHIFT)) currentPos.y -= moveSpeed;
-
+	if (engine_->IsKeyPressed(DIK_W)) currentPos.z += moveSpeed_;
+	if (engine_->IsKeyPressed(DIK_S)) currentPos.z -= moveSpeed_;
+	if (engine_->IsKeyPressed(DIK_A)) currentPos.x -= moveSpeed_;
+	if (engine_->IsKeyPressed(DIK_D)) currentPos.x += moveSpeed_;
+	if (engine_->IsKeyPressed(DIK_SPACE)) currentPos.y += moveSpeed_;
+	if (engine_->IsKeyPressed(DIK_LSHIFT)) currentPos.y -= moveSpeed_;
 	engine_->SetCameraPosition(currentPos);
 
-	// 十字キーでヒューマンモデル移動
-	if (humanController_) {
-		const float humanSpeed = 0.05f;
-		Vector3 humanPos = humanController_->GetPosition();
-		
-		if (engine_->IsKeyPressed(DIK_UP)) humanPos.z += humanSpeed;
-		if (engine_->IsKeyPressed(DIK_DOWN)) humanPos.z -= humanSpeed;
-		if (engine_->IsKeyPressed(DIK_LEFT)) humanPos.x -= humanSpeed;
-		if (engine_->IsKeyPressed(DIK_RIGHT)) humanPos.x += humanSpeed;
-		
-		humanController_->SetPosition(humanPos);
+
+	if (humanObject3d_) {
+		Vector3 humanPos = humanObject3d_->GetPosition();
+		if (engine_->IsKeyPressed(DIK_UP)) humanPos.z += humanSpeed_;
+		if (engine_->IsKeyPressed(DIK_DOWN)) humanPos.z -= humanSpeed_;
+		if (engine_->IsKeyPressed(DIK_LEFT)) humanPos.x -= humanSpeed_;
+		if (engine_->IsKeyPressed(DIK_RIGHT)) humanPos.x += humanSpeed_;
+		humanObject3d_->SetPosition(humanPos);
 		
 		// アニメーション制御
 		if (engine_->IsKeyTriggered(DIK_P)) {
-			humanController_->ToggleAnimation();
+			animationPaused_ = !animationPaused_;
 		}
 		if (engine_->IsKeyTriggered(DIK_R)) {
-			humanController_->ResetAnimation();
+			animationTime_ = 0.0f;
 		}
+	}
+
+
+	if (humanAnimatedModel_ && enableAnimation_ && !animationPaused_) {
+		// AnimatedModelの更新
+		humanAnimatedModel_->Update(1.0f / 60.0f);
 		
-		// ヒューマンモデルの更新
-		humanController_->Update();
+		// アニメーション時間の更新
+		animationTime_ += 1.0f / 60.0f;
+		if (humanAnimatedModel_->GetAnimationPlayer().GetDuration() > 0.0f) {
+			animationTime_ = std::fmod(animationTime_, humanAnimatedModel_->GetAnimationPlayer().GetDuration());
+		}
+
+
+		if (humanObject3d_) {
+			Animation& animation = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
+			Skeleton& skeleton = humanAnimatedModel_->GetSkeleton();
+			SkinCluster& skinCluster = humanAnimatedModel_->GetSkinCluster();
+			
+			if (animation.nodeAnimations.size() > 0) {
+				humanObject3d_->ApplyAnimation(skeleton, animation, animationTime_);
+				humanObject3d_->SkeletonUpdate(skeleton);
+				humanObject3d_->SkinClusterUpdate(skinCluster, skeleton);
+			}
+			
+			// Object3dの更新
+			humanObject3d_->Update();
+		}
 	}
 
 	// カメラの更新
@@ -85,13 +112,16 @@ void GamePlayScene::Update() {
 void GamePlayScene::Draw() {
 	if (!initialized_) return;
 
+
+	spriteCommon_->CommonDraw();
+
 	// アニメーション付きヒューマンモデルの描画
-	if (humanController_) {
-		humanController_->Draw();
+	if (humanObject3d_) {
+		humanObject3d_->Draw();
 	}
 
 	// シンプルなImGuiウィンドウ
-	ImGui::Begin("Human Animation Demo");
+	ImGui::Begin("Human Animation Demo ");
 
 	ImGui::Text("操作方法:");
 	ImGui::Text("WASD - カメラ移動");
@@ -106,13 +136,20 @@ void GamePlayScene::Draw() {
 	Vector3 cameraPos = engine_->GetCameraPosition();
 	ImGui::Text("カメラ位置: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
 
-	if (humanController_) {
+	if (humanObject3d_) {
 		ImGui::Separator();
-		Vector3 humanPos = humanController_->GetPosition();
+		Vector3 humanPos = humanObject3d_->GetPosition();
 		ImGui::Text("ヒューマン位置: (%.1f, %.1f, %.1f)", humanPos.x, humanPos.y, humanPos.z);
-		ImGui::Text("アニメーション時間: %.2f秒", humanController_->GetAnimationTime());
-		ImGui::Text("アニメーションスピード: %.2f", humanController_->GetAnimationSpeed());
-		ImGui::Text("アニメーション状態: %s", humanController_->IsAnimationPaused() ? "一時停止" : "再生中");
+		ImGui::Text("アニメーション時間: %.2f秒", animationTime_);
+		ImGui::Text("アニメーション状態: %s", animationPaused_ ? "一時停止" : "再生中");
+		ImGui::Text("アニメーション有効: %s", enableAnimation_ ? "有効" : "無効");
+	}
+
+	if (humanAnimatedModel_) {
+		ImGui::Separator();
+		ImGui::Text("アニメーション総時間: %.2f秒", humanAnimatedModel_->GetAnimationPlayer().GetDuration());
+		ImGui::Text("ノードアニメーション数: %d", (int)humanAnimatedModel_->GetAnimationPlayer().GetAnimation().nodeAnimations.size());
+		ImGui::Text("ジョイント数: %d", (int)humanAnimatedModel_->GetSkeleton().joints.size());
 	}
 
 	ImGui::End();
@@ -120,8 +157,11 @@ void GamePlayScene::Draw() {
 
 void GamePlayScene::Finalize() {
 	// ヒューマンモデルの終了処理
-	if (humanController_) {
-		humanController_->Finalize();
-		humanController_.reset();
+	if (humanObject3d_) {
+		humanObject3d_.reset();
+	}
+	
+	if (humanAnimatedModel_) {
+		humanAnimatedModel_.reset();
 	}
 }

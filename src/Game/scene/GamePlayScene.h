@@ -1,9 +1,9 @@
 #pragma once
 #include "UnoEngine.h"
 #include "AnimatedModel.h"
-#include "AnimatedHumanController.h"
+#include "Object3d.h"
 
-// 統合APIを使用したGamePlayScene
+
 class GamePlayScene : public IScene {
 public:
     // コンストラクタ・デストラクタ
@@ -22,19 +22,16 @@ protected:
     
     // UnoEngineインスタンス
     UnoEngine* engine_ = nullptr;
+
+    std::unique_ptr<Object3d> humanObject3d_;
+    std::unique_ptr<AnimatedModel> humanAnimatedModel_;
     
-    // ゲームオブジェクト
-    std::unique_ptr<Object3d> cubeObject_;
-    std::unique_ptr<Model> cubeModel_;
-    std::unique_ptr<AnimatedModel> animatedCubeModel_;  // アニメーション付きモデル
-    std::unique_ptr<Sprite> titleSprite_;
+    // アニメーション制御
+    float animationTime_ = 0.0f;
+    bool animationPaused_ = false;
+    bool enableAnimation_ = true;
     
-    // アニメーション付きヒューマンモデル
-    std::unique_ptr<AnimatedHumanController> humanController_;
-    
-    // 3D空間オーディオ
-    std::unique_ptr<SpatialAudioSource> cubeSpatialAudio_;
-    
-    // キューブの位置
-    Vector3 cubePosition_ = Vector3{0.0f, 0.0f, 0.0f};
+    // 移動速度
+    const float moveSpeed_ = 0.1f;
+    const float humanSpeed_ = 0.05f;
 };

@@ -15,7 +15,9 @@
 Matrix4x4 MakeIdentity4x4();
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 Matrix4x4 MakeRotateMatrix(const Vector3& rotate);
+Matrix4x4 MakeRotateMatrix(const Vector4& rotate);
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector4& rotate, const Vector3& translate);
 Matrix4x4 Inverse(const Matrix4x4& m);
 //Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip);
 //Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearclip, float farclip);
@@ -25,6 +27,11 @@ Matrix4x4 MakeRotateXMatrix(float radian);
 Matrix4x4 MakeRotateYMatrix(float radian);
 Matrix4x4 MakeRotateZMatrix(float radian);
 Matrix4x4 MakeTranslateMatrix(const Vector3& translate);
+Matrix4x4 Transpose(const Matrix4x4& m);
+
+// 補間関数
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+Vector4 Slerp(const Vector4& q1, const Vector4& q2, float t);
 
 struct VertexData {
     Vector4 position;
@@ -66,15 +73,8 @@ struct MaterialData {
     float alpha = 1.0f;                          // 透明度(d)
 };
 
-// ノードデータ構造体（アニメーション用）
-struct Node {
-    std::string name;           // ノード名
-    Matrix4x4 localMatrix;     // ローカル変換行列
-    std::vector<Node> children; // 子ノード
-};
-
 struct ModelData {
     std::vector<VertexData>vertices;
     MaterialData material;
-    Node rootNode;              // ルートノード（アニメーション用）
+    // Node rootNode;              // ルートノード（アニメーション用）
 };

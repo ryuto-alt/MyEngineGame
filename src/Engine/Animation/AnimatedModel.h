@@ -38,6 +38,14 @@ public:
     AnimationPlayer& GetAnimationPlayer() { return animationPlayer_; }
     const AnimationPlayer& GetAnimationPlayer() const { return animationPlayer_; }
     
+    // スケルトンを取得
+    Skeleton& GetSkeleton() { return skeleton_; }
+    const Skeleton& GetSkeleton() const { return skeleton_; }
+    
+    // スキンクラスターを取得
+    SkinCluster& GetSkinCluster() { return skinCluster_; }
+    const SkinCluster& GetSkinCluster() const { return skinCluster_; }
+    
     // アニメーション再生制御
     void PlayAnimation();
     void StopAnimation();
@@ -59,10 +67,21 @@ private:
     
     // assimpノードからアニメーションデータを作成
     void ProcessAssimpAnimation(const aiScene* scene);
+    
+   
+    Node ReadNode(aiNode* node);
+    Skeleton CreateSkeleton(const Node& rootNode);
+    int32_t CreateJoint(const Node& node, std::optional<int32_t> parent, std::vector<Joint>& joints);
+    SkinCluster CreateSkinCluster();
 
     AnimationPlayer animationPlayer_;  // アニメーションプレイヤー
     Animation animation_;              // アニメーション格納するでーた　
     std::string rootNodeName_;         // ルートノード名
+    
+    // スキニング関連
+    Skeleton skeleton_;                // スケルトン
+    SkinCluster skinCluster_;          // スキンクラスター
+    DirectXCommon* dxCommon_;          // DirectXCommon
     
     Assimp::Importer assimpImporter_;  // assimpインポーター
 };

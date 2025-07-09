@@ -3,14 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-// 線形補間関数
-Vector3 Lerp(const Vector3& start, const Vector3& end, float t) {
-    return {
-        start.x + t * (end.x - start.x),
-        start.y + t * (end.y - start.y),
-        start.z + t * (end.z - start.z)
-    };
-}
+// 線形補間関数（削除：Mymath.cppで定義済み）
 
 // クォータニオンの内積
 float Dot(const Quaternion& q1, const Quaternion& q2) {
@@ -31,45 +24,7 @@ Quaternion Normalize(const Quaternion& q) {
     };
 }
 
-// 球面線形補間関数
-Quaternion Slerp(const Quaternion& start, const Quaternion& end, float t) {
-    // 内積を計算
-    float dot = Dot(start, end);
-    
-    // 最短経路を選択するため、負の場合は片方を反転
-    Quaternion q2 = end;
-    if (dot < 0.0f) {
-        q2 = { -end.x, -end.y, -end.z, -end.w };
-        dot = -dot;
-    }
-    
-    // 値をクランプ
-    dot = std::min(std::max(dot, -1.0f), 1.0f);
-    
-    // 線形補間で十分近い場合は線形補間を使用
-    if (dot > 0.9995f) {
-        Quaternion result = {
-            start.x + t * (q2.x - start.x),
-            start.y + t * (q2.y - start.y),
-            start.z + t * (q2.z - start.z),
-            start.w + t * (q2.w - start.w)
-        };
-        return Normalize(result);
-    }
-    
-    // 球面線形補間
-    float theta = std::acos(dot);
-    float sinTheta = std::sin(theta);
-    float w1 = std::sin((1.0f - t) * theta) / sinTheta;
-    float w2 = std::sin(t * theta) / sinTheta;
-    
-    return {
-        w1 * start.x + w2 * q2.x,
-        w1 * start.y + w2 * q2.y,
-        w1 * start.z + w2 * q2.z,
-        w1 * start.w + w2 * q2.w
-    };
-}
+// 球面線形補間関数（削除：Mymath.cppで定義済み）
 
 // 指定した時刻のVector3値を計算（線形補間）
 Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time) {

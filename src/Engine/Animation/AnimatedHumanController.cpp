@@ -82,6 +82,19 @@ void AnimatedHumanController::Update() {
     // アニメーションモデルの更新
     animatedModel_->Update(1.0f / 60.0f);
     
+
+    if (object3d_ && animatedModel_) {
+        Animation& animation = animatedModel_->GetAnimationPlayer().GetAnimation();
+        Skeleton& skeleton = animatedModel_->GetSkeleton();
+        SkinCluster& skinCluster = animatedModel_->GetSkinCluster();
+        
+        if (animation.nodeAnimations.size() > 0) {
+            object3d_->ApplyAnimation(skeleton, animation, animationTime_);
+            object3d_->SkeletonUpdate(skeleton);
+            object3d_->SkinClusterUpdate(skinCluster, skeleton);
+        }
+    }
+    
     // Object3Dの更新
     if (object3d_) {
         object3d_->SetPosition(position_);

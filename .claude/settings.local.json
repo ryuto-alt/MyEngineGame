@@ -28,7 +28,8 @@
       "Bash(npm run:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(\"/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe\" MyEngineGame.sln /p:Configuration=Debug /p:Platform=x64)"
     ],
     "deny": []
   }

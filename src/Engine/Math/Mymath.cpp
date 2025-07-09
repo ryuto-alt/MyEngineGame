@@ -372,3 +372,115 @@ Matrix4x4 MakeTranslateMatrix(const Vector3& translate)
 
 	return ans;
 }
+
+Matrix4x4 Transpose(const Matrix4x4& m)
+{
+    Matrix4x4 result;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            result.m[i][j] = m.m[j][i];
+        }
+    }
+    return result;
+}
+
+Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
+{
+    Vector3 result;
+    result.x = v1.x + t * (v2.x - v1.x);
+    result.y = v1.y + t * (v2.y - v1.y);
+    result.z = v1.z + t * (v2.z - v1.z);
+    return result;
+}
+
+Vector4 Slerp(const Vector4& start, const Vector4& end, float t)
+{
+    // クォータニオンの内積を計算
+    float dot = start.x * end.x + start.y * end.y + start.z * end.z + start.w * end.w;
+    // 内積が負の場合は、片方のクォータニオンを反転
+    Vector4 endQuat = end;
+    if (dot < 0.0f) {
+        endQuat = { -end.x, -end.y, -end.z, -end.w };
+        dot = -dot;
+    }
+    // 内積が 1 に近い場合は、線形補間
+    if (dot > 0.9995f) {
+        Vector4 result;
+        result.x = start.x + t * (endQuat.x - start.x);
+        result.y = start.y + t * (endQuat.y - start.y);
+        result.z = start.z + t * (endQuat.z - start.z);
+        result.w = start.w + t * (endQuat.w - start.w);
+        // 正規化
+        float length = std::sqrt(result.x * result.x + result.y * result.y + result.z * result.z + result.w * result.w);
+        if (length > 0.0f) {
+            result.x /= length;
+            result.y /= length;
+            result.z /= length;
+            result.w /= length;
+        }
+        return result;
+    }
+    // クォータニオンの角度を計算
+    float theta = std::acos(dot);
+    // クォータニオンの正規化
+    float sinTheta = std::sin(theta);
+    float sinTTheta = std::sin(t * theta);
+    float sinOneMinusTTheta = std::sin((1.0f - t) * theta);
+    
+    Vector4 result;
+    result.x = (start.x * sinOneMinusTTheta + endQuat.x * sinTTheta) / sinTheta;
+    result.y = (start.y * sinOneMinusTTheta + endQuat.y * sinTTheta) / sinTheta;
+    result.z = (start.z * sinOneMinusTTheta + endQuat.z * sinTTheta) / sinTheta;
+    result.w = (start.w * sinOneMinusTTheta + endQuat.w * sinTTheta) / sinTheta;
+    
+    return result;
+}
+
+Matrix4x4 MakeRotateMatrix(const Vector4& rotate)
+{
+    // SoraEngineのMakeRotationMatrixからの実装
+    float x2 = rotate.x + rotate.x;
+    float y2 = rotate.y + rotate.y;
+    float z2 = rotate.z + rotate.z;
+    float xx = rotate.x * x2;
+    float xy = rotate.x * y2;
+    float xz = rotate.x * z2;
+    float yy = rotate.y * y2;
+    float yz = rotate.y * z2;
+    float zz = rotate.z * z2;
+    float wx = rotate.w * x2;
+    float wy = rotate.w * y2;
+    float wz = rotate.w * z2;
+    
+    Matrix4x4 result;
+    result.m[0][0] = 1.0f - (yy + zz);
+    result.m[0][1] = xy + wz;
+    result.m[0][2] = xz - wy;
+    result.m[0][3] = 0.0f;
+    
+    result.m[1][0] = xy - wz;
+    result.m[1][1] = 1.0f - (xx + zz);
+    result.m[1][2] = yz + wx;
+    result.m[1][3] = 0.0f;
+    
+    result.m[2][0] = xz + wy;
+    result.m[2][1] = yz - wx;
+    result.m[2][2] = 1.0f - (xx + yy);
+    result.m[2][3] = 0.0f;
+    
+    result.m[3][0] = 0.0f;
+    result.m[3][1] = 0.0f;
+    result.m[3][2] = 0.0f;
+    result.m[3][3] = 1.0f;
+    
+    return result;
+}
+
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector4& rotate, const Vector3& translate)
+{
+    Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+    Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
+    Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+    
+    return Multiply(Multiply(scaleMatrix, rotateMatrix), translateMatrix);
+}

@@ -90,7 +90,7 @@ Matrix4x4 AnimationPlayer::GetLocalMatrix(const std::string& nodeName) {
 
 // アニメーション時刻を設定
 void AnimationPlayer::SetTime(float time) {
-    animationTime_ = std::max(0.0f, time);
+    animationTime_ = (time > 0.0f) ? time : 0.0f;
     if (animation_.duration > 0.0f && animationTime_ > animation_.duration) {
         if (isLoop_) {
             animationTime_ = std::fmod(animationTime_, animation_.duration);
