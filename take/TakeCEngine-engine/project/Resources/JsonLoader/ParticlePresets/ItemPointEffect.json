@@ -1,0 +1,53 @@
+{
+    "attributes": {
+        "color": [
+            0.501960813999176,
+            0.14901961386203766,
+            1.0
+        ],
+        "colorRange": {
+            "max": 1.0,
+            "min": 0.0
+        },
+        "editColor": true,
+        "emitCount": 0,
+        "enableFollowEmitter_": false,
+        "frequency": 0.0,
+        "isBillboard": true,
+        "isTraslate_": false,
+        "lifetimeRange": {
+            "max": 1.0499999523162842,
+            "min": 0.5600000023841858
+        },
+        "positionRange": {
+            "max": 0.0,
+            "min": 0.0
+        },
+        "rotateRange": {
+            "max": 3.1415927410125732,
+            "min": -3.1415927410125732
+        },
+        "scale": [
+            100.0,
+            3.0,
+            1.0
+        ],
+        "scaleRange": {
+            "max": 3.0,
+            "min": 0.10000000149011612
+        },
+        "scaleSetting_": 1,
+        "velocityRange": {
+            "max": 1.0,
+            "min": -1.0
+        }
+    },
+    "name": "DefaultGroup",
+    "primitiveParameters": {
+        "x": 1.9800000190734863,
+        "y": 2.0799999237060547,
+        "z": 1.0
+    },
+    "primitiveType": "PRIMITIVE_PLANE",
+    "textureFilePath": "Cross.png"
+}

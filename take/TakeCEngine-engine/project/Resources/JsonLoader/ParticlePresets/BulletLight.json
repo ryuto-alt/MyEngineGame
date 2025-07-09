@@ -1,0 +1,53 @@
+{
+    "attributes": {
+        "color": {
+            "x": 0.7843137383460999,
+            "y": 0.7843137383460999,
+            "z": 1.0
+        },
+        "colorRange": {
+            "max": 1.0,
+            "min": 0.0
+        },
+        "editColor": true,
+        "emitCount": 0,
+        "enableFollowEmitter_": false,
+        "frequency": 0.0,
+        "isBillboard": true,
+        "isTraslate_": true,
+        "lifetimeRange": {
+            "max": 0.800000011920929,
+            "min": 0.5
+        },
+        "positionRange": {
+            "max": 0.0,
+            "min": 0.0
+        },
+        "rotateRange": {
+            "max": 3.140000104904175,
+            "min": -3.140000104904175
+        },
+        "scale": {
+           "x": 5.099999904632568,
+           "y": 5.099999904632568,
+           "z": 1.0
+        },
+        "scaleRange": {
+            "max": 5.099999904632568,
+            "min": 0.10000000149011612
+        },
+        "scaleSetting_": 2,
+        "velocityRange": {
+            "max": 1.0,
+            "min": -1.0
+        }
+    },
+    "name": "BulletLight",
+    "primitiveParameters": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+    },
+    "primitiveType": "PRIMITIVE_PLANE",
+    "textureFilePath": "Spark.png"
+}

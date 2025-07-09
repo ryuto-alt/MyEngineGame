@@ -27,7 +27,8 @@
       "Bash(npm run dev:*)",
       "Bash(npm run:*)",
       "Bash(\"/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

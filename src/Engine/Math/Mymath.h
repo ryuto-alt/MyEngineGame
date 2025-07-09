@@ -93,28 +93,6 @@ struct Node {
     std::vector<Node> children; // 子ノード
 };
 
-// Joint構造体（スケルトンアニメーション用）
-struct Joint {
-    QuaternionTransform transform;   // Transform情報
-    Matrix4x4 localMatrix;          // localMatrix
-    Matrix4x4 skeletonSpaceMatrix;  // skeletonSpaceでの変換行列
-    std::string name;               // 名前
-    std::vector<int32_t> children;  // 子JointのIndexのリスト
-    int32_t index;                  // 自身のIndex
-    std::optional<int32_t> parent;  // 親JointのIndex（いなければnull）
-};
-
-// Skeleton構造体（スケルトンアニメーション用）
-struct Skeleton {
-    int32_t root;                                // RootJointのIndex
-    std::map<std::string, int32_t> jointMap;     // Joint名とIndexとの辞書
-    std::vector<Joint> joints;                   // 所属しているジョイント
-};
-
-// スケルトンアニメーション関数の宣言
-Skeleton CreateSkeleton(const Node& rootNode);
-int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
-void UpdateSkeleton(Skeleton& skeleton);
 
 struct ModelData {
     std::vector<VertexData>vertices;

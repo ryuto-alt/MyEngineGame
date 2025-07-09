@@ -1,6 +1,8 @@
 #pragma once
 #include "UnoEngine.h"
-#include "AnimatedModel.h"
+#include "Animation/Animator.h"
+#include "Animation/Skeleton.h"
+#include "Animation/SkinCluster.h"
 // #include "LineRenderer.h"  // 一時的に無効化
 
 // 統合APIを使用したGamePlayScene
@@ -26,8 +28,15 @@ protected:
     // ゲームオブジェクト
     std::unique_ptr<Object3d> cubeObject_;
     std::unique_ptr<Model> cubeModel_;
-    std::unique_ptr<AnimatedModel> animatedCubeModel_;  // アニメーション付きモデル
+    std::unique_ptr<Model> walkModel_;
     std::unique_ptr<Sprite> titleSprite_;
+    
+    // アニメーション関連
+    std::unique_ptr<Animator> animator_;
+    std::unique_ptr<Skeleton> skeleton_;
+    std::unique_ptr<SkinCluster> skinCluster_;
+    Animation* walkAnimation_ = nullptr;
+    float animationTime_ = 0.0f;
     
     // 3D空間オーディオ
     std::unique_ptr<SpatialAudioSource> cubeSpatialAudio_;

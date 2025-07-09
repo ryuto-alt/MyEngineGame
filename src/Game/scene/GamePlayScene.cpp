@@ -36,21 +36,56 @@ void GamePlayScene::Initialize() {
 	cubeModel_ = engine_->LoadModel("Resources/Models/cube/cube.obj");
 	
 	// アニメーション付きモデルの作成（walk.gltfを使用）
-	animatedCubeModel_ = std::make_unique<AnimatedModel>();
-	animatedCubeModel_->Initialize(dxCommon_);
-	animatedCubeModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
-	animatedCubeModel_->PlayAnimation();  // アニメーション開始
+	walkModel_ = engine_->LoadModel("Resources/Models/human/walk.gltf");
+	cubeObject_->SetModel(walkModel_.get());
 	
-	cubeObject_->SetModel(animatedCubeModel_.get());
+	// アニメーション関連の初期化
+	animator_ = std::make_unique<Animator>();
+	animator_->LoadAnimation("walk.gltf");
+	
+	// 利用可能なアニメーション名を取得
+	std::vector<std::string> animNames = animator_->GetAnimationNames("walk.gltf");
+	if (!animNames.empty()) {
+		// 最初のアニメーションを使用
+		walkAnimation_ = animator_->FindAnimation("walk.gltf", animNames[0]);
+		
+		// デバッグ情報を出力
+		char debugMsg[256];
+		sprintf_s(debugMsg, "GamePlayScene: Using animation '%s' from walk.gltf\n", animNames[0].c_str());
+		OutputDebugStringA(debugMsg);
+	} else {
+		OutputDebugStringA("GamePlayScene: No animations found in walk.gltf\n");
+		walkAnimation_ = nullptr;
+	}
+	
+	// スケルトンの初期化
+	skeleton_ = std::make_unique<Skeleton>();
+	skeleton_->Create(walkModel_->GetModelData().rootNode);
+	
+	// SkinClusterの初期化（必要なデバイスとSRVManagerを取得）
+	skinCluster_ = std::make_unique<SkinCluster>();
+	if (walkModel_) {
+		// DirectXCommonとSrvManagerを取得
+		ID3D12Device* device = dxCommon_->GetDevice();
+		SrvManager* srvManager = engine_->GetSrvManager();
+		
+		// SkinClusterを作成
+		skinCluster_->Create(
+			Microsoft::WRL::ComPtr<ID3D12Device>(device),
+			srvManager,
+			skeleton_.get(),
+			&walkModel_->GetModelData()
+		);
+	}
 	
 	// マテリアル情報を手動で再適用（確実にマテリアルを適用するため）
 	OutputDebugStringA("GamePlayScene: Manually applying material data\n");
-	if (animatedCubeModel_) {
-		const MaterialData& material = animatedCubeModel_->GetMaterial();
+	if (walkModel_) {
+		const MaterialData& material = walkModel_->GetMaterial();
 		cubeObject_->SetColor(material.diffuse);
 		
-		std::string texturePath = animatedCubeModel_->GetTextureFilePath();
-		OutputDebugStringA(("GamePlayScene: AnimatedModel texture path: " + texturePath + "\n").c_str());
+		std::string texturePath = walkModel_->GetTextureFilePath();
+		OutputDebugStringA(("GamePlayScene: WalkModel texture path: " + texturePath + "\n").c_str());
 	}
 
 	// キューブの初期位置を設定
@@ -248,11 +283,21 @@ void GamePlayScene::Update() {
 	engine_->UpdateSpatialAudio();
 
 	// アニメーションの更新
-	animatedCubeModel_->Update(1.0f / 60.0f);  // 60FPSで更新
-	
-	// アニメーション行列を取得してオブジェクトに適用
-	Matrix4x4 animationMatrix = animatedCubeModel_->GetAnimationLocalMatrix();
-	cubeObject_->SetAnimationMatrix(animationMatrix);
+	if (walkAnimation_ && skeleton_) {
+		animationTime_ += 1.0f / 60.0f;
+		if (animationTime_ >= walkAnimation_->duration) {
+			animationTime_ = 0.0f;
+		}
+		
+		// スケルトンにアニメーションを適用
+		skeleton_->ApplyAnimation(walkAnimation_, animationTime_);
+		skeleton_->Update();
+		
+		// SkinClusterを更新
+		if (skinCluster_) {
+			skinCluster_->Update(skeleton_.get());
+		}
+	}
 	
 	// オブジェクトの更新
 	cubeObject_->Update();
@@ -272,7 +317,7 @@ void GamePlayScene::Draw() {
 	titleSprite_->Draw();
 
 	// スケルトンのデバッグ描画は一時的に無効化（DirectX競合問題解決のため）
-	// if (showSkeleton_ && animatedCubeModel_ && animatedCubeModel_->HasSkeleton()) {
+	// if (showSkeleton_ && walkModel_) {
 	//     // スケルトン描画処理をここに実装予定
 	// }
 
@@ -303,13 +348,12 @@ void GamePlayScene::Draw() {
 	
 	// スケルトン情報
 	ImGui::Text("スケルトン情報:");
-	if (animatedCubeModel_ && animatedCubeModel_->HasSkeleton()) {
-		const Skeleton& skeleton = animatedCubeModel_->GetSkeleton();
-		ImGui::Text("ジョイント数: %d", (int)skeleton.joints.size());
-		ImGui::Text("ルートジョイント: %d", skeleton.root);
+	if (skeleton_) {
+		ImGui::Text("ジョイント数: %d", (int)skeleton_->GetJoints().size());
+		ImGui::Text("ルートジョイント: %d", skeleton_->GetRoot());
 		
 		if (ImGui::TreeNode("ジョイント一覧")) {
-			for (const Joint& joint : skeleton.joints) {
+			for (const Joint& joint : skeleton_->GetJoints()) {
 				ImGui::Text("ID %d: %s", joint.index, joint.name.c_str());
 				ImGui::SameLine();
 				if (joint.parent) {
@@ -363,7 +407,7 @@ void GamePlayScene::Finalize() {
 
 	cubeObject_.reset();
 	cubeModel_.reset();
-	animatedCubeModel_.reset();
+	walkModel_.reset();
 	titleSprite_.reset();
 	// lineRenderer_.reset();
 }
