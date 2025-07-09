@@ -29,8 +29,8 @@ void MyGame::Initialize() {
         // エンジンにSceneFactoryを設定
         engine_->SetSceneFactory(sceneFactory_.get());
 
-        // 初期シーンへの遷移
-        engine_->GetSceneManager()->ChangeScene("Title");
+        // 初期シーンへの遷移 - 直接GamePlaySceneに
+        engine_->GetSceneManager()->ChangeScene("GamePlay");
     }
     catch (const std::exception& e) {
         OutputDebugStringA(("ERROR: Exception in MyGame::Initialize: " + std::string(e.what()) + "\n").c_str());
