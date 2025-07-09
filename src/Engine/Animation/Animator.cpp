@@ -76,19 +76,39 @@ void Animator::LoadAnimation(const std::string& filePath) {
 		return;
 	}
 
-	std::map<std::string, Animation*> animation = LoadAnimationFile("Models/human", filePath);
+	std::map<std::string, Animation*> animation = LoadAnimationFile(filePath);
 	animations_.insert(std::make_pair(filePath, animation));
 }
 
 Animation* Animator::FindAnimation(const std::string& filePath, const std::string& animName) {
+	char debugMsg[256];
+	sprintf_s(debugMsg, "Animator::FindAnimation: Looking for '%s' in '%s'\n", animName.c_str(), filePath.c_str());
+	OutputDebugStringA(debugMsg);
+	
 	if (animations_.contains(filePath)) {
+		sprintf_s(debugMsg, "Animator::FindAnimation: File found, available animations:\n");
+		OutputDebugStringA(debugMsg);
+		
+		for (const auto& pair : animations_.at(filePath)) {
+			sprintf_s(debugMsg, "  - '%s'\n", pair.first.c_str());
+			OutputDebugStringA(debugMsg);
+		}
+		
 		if (animations_.at(filePath).contains(animName)) {
+			sprintf_s(debugMsg, "Animator::FindAnimation: Found animation '%s'\n", animName.c_str());
+			OutputDebugStringA(debugMsg);
 			return animations_.at(filePath).at(animName);
 		}
 		// 指定されたアニメーション名が見つからない場合、最初のアニメーションを返す
 		if (!animations_.at(filePath).empty()) {
-			return animations_.at(filePath).begin()->second;
+			auto firstAnim = animations_.at(filePath).begin();
+			sprintf_s(debugMsg, "Animator::FindAnimation: Using first animation '%s'\n", firstAnim->first.c_str());
+			OutputDebugStringA(debugMsg);
+			return firstAnim->second;
 		}
+	} else {
+		sprintf_s(debugMsg, "Animator::FindAnimation: File '%s' not found in animations\n", filePath.c_str());
+		OutputDebugStringA(debugMsg);
 	}
 
 	return nullptr;
@@ -104,13 +124,21 @@ std::vector<std::string> Animator::GetAnimationNames(const std::string& filePath
 	return names;
 }
 
-std::map<std::string, Animation*> Animator::LoadAnimationFile(const std::string& directoryPath, const std::string& filename) {
+std::map<std::string, Animation*> Animator::LoadAnimationFile(const std::string& filePath) {
 	std::map<std::string, Animation*> animations = {};
 	Assimp::Importer importer;
-	std::string filePath = "./Resources/" + directoryPath + "/" + filename;
+	
+	// デバッグ情報を出力
+	char debugMsg[256];
+	sprintf_s(debugMsg, "Animator: Loading animation from %s\n", filePath.c_str());
+	OutputDebugStringA(debugMsg);
+	
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
 
 	if (!scene || scene->mNumAnimations == 0) {
+		sprintf_s(debugMsg, "Animator: Failed to load scene or no animations found. Scene=%p, NumAnimations=%d\n", 
+		         scene, scene ? scene->mNumAnimations : 0);
+		OutputDebugStringA(debugMsg);
 		return animations;
 	}
 
@@ -156,8 +184,8 @@ std::map<std::string, Animation*> Animator::LoadAnimationFile(const std::string&
 		animation->name = animationName;
 		
 		// デバッグ情報を出力
-		char debugMsg[256];
-		sprintf_s(debugMsg, "Animator: Loaded animation '%s' from %s\n", animationName.c_str(), filename.c_str());
+		sprintf_s(debugMsg, "Animator: Loaded animation '%s', duration=%.2f, channels=%d\n", 
+		         animationName.c_str(), animation->duration, animationAssimp->mNumChannels);
 		OutputDebugStringA(debugMsg);
 
 		animations.insert(std::make_pair(animationName, animation));

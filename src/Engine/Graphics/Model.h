@@ -61,6 +61,7 @@ private:
     void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName = "");
     std::string FindTextureInDirectory(const std::string& directoryPath);
     std::string ParseMTLFile(const std::string& directoryPath, const std::string& objFileName);
+    Node ProcessAssimpNode(const aiNode* node);
 
     // モデルデータ
     ModelData modelData_;

@@ -138,24 +138,7 @@ void Model::ProcessAssimpScene(const aiScene* scene, const std::string& director
     }
     
     if (scene->mRootNode) {
-        modelData_.rootNode.name = scene->mRootNode->mName.C_Str();
-        if (modelData_.rootNode.name.empty()) {
-            modelData_.rootNode.name = "RootNode";
-        }
-        
-        aiMatrix4x4 assimpMatrix = scene->mRootNode->mTransformation;
-        
-        Matrix4x4 transformMatrix;
-        transformMatrix.m[0][0] = assimpMatrix.a1; transformMatrix.m[0][1] = assimpMatrix.a2; transformMatrix.m[0][2] = assimpMatrix.a3; transformMatrix.m[0][3] = assimpMatrix.a4;
-        transformMatrix.m[1][0] = assimpMatrix.b1; transformMatrix.m[1][1] = assimpMatrix.b2; transformMatrix.m[1][2] = assimpMatrix.b3; transformMatrix.m[1][3] = assimpMatrix.b4;
-        transformMatrix.m[2][0] = assimpMatrix.c1; transformMatrix.m[2][1] = assimpMatrix.c2; transformMatrix.m[2][2] = assimpMatrix.c3; transformMatrix.m[2][3] = assimpMatrix.c4;
-        transformMatrix.m[3][0] = assimpMatrix.d1; transformMatrix.m[3][1] = assimpMatrix.d2; transformMatrix.m[3][2] = assimpMatrix.d3; transformMatrix.m[3][3] = assimpMatrix.d4;
-        
-        Matrix4x4 coordinateConversion = MakeIdentity4x4();
-        coordinateConversion.m[2][2] = -1.0f;
-        
-        modelData_.rootNode.localMatrix = Multiply(coordinateConversion, transformMatrix);
-        
+        modelData_.rootNode = ProcessAssimpNode(scene->mRootNode);
         OutputDebugStringA(("Model: Root node: " + modelData_.rootNode.name + "\n").c_str());
     } else {
         modelData_.rootNode.name = "DefaultRoot";
@@ -196,6 +179,47 @@ void Model::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) {
     }
     
     OutputDebugStringA(("Model: Created " + std::to_string(modelData_.vertices.size()) + " vertices and " + std::to_string(modelData_.indices.size()) + " indices\n").c_str());
+}
+
+Node Model::ProcessAssimpNode(const aiNode* node) {
+    Node result;
+    
+    // ノード名を設定
+    result.name = node->mName.C_Str();
+    if (result.name.empty()) {
+        result.name = "UnnamedNode";
+    }
+    
+    // 変換行列を設定
+    aiMatrix4x4 assimpMatrix = node->mTransformation;
+    Matrix4x4 transformMatrix;
+    transformMatrix.m[0][0] = assimpMatrix.a1; transformMatrix.m[0][1] = assimpMatrix.a2; transformMatrix.m[0][2] = assimpMatrix.a3; transformMatrix.m[0][3] = assimpMatrix.a4;
+    transformMatrix.m[1][0] = assimpMatrix.b1; transformMatrix.m[1][1] = assimpMatrix.b2; transformMatrix.m[1][2] = assimpMatrix.b3; transformMatrix.m[1][3] = assimpMatrix.b4;
+    transformMatrix.m[2][0] = assimpMatrix.c1; transformMatrix.m[2][1] = assimpMatrix.c2; transformMatrix.m[2][2] = assimpMatrix.c3; transformMatrix.m[2][3] = assimpMatrix.c4;
+    transformMatrix.m[3][0] = assimpMatrix.d1; transformMatrix.m[3][1] = assimpMatrix.d2; transformMatrix.m[3][2] = assimpMatrix.d3; transformMatrix.m[3][3] = assimpMatrix.d4;
+    
+    // 座標変換を適用
+    Matrix4x4 coordinateConversion = MakeIdentity4x4();
+    coordinateConversion.m[2][2] = -1.0f;
+    result.localMatrix = Multiply(coordinateConversion, transformMatrix);
+    
+    // 変換を分解（簡易版）
+    result.transform.scale = {1.0f, 1.0f, 1.0f};
+    result.transform.rotate = {0.0f, 0.0f, 0.0f, 1.0f};
+    result.transform.translate = {result.localMatrix.m[0][3], result.localMatrix.m[1][3], result.localMatrix.m[2][3]};
+    
+    // 子ノードを再帰的に処理
+    for (unsigned int i = 0; i < node->mNumChildren; i++) {
+        Node childNode = ProcessAssimpNode(node->mChildren[i]);
+        result.children.push_back(childNode);
+    }
+    
+    // デバッグ出力
+    char debugMsg[256];
+    sprintf_s(debugMsg, "Model: Node '%s' has %d children\n", result.name.c_str(), (int)result.children.size());
+    OutputDebugStringA(debugMsg);
+    
+    return result;
 }
 
 void Model::ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath, const std::string& objFileName) {

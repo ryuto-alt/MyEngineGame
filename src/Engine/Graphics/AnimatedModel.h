@@ -24,6 +24,9 @@ public:
     // SkinClusterの取得
     SkinCluster* GetSkinCluster() const { return skinCluster_.get(); }
     
+    // アニメーション行列の取得（スキニング処理がない場合に使用）
+    Matrix4x4 GetAnimationMatrix() const;
+    
 private:
     std::unique_ptr<Skeleton> skeleton_;
     std::unique_ptr<SkinCluster> skinCluster_;

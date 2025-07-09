@@ -42,10 +42,19 @@ void GamePlayScene::Initialize() {
 	
 	// アニメーション関連の初期化
 	animator_ = std::make_unique<Animator>();
-	animator_->LoadAnimation("walk.gltf");
+	animator_->LoadAnimation("Resources/Models/human/walk.gltf");
 	
-	// 最初のアニメーションを使用
-	walkAnimation_ = animator_->FindAnimation("walk.gltf", "");
+	// 正しいアニメーション名を使用
+	walkAnimation_ = animator_->FindAnimation("Resources/Models/human/walk.gltf", "Armature|mixamo.com|Layer0");
+	
+	// デバッグ情報を出力
+	if (walkAnimation_) {
+		char debugMsg[256];
+		sprintf_s(debugMsg, "GamePlayScene: Animation found! Duration=%.2f\n", walkAnimation_->duration);
+		OutputDebugStringA(debugMsg);
+	} else {
+		OutputDebugStringA("GamePlayScene: Animation NOT found!\n");
+	}
 	
 	// マテリアル情報を手動で再適用（確実にマテリアルを適用するため）
 	OutputDebugStringA("GamePlayScene: Manually applying material data\n");
@@ -261,8 +270,8 @@ void GamePlayScene::Update() {
 		// AnimatedModelのアニメーション更新
 		animatedModel_->Update(walkAnimation_, animationTime_);
 		
-		// アニメーション行列を単位行列に設定（GPU上でスキニング処理）
-		cubeObject_->SetAnimationMatrix(MakeIdentity4x4());
+		// アニメーション行列を設定（スキニング処理がない場合はルートジョイントの変換を適用）
+		cubeObject_->SetAnimationMatrix(animatedModel_->GetAnimationMatrix());
 	}
 	
 	// オブジェクトの更新

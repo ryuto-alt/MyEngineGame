@@ -1,0 +1,3073 @@
+'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\CG2_00-01.exe' が読み込まれました。シンボルが読み込まれました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntdll.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\kernel32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\KernelBase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\user32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\win32u.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\gdi32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\gdi32full.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcp_win.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ucrtbase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ole32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\combase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\rpcrt4.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\imm32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3DCompiler_47.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfreadwrite.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dwmapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfplat.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\SHCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3D12.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxgi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dinput8.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\vcomp140d.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptsp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\advapi32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcrt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\sechost.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cfgmgr32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\dxcompiler.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\oleaut32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\bcryptprimitives.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\RTWorkQ.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\dxil.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\directxdatabasehelper.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\kernel.appcore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\InputHost.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\CoreMessaging.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\uxtheme.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptbase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msctf.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\TextInputFramework.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\CoreUIComponents.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\WinTypes.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3D12Core.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXGIDebug.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\d3d12SDKLayers.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' がアンロードされました
+Use Adapter:NVIDIA GeForce RTX 3060 Laptop GPU
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvldumdx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msasn1.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptnet.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\crypt32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\wldp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\drvstore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\devobj.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\wintrust.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\imagehlp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\rsaenh.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\bcrypt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvgpucomp64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\shell32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\NvMemMapStoragex.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\winmm.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\powrprof.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\umpdc.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvwgf2umx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\windows.storage.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\shlwapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\nvspcap64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\profapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntmarta.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+スレッド 0x77a0 はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvppex.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxilconv.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3DSCache.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\userenv.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\twinapi.appcore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxilconv.dll' がアンロードされました
+D3D12 MESSAGE: Device Debug Layer Startup Options: GPU-Based Validation is enabled (disabled by default). This results in new validation not possible during API calls on the CPU, by creating patched shaders that have validation added directly to the shader. However, it can slow things down a lot, especially for applications with numerous PSOs. Time to see the first render frame may take several minutes. [ INITIALIZATION MESSAGE #1016: CREATEDEVICE_DEBUG_LAYER_STARTUP_OPTIONS]
+FeatureLevel:12.2
+Complete create D3D12Device!!!
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\d3d11.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igd10iumd64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\apphelp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igd10um64xe.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ncrypt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntasn1.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ControlLib.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\setupapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\IntelControlLib.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igdgmm64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igc64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dcomp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\Microsoft.Internal.WarpPal.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+SrvManager initialized successfully
+TextureManager: Initialized successfully
+SrvManager: Allocated index 1
+SrvManager: Created SRV for Texture2D at index 1
+TextureManager::LoadDefaultTexture - Default white texture created in memory successfully
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\XInput1_4.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\hid.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\XAudio2_9.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\MMDevAPI.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\avrt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\clbcatq.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\AudioSes.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+Begin CompileShader,path:Resources/Shaders/Object3D.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/Shaders/Object3D.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
+Begin CompileShader,path:Resources/Shaders/Particle.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/Shaders/Particle.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/Shaders/Particle.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/Shaders/Particle.PS.hlsl,profile:ps_6_0
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\WindowsCodecs.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+SrvManager: Allocated index 2
+SrvManager: Created SRV for Texture2D at index 2
+TextureManager::LoadTexture - Successfully loaded: Resources/particle/smoke.png
+TextureManager::LoadTexture - SRV index: 2
+SrvManager: Allocated index 3
+SrvManager: Created SRV for StructuredBuffer at index 3
+ParticleManager: Created particle group - smoke
+Particle3DManager: Initialized successfully
+Model: Loading Resources/particle/effect.obj with Assimp
+Model: Loading file: Resources/particle/effect.obj
+Model: Successfully loaded file with 1 meshes, 2 materials
+Model: Material 0 name: DefaultMaterial
+Model: Material 0 has 0 diffuse textures
+Model: Material 1 name: 繝槭ユ繝ｪ繧｢繝ｫ.001
+Model: Material 1 has 1 diffuse textures
+Model: Diffuse texture 0: C:/Users/k023g/source/repos/CG4/CG4_Repository/DirectXGame/Resources/white1x1.png
+Model: Processing mesh with 4 vertices and 2 faces
+Model: Created 4 vertices and 6 indices
+Model: Processing material with 0 diffuse textures
+Model: No texture found in material via assimp, searching manually
+Model: Found map_Kd in MTL: C:/Users/k023g/source/repos/CG4/CG4_Repository/DirectXGame/Resources/white1x1.png
+Model: MTL texture not found, searching directory for PNG files
+Model: Found PNG in directory: Resources/particle/explosion.png
+Model: Auto-detected texture: Resources/particle/explosion.png
+Model: Diffuse color: 0.600000, 0.600000, 0.600000
+SrvManager: Allocated index 4
+SrvManager: Created SRV for Texture2D at index 4
+TextureManager::LoadTexture - Successfully loaded: Resources/particle/explosion.png
+TextureManager::LoadTexture - SRV index: 4
+Model: Root node: effect.obj
+Model: Created vertex buffer with 4 vertices
+Model: Created index buffer with 6 indices
+Particle3DManager: Model loaded successfully - effect.obj
+Particle3DManager: Created 3D particle group - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+SceneManager initialized successfully
+SceneManager: Scene change requested to Title
+スレッド 0x1ac0 はコード 0 (0x0) で終了しました。
+SceneManager: Changing scene to Title
+Model: Loading Resources/Models/sphere/sphere.obj with Assimp
+Model: Loading file: Resources/Models/sphere/sphere.obj
+Model: Successfully loaded file with 1 meshes, 2 materials
+Model: Material 0 name: DefaultMaterial
+Model: Material 0 has 0 diffuse textures
+Model: Material 1 name: 繝槭ユ繝ｪ繧｢繝ｫ
+Model: Material 1 has 1 diffuse textures
+Model: Processing mesh with 2048 vertices and 960 faces
+Model: Created 2048 vertices and 2880 indices
+Model: Processing material with 0 diffuse textures
+Model: No texture found in material via assimp, searching manually
+Model: MTL texture found at: Resources/Models/sphere/kao.png
+Model: Diffuse color: 0.600000, 0.600000, 0.600000
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\PhotoMetadataHandler.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\propsys.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+SrvManager: Allocated index 5
+SrvManager: Created SRV for Texture2D at index 5
+TextureManager::LoadTexture - Successfully loaded: Resources/Models/sphere/kao.png
+TextureManager::LoadTexture - SRV index: 5
+Model: Root node: sphere.obj
+Model: Created vertex buffer with 2048 vertices
+Model: Created index buffer with 2880 indices
+Object3d::SetModel - Called
+Object3d::SetModel - model_ is not null
+Object3d::SetModel - materialData_ is not null
+Object3d::SetModel - Applying material data
+Object3d::SetModel - Model texture path: Resources/Models/sphere/kao.png
+Object3d::SetModel - Texture already loaded: Resources/Models/sphere/kao.png
+Object3d::SetModel - Material information:
+  - Diffuse (RGBA): 0.600000, 0.600000, 0.600000, 1.000000
+  - Texture: Resources/Models/sphere/kao.png
+SrvManager: Allocated index 6
+SrvManager: Created SRV for Texture2D at index 6
+TextureManager::LoadTexture - Successfully loaded: Resources/textures/title_logo.png
+TextureManager::LoadTexture - SRV index: 6
+SceneManager: Successfully initialized scene Title
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+SceneManager: Scene change requested to GamePlay
+Object3d::Draw - Using texture path: Resources/Models/sphere/kao.png
+Object3d::Draw - Using valid texture: Resources/Models/sphere/kao.png
+SceneManager: Changing scene to GamePlay
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfcore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfsrcsnk.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\CompPkgSup.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\Windows.Media.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\Windows.ApplicationModel.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\MP3DMOD.DLL' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msdmo.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\AppXDeploymentClient.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+TextureManager::LoadTexture - Already loaded: Resources/particle/explosion.png
+SrvManager: Allocated index 7
+SrvManager: Created SRV for StructuredBuffer at index 7
+ParticleManager: Created particle group - explosion
+Model: Loading Resources/Models/cube//cube.obj with Assimp
+Model: Loading file: Resources/Models/cube//cube.obj
+Model: Successfully loaded file with 1 meshes, 3 materials
+Model: Material 0 name: DefaultMaterial
+Model: Material 0 has 0 diffuse textures
+Model: Material 1 name: AnimatedCube
+Model: Material 1 has 1 diffuse textures
+Model: Diffuse texture 0: ../AnimatedCube/AnimatedCube_BaseColor.png
+Model: Material 2 name: Gravel
+Model: Material 2 has 0 diffuse textures
+Model: Processing mesh with 24 vertices and 12 faces
+Model: Created 24 vertices and 36 indices
+Model: Processing material with 0 diffuse textures
+Model: No texture found in material via assimp, searching manually
+Model: Found map_Kd in MTL: ../AnimatedCube/AnimatedCube_BaseColor.png
+Model: MTL texture found at: Resources/Models/cube//../AnimatedCube/AnimatedCube_BaseColor.png
+Model: Diffuse color: 0.600000, 0.600000, 0.600000
+SrvManager: Allocated index 8
+SrvManager: Created SRV for Texture2D at index 8
+TextureManager::LoadTexture - Successfully loaded: Resources/Models/cube//../AnimatedCube/AnimatedCube_BaseColor.png
+TextureManager::LoadTexture - SRV index: 8
+Model: Root node: cube.obj
+Model: Created vertex buffer with 24 vertices
+Model: Created index buffer with 36 indices
+Model: Loading Resources/Models/human//walk.gltf with Assimp
+Model: Loading file: Resources/Models/human//walk.gltf
+Model: Successfully loaded file with 1 meshes, 2 materials
+Model: Material 0 name: None
+Model: Material 0 has 1 diffuse textures
+Model: Diffuse texture 0: white.png
+Model: Material 1 has 0 diffuse textures
+Model: Processing mesh with 13538 vertices and 26960 faces
+Model: Created 13538 vertices and 80880 indices
+Model: Processing material with 1 diffuse textures
+Model: Found texture in material: white.png
+Model: Checking texture path: Resources/Models/human//white.png
+Model: Texture found at: Resources/Models/human//white.png
+Model: Diffuse color: 1.000000, 1.000000, 1.000000
+SrvManager: Allocated index 9
+SrvManager: Created SRV for Texture2D at index 9
+TextureManager::LoadTexture - Successfully loaded: Resources/Models/human//white.png
+TextureManager::LoadTexture - SRV index: 9
+Model: Root node: Armature
+Model: Created vertex buffer with 13538 vertices
+Model: Created index buffer with 80880 indices
+Model: Created vertex buffer with 13538 vertices
+Model: Created index buffer with 80880 indices
+AnimatedModel: Loaded vertices=13538, indices=80880
+AnimatedModel: rootNode.children.size() = 0
+AnimatedModel: rootNode.name = Armature
+AnimatedModel: Joint count = 1
+SrvManager: Allocated index 10
+SrvManager: Created SRV for StructuredBuffer at index 10
+SrvManager: Allocated index 11
+SrvManager: Created SRV for StructuredBuffer at index 11
+AnimatedModel: Skeleton and SkinCluster created
+Object3d::SetModel - Called
+Object3d::SetModel - model_ is not null
+Object3d::SetModel - materialData_ is not null
+Object3d::SetModel - Applying material data
+Object3d::SetModel - Model texture path: Resources/Models/human//white.png
+Object3d::SetModel - Texture already loaded: Resources/Models/human//white.png
+Object3d::SetModel - Material information:
+  - Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Texture: Resources/Models/human//white.png
+Animator: Loaded animation 'Armature|mixamo.com|Layer0' from walk.gltf
+GamePlayScene: Manually applying material data
+GamePlayScene: AnimatedModel texture path: Resources/Models/human//white.png
+TextureManager::LoadTexture - Already loaded: Resources/textures/title_logo.png
+TextureManager::LoadTexture - Already loaded: Resources/textures/title_logo.png
+SceneManager: Successfully initialized scene GamePlay
+Camera Forward: (0.00, 0.00, 1.00)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.23, 0.01, 0.97)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.21, 0.04, 0.98)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.21, 0.04, 0.98)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.21, 0.04, 0.98)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.21, 0.04, 0.98)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.21, 0.04, 0.98)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.21, 0.04, 0.98)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (0.21, 0.03, 0.98)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (-0.45, 0.80, 0.40)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (-0.23, -0.35, 0.91)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+Camera Forward: (-0.16, -0.20, 0.97)AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+AnimatedModel::Dispatch: Skinning applied
+AnimatedModel::Dispatch: Skinning applied
+Object3d::Draw - Using texture path: Resources/Models/human//white.png
+Object3d::Draw - Using valid texture: Resources/Models/human//white.png
+SceneManager finalized successfully
+ParticleManager::ForceReleaseResources - Starting resource cleanup
+ParticleManager: Releasing particle group - smoke
+ParticleManager: Releasing particle group - explosion
+ParticleManager: All particle groups cleared
+ParticleManager: Material resource unmapped
+ParticleManager: Material resource reset
+ParticleManager: DirectionalLight resource unmapped
+ParticleManager: DirectionalLight resource reset
+ParticleManager: Vertex resource reset
+ParticleManager: Pipeline state reset
+ParticleManager: Root signature reset
+ParticleManager::ForceReleaseResources - Resource cleanup completed
+スレッド 0x6c78 はコード 0 (0x0) で終了しました。
+スレッド 0x47f8 はコード 0 (0x0) で終了しました。
+スレッド 0x33cc はコード 0 (0x0) で終了しました。
+スレッド 0x1cc8 はコード 0 (0x0) で終了しました。
+スレッド 0x693c はコード 0 (0x0) で終了しました。
+スレッド 0x132c はコード 0 (0x0) で終了しました。
+スレッド 0x14bc はコード 0 (0x0) で終了しました。
+スレッド 0x4e30 はコード 0 (0x0) で終了しました。
+スレッド 0x70d4 はコード 0 (0x0) で終了しました。
+0x00007FFE8FF57F9A で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::DdiThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x000000ED30FFFB10)。
+スレッド 0x71a4 はコード 0 (0x0) で終了しました。
+0x00007FFE8FF57F9A で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::IgcThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x000000ED30EFFDA0)。
+スレッド 0x6eac はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igc64.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igdgmm64.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\IntelControlLib.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ControlLib.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igd10iumd64.dll' がアンロードされました
+スレッド 0x30ec はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\d3d11.dll' がアンロードされました
+スレッド 0x828 はコード 0 (0x0) で終了しました。
+スレッド 0x10a8 はコード 0 (0x0) で終了しました。
+スレッド 0x4334 はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 0' (0x64b8) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 2' (0x411c) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 3' (0x6e08) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 1' (0x7234) はコード 0 (0x0) で終了しました。
+スレッド 'NVFBCAsyncThread' (0x600) はコード 0 (0x0) で終了しました。
+スレッド 0x57a8 はコード 0 (0x0) で終了しました。
+スレッド 0x321c はコード 0 (0x0) で終了しました。
+スレッド 0x26a8 はコード 0 (0x0) で終了しました。
+スレッド 0x736c はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvwgf2umx.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvgpucomp64.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\NvMemMapStoragex.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvldumdx.dll' がアンロードされました
+スレッド 0x5cdc はコード 0 (0x0) で終了しました。
+スレッド 0x6b90 はコード 0 (0x0) で終了しました。
+スレッド 0x5368 はコード 0 (0x0) で終了しました。
+スレッド 0x69ac はコード 0 (0x0) で終了しました。
+スレッド 0x2724 はコード 0 (0x0) で終了しました。
+スレッド 0x1a34 はコード 0 (0x0) で終了しました。
+スレッド 0x6acc はコード 0 (0x0) で終了しました。
+スレッド 0x32f4 はコード 0 (0x0) で終了しました。
+プログラム '[0x7230] CG2_00-01.exe' はコード 0 (0x0) で終了しました。

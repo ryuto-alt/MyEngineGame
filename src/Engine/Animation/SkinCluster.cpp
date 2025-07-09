@@ -3,6 +3,8 @@
 #include "d3dx12.h"
 #include <algorithm>
 #include <cassert>
+#include <Windows.h>
+#include <cstdio>
 
 void SkinCluster::Create(
 	const ComPtr<ID3D12Device>& device, SrvManager* srvManager,
@@ -107,10 +109,30 @@ void SkinCluster::Update(Skeleton* skeleton) {
 		mappedPalette[jointIndex].skeletonSpaceInvTransposeMatrix =
 			Inverse(mappedPalette[jointIndex].skeletonSpaceMatrix);
 	}
+	
+	// デバッグ出力（最初の数回のみ）
+	static int debugCounter = 0;
+	if (debugCounter < 3) {
+		debugCounter++;
+		char debugMsg[256];
+		sprintf_s(debugMsg, "SkinCluster::Update: Updated %d joints\n", (int)skeleton->GetJoints().size());
+		OutputDebugStringA(debugMsg);
+		
+		// 最初のジョイントの変換行列を確認
+		if (!skeleton->GetJoints().empty()) {
+			const auto& firstJoint = skeleton->GetJoints()[0];
+			sprintf_s(debugMsg, "  First joint '%s' matrix[0,3]=%.3f, [1,3]=%.3f, [2,3]=%.3f\n",
+			         firstJoint.name.c_str(),
+			         firstJoint.skeletonSpaceMatrix.m[0][3],
+			         firstJoint.skeletonSpaceMatrix.m[1][3],
+			         firstJoint.skeletonSpaceMatrix.m[2][3]);
+			OutputDebugStringA(debugMsg);
+		}
+	}
 }
 
 void SkinCluster::UpdateVertices(Skeleton* skeleton, const ModelData* originalModelData, VertexData* outputVertices) {
-	// 簡易実装：ルートボーンの変換を全頂点に適用
+	// 簡易実装：アニメーションが適用されているジョイントを探して変換を適用
 	if (skeleton->GetJoints().empty()) {
 		// スケルトンがない場合は元データをコピー
 		for (size_t i = 0; i < originalModelData->vertices.size(); ++i) {
@@ -119,8 +141,44 @@ void SkinCluster::UpdateVertices(Skeleton* skeleton, const ModelData* originalMo
 		return;
 	}
 	
-	const Joint& rootJoint = skeleton->GetJoints()[skeleton->GetRoot()];
-	Matrix4x4 transform = rootJoint.skeletonSpaceMatrix;
+	// mixamorig:Hipsを探す（最も重要なジョイント）
+	Matrix4x4 transform = MakeIdentity4x4();
+	bool foundAnimatedJoint = false;
+	
+	for (const Joint& joint : skeleton->GetJoints()) {
+		if (joint.name == "mixamorig:Hips") {
+			transform = joint.skeletonSpaceMatrix;
+			foundAnimatedJoint = true;
+			break;
+		}
+	}
+	
+	// mixamorig:Hipsが見つからない場合は、他のmixamorigジョイントを探す
+	if (!foundAnimatedJoint) {
+		for (const Joint& joint : skeleton->GetJoints()) {
+			if (joint.name.find("mixamorig:") == 0) {
+				transform = joint.skeletonSpaceMatrix;
+				foundAnimatedJoint = true;
+				break;
+			}
+		}
+	}
+	
+	// それでも見つからない場合はルートジョイントを使用
+	if (!foundAnimatedJoint) {
+		const Joint& rootJoint = skeleton->GetJoints()[skeleton->GetRoot()];
+		transform = rootJoint.skeletonSpaceMatrix;
+	}
+	
+	// デバッグ出力（最初の数回のみ）
+	static int updateDebugCounter = 0;
+	if (updateDebugCounter < 3) {
+		updateDebugCounter++;
+		char debugMsg[256];
+		sprintf_s(debugMsg, "SkinCluster::UpdateVertices: Using transform matrix[0,3]=%.3f, [1,3]=%.3f, [2,3]=%.3f (foundAnimatedJoint=%s)\n",
+		         transform.m[0][3], transform.m[1][3], transform.m[2][3], foundAnimatedJoint ? "true" : "false");
+		OutputDebugStringA(debugMsg);
+	}
 	
 	for (size_t i = 0; i < originalModelData->vertices.size(); ++i) {
 		const VertexData& original = originalModelData->vertices[i];

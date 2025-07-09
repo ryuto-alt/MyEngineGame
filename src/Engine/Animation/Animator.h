@@ -22,7 +22,7 @@ public:
 	// 利用可能なアニメーション名を取得
 	std::vector<std::string> GetAnimationNames(const std::string& filePath);
 
-	static std::map<std::string, Animation*> LoadAnimationFile(const std::string& directoryPath, const std::string& filename);
+	static std::map<std::string, Animation*> LoadAnimationFile(const std::string& filePath);
 
 	static Vector3 CalculateValue(const std::vector<KeyflameVector3>& keyframes, float time);
 
