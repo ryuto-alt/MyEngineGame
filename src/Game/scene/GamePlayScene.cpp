@@ -43,20 +43,8 @@ void GamePlayScene::Initialize() {
 	animator_ = std::make_unique<Animator>();
 	animator_->LoadAnimation("walk.gltf");
 	
-	// 利用可能なアニメーション名を取得
-	std::vector<std::string> animNames = animator_->GetAnimationNames("walk.gltf");
-	if (!animNames.empty()) {
-		// 最初のアニメーションを使用
-		walkAnimation_ = animator_->FindAnimation("walk.gltf", animNames[0]);
-		
-		// デバッグ情報を出力
-		char debugMsg[256];
-		sprintf_s(debugMsg, "GamePlayScene: Using animation '%s' from walk.gltf\n", animNames[0].c_str());
-		OutputDebugStringA(debugMsg);
-	} else {
-		OutputDebugStringA("GamePlayScene: No animations found in walk.gltf\n");
-		walkAnimation_ = nullptr;
-	}
+	// 最初のアニメーションを使用
+	walkAnimation_ = animator_->FindAnimation("walk.gltf", "");
 	
 	// スケルトンの初期化
 	skeleton_ = std::make_unique<Skeleton>();
@@ -76,6 +64,9 @@ void GamePlayScene::Initialize() {
 			skeleton_.get(),
 			&walkModel_->GetModelData()
 		);
+		
+		// Object3dにSkinClusterを設定
+		cubeObject_->SetSkinCluster(skinCluster_.get());
 	}
 	
 	// マテリアル情報を手動で再適用（確実にマテリアルを適用するため）
@@ -298,6 +289,12 @@ void GamePlayScene::Update() {
 			skinCluster_->Update(skeleton_.get());
 		}
 	}
+	else if (!walkAnimation_) {
+		// アニメーションが見つからない場合、スケルトンのみ更新
+		if (skeleton_) {
+			skeleton_->Update();
+		}
+	}
 	
 	// オブジェクトの更新
 	cubeObject_->Update();
@@ -310,7 +307,12 @@ void GamePlayScene::Update() {
 void GamePlayScene::Draw() {
 	if (!initialized_) return;
 
-	// 3Dオブジェクトの描画
+	// TakeCEngine-engineの描画方法を適用
+	// 1. コンピュートシェーダーでスキニング処理
+	cubeObject_->Dispatch();
+	
+	// 2. 描画前処理はSpriteCommon->CommonDraw()内で実行される
+	// 3. 実際の描画
 	cubeObject_->Draw();
 
 	// 2Dスプライトの描画

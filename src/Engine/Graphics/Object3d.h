@@ -27,6 +27,8 @@ public:
     void SetModel(Model* model);
     // 更新処理（従来のメソッド - 後方互換性のため残す）
     void Update(const Matrix4x4& viewMatrix, const Matrix4x4& projectionMatrix);
+    // コンピュートシェーダーでのスキニング処理
+    void Dispatch();
     // 描画処理
     void Draw();
 
@@ -64,6 +66,10 @@ public:
     // アニメーション行列の設定
     void SetAnimationMatrix(const Matrix4x4& animationMatrix) { animationMatrix_ = animationMatrix; }
     const Matrix4x4& GetAnimationMatrix() const { return animationMatrix_; }
+    
+    // SkinClusterの設定（アニメーション用）
+    void SetSkinCluster(struct SkinCluster* skinCluster) { skinCluster_ = skinCluster; }
+    struct SkinCluster* GetSkinCluster() const { return skinCluster_; }
 
 private:
     // モデル
@@ -94,6 +100,9 @@ private:
     
     // アニメーション行列
     Matrix4x4 animationMatrix_;
+    
+    // SkinCluster（アニメーション用）
+    struct SkinCluster* skinCluster_ = nullptr;
 
     // カメラへの参照
     Camera* camera_ = nullptr;

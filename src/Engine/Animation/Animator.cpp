@@ -91,7 +91,6 @@ Animation* Animator::FindAnimation(const std::string& filePath, const std::strin
 		}
 	}
 
-	assert(0 && "Animation not found");
 	return nullptr;
 }
 

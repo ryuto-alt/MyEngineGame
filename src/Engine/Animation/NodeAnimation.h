@@ -18,6 +18,6 @@ struct NodeAnimation {
 
 struct Animation {
 	std::string name;
-	float duration;
+	float duration = 0.0f;
 	std::map<std::string, NodeAnimation> nodeAnimations;
 };

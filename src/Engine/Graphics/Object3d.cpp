@@ -4,11 +4,12 @@
 #include "SpriteCommon.h"
 #include "Mymath.h"
 #include "TextureManager.h"
+#include "Animation/SkinCluster.h"
 
 
 Object3d::Object3d() : model_(nullptr), dxCommon_(nullptr), spriteCommon_(nullptr),
 materialData_(nullptr), transformationMatrixData_(nullptr), directionalLightData_(nullptr),
-camera_(nullptr) {
+skinCluster_(nullptr), camera_(nullptr) {
     // 初期値設定
     transform_.scale = { 1.0f, 1.0f, 1.0f };
     transform_.rotate = { 0.0f, 0.0f, 0.0f };
@@ -171,6 +172,21 @@ void Object3d::Update() {
     // 行列の更新
     transformationMatrixData_->WVP = worldViewProjectionMatrix;
     transformationMatrixData_->World = finalWorldMatrix;
+}
+
+void Object3d::Dispatch() {
+    assert(dxCommon_);
+    assert(model_);
+    
+    // SkinClusterが設定されている場合、コンピュートシェーダーでスキニング処理を実行
+    if (skinCluster_) {
+        // TODO: コンピュートシェーダーでスキニング処理を実装
+        // 現在は基本的なモデルのDispatchを呼び出し
+        model_->Dispatch();
+    } else {
+        // 通常のモデルの場合はそのまま呼び出し
+        model_->Dispatch();
+    }
 }
 
 void Object3d::Draw() {

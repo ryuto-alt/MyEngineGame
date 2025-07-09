@@ -44,11 +44,11 @@ struct SkinCluster {
 	ComPtr<ID3D12Resource> paletteResource;
 	std::span<WellForGPU> mappedPalette;
 	ComPtr<ID3D12Resource> skinningInfoResource;
-	SkinningInfo* skinningInfoData;
+	SkinningInfo* skinningInfoData = nullptr;
 
 	std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, D3D12_GPU_DESCRIPTOR_HANDLE> paletteSrvHandle;
-	uint32_t paletteIndex;
-	uint32_t influenceIndex;
+	uint32_t paletteIndex = 0;
+	uint32_t influenceIndex = 0;
 
 	void Create(const ComPtr<ID3D12Device>& device, SrvManager* srvManager,
 		Skeleton* skeleton, const ModelData* modelData);

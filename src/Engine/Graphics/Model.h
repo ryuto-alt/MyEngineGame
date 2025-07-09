@@ -39,6 +39,9 @@ public:
     ID3D12Resource* GetVertexResource() const { return vertexResource_.Get(); }
     ID3D12Resource* GetIndexResource() const { return indexResource_.Get(); }
     const ModelData& GetModelData() const { return modelData_; }
+    
+    // スキニング処理（アニメーション用）
+    virtual void Dispatch() {}
 
 protected:
     // モデルデータアクセサ（継承クラス用）
