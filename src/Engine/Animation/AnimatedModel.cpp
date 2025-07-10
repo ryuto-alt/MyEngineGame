@@ -406,7 +406,8 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
             // 各面で頂点が複製されているため、元のインデックスを持つすべての頂点を探す
             for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++) {
                 const aiFace& face = mesh->mFaces[faceIndex];
-                unsigned int indices[3] = { face.mIndices[0], face.mIndices[2], face.mIndices[1] };
+                // X軸反転によりワインディングオーダーはそのまま維持
+                unsigned int indices[3] = { face.mIndices[0], face.mIndices[1], face.mIndices[2] };
                 
                 for (int i = 0; i < 3; i++) {
                     if (indices[i] == weight.mVertexId) {
