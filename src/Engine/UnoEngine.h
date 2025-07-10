@@ -19,6 +19,13 @@
 #include "HitEffect3D.h"
 #include "EffectManager3D.h"
 
+// アニメーション関連
+#include "AnimatedModel.h"
+#include "Animation.h"
+#include "AnimationPlayer.h"
+#include "AnimationBlender.h"
+#include "AnimationUtility.h"
+
 // 衝突判定関連
 #include "Collision.h"
 #include "CollisionPrimitive.h"
@@ -137,6 +144,10 @@ public:
     // === 3Dオブジェクト作成システム ===
     std::unique_ptr<Object3d> CreateObject3D();
     std::unique_ptr<Model> LoadModel(const std::string& modelPath);
+    
+    // === アニメーションシステム ===
+    std::unique_ptr<AnimatedModel> CreateAnimatedModel();
+    Animation LoadAnimation(const std::string& directoryPath, const std::string& filename);
     
     // === 2Dスプライト作成システム ===
     std::unique_ptr<Sprite> CreateSprite(const std::string& texturePath);

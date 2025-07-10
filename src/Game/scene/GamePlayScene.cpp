@@ -1,10 +1,4 @@
 #include "GamePlayScene.h"
-#include "../../Engine/Resource/ResourcePreloader.h"
-#include "Vector3.h"
-#include "imgui.h"
-#include "SpriteCommon.h"
-#include "../../Engine/Graphics/TextureManager.h"
-#include "../../Engine/Animation/AnimationUtility.h"
 
 GamePlayScene::GamePlayScene() {
 }
@@ -37,19 +31,17 @@ void GamePlayScene::Update() {
 	// モデルがまだ読み込まれていない場合は読み込む
 	if (!modelLoaded_) {
 		// 通常の読み込み（高速化済み）
-		humanAnimatedModel_ = std::make_unique<AnimatedModel>();
-		humanAnimatedModel_->Initialize(dxCommon_);
+		humanAnimatedModel_ = engine_->CreateAnimatedModel();
 		
 		// モデルの読み込み（walkで読み込み）
 		humanAnimatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
 		
 		// 各アニメーションを読み込んで追加
-		// walkアニメーション（初期アニメーション）
 		Animation walkAnim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
 		humanAnimatedModel_->AddAnimation("walk", walkAnim);
 		
 		// sneakWalkアニメーションを読み込み
-		Animation sneakWalkAnim = LoadAnimationFile("Resources/Models/human", "sneakWalk.gltf");
+		Animation sneakWalkAnim = engine_->LoadAnimation("Resources/Models/human", "sneakWalk.gltf");
 		humanAnimatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
 		
 		// 初期アニメーションを"walk"に設定して再生
@@ -89,16 +81,13 @@ void GamePlayScene::Update() {
 
 	if (humanObject3d_ && humanAnimatedModel_) {
 		Vector3 humanPos = humanObject3d_->GetPosition();
-		if (engine_->IsKeyPressed(DIK_UP)) humanPos.z += humanSpeed_;
-		if (engine_->IsKeyPressed(DIK_DOWN)) humanPos.z -= humanSpeed_;
-		if (engine_->IsKeyPressed(DIK_LEFT)) humanPos.x -= humanSpeed_;
-		if (engine_->IsKeyPressed(DIK_RIGHT)) humanPos.x += humanSpeed_;
+
 		humanObject3d_->SetPosition(humanPos);
 
 		// アニメーション制御
 		if (engine_->IsKeyTriggered(DIK_P)) {
 			animationPaused_ = !animationPaused_;
-			// SetEnableAnimationは呼ばない（スケルトン更新を継続するため）
+			
 			if (animationPaused_) {
 				humanAnimatedModel_->PauseAnimation();
 			}
@@ -110,7 +99,7 @@ void GamePlayScene::Update() {
 			humanObject3d_->SetAnimationTime(0.0f);
 		}
 		
-		// アニメーション切り替え（1キーでトグル）
+		
 		if (engine_->IsKeyTriggered(DIK_1)) {
 			if (humanAnimatedModel_->GetCurrentAnimationName() == "walk") {
 				humanAnimatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
@@ -119,19 +108,19 @@ void GamePlayScene::Update() {
 			}
 		}
 
-		// アニメーションモデルの更新（一時停止中は0を渡す）
+		
 		if (!animationPaused_) {
 			humanAnimatedModel_->Update(1.0f / 60.0f);
 		}
 		else {
-			humanAnimatedModel_->Update(0.0f);  // 時刻を進めない
+			humanAnimatedModel_->Update(0.0f); 
 		}
 
-		// Object3dの更新
+		
 		humanObject3d_->Update();
 	}
 
-	// カメラの更新
+	
 	camera_->Update();
 }
 
@@ -141,6 +130,7 @@ void GamePlayScene::Draw() {
 
 	spriteCommon_->CommonDraw();
 
+#pragma region imgui
 	// モデルが読み込まれていない場合はローディング表示
 	if (!modelLoaded_) {
 		ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f - 100, ImGui::GetIO().DisplaySize.y * 0.5f - 25), ImGuiCond_Always);
@@ -177,13 +167,14 @@ void GamePlayScene::Draw() {
 		// アニメーション情報
 		ImGui::Separator();
 		ImGui::Text("現在のアニメーション: %s", humanAnimatedModel_->GetCurrentAnimationName().c_str());
-		if (humanAnimatedModel_->GetAnimationBlender().IsBlending()) {
-			ImGui::Text("ブレンド中: %.1f%%", humanAnimatedModel_->GetAnimationBlender().GetBlendProgress() * 100.0f);
+		if (humanAnimatedModel_->IsBlending()) {
+			ImGui::Text("ブレンド中: %.1f%%", humanAnimatedModel_->GetBlendProgress() * 100.0f);
 		}
 
 		ImGui::End();
 	}
 }
+#pragma endregion
 
 void GamePlayScene::Finalize() {
 	// ヒューマンモデルの終了処理

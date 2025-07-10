@@ -1,7 +1,5 @@
 #pragma once
 #include "UnoEngine.h"
-#include "AnimatedModel.h"
-#include "Object3d.h"
 
 
 class GamePlayScene : public IScene {

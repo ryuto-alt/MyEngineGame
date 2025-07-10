@@ -355,6 +355,17 @@ std::unique_ptr<Model> UnoEngine::LoadModel(const std::string& modelPath) {
     return model;
 }
 
+// === アニメーションシステム ===
+std::unique_ptr<AnimatedModel> UnoEngine::CreateAnimatedModel() {
+    auto animatedModel = std::make_unique<AnimatedModel>();
+    animatedModel->Initialize(dxCommon_.get());
+    return animatedModel;
+}
+
+Animation UnoEngine::LoadAnimation(const std::string& directoryPath, const std::string& filename) {
+    return LoadAnimationFile(directoryPath, filename);
+}
+
 // === 2Dスプライト作成システム ===
 std::unique_ptr<Sprite> UnoEngine::CreateSprite(const std::string& texturePath) {
     // テクスチャを読み込み
