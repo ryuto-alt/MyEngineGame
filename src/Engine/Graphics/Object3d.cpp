@@ -6,6 +6,7 @@
 #include "TextureManager.h"
 #include "Animation.h"
 #include "AnimatedModel.h"
+#include "AnimationUtility.h"
 #include "UnoEngine.h"
 
 
@@ -365,9 +366,9 @@ void Object3d::ApplyAnimation(Skeleton& skeleton, const Animation& animation, fl
         if (auto it = animation.nodeAnimations.find(joint.name); it != animation.nodeAnimations.end()) {
             const NodeAnimation& nodeAnimation = it->second;
 
-            joint.transform.translate = CalculateValue(nodeAnimation.translate, animationTime);
-            joint.transform.rotate = CalculateValue(nodeAnimation.rotate, animationTime);
-            joint.transform.scale = CalculateValue(nodeAnimation.scale, animationTime);
+            joint.transform.translate = ::CalculateValue(nodeAnimation.translate, animationTime);
+            joint.transform.rotate = ::CalculateValue(nodeAnimation.rotate, animationTime);
+            joint.transform.scale = ::CalculateValue(nodeAnimation.scale, animationTime);
             
             if (shouldDebug) {
                 OutputDebugStringA(("ApplyAnimation - Joint: " + joint.name + 
@@ -404,45 +405,7 @@ void Object3d::SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skele
     debugCount++;
 }
 
-Vector3 Object3d::CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time)
-{
-    assert(!keyframes.empty());
-    if (keyframes.size() == 1 || time <= keyframes[0].time) {
-        return keyframes[0].value;
-    }
-
-    for (size_t index = 0; index < keyframes.size() - 1; ++index) {
-        size_t nextIndex = index + 1;
-        //indexとnextIndexの2つのキーフレームを取得して範囲内に時刻があるか判定する
-        if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
-            //補間する
-            float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-            return Lerp(keyframes[index].value, keyframes[nextIndex].value, t);
-        }
-    }
-    //ここまで来た場合は一番後の時刻よりも後の時刻なので最後の値を返す
-    return keyframes.back().value;
-}
-
-Quaternion Object3d::CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time)
-{
-    assert(!keyframes.empty());
-    if (keyframes.size() == 1 || time <= keyframes[0].time) {
-        return keyframes[0].value;
-    }
-
-    for (size_t index = 0; index < keyframes.size() - 1; ++index) {
-        size_t nextIndex = index + 1;
-        //indexとnextIndexの2つのキーフレームを取得して範囲内に時刻があるか判定する
-        if (keyframes[index].time <= time && time <= keyframes[nextIndex].time) {
-            //補間する
-            float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
-            return Slerp(keyframes[index].value, keyframes[nextIndex].value, t);
-        }
-    }
-    //ここまで来た場合は一番後の時刻よりも後の時刻なので最後の値を返す
-    return keyframes.back().value;
-}
+// CalculateValue関数はAnimationUtilityから使用するため、Object3dクラスからは削除
 
 void Object3d::SetAnimatedModel(class AnimatedModel* animatedModel)
 {

@@ -2,8 +2,14 @@
 #include <cassert>
 #include <cmath>
 #include <algorithm>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include <Windows.h>
+#include <string>
+#include "Mymath.h"
 
-// 線形補間関数（削除：Mymath.cppで定義済み）
+
 
 // クォータニオンの内積
 float Dot(const Quaternion& q1, const Quaternion& q2) {
@@ -74,46 +80,95 @@ Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, floa
     return keyframes.back().value;
 }
 
-// アニメーション読み込み関数（外部ライブラリなし版 - テスト用ダミーデータ）
+// アニメーション読み込み関数
 Animation LoadAnimationFile(const std::string& directoryPath, const std::string& filename) {
     Animation animation;
     
-    // ダミーアニメーションデータを作成（実際のファイル読み込みは後で実装）
-    animation.duration = 2.0f; // 2秒のアニメーション
+    // assimpでファイルを読み込み
+    Assimp::Importer importer;
+    std::string fullPath = directoryPath + "/" + filename;
     
-    // ルートノードのアニメーションを作成
-    NodeAnimation rootNodeAnimation;
+    const aiScene* scene = importer.ReadFile(fullPath,
+        aiProcess_Triangulate |
+        aiProcess_FlipUVs |
+        aiProcess_CalcTangentSpace |
+        aiProcess_JoinIdenticalVertices |
+        aiProcess_GenSmoothNormals
+    );
     
-    // 回転アニメーション（Y軸周りの360度回転）
-    KeyframeQuaternion rotKey1, rotKey2, rotKey3;
-    rotKey1.time = 0.0f;
-    rotKey1.value = { 0.0f, 0.0f, 0.0f, 1.0f }; // 回転なし
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+        OutputDebugStringA(("LoadAnimationFile: Error loading file: " + std::string(importer.GetErrorString()) + "\n").c_str());
+        
+        // エラーの場合はダミーアニメーションを返す
+        animation.duration = 2.0f;
+        NodeAnimation dummyNodeAnimation;
+        KeyframeVector3 scaleKey;
+        scaleKey.time = 0.0f;
+        scaleKey.value = { 1.0f, 1.0f, 1.0f };
+        dummyNodeAnimation.scale.push_back(scaleKey);
+        animation.nodeAnimations["root"] = dummyNodeAnimation;
+        return animation;
+    }
     
-    rotKey2.time = 1.0f;
-    rotKey2.value = { 0.0f, 0.707f, 0.0f, 0.707f }; // Y軸周り180度
+    // アニメーションが存在しない場合
+    if (scene->mNumAnimations == 0) {
+        OutputDebugStringA("LoadAnimationFile: No animations found in file\n");
+        animation.duration = 0.0f;
+        return animation;
+    }
     
-    rotKey3.time = 2.0f;
-    rotKey3.value = { 0.0f, 1.0f, 0.0f, 0.0f }; // Y軸周り360度
+    // 最初のアニメーションを処理
+    const aiAnimation* assimpAnimation = scene->mAnimations[0];
     
-    rootNodeAnimation.rotate.push_back(rotKey1);
-    rootNodeAnimation.rotate.push_back(rotKey2);
-    rootNodeAnimation.rotate.push_back(rotKey3);
+    OutputDebugStringA(("LoadAnimationFile: Processing animation with " + std::to_string(assimpAnimation->mNumChannels) + " channels\n").c_str());
     
-    // スケールアニメーション（固定）
-    KeyframeVector3 scaleKey;
-    scaleKey.time = 0.0f;
-    scaleKey.value = { 1.0f, 1.0f, 1.0f };
-    rootNodeAnimation.scale.push_back(scaleKey);
+    // アニメーション時間を設定
+    animation.duration = static_cast<float>(assimpAnimation->mDuration / assimpAnimation->mTicksPerSecond);
+    animation.nodeAnimations.clear();
     
-    // 平行移動アニメーション（固定）
-    KeyframeVector3 translateKey;
-    translateKey.time = 0.0f;
-    translateKey.value = { 0.0f, 0.0f, 0.0f };
-    rootNodeAnimation.translate.push_back(translateKey);
+    // 各ノードアニメーションチャンネルを処理
+    for (unsigned int i = 0; i < assimpAnimation->mNumChannels; i++) {
+        const aiNodeAnim* nodeAnim = assimpAnimation->mChannels[i];
+        std::string nodeName = nodeAnim->mNodeName.C_Str();
+        
+        NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeName];
+        
+        // 位置キーフレーム（右手座標系→左手座標系：Z座標を反転）
+        for (unsigned int j = 0; j < nodeAnim->mNumPositionKeys; j++) {
+            const aiVectorKey& key = nodeAnim->mPositionKeys[j];
+            KeyframeVector3 keyframe;
+            keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
+            keyframe.value = {key.mValue.x, key.mValue.y, -key.mValue.z};  // Z座標を反転
+            nodeAnimation.translate.push_back(keyframe);
+        }
+        
+        // 回転キーフレーム（右手座標系→左手座標系：クォータニオンの共役を取る）
+        for (unsigned int j = 0; j < nodeAnim->mNumRotationKeys; j++) {
+            const aiQuatKey& key = nodeAnim->mRotationKeys[j];
+            KeyframeQuaternion keyframe;
+            keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
+            
+            // 右手座標系から左手座標系への変換：
+            // 座標系変換のためクォータニオンの共役を取る（x,y,z成分の符号を反転）
+            keyframe.value = {-key.mValue.x, -key.mValue.y, -key.mValue.z, key.mValue.w};
+            nodeAnimation.rotate.push_back(keyframe);
+        }
+        
+        // スケールキーフレーム（スケールは座標系に依存しない）
+        for (unsigned int j = 0; j < nodeAnim->mNumScalingKeys; j++) {
+            const aiVectorKey& key = nodeAnim->mScalingKeys[j];
+            KeyframeVector3 keyframe;
+            keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
+            keyframe.value = {key.mValue.x, key.mValue.y, key.mValue.z};
+            nodeAnimation.scale.push_back(keyframe);
+        }
+        
+       ///OutputDebugStringA(("LoadAnimationFile: Node " + nodeName + " - Position keys: " + std::to_string(nodeAnimation.translate.size()) + 
+       ///                  ", Rotation keys: " + std::to_string(nodeAnimation.rotate.size()) + 
+       ///                  ", Scale keys: " + std::to_string(nodeAnimation.scale.size()) + "\n").c_str());
+    }
     
-    // ルートノードアニメーションを追加（rootとAnimatedCube両方に対応）
-    animation.nodeAnimations["root"] = rootNodeAnimation;
-    animation.nodeAnimations["AnimatedCube"] = rootNodeAnimation;
+    ///OutputDebugStringA(("LoadAnimationFile: Animation duration: " + std::to_string(animation.duration) + " seconds\n").c_str());
     
     return animation;
 }

@@ -71,11 +71,6 @@ public:
     void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
     void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
     
-    // アニメーション補間メソッド
-    Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
-    Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
-    
-
     void SetAnimatedModel(class AnimatedModel* animatedModel);
     void SetEnableAnimation(bool enable);
     bool GetEnableAnimation() const;

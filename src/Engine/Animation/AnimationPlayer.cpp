@@ -61,31 +61,21 @@ Matrix4x4 AnimationPlayer::GetLocalMatrix(const std::string& nodeName) {
     
     // Translateの値を計算
     if (!nodeAnimation.translate.empty()) {
-        translate = CalculateValue(nodeAnimation.translate, animationTime_);
+        translate = ::CalculateValue(nodeAnimation.translate, animationTime_);
     }
     
     // Rotateの値を計算
     if (!nodeAnimation.rotate.empty()) {
-        rotate = CalculateValue(nodeAnimation.rotate, animationTime_);
+        rotate = ::CalculateValue(nodeAnimation.rotate, animationTime_);
     }
     
     // Scaleの値を計算
     if (!nodeAnimation.scale.empty()) {
-        scale = CalculateValue(nodeAnimation.scale, animationTime_);
+        scale = ::CalculateValue(nodeAnimation.scale, animationTime_);
     }
     
-    // クォータニオンをオイラー角に変換してからMatrix4x4を作成
-    // 簡易的な変換（完全な実装ではないが、基本的な回転に対応）
-    Vector3 rotateEuler = { 0.0f, 0.0f, 0.0f };
-    
-    // Y軸回転のクォータニオンからY軸回転角を抽出（簡易版）
-    // 実際にはクォータニオンからオイラー角への変換は複雑
-    if (rotate.w != 0.0f || rotate.y != 0.0f) {
-        rotateEuler.y = 2.0f * std::atan2(rotate.y, rotate.w);
-    }
-    
-    // アフィン変換行列を生成
-    return MakeAffineMatrix(scale, rotateEuler, translate);
+    // クォータニオンから回転行列を直接生成してアフィン変換行列を作成
+    return MakeAffineMatrix(scale, rotate, translate);
 }
 
 // アニメーション時刻を設定

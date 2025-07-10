@@ -387,10 +387,17 @@ Matrix4x4 Transpose(const Matrix4x4& m)
 
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
 {
+    // tが0.0から1.0の範囲内にあることを確認
+    assert(t >= 0.0f && t <= 1.0f);
+    
     Vector3 result;
     result.x = v1.x + t * (v2.x - v1.x);
     result.y = v1.y + t * (v2.y - v1.y);
     result.z = v1.z + t * (v2.z - v1.z);
+
+	assert(!std::isnan(result.x));
+	assert(!std::isnan(result.y));
+	assert(!std::isnan(result.z));
     return result;
 }
 
