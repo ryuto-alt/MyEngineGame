@@ -40,19 +40,20 @@ void GamePlayScene::Update() {
 		humanAnimatedModel_ = std::make_unique<AnimatedModel>();
 		humanAnimatedModel_->Initialize(dxCommon_);
 		
-		// モデルの読み込み（sneakWalkで読み込み）
-		humanAnimatedModel_->LoadFromFile("Resources/Models/human", "sneakWalk.gltf");
+		// モデルの読み込み（walkで読み込み）
+		humanAnimatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
 		
 		// 各アニメーションを読み込んで追加
-		// sneakWalkアニメーション
-		Animation sneakWalkAnim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
-		humanAnimatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
-		
-		// walkアニメーションを読み込み
-		Animation walkAnim = LoadAnimationFile("Resources/Models/human", "walk.gltf");
+		// walkアニメーション（初期アニメーション）
+		Animation walkAnim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
 		humanAnimatedModel_->AddAnimation("walk", walkAnim);
 		
-		// 初期アニメーションを再生
+		// sneakWalkアニメーションを読み込み
+		Animation sneakWalkAnim = LoadAnimationFile("Resources/Models/human", "sneakWalk.gltf");
+		humanAnimatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
+		
+		// 初期アニメーションを"walk"に設定して再生
+		humanAnimatedModel_->ChangeAnimation("walk");
 		humanAnimatedModel_->PlayAnimation();
 
 		humanObject3d_ = engine_->CreateObject3D();
@@ -111,10 +112,10 @@ void GamePlayScene::Update() {
 		
 		// アニメーション切り替え（1キーでトグル）
 		if (engine_->IsKeyTriggered(DIK_1)) {
-			if (humanAnimatedModel_->GetCurrentAnimationName() == "sneakWalk") {
-				humanAnimatedModel_->TransitionToAnimation("walk", 0.3f);
-			} else {
+			if (humanAnimatedModel_->GetCurrentAnimationName() == "walk") {
 				humanAnimatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
+			} else {
+				humanAnimatedModel_->TransitionToAnimation("walk", 0.3f);
 			}
 		}
 

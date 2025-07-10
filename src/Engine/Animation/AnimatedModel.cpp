@@ -193,6 +193,9 @@ void AnimatedModel::ChangeAnimation(const std::string& name) {
     auto it = animations_.find(name);
     if (it != animations_.end()) {
         currentAnimationName_ = name;
+        animationPlayer_.SetAnimation(it->second);
+        animationPlayer_.Play();
+        // animationBlender_も更新（互換性のため）
         animationBlender_.SetAnimation(it->second);
         animationBlender_.Play();
     }

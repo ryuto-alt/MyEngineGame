@@ -201,16 +201,19 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Animation\AnimatedModel.cpp">
-      <Filter>src</Filter>
+      <Filter>src\engine\Animation</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Animation\AnimationBlender.cpp">
-      <Filter>src</Filter>
+      <Filter>src\engine\Animation</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Animation\AnimationPlayer.cpp">
-      <Filter>src</Filter>
+      <Filter>src\engine\Animation</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Animation\AnimationUtility.cpp">
-      <Filter>src</Filter>
+      <Filter>src\engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Resource\ResourcePreloader.cpp">
+      <Filter>src\engine\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -378,11 +381,24 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Audio\SpatialAudioListener.h" />
     <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h" />
-    <ClInclude Include="src\Engine\Animation\Animation.h" />
-    <ClInclude Include="src\Engine\Animation\AnimatedModel.h" />
-    <ClInclude Include="src\Engine\Animation\AnimationBlender.h" />
-    <ClInclude Include="src\Engine\Animation\AnimationPlayer.h" />
-    <ClInclude Include="src\Engine\Animation\AnimationUtility.h" />
+    <ClInclude Include="src\Engine\Animation\AnimatedModel.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\Animation.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\AnimationBlender.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\AnimationPlayer.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Animation\AnimationUtility.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Resource\ResourcePreloader.h">
+      <Filter>src\engine\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
