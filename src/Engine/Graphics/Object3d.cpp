@@ -155,10 +155,9 @@ Camera* Object3d::GetCamera() const {
 void Object3d::Update() {
     assert(transformationMatrixData_);
 
-    // アニメーション処理を段階的に有効化
-    if (enableAnimation_ && animatedModel_ && animatedModel_->GetAnimationPlayer().GetAnimation().nodeAnimations.size() > 0) {
-        // アニメーションが有効で、アニメーションデータが存在する場合のみ実行
-        //OutputDebugStringA("Object3d::Update - Animation processing enabled\n");
+    // アニメーション処理
+    if (animatedModel_ && animatedModel_->GetAnimationPlayer().GetAnimation().nodeAnimations.size() > 0) {
+        // アニメーションデータが存在する場合
         Animation& animation = animatedModel_->GetAnimationPlayer().GetAnimation();
         Skeleton& skeleton = animatedModel_->GetSkeleton();
         SkinCluster& skinCluster = animatedModel_->GetSkinCluster();
@@ -166,14 +165,17 @@ void Object3d::Update() {
         // デバッグ出力
         static int frameCount = 0;
         if (frameCount % 60 == 0) {
-           // OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(animationTime_) + 
-           //                    ", Duration: " + std::to_string(animation.duration) + 
-           //                    ", Joints: " + std::to_string(skeleton.joints.size()) + 
-           //                    ", NodeAnimations: " + std::to_string(animation.nodeAnimations.size()) + "\n").c_str());
+            float currentTime = animatedModel_->GetAnimationPlayer().GetTime();
+            OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(currentTime) + 
+                               ", Duration: " + std::to_string(animation.duration) + 
+                               ", Joints: " + std::to_string(skeleton.joints.size()) + 
+                               ", NodeAnimations: " + std::to_string(animation.nodeAnimations.size()) + "\n").c_str());
         }
         frameCount++;
         
-        ApplyAnimation(skeleton, animation, animationTime_);
+        // アニメーションの適用（AnimationPlayerの時刻を使用）
+        float currentAnimTime = animatedModel_->GetAnimationPlayer().GetTime();
+        ApplyAnimation(skeleton, animation, currentAnimTime);
         SkeletonUpdate(skeleton);
         SkinClusterUpdate(skinCluster, skeleton);  // スキニング処理を有効化
         
@@ -189,13 +191,13 @@ void Object3d::Update() {
         // アニメーション行列は単位行列のままにする（スキニングで頂点変換するため）
         animationMatrix_ = MakeIdentity4x4();
         
-        animationTime_ += 1.0f / 60.0f;
-        animationTime_ = std::fmod(animationTime_, animation.duration);
+        // アニメーション時刻の管理はAnimationPlayerに任せる
+        // Object3d側では時刻を更新しない
     } else {
-        // アニメーションが無効またはデータが存在しない場合
+        // アニメーションデータが存在しない場合
         static int noAnimCount = 0;
         if (noAnimCount % 60 == 0) {
-           // OutputDebugStringA(("Object3d::Update - Animation disabled for basic rendering\n"));
+           // OutputDebugStringA(("Object3d::Update - No animation data available\n"));
         }
         noAnimCount++;
     }
@@ -428,10 +430,18 @@ bool Object3d::GetEnableAnimation() const
 
 float Object3d::GetAnimationTime() const
 {
+    // AnimationPlayerから時刻を取得
+    if (animatedModel_) {
+        return animatedModel_->GetAnimationPlayer().GetTime();
+    }
     return animationTime_;
 }
 
 void Object3d::SetAnimationTime(float time)
 {
-    animationTime_ = time;
+    // AnimationPlayerの時刻を設定
+    if (animatedModel_) {
+        animatedModel_->GetAnimationPlayer().SetTime(time);
+    }
+    animationTime_ = time; // 互換性のため残す
 }

@@ -103,7 +103,7 @@ void AnimationPlayer::Play() {
 // アニメーション再生を停止
 void AnimationPlayer::Stop() {
     isPlaying_ = false;
-    animationTime_ = 0.0f;
+    // animationTime_ = 0.0f; // 時刻をリセットしないことで現在のポーズを維持
 }
 
 // アニメーション再生を一時停止

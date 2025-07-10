@@ -84,7 +84,7 @@ void GamePlayScene::Update() {
 		// アニメーション制御
 		if (engine_->IsKeyTriggered(DIK_P)) {
 			animationPaused_ = !animationPaused_;
-			humanObject3d_->SetEnableAnimation(!animationPaused_);
+			// SetEnableAnimationは呼ばない（スケルトン更新を継続するため）
 			if (animationPaused_) {
 				humanAnimatedModel_->PauseAnimation();
 			} else {
@@ -95,8 +95,12 @@ void GamePlayScene::Update() {
 			humanObject3d_->SetAnimationTime(0.0f);
 		}
 		
-		// アニメーションモデルの更新（deltaTime = 1/60秒）
-		humanAnimatedModel_->Update(1.0f / 60.0f);
+		// アニメーションモデルの更新（一時停止中は0を渡す）
+		if (!animationPaused_) {
+			humanAnimatedModel_->Update(1.0f / 60.0f);
+		} else {
+			humanAnimatedModel_->Update(0.0f);  // 時刻を進めない
+		}
 		
 		// Object3dの更新
 		humanObject3d_->Update();
