@@ -153,7 +153,7 @@ public:
     // === デバッグ情報 ===
     void ShowDebugInfo();
     
-    // === 従来のアクセサ（上級者向け・必要時のみ使用） ===
+    // === 従来のアクセサ ===
     WinApp* GetWinApp() const { return winApp_.get(); }
     DirectXCommon* GetDirectXCommon() const { return dxCommon_.get(); }
     Input* GetInput() const { return input_.get(); }
@@ -190,7 +190,7 @@ private:
     std::unique_ptr<SpriteCommon> spriteCommon_;
     std::unique_ptr<SrvManager> srvManager_;
 
-    // シーンファクトリー (SceneFactoryへのポインタとして保存)
+    // シーンファクトリー 
     std::unique_ptr<SceneFactory> sceneFactory_;
     
     // 3D空間オーディオ関連

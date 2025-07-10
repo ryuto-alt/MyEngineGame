@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include "SpriteCommon.h"
 #include "../../Engine/Graphics/TextureManager.h"
+#include "../../Engine/Animation/AnimationUtility.h"
 
 GamePlayScene::GamePlayScene() {
 }
@@ -38,11 +39,21 @@ void GamePlayScene::Update() {
 		// 通常の読み込み（高速化済み）
 		humanAnimatedModel_ = std::make_unique<AnimatedModel>();
 		humanAnimatedModel_->Initialize(dxCommon_);
+		
+		// モデルの読み込み（sneakWalkで読み込み）
 		humanAnimatedModel_->LoadFromFile("Resources/Models/human", "sneakWalk.gltf");
+		
+		// 各アニメーションを読み込んで追加
+		// sneakWalkアニメーション
+		Animation sneakWalkAnim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
+		humanAnimatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
+		
+		// walkアニメーションを読み込み
+		Animation walkAnim = LoadAnimationFile("Resources/Models/human", "walk.gltf");
+		humanAnimatedModel_->AddAnimation("walk", walkAnim);
+		
+		// 初期アニメーションを再生
 		humanAnimatedModel_->PlayAnimation();
-
-		// デバッグ：アニメーションが読み込まれたか確認
-		const Animation& anim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
 
 		humanObject3d_ = engine_->CreateObject3D();
 		humanObject3d_->SetModel(static_cast<Model*>(humanAnimatedModel_.get()));
@@ -97,6 +108,15 @@ void GamePlayScene::Update() {
 		if (engine_->IsKeyTriggered(DIK_R)) {
 			humanObject3d_->SetAnimationTime(0.0f);
 		}
+		
+		// アニメーション切り替え（1キーでトグル）
+		if (engine_->IsKeyTriggered(DIK_1)) {
+			if (humanAnimatedModel_->GetCurrentAnimationName() == "sneakWalk") {
+				humanAnimatedModel_->TransitionToAnimation("walk", 0.3f);
+			} else {
+				humanAnimatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
+			}
+		}
 
 		// アニメーションモデルの更新（一時停止中は0を渡す）
 		if (!animationPaused_) {
@@ -146,11 +166,19 @@ void GamePlayScene::Draw() {
 		ImGui::Text("↑↓←→ - ヒューマンモデル移動");
 		ImGui::Text("P - アニメーション一時停止/再開");
 		ImGui::Text("R - アニメーションリセット");
+		ImGui::Text("1 - アニメーション切り替え（SneakWalk ⇔ Walk）");
 		ImGui::Text("ESC - 終了");
 
 		ImGui::Separator();
 		Vector3 cameraPos = engine_->GetCameraPosition();
 		ImGui::Text("カメラ位置: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
+		
+		// アニメーション情報
+		ImGui::Separator();
+		ImGui::Text("現在のアニメーション: %s", humanAnimatedModel_->GetCurrentAnimationName().c_str());
+		if (humanAnimatedModel_->GetAnimationBlender().IsBlending()) {
+			ImGui::Text("ブレンド中: %.1f%%", humanAnimatedModel_->GetAnimationBlender().GetBlendProgress() * 100.0f);
+		}
 
 		ImGui::End();
 	}

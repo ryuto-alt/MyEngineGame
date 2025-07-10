@@ -34,7 +34,7 @@ void UnoEngine::Initialize() {
         // テクスチャマネージャの初期化
         TextureManager::GetInstance()->Initialize(dxCommon_.get(), srvManager_.get());
 
-        // デフォルトテクスチャの事前読み込み（遅延）
+        // デフォルトテクスチャの事前読み込み
         // TextureManager::GetInstance()->LoadDefaultTexture();
 
         // ImGuiの初期化
@@ -69,8 +69,7 @@ void UnoEngine::Initialize() {
         // 3Dエフェクトマネージャの初期化
         EffectManager3D::GetInstance()->Initialize();
 
-        // 衝突判定マネージャの初期化（特別な初期化は不要）
-        // すでにシングルトンパターンで実装されているため、呼び出すだけで初期化される
+      
         
         // 3D空間オーディオリスナーの初期化
         audioListener_ = std::make_unique<SpatialAudioListener>();

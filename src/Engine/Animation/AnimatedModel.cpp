@@ -16,6 +16,7 @@ AnimatedModel::~AnimatedModel() {
 void AnimatedModel::Initialize(DirectXCommon* dxCommon) {
     Model::Initialize(dxCommon);
     dxCommon_ = dxCommon;
+    animationBlender_.Initialize();
 }
 
 // モデルとアニメーションの読み込み
@@ -86,6 +87,15 @@ void AnimatedModel::LoadFromGLTFWithAssimp(const std::string& directoryPath, con
     skeleton_ = CreateSkeleton(rootNode);
     skinCluster_ = CreateSkinCluster();
     
+    // 初期ジョイント変換を保存
+    for (const Joint& joint : skeleton_.joints) {
+        JointTransform transform;
+        transform.scale = joint.transform.scale;
+        transform.rotate = joint.transform.rotate;
+        transform.translate = joint.transform.translate;
+        initialJointTransforms_[joint.name] = transform;
+    }
+    
     // 頂点バッファを作成
     CreateVertexBuffer();
 }
@@ -95,37 +105,115 @@ void AnimatedModel::LoadAnimation(const std::string& directoryPath, const std::s
     // LoadAnimationFile関数を使用してアニメーションを読み込み
     animation_ = LoadAnimationFile(directoryPath, filename);
     
-    // アニメーションプレイヤーに設定
+    // アニメーションプレイヤーに設定（互換性のため）
     animationPlayer_.SetAnimation(animation_);
     animationPlayer_.SetLoop(true);
+    
+    // AnimationBlenderにも設定
+    animationBlender_.SetAnimation(animation_);
+    animationBlender_.SetLoop(true);
+    animationBlender_.Play();
 }
 
 // 更新（アニメーション時刻を進める）
 void AnimatedModel::Update(float deltaTime) {
+    // 現在のアニメーションを更新
     animationPlayer_.Update(deltaTime);
+    
+    // ブレンド中の場合
+    if (isBlending_) {
+        // ターゲットアニメーションも更新
+        targetPlayer_.Update(deltaTime);
+        
+        // ブレンド進行度を更新
+        blendElapsedTime_ += deltaTime;
+        blendProgress_ = std::min(blendElapsedTime_ / blendDuration_, 1.0f);
+        
+        // ブレンド完了判定
+        if (blendProgress_ >= 1.0f) {
+            // ターゲットを現在のアニメーションに切り替え
+            animationPlayer_ = targetPlayer_;
+            currentAnimationName_ = targetAnimationName_;
+            
+            isBlending_ = false;
+            blendProgress_ = 0.0f;
+            blendElapsedTime_ = 0.0f;
+        }
+    }
+    
+    // AnimationBlenderは使用しないのでコメントアウト
+    // animationBlender_.Update(deltaTime);
 }
 
 // アニメーションのローカル変換行列を取得
 Matrix4x4 AnimatedModel::GetAnimationLocalMatrix() {
-    // GLTFファイルの場合はAnimatedCubeノード、それ以外はrootノードを使用
+    // ブレンダーが有効な場合はブレンダーから取得
+    if (!animations_.empty()) {
+        return animationBlender_.GetLocalMatrix(rootNodeName_);
+    }
+    // 互換性のため、単一アニメーションの場合はプレイヤーから取得
     return animationPlayer_.GetLocalMatrix(rootNodeName_);
 }
 
 // アニメーション再生制御
 void AnimatedModel::PlayAnimation() {
     animationPlayer_.Play();
+    animationBlender_.Play();
 }
 
 void AnimatedModel::StopAnimation() {
     animationPlayer_.Stop();
+    animationBlender_.Stop();
 }
 
 void AnimatedModel::PauseAnimation() {
     animationPlayer_.Pause();
+    animationBlender_.Pause();
 }
 
 void AnimatedModel::SetAnimationLoop(bool loop) {
     animationPlayer_.SetLoop(loop);
+    animationBlender_.SetLoop(loop);
+}
+
+// アニメーションの追加
+void AnimatedModel::AddAnimation(const std::string& name, const Animation& animation) {
+    animations_[name] = animation;
+    
+    // 最初のアニメーションの場合は自動的に設定
+    if (animations_.size() == 1) {
+        currentAnimationName_ = name;
+        animationBlender_.SetAnimation(animation);
+        animationBlender_.Play();
+    }
+}
+
+// アニメーションの切り替え（即座）
+void AnimatedModel::ChangeAnimation(const std::string& name) {
+    auto it = animations_.find(name);
+    if (it != animations_.end()) {
+        currentAnimationName_ = name;
+        animationBlender_.SetAnimation(it->second);
+        animationBlender_.Play();
+    }
+}
+
+// アニメーションの切り替え（ブレンド遷移）
+void AnimatedModel::TransitionToAnimation(const std::string& name, float transitionDuration) {
+    auto it = animations_.find(name);
+    if (it != animations_.end() && currentAnimationName_ != name) {
+        // ブレンド開始
+        targetAnimationName_ = name;
+        targetPlayer_.SetAnimation(it->second);
+        targetPlayer_.SetLoop(true); // 常にループ（後で改善）
+        targetPlayer_.Play();
+        targetPlayer_.SetTime(0.0f); // 新しいアニメーションは最初から
+        
+        isBlending_ = true;
+        blendDuration_ = transitionDuration;
+        blendElapsedTime_ = 0.0f;
+        blendProgress_ = 0.0f;
+    }
 }
 
 
@@ -523,9 +611,117 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
                           ", Scale keys: " + std::to_string(nodeAnimation.scale.size()) + "\n").c_str());
     }
     
-    // アニメーションプレイヤーに設定
+    // アニメーションプレイヤーに設定（互換性のため）
     animationPlayer_.SetAnimation(animation_);
     animationPlayer_.SetLoop(true);
     
+    // AnimationBlenderにも設定
+    animationBlender_.SetAnimation(animation_);
+    animationBlender_.SetLoop(true);
+    animationBlender_.Play();
+    
+    // デフォルトアニメーションとして登録
+    if (animations_.empty()) {
+        animations_["default"] = animation_;
+        currentAnimationName_ = "default";
+    }
+    
     // OutputDebugStringA(("AnimatedModel: Animation duration: " + std::to_string(animation_.duration) + " seconds\n").c_str());
+}
+
+// 指定したジョイントのブレンドされた変換を取得
+JointTransform AnimatedModel::GetBlendedTransform(const std::string& jointName, const JointTransform& originalTransform) const {
+    // 現在のアニメーションから変換を取得
+    const Animation& currentAnim = animationPlayer_.GetAnimation();
+    JointTransform currentTransform;
+    
+    if (auto it = currentAnim.nodeAnimations.find(jointName); it != currentAnim.nodeAnimations.end()) {
+        const NodeAnimation& nodeAnimation = it->second;
+        float currentTime = animationPlayer_.GetTime();
+        
+        // 各キーフレームリストが空でないことを確認
+        if (!nodeAnimation.translate.empty()) {
+            currentTransform.translate = CalculateValue(nodeAnimation.translate, currentTime);
+        } else {
+            currentTransform.translate = originalTransform.translate;
+        }
+        
+        if (!nodeAnimation.rotate.empty()) {
+            currentTransform.rotate = CalculateValue(nodeAnimation.rotate, currentTime);
+        } else {
+            currentTransform.rotate = originalTransform.rotate;
+        }
+        
+        if (!nodeAnimation.scale.empty()) {
+            currentTransform.scale = CalculateValue(nodeAnimation.scale, currentTime);
+        } else {
+            // スケールキーフレームがない場合は元の値を使用
+            currentTransform.scale = originalTransform.scale;
+        }
+        
+        // デバッグ: アニメーションからのスケール値を確認
+        static int debugCount = 0;
+        if (debugCount++ % 300 == 0) {
+            OutputDebugStringA(("AnimatedModel::GetBlendedTransform - " + jointName + 
+                               " has scale keys: " + (nodeAnimation.scale.empty() ? "NO" : "YES") +
+                               ", using scale: (" + std::to_string(currentTransform.scale.x) + ", " +
+                               std::to_string(currentTransform.scale.y) + ", " +
+                               std::to_string(currentTransform.scale.z) + ")\n").c_str());
+        }
+    } else {
+        // アニメーションがない場合は元の変換値を使用
+        currentTransform = originalTransform;
+    }
+    
+    // ブレンド中でない場合は現在の変換をそのまま返す
+    if (!isBlending_) {
+        return currentTransform;
+    }
+    
+    // ターゲットアニメーションから変換を取得
+    const Animation& targetAnim = targetPlayer_.GetAnimation();
+    JointTransform targetTransform;
+    
+    if (auto it = targetAnim.nodeAnimations.find(jointName); it != targetAnim.nodeAnimations.end()) {
+        const NodeAnimation& nodeAnimation = it->second;
+        float targetTime = targetPlayer_.GetTime();
+        
+        // 各キーフレームリストが空でないことを確認
+        if (!nodeAnimation.translate.empty()) {
+            targetTransform.translate = CalculateValue(nodeAnimation.translate, targetTime);
+        } else {
+            targetTransform.translate = originalTransform.translate;
+        }
+        
+        if (!nodeAnimation.rotate.empty()) {
+            targetTransform.rotate = CalculateValue(nodeAnimation.rotate, targetTime);
+        } else {
+            targetTransform.rotate = originalTransform.rotate;
+        }
+        
+        if (!nodeAnimation.scale.empty()) {
+            targetTransform.scale = CalculateValue(nodeAnimation.scale, targetTime);
+        } else {
+            // スケールキーフレームがない場合は元の値を使用
+            targetTransform.scale = originalTransform.scale;
+        }
+    } else {
+        // アニメーションがない場合は元の変換値を使用
+        targetTransform = originalTransform;
+    }
+    
+    // ブレンド（t * B + (1 - t) * A）
+    JointTransform blendedTransform;
+    float t = blendProgress_;
+    
+    // スケールの線形補間
+    blendedTransform.scale = ::Lerp(currentTransform.scale, targetTransform.scale, t);
+    
+    // 回転の球面線形補間（QuaternionはVector4）
+    blendedTransform.rotate = ::Slerp(currentTransform.rotate, targetTransform.rotate, t);
+    
+    // 位置の線形補間  
+    blendedTransform.translate = ::Lerp(currentTransform.translate, targetTransform.translate, t);
+    
+    return blendedTransform;
 }

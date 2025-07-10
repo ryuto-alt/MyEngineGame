@@ -156,26 +156,66 @@ void Object3d::Update() {
     assert(transformationMatrixData_);
 
     // アニメーション処理
-    if (animatedModel_ && animatedModel_->GetAnimationPlayer().GetAnimation().nodeAnimations.size() > 0) {
-        // アニメーションデータが存在する場合
-        Animation& animation = animatedModel_->GetAnimationPlayer().GetAnimation();
+    if (animatedModel_) {
         Skeleton& skeleton = animatedModel_->GetSkeleton();
         SkinCluster& skinCluster = animatedModel_->GetSkinCluster();
         
-        // デバッグ出力
+        // デバッグ出力用
         static int frameCount = 0;
+        
+        // ブレンド対応のアニメーション適用
+        if (animatedModel_->IsBlending()) {
+            // ブレンド中は各ジョイントに対してブレンドされた変換を適用
+            for (Joint& joint : skeleton.joints) {
+                // 初期ジョイント変換を使用（前フレームの値ではなく）
+                JointTransform originalTransform;
+                auto initialIt = animatedModel_->GetInitialJointTransforms().find(joint.name);
+                if (initialIt != animatedModel_->GetInitialJointTransforms().end()) {
+                    originalTransform = initialIt->second;
+                } else {
+                    // 初期変換が見つからない場合は現在の値を使用
+                    originalTransform.scale = joint.transform.scale;
+                    originalTransform.rotate = joint.transform.rotate;
+                    originalTransform.translate = joint.transform.translate;
+                }
+                
+                // ブレンドされた変換を取得
+                auto blendedTransform = animatedModel_->GetBlendedTransform(joint.name, originalTransform);
+                
+                // デバッグ: スケール値を確認
+                if (frameCount % 60 == 0 && joint.name == skeleton.joints[0].name) {
+                    OutputDebugStringA(("Object3d::Update - Joint " + joint.name + 
+                                       " original scale: (" + std::to_string(originalTransform.scale.x) + ", " +
+                                       std::to_string(originalTransform.scale.y) + ", " +
+                                       std::to_string(originalTransform.scale.z) + ")" +
+                                       " blended scale: (" + std::to_string(blendedTransform.scale.x) + ", " +
+                                       std::to_string(blendedTransform.scale.y) + ", " +
+                                       std::to_string(blendedTransform.scale.z) + ")\n").c_str());
+                }
+                
+                joint.transform.scale = blendedTransform.scale;
+                joint.transform.rotate = blendedTransform.rotate;
+                joint.transform.translate = blendedTransform.translate;
+            }
+        } else {
+            // 通常のアニメーション適用
+            const Animation& currentAnimation = animatedModel_->GetAnimationPlayer().GetAnimation();
+            float animationTime = animatedModel_->GetAnimationPlayer().GetTime();
+            ApplyAnimation(skeleton, currentAnimation, animationTime);
+        }
+        
+        // デバッグ出力
         if (frameCount % 60 == 0) {
-            float currentTime = animatedModel_->GetAnimationPlayer().GetTime();
-            OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(currentTime) + 
-                               ", Duration: " + std::to_string(animation.duration) + 
-                               ", Joints: " + std::to_string(skeleton.joints.size()) + 
-                               ", NodeAnimations: " + std::to_string(animation.nodeAnimations.size()) + "\n").c_str());
+            float animationTime = animatedModel_->GetAnimationPlayer().GetTime();
+            OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(animationTime) + 
+                               ", Current animation: " + animatedModel_->GetCurrentAnimationName() +
+                               ", Blending: " + (animatedModel_->IsBlending() ? "Yes" : "No") + 
+                               (animatedModel_->IsBlending() ? ", Progress: " + std::to_string(animatedModel_->GetBlendProgress() * 100.0f) + "%" : "") + 
+                               "\n").c_str());
         }
         frameCount++;
         
-        // アニメーションの適用（AnimationPlayerの時刻を使用）
-        float currentAnimTime = animatedModel_->GetAnimationPlayer().GetTime();
-        ApplyAnimation(skeleton, animation, currentAnimTime);
+        // スケルトンの更新
         SkeletonUpdate(skeleton);
         SkinClusterUpdate(skinCluster, skeleton);  // スキニング処理を有効化
         
