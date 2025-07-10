@@ -194,12 +194,6 @@
     <ClCompile Include="src\Engine\Animation\AnimatedHumanController.cpp">
       <Filter>src\engine\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Audio\SpatialAudioListener.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Engine\Audio\SpatialAudioSource.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Animation\AnimatedModel.cpp">
       <Filter>src\engine\Animation</Filter>
     </ClCompile>
@@ -214,6 +208,12 @@
     </ClCompile>
     <ClCompile Include="src\Engine\Resource\ResourcePreloader.cpp">
       <Filter>src\engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\SpatialAudioListener.cpp">
+      <Filter>src\engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\SpatialAudioSource.cpp">
+      <Filter>src\engine\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -379,8 +379,6 @@
     <ClInclude Include="src\Engine\Animation\AnimatedHumanController.h">
       <Filter>src\engine\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Audio\SpatialAudioListener.h" />
-    <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h" />
     <ClInclude Include="src\Engine\Animation\AnimatedModel.h">
       <Filter>src\engine\Animation</Filter>
     </ClInclude>
@@ -398,6 +396,12 @@
     </ClInclude>
     <ClInclude Include="src\Engine\Resource\ResourcePreloader.h">
       <Filter>src\engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\SpatialAudioListener.h">
+      <Filter>src\engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h">
+      <Filter>src\engine\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

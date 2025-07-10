@@ -35,6 +35,6 @@ protected:
     bool enableAnimation_ = true;
     
     // 移動速度
-    const float moveSpeed_ = 0.1f;
+    const float moveSpeed_ = 0.01f;
     const float humanSpeed_ = 0.05f;
 };
