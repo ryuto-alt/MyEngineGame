@@ -54,7 +54,7 @@ void GamePlayScene::Update() {
 		humanObject3d_->SetPosition(Vector3{ 0.0f, 0.0f, 0.0f });
 		humanObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
 		humanObject3d_->SetColor(Vector4{ 1.0f, 1.0f, 1.0f, 1.0f });
-		humanObject3d_->SetRotation(Vector3{ 0.0f,0.0f,0.0f });
+		humanObject3d_->SetRotation(Vector3{ 0.0f,3.14f,0.0f });
 		humanObject3d_->SetEnableLighting(true);
 		humanObject3d_->SetEnableAnimation(true);
 		humanObject3d_->SetCamera(camera_);
