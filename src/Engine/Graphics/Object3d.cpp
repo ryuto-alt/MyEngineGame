@@ -195,7 +195,7 @@ void Object3d::Update() {
         // アニメーションが無効またはデータが存在しない場合
         static int noAnimCount = 0;
         if (noAnimCount % 60 == 0) {
-            OutputDebugStringA(("Object3d::Update - Animation disabled for basic rendering\n"));
+           // OutputDebugStringA(("Object3d::Update - Animation disabled for basic rendering\n"));
         }
         noAnimCount++;
     }
@@ -203,7 +203,7 @@ void Object3d::Update() {
     // カメラが設定されている場合のみ処理
     if (!camera_) {
         // カメラが設定されていない場合は何もしない
-        OutputDebugStringA("Object3d::Update - Camera is null, skipping matrix update\n");
+        //OutputDebugStringA("Object3d::Update - Camera is null, skipping matrix update\n");
         return;
     }
 
@@ -357,7 +357,7 @@ void Object3d::SkeletonUpdate(Skeleton& skeleton)
 void Object3d::ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime)
 {
     static int applyCount = 0;
-    bool shouldDebug = (applyCount % 60 == 0);
+    bool shouldDebug = (applyCount % 300 == 0); // 5秒ごとに出力
     applyCount++;
     
     for (Joint& joint : skeleton.joints) {
@@ -374,7 +374,11 @@ void Object3d::ApplyAnimation(Skeleton& skeleton, const Animation& animation, fl
                 OutputDebugStringA(("ApplyAnimation - Joint: " + joint.name + 
                                    ", translate: (" + std::to_string(joint.transform.translate.x) + 
                                    ", " + std::to_string(joint.transform.translate.y) + 
-                                   ", " + std::to_string(joint.transform.translate.z) + ")\n").c_str());
+                                   ", " + std::to_string(joint.transform.translate.z) + ")" +
+                                   ", rotate: (" + std::to_string(joint.transform.rotate.x) + 
+                                   ", " + std::to_string(joint.transform.rotate.y) + 
+                                   ", " + std::to_string(joint.transform.rotate.z) + 
+                                   ", " + std::to_string(joint.transform.rotate.w) + ")\n").c_str());
             }
         }
     }

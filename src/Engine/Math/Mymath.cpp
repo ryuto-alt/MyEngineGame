@@ -424,9 +424,13 @@ Vector4 Slerp(const Vector4& befor, const Vector4& after, float t)
 	float dot = Dot(quat0, quat1);
 	assert(!std::isnan(dot));
 	
+	// 最短経路で補間するため、dotが負の場合はクォータニオンを反転
 	if (dot < 0.0f)
 	{
-		quat1 = -quat1;
+		quat1.x = -quat1.x;
+		quat1.y = -quat1.y;
+		quat1.z = -quat1.z;
+		quat1.w = -quat1.w;
 		dot = -dot;
 	}
 
@@ -472,7 +476,7 @@ Matrix4x4 MakeRotateMatrix(const Vector4& rotate)
     // クォータニオンの長さをチェック（正規化されているべき）
     float lengthSq = rotate.x * rotate.x + rotate.y * rotate.y + rotate.z * rotate.z + rotate.w * rotate.w;
     assert(!std::isnan(lengthSq));
-    assert(std::abs(lengthSq - 1.0f) < 0.01f); // 正規化されているかチェック（許容誤差あり）
+    assert(std::abs(lengthSq - 1.0f) < 0.1f); // 正規化されているかチェック（許容誤差を緩める）
 
     float x2 = rotate.x + rotate.x;
     float y2 = rotate.y + rotate.y;

@@ -178,24 +178,24 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
         
         NodeAnimation& nodeAnimation = animation.nodeAnimations[nodeName];
         
-        // 位置キーフレーム（右手座標系→左手座標系：Z座標を反転）
+        // 位置キーフレーム（右手座標系→左手座標系：X座標を反転）
         for (unsigned int j = 0; j < nodeAnim->mNumPositionKeys; j++) {
             const aiVectorKey& key = nodeAnim->mPositionKeys[j];
             KeyframeVector3 keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
-            keyframe.value = {key.mValue.x, key.mValue.y, -key.mValue.z};  // Z座標を反転
+            keyframe.value = {-key.mValue.x, key.mValue.y, key.mValue.z};  // X座標を反転（SoraEngine-Skinning方式）
             nodeAnimation.translate.push_back(keyframe);
         }
         
-        // 回転キーフレーム（右手座標系→左手座標系：クォータニオンの共役を取る）
+        // 回転キーフレーム（右手座標系→左手座標系）
         for (unsigned int j = 0; j < nodeAnim->mNumRotationKeys; j++) {
             const aiQuatKey& key = nodeAnim->mRotationKeys[j];
             KeyframeQuaternion keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
             
-            // 右手座標系から左手座標系への変換：
-            // 座標系変換のためクォータニオンの共役を取る（x,y,z成分の符号を反転）
-            keyframe.value = {-key.mValue.x, -key.mValue.y, -key.mValue.z, key.mValue.w};
+            // 右手座標系から左手座標系への変換（SoraEngine-Skinning方式）
+            // Y,Z成分を反転
+            keyframe.value = {key.mValue.x, -key.mValue.y, -key.mValue.z, key.mValue.w};
             nodeAnimation.rotate.push_back(keyframe);
         }
         

@@ -140,8 +140,8 @@ Node AnimatedModel::ReadNode(aiNode* node)
 
     node->mTransformation.Decompose(scale, rotation, translate);
     result.transform.scale = { scale.x, scale.y, scale.z };
-    result.transform.rotate = { rotation.x, -rotation.y, -rotation.z, rotation.w };
-    result.transform.translate = { translate.x, translate.y, translate.z };
+    result.transform.rotate = { rotation.x, -rotation.y, -rotation.z, rotation.w };  // Y,Z成分を反転（SoraEngine-Skinning方式）
+    result.transform.translate = { -translate.x, translate.y, translate.z };  // X座標を反転（SoraEngine-Skinning方式）
     result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
     result.name = node->mName.C_Str();
     result.children.resize(node->mNumChildren);
@@ -320,20 +320,20 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
         VertexData& vertex = indexedVertices[i];
         
-        // 位置（右手座標系→左手座標系：Z座標を反転）
+        // 位置（右手座標系→左手座標系：X座標を反転）
         vertex.position = {
-            mesh->mVertices[i].x,
+            -mesh->mVertices[i].x,  // X座標を反転（SoraEngine-Skinning方式）
             mesh->mVertices[i].y,
-            -mesh->mVertices[i].z,  // Z座標を反転
+            mesh->mVertices[i].z,
             1.0f
         };
         
-        // 法線（右手座標系→左手座標系：Z成分を反転）
+        // 法線（右手座標系→左手座標系：X成分を反転）
         if (mesh->HasNormals()) {
             vertex.normal = {
-                mesh->mNormals[i].x,
+                -mesh->mNormals[i].x,  // X成分を反転（SoraEngine-Skinning方式）
                 mesh->mNormals[i].y,
-                -mesh->mNormals[i].z  // Z成分を反転
+                mesh->mNormals[i].z
             };
         } else {
             vertex.normal = {0.0f, 1.0f, 0.0f};
@@ -359,8 +359,8 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
             continue;
         }
         
-        // DirectX用にワインディングオーダーを反転（0, 2, 1の順序）
-        unsigned int indices[3] = { face.mIndices[0], face.mIndices[2], face.mIndices[1] };
+        // X軸反転によりワインディングオーダーはそのまま（0, 1, 2の順序）
+        unsigned int indices[3] = { face.mIndices[0], face.mIndices[1], face.mIndices[2] };
         
         for (int i = 0; i < 3; i++) {
             unsigned int vertexIndex = indices[i];
@@ -381,21 +381,22 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         // InverseBindPose行列を取得（assimpのOffsetMatrixがInverseBindPose）
         aiMatrix4x4 offsetMatrix = bone->mOffsetMatrix;
         
-        // aiMatrix4x4からMatrix4x4への変換（右手座標系→左手座標系）
-        for (int row = 0; row < 4; row++) {
-            for (int col = 0; col < 4; col++) {
-                jointWeightData.inverseBindPoseMatrix.m[row][col] = offsetMatrix[row][col];
-            }
-        }
+        // SoraEngine-Skinning方式の座標系変換を使用
+        // InverseBindPose行列を分解して、各成分を変換してから再構築
+        aiMatrix4x4 bindPoseMatrix = offsetMatrix.Inverse();
+        aiVector3D scale, translate;
+        aiQuaternion rotation;
+        bindPoseMatrix.Decompose(scale, rotation, translate);
         
-        // 右手座標系から左手座標系への変換
-        // 位置成分（行列の第4列）のZ座標を反転
-        jointWeightData.inverseBindPoseMatrix.m[2][3] = -jointWeightData.inverseBindPoseMatrix.m[2][3];
-        // Z軸に関する成分を反転
-        jointWeightData.inverseBindPoseMatrix.m[0][2] = -jointWeightData.inverseBindPoseMatrix.m[0][2];
-        jointWeightData.inverseBindPoseMatrix.m[1][2] = -jointWeightData.inverseBindPoseMatrix.m[1][2];
-        jointWeightData.inverseBindPoseMatrix.m[2][0] = -jointWeightData.inverseBindPoseMatrix.m[2][0];
-        jointWeightData.inverseBindPoseMatrix.m[2][1] = -jointWeightData.inverseBindPoseMatrix.m[2][1];
+        // 右手座標系から左手座標系への変換（SoraEngine-Skinning方式）
+        Matrix4x4 bindPoseMatrixConverted = MakeAffineMatrix(
+            { scale.x, scale.y, scale.z },                              // スケール
+            { rotation.x, -rotation.y, -rotation.z, rotation.w },       // 回転（Y,Z成分を反転）
+            { -translate.x, translate.y, translate.z }                  // 位置（X座標を反転）
+        );
+        
+        // 逆バインドポーズ行列を格納
+        jointWeightData.inverseBindPoseMatrix = Inverse(bindPoseMatrixConverted);
         
         // 頂点ウェイト情報を格納
         for (unsigned int weightIndex = 0; weightIndex < bone->mNumWeights; weightIndex++) {
@@ -489,25 +490,24 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
         
         NodeAnimation& nodeAnimation = animation_.nodeAnimations[nodeName];
         
-        // 位置キーフレーム（右手座標系→左手座標系：Z座標を反転）
+        // 位置キーフレーム（右手座標系→左手座標系：X座標を反転）
         for (unsigned int j = 0; j < nodeAnim->mNumPositionKeys; j++) {
             const aiVectorKey& key = nodeAnim->mPositionKeys[j];
             KeyframeVector3 keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
-            keyframe.value = {key.mValue.x, key.mValue.y, -key.mValue.z};  // Z座標を反転
+            keyframe.value = {-key.mValue.x, key.mValue.y, key.mValue.z};  // X座標を反転（SoraEngine-Skinning方式）
             nodeAnimation.translate.push_back(keyframe);
         }
         
-        // 回転キーフレーム（右手座標系→左手座標系：クォータニオンの共役を取る）
+        // 回転キーフレーム（右手座標系→左手座標系）
         for (unsigned int j = 0; j < nodeAnim->mNumRotationKeys; j++) {
             const aiQuatKey& key = nodeAnim->mRotationKeys[j];
             KeyframeQuaternion keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
             
-            // 右手座標系から左手座標系への変換：
-            // 座標系変換のためクォータニオンの共役を取る（x,y,z成分の符号を反転）
-            // これにより回転方向が適切に変換される
-            keyframe.value = {-key.mValue.x, -key.mValue.y, -key.mValue.z, key.mValue.w};
+            // 右手座標系から左手座標系への変換（SoraEngine-Skinning方式）
+            // Y,Z成分を反転
+            keyframe.value = {key.mValue.x, -key.mValue.y, -key.mValue.z, key.mValue.w};
             nodeAnimation.rotate.push_back(keyframe);
         }
         
