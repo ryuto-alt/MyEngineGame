@@ -438,7 +438,7 @@ Vector4 Slerp(const Vector4& start, const Vector4& end, float t)
 
 Matrix4x4 MakeRotateMatrix(const Vector4& rotate)
 {
-    // SoraEngineのMakeRotationMatrixからの実装
+
     float x2 = rotate.x + rotate.x;
     float y2 = rotate.y + rotate.y;
     float z2 = rotate.z + rotate.z;

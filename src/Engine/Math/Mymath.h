@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include <map>
 
 //float Cot(float theta);
 
@@ -73,8 +74,19 @@ struct MaterialData {
     float alpha = 1.0f;                          // 透明度(d)
 };
 
+// ボーンウェイト構造体
+struct VertexWeightData {
+    float weight;
+    uint32_t vectorIndex;
+};
+
+struct JointWeightData {
+    Matrix4x4 inverseBindPoseMatrix;
+    std::vector<VertexWeightData> vertexWeights;
+};
+
 struct ModelData {
     std::vector<VertexData>vertices;
     MaterialData material;
-    // Node rootNode;              // ルートノード（アニメーション用）
+    std::map<std::string, JointWeightData> skinClusterData;  // ボーンウェイト情報
 };

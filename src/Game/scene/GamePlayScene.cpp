@@ -28,14 +28,27 @@ void GamePlayScene::Initialize() {
 	humanAnimatedModel_->Initialize(dxCommon_);
 	humanAnimatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
 	humanAnimatedModel_->PlayAnimation();
-
+	
+	// デバッグ：アニメーションが読み込まれたか確認
+	const Animation& anim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
+	OutputDebugStringA(("GamePlayScene: Animation loaded - duration: " + std::to_string(anim.duration) + 
+	                    " seconds, nodeAnimations: " + std::to_string(anim.nodeAnimations.size()) + "\n").c_str());
+	for (const auto& nodeAnim : anim.nodeAnimations) {
+		OutputDebugStringA(("  Node: " + nodeAnim.first + 
+		                    " - translate keys: " + std::to_string(nodeAnim.second.translate.size()) +
+		                    ", rotate keys: " + std::to_string(nodeAnim.second.rotate.size()) +
+		                    ", scale keys: " + std::to_string(nodeAnim.second.scale.size()) + "\n").c_str());
+	}
 
 	humanObject3d_ = engine_->CreateObject3D();
 	humanObject3d_->SetModel(static_cast<Model*>(humanAnimatedModel_.get()));
+	humanObject3d_->SetAnimatedModel(humanAnimatedModel_.get());
 	humanObject3d_->SetPosition(Vector3{ 0.0f, 0.0f, 0.0f });
 	humanObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
 	humanObject3d_->SetColor(Vector4{ 1.0f, 1.0f, 1.0f, 1.0f });
 	humanObject3d_->SetEnableLighting(true);
+	humanObject3d_->SetEnableAnimation(true);
+	humanObject3d_->SetCamera(camera_);
 
 	// 初期化完了
 	initialized_ = true;
@@ -60,7 +73,7 @@ void GamePlayScene::Update() {
 	engine_->SetCameraPosition(currentPos);
 
 
-	if (humanObject3d_) {
+	if (humanObject3d_ && humanAnimatedModel_) {
 		Vector3 humanPos = humanObject3d_->GetPosition();
 		if (engine_->IsKeyPressed(DIK_UP)) humanPos.z += humanSpeed_;
 		if (engine_->IsKeyPressed(DIK_DOWN)) humanPos.z -= humanSpeed_;
@@ -71,38 +84,22 @@ void GamePlayScene::Update() {
 		// アニメーション制御
 		if (engine_->IsKeyTriggered(DIK_P)) {
 			animationPaused_ = !animationPaused_;
+			humanObject3d_->SetEnableAnimation(!animationPaused_);
+			if (animationPaused_) {
+				humanAnimatedModel_->PauseAnimation();
+			} else {
+				humanAnimatedModel_->PlayAnimation();
+			}
 		}
 		if (engine_->IsKeyTriggered(DIK_R)) {
-			animationTime_ = 0.0f;
+			humanObject3d_->SetAnimationTime(0.0f);
 		}
-	}
-
-
-	if (humanAnimatedModel_ && enableAnimation_ && !animationPaused_) {
-		// AnimatedModelの更新
+		
+		// アニメーションモデルの更新（deltaTime = 1/60秒）
 		humanAnimatedModel_->Update(1.0f / 60.0f);
 		
-		// アニメーション時間の更新
-		animationTime_ += 1.0f / 60.0f;
-		if (humanAnimatedModel_->GetAnimationPlayer().GetDuration() > 0.0f) {
-			animationTime_ = std::fmod(animationTime_, humanAnimatedModel_->GetAnimationPlayer().GetDuration());
-		}
-
-
-		if (humanObject3d_) {
-			Animation& animation = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
-			Skeleton& skeleton = humanAnimatedModel_->GetSkeleton();
-			SkinCluster& skinCluster = humanAnimatedModel_->GetSkinCluster();
-			
-			if (animation.nodeAnimations.size() > 0) {
-				humanObject3d_->ApplyAnimation(skeleton, animation, animationTime_);
-				humanObject3d_->SkeletonUpdate(skeleton);
-				humanObject3d_->SkinClusterUpdate(skinCluster, skeleton);
-			}
-			
-			// Object3dの更新
-			humanObject3d_->Update();
-		}
+		// Object3dの更新
+		humanObject3d_->Update();
 	}
 
 	// カメラの更新
@@ -140,9 +137,8 @@ void GamePlayScene::Draw() {
 		ImGui::Separator();
 		Vector3 humanPos = humanObject3d_->GetPosition();
 		ImGui::Text("ヒューマン位置: (%.1f, %.1f, %.1f)", humanPos.x, humanPos.y, humanPos.z);
-		ImGui::Text("アニメーション時間: %.2f秒", animationTime_);
-		ImGui::Text("アニメーション状態: %s", animationPaused_ ? "一時停止" : "再生中");
-		ImGui::Text("アニメーション有効: %s", enableAnimation_ ? "有効" : "無効");
+		ImGui::Text("アニメーション時間: %.2f秒", humanObject3d_->GetAnimationTime());
+		ImGui::Text("アニメーション状態: %s", humanObject3d_->GetEnableAnimation() ? "再生中" : "停止");
 	}
 
 	if (humanAnimatedModel_) {

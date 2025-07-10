@@ -1,5 +1,6 @@
 #include "AnimatedModel.h"
 #include "Mymath.h"
+#include "UnoEngine.h"
 #include <algorithm>
 #include <cctype>
 
@@ -192,9 +193,23 @@ SkinCluster AnimatedModel::CreateSkinCluster()
     skinCluster.paletteResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedPalette));
     skinCluster.mappedPalette = { mappedPalette, skeleton_.joints.size() };
     
-    // SRVを作成（簡易実装）
-    skinCluster.paletteSrvHandle.first = {};
-    skinCluster.paletteSrvHandle.second = {};
+    // SRVを作成
+    // UnoEngineのSrvManagerを使用
+    UnoEngine* engine = UnoEngine::GetInstance();
+    if (engine && engine->GetSrvManager()) {
+        SrvManager* srvManager = engine->GetSrvManager();
+        uint32_t srvIndex = srvManager->Allocate();
+        srvManager->CreateSRVForStructuredBuffer(srvIndex, skinCluster.paletteResource, 
+                                                  static_cast<UINT>(skeleton_.joints.size()), sizeof(WellForGPU));
+        skinCluster.paletteSrvHandle.first = srvManager->GetCPUDescriptorHandle(srvIndex);
+        skinCluster.paletteSrvHandle.second = srvManager->GetGPUDescriptorHandle(srvIndex);
+        
+        OutputDebugStringA(("AnimatedModel: Created palette SRV at index " + std::to_string(srvIndex) + "\n").c_str());
+    } else {
+        OutputDebugStringA("AnimatedModel: WARNING - Could not access SrvManager\n");
+        skinCluster.paletteSrvHandle.first = {};
+        skinCluster.paletteSrvHandle.second = {};
+    }
     
     // Influence用のリソースを作成
     const ModelData& modelData = GetModelData();
@@ -212,6 +227,59 @@ SkinCluster AnimatedModel::CreateSkinCluster()
     // InverseBindPoseMatrixを格納する場所を作成して、単位行列で埋める
     skinCluster.inverseBindPoseMatrices.resize(skeleton_.joints.size());
     std::generate(skinCluster.inverseBindPoseMatrices.begin(), skinCluster.inverseBindPoseMatrices.end(), [] { return MakeIdentity4x4(); });
+    
+    // ボーンウェイト情報をインフルエンスデータに設定
+    for (const auto& jointWeight : modelData.skinClusterData) {
+        auto it = skeleton_.jointMap.find(jointWeight.first);
+        if (it == skeleton_.jointMap.end()) {
+            continue; // このジョイントがスケルトンに存在しない場合はスキップ
+        }
+        
+        // InverseBindPoseMatrixを設定
+        skinCluster.inverseBindPoseMatrices[it->second] = jointWeight.second.inverseBindPoseMatrix;
+        
+        // 各頂点のウェイト情報を設定
+        for (const auto& vertexWeight : jointWeight.second.vertexWeights) {
+            if (vertexWeight.vectorIndex >= modelData.vertices.size()) {
+                continue; // 無効なインデックスはスキップ
+            }
+            
+            auto& currentInfluence = skinCluster.mappedInfluence[vertexWeight.vectorIndex];
+            
+            // 空いているスロットにウェイトとジョイントインデックスを設定
+            for (uint32_t index = 0; index < kNumMaxInfluence; ++index) {
+                if (currentInfluence.weights[index] == 0.0f) {
+                    currentInfluence.weights[index] = vertexWeight.weight;
+                    currentInfluence.jointIndices[index] = it->second;
+                    break;
+                }
+            }
+        }
+    }
+    
+    // ウェイトの正規化（合計が1になるように）
+    for (size_t i = 0; i < modelData.vertices.size(); ++i) {
+        auto& influence = skinCluster.mappedInfluence[i];
+        float totalWeight = 0.0f;
+        
+        // 合計ウェイトを計算
+        for (uint32_t j = 0; j < kNumMaxInfluence; ++j) {
+            totalWeight += influence.weights[j];
+        }
+        
+        // 正規化
+        if (totalWeight > 0.0f) {
+            for (uint32_t j = 0; j < kNumMaxInfluence; ++j) {
+                influence.weights[j] /= totalWeight;
+            }
+        } else {
+            // ウェイトが設定されていない頂点はルートジョイントに100%バインド
+            influence.weights[0] = 1.0f;
+            influence.jointIndices[0] = 0;
+        }
+    }
+    
+    OutputDebugStringA(("AnimatedModel: Created SkinCluster with " + std::to_string(skeleton_.joints.size()) + " joints\n").c_str());
     
     return skinCluster;
 }
@@ -247,6 +315,41 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
     
     OutputDebugStringA(("AnimatedModel: Processing mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces\n").c_str());
     
+    // まず頂点データを頂点インデックス順に格納（ボーンウェイトの参照用）
+    std::vector<VertexData> indexedVertices(mesh->mNumVertices);
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
+        VertexData& vertex = indexedVertices[i];
+        
+        // 位置（右手座標系→左手座標系：Z座標を反転）
+        vertex.position = {
+            mesh->mVertices[i].x,
+            mesh->mVertices[i].y,
+            -mesh->mVertices[i].z,  // Z座標を反転
+            1.0f
+        };
+        
+        // 法線（右手座標系→左手座標系：Z成分を反転）
+        if (mesh->HasNormals()) {
+            vertex.normal = {
+                mesh->mNormals[i].x,
+                mesh->mNormals[i].y,
+                -mesh->mNormals[i].z  // Z成分を反転
+            };
+        } else {
+            vertex.normal = {0.0f, 1.0f, 0.0f};
+        }
+        
+        // テクスチャ座標（最初のセットのみ）
+        if (mesh->mTextureCoords[0]) {
+            vertex.texcoord = {
+                mesh->mTextureCoords[0][i].x,
+                mesh->mTextureCoords[0][i].y
+            };
+        } else {
+            vertex.texcoord = {0.0f, 0.0f};
+        }
+    }
+    
     // インデックスを使用して三角形ごとに頂点を作成（DirectX用に座標変換も適用）
     for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++) {
         const aiFace& face = mesh->mFaces[faceIndex];
@@ -261,38 +364,59 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         
         for (int i = 0; i < 3; i++) {
             unsigned int vertexIndex = indices[i];
-            VertexData vertex{};
-            
-            // 位置（右手座標系→左手座標系：Z座標を反転）
-            vertex.position = {
-                mesh->mVertices[vertexIndex].x,
-                mesh->mVertices[vertexIndex].y,
-                -mesh->mVertices[vertexIndex].z,  // Z座標を反転
-                1.0f
-            };
-            
-            // 法線（右手座標系→左手座標系：Z成分を反転）
-            if (mesh->HasNormals()) {
-                vertex.normal = {
-                    mesh->mNormals[vertexIndex].x,
-                    mesh->mNormals[vertexIndex].y,
-                    -mesh->mNormals[vertexIndex].z  // Z成分を反転
-                };
-            } else {
-                vertex.normal = {0.0f, 1.0f, 0.0f};
+            modelData.vertices.push_back(indexedVertices[vertexIndex]);
+        }
+    }
+    
+    // ボーン情報の処理
+    OutputDebugStringA(("AnimatedModel: Processing " + std::to_string(mesh->mNumBones) + " bones\n").c_str());
+    
+    for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++) {
+        aiBone* bone = mesh->mBones[boneIndex];
+        std::string jointName = bone->mName.C_Str();
+        JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
+        
+        OutputDebugStringA(("AnimatedModel: Processing bone: " + jointName + " with " + std::to_string(bone->mNumWeights) + " weights\n").c_str());
+        
+        // InverseBindPose行列を取得（assimpのOffsetMatrixがInverseBindPose）
+        aiMatrix4x4 offsetMatrix = bone->mOffsetMatrix;
+        
+        // aiMatrix4x4からMatrix4x4への変換（右手座標系→左手座標系）
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 4; col++) {
+                jointWeightData.inverseBindPoseMatrix.m[row][col] = offsetMatrix[row][col];
             }
+        }
+        
+        // 右手座標系から左手座標系への変換
+        // 位置成分（行列の第4列）のZ座標を反転
+        jointWeightData.inverseBindPoseMatrix.m[2][3] = -jointWeightData.inverseBindPoseMatrix.m[2][3];
+        // Z軸に関する成分を反転
+        jointWeightData.inverseBindPoseMatrix.m[0][2] = -jointWeightData.inverseBindPoseMatrix.m[0][2];
+        jointWeightData.inverseBindPoseMatrix.m[1][2] = -jointWeightData.inverseBindPoseMatrix.m[1][2];
+        jointWeightData.inverseBindPoseMatrix.m[2][0] = -jointWeightData.inverseBindPoseMatrix.m[2][0];
+        jointWeightData.inverseBindPoseMatrix.m[2][1] = -jointWeightData.inverseBindPoseMatrix.m[2][1];
+        
+        // 頂点ウェイト情報を格納
+        for (unsigned int weightIndex = 0; weightIndex < bone->mNumWeights; weightIndex++) {
+            const aiVertexWeight& weight = bone->mWeights[weightIndex];
             
-            // テクスチャ座標（最初のセットのみ）
-            if (mesh->mTextureCoords[0]) {
-                vertex.texcoord = {
-                    mesh->mTextureCoords[0][vertexIndex].x,
-                    mesh->mTextureCoords[0][vertexIndex].y
-                };
-            } else {
-                vertex.texcoord = {0.0f, 0.0f};
+            // 元の頂点インデックスから実際の頂点配列でのインデックスを探す
+            // 各面で頂点が複製されているため、元のインデックスを持つすべての頂点を探す
+            for (unsigned int faceIndex = 0; faceIndex < mesh->mNumFaces; faceIndex++) {
+                const aiFace& face = mesh->mFaces[faceIndex];
+                unsigned int indices[3] = { face.mIndices[0], face.mIndices[2], face.mIndices[1] };
+                
+                for (int i = 0; i < 3; i++) {
+                    if (indices[i] == weight.mVertexId) {
+                        // この頂点は modelData.vertices の (faceIndex * 3 + i) 番目に格納されている
+                        VertexWeightData vwd;
+                        vwd.weight = weight.mWeight;
+                        vwd.vectorIndex = faceIndex * 3 + i;
+                        jointWeightData.vertexWeights.push_back(vwd);
+                    }
+                }
             }
-            
-            modelData.vertices.push_back(vertex);
         }
     }
     

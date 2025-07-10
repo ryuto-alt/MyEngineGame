@@ -5,6 +5,8 @@
 #include "Mymath.h"
 #include "TextureManager.h"
 #include "Animation.h"
+#include "AnimatedModel.h"
+#include "UnoEngine.h"
 
 
 Object3d::Object3d() : model_(nullptr), dxCommon_(nullptr), spriteCommon_(nullptr),
@@ -152,9 +154,55 @@ Camera* Object3d::GetCamera() const {
 void Object3d::Update() {
     assert(transformationMatrixData_);
 
+    // アニメーション処理を段階的に有効化
+    if (enableAnimation_ && animatedModel_ && animatedModel_->GetAnimationPlayer().GetAnimation().nodeAnimations.size() > 0) {
+        // アニメーションが有効で、アニメーションデータが存在する場合のみ実行
+        OutputDebugStringA("Object3d::Update - Animation processing enabled\n");
+        Animation& animation = animatedModel_->GetAnimationPlayer().GetAnimation();
+        Skeleton& skeleton = animatedModel_->GetSkeleton();
+        SkinCluster& skinCluster = animatedModel_->GetSkinCluster();
+        
+        // デバッグ出力
+        static int frameCount = 0;
+        if (frameCount % 60 == 0) {
+            OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(animationTime_) + 
+                               ", Duration: " + std::to_string(animation.duration) + 
+                               ", Joints: " + std::to_string(skeleton.joints.size()) + 
+                               ", NodeAnimations: " + std::to_string(animation.nodeAnimations.size()) + "\n").c_str());
+        }
+        frameCount++;
+        
+        ApplyAnimation(skeleton, animation, animationTime_);
+        SkeletonUpdate(skeleton);
+        SkinClusterUpdate(skinCluster, skeleton);  // スキニング処理を有効化
+        
+        // デバッグ：最初のジョイントの変換を確認
+        if (skeleton.joints.size() > 0 && frameCount % 60 == 0) {
+            const Joint& firstJoint = skeleton.joints[0];
+            OutputDebugStringA(("Object3d::Update - First joint transform: " + firstJoint.name + 
+                               " pos:(" + std::to_string(firstJoint.transform.translate.x) + "," +
+                               std::to_string(firstJoint.transform.translate.y) + "," +
+                               std::to_string(firstJoint.transform.translate.z) + ")\n").c_str());
+        }
+        
+        // アニメーション行列は単位行列のままにする（スキニングで頂点変換するため）
+        animationMatrix_ = MakeIdentity4x4();
+        
+        animationTime_ += 1.0f / 60.0f;
+        animationTime_ = std::fmod(animationTime_, animation.duration);
+    } else {
+        // アニメーションが無効またはデータが存在しない場合
+        static int noAnimCount = 0;
+        if (noAnimCount % 60 == 0) {
+            OutputDebugStringA(("Object3d::Update - Animation disabled for basic rendering\n"));
+        }
+        noAnimCount++;
+    }
+
     // カメラが設定されている場合のみ処理
     if (!camera_) {
         // カメラが設定されていない場合は何もしない
+        OutputDebugStringA("Object3d::Update - Camera is null, skipping matrix update\n");
         return;
     }
 
@@ -178,11 +226,36 @@ void Object3d::Draw() {
     assert(dxCommon_);
     assert(model_);
 
-    // 共通描画設定
-    spriteCommon_->CommonDraw();
+    // SRVディスクリプタヒープの設定（重要！）
+    // 現在はSpriteCommon経由で設定済みなので、追加の設定は不要
+    // TODO: 将来的にはSrvManagerを直接参照できるようにする
 
-    // モデルの頂点バッファをセット
-    dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &model_->GetVBView());
+    // パイプラインの設定
+    if (enableAnimation_ && animatedModel_) {
+        // スキニング用パイプラインを使用
+        dxCommon_->GetCommandList()->SetGraphicsRootSignature(spriteCommon_->GetRootSignature().Get());
+        dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetSkinningPipelineState().Get());
+        dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    } else {
+        // 通常の描画設定
+        spriteCommon_->CommonDraw();
+    }
+
+    // アニメーションモデルの場合、頂点バッファとインフルエンスバッファを設定
+    if (enableAnimation_ && animatedModel_) {
+        AnimatedModel* animModel = static_cast<AnimatedModel*>(animatedModel_);
+        const SkinCluster& skinCluster = animModel->GetSkinCluster();
+        
+        // 頂点バッファとインフルエンスバッファを設定
+        D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+            model_->GetVBView(),
+            skinCluster.influenceBufferView
+        };
+        dxCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
+    } else {
+        // 通常の頂点バッファのみセット
+        dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &model_->GetVBView());
+    }
 
     // マテリアルCBufferの場所を設定
     dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -238,6 +311,23 @@ void Object3d::Draw() {
     // ライトCBufferの場所を設定
     dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
+    // パレットSRVの設定（アニメーション用）
+    if (enableAnimation_ && animatedModel_) {
+        AnimatedModel* animModel = static_cast<AnimatedModel*>(animatedModel_);
+        const SkinCluster& skinCluster = animModel->GetSkinCluster();
+        
+        if (skinCluster.paletteSrvHandle.second.ptr != 0) {
+            dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster.paletteSrvHandle.second);
+        } else {
+            // パレットSRVが無効な場合は警告
+            OutputDebugStringA("Object3d::Draw - WARNING: Palette SRV is not set for animated model\n");
+        }
+    } else {
+        // 通常のオブジェクトの場合、ダミーのSRVを設定（必要に応じて）
+        // 現在のルートシグネチャではパレットSRVは必須なので、通常のオブジェクトでは問題になる
+        // この問題は後で対処
+    }
+
     // 描画
     dxCommon_->GetCommandList()->DrawInstanced(model_->GetVertexCount(), 1, 0, 0);
 }
@@ -265,6 +355,10 @@ void Object3d::SkeletonUpdate(Skeleton& skeleton)
 
 void Object3d::ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime)
 {
+    static int applyCount = 0;
+    bool shouldDebug = (applyCount % 60 == 0);
+    applyCount++;
+    
     for (Joint& joint : skeleton.joints) {
         // 対象のJointのAnimationがあれば、値の適用を行う。
         // 下記のif文はC++17から可能になった初期化付きif文。
@@ -274,6 +368,13 @@ void Object3d::ApplyAnimation(Skeleton& skeleton, const Animation& animation, fl
             joint.transform.translate = CalculateValue(nodeAnimation.translate, animationTime);
             joint.transform.rotate = CalculateValue(nodeAnimation.rotate, animationTime);
             joint.transform.scale = CalculateValue(nodeAnimation.scale, animationTime);
+            
+            if (shouldDebug) {
+                OutputDebugStringA(("ApplyAnimation - Joint: " + joint.name + 
+                                   ", translate: (" + std::to_string(joint.transform.translate.x) + 
+                                   ", " + std::to_string(joint.transform.translate.y) + 
+                                   ", " + std::to_string(joint.transform.translate.z) + ")\n").c_str());
+            }
         }
     }
 }
@@ -288,6 +389,19 @@ void Object3d::SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skele
         skinCluster.mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
             Transpose(Inverse(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
     }
+    
+    // デバッグ出力
+    static int debugCount = 0;
+    if (debugCount % 60 == 0) {
+        OutputDebugStringA(("SkinClusterUpdate - Updated " + std::to_string(skeleton.joints.size()) + " joint matrices\n").c_str());
+        if (skeleton.joints.size() > 0) {
+            OutputDebugStringA(("  First joint: " + skeleton.joints[0].name + 
+                               ", translate: (" + std::to_string(skeleton.joints[0].transform.translate.x) + 
+                               ", " + std::to_string(skeleton.joints[0].transform.translate.y) + 
+                               ", " + std::to_string(skeleton.joints[0].transform.translate.z) + ")\n").c_str());
+        }
+    }
+    debugCount++;
 }
 
 Vector3 Object3d::CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time)
@@ -328,4 +442,29 @@ Quaternion Object3d::CalculateValue(const std::vector<KeyframeQuaternion>& keyfr
     }
     //ここまで来た場合は一番後の時刻よりも後の時刻なので最後の値を返す
     return keyframes.back().value;
+}
+
+void Object3d::SetAnimatedModel(class AnimatedModel* animatedModel)
+{
+    animatedModel_ = animatedModel;
+}
+
+void Object3d::SetEnableAnimation(bool enable)
+{
+    enableAnimation_ = enable;
+}
+
+bool Object3d::GetEnableAnimation() const
+{
+    return enableAnimation_;
+}
+
+float Object3d::GetAnimationTime() const
+{
+    return animationTime_;
+}
+
+void Object3d::SetAnimationTime(float time)
+{
+    animationTime_ = time;
 }

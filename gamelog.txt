@@ -1,0 +1,1840 @@
+'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\CG2_00-01.exe' が読み込まれました。シンボルが読み込まれました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntdll.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\kernel32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\KernelBase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\user32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\win32u.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\gdi32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\gdi32full.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcp_win.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ucrtbase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ole32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\combase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\rpcrt4.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\imm32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3DCompiler_47.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dwmapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfreadwrite.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfplat.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\SHCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxgi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3D12.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dinput8.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\vcomp140d.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptsp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\advapi32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcrt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cfgmgr32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\sechost.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\dxcompiler.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\oleaut32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\bcryptprimitives.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\RTWorkQ.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\dxil.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\directxdatabasehelper.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\kernel.appcore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\InputHost.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\CoreMessaging.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\uxtheme.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptbase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msctf.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\TextInputFramework.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\CoreUIComponents.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\WinTypes.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3D12Core.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXGIDebug.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\d3d12SDKLayers.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvdlistx.dll' がアンロードされました
+Use Adapter:NVIDIA GeForce RTX 3060 Laptop GPU
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvldumdx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msasn1.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptnet.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\crypt32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\wldp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\drvstore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\devobj.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\wintrust.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\imagehlp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\rsaenh.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\bcrypt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvgpucomp64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\shell32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\NvMemMapStoragex.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\winmm.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\powrprof.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\umpdc.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvwgf2umx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\windows.storage.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\shlwapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\nvspcap64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\profapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntmarta.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+スレッド 0x73e0 はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvppex.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxilconv.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3DSCache.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\userenv.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\twinapi.appcore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxilconv.dll' がアンロードされました
+D3D12 MESSAGE: Device Debug Layer Startup Options: GPU-Based Validation is enabled (disabled by default). This results in new validation not possible during API calls on the CPU, by creating patched shaders that have validation added directly to the shader. However, it can slow things down a lot, especially for applications with numerous PSOs. Time to see the first render frame may take several minutes. [ INITIALIZATION MESSAGE #1016: CREATEDEVICE_DEBUG_LAYER_STARTUP_OPTIONS]
+FeatureLevel:12.2
+Complete create D3D12Device!!!
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\d3d11.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igd10iumd64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\apphelp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igd10um64xe.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ncrypt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntasn1.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ControlLib.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\setupapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\IntelControlLib.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igdgmm64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igc64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dcomp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\Microsoft.Internal.WarpPal.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+SrvManager initialized successfully
+TextureManager: Initialized successfully
+SrvManager: Allocated index 1
+SrvManager: Created SRV for Texture2D at index 1
+TextureManager::LoadDefaultTexture - Default white texture created in memory successfully
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\XInput1_4.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\hid.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\XAudio2_9.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\MMDevAPI.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\avrt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\clbcatq.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\AudioSes.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+Begin CompileShader,path:Resources/Shaders/Object3D.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/Shaders/Object3D.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
+Begin CompileShader,path:Resources/Shaders/Particle.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/Shaders/Particle.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/Shaders/Particle.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/Shaders/Particle.PS.hlsl,profile:ps_6_0
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\WindowsCodecs.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+SrvManager: Allocated index 2
+SrvManager: Created SRV for Texture2D at index 2
+TextureManager::LoadTexture - Successfully loaded: Resources/particle/smoke.png
+TextureManager::LoadTexture - SRV index: 2
+SrvManager: Allocated index 3
+SrvManager: Created SRV for StructuredBuffer at index 3
+ParticleManager: Created particle group - smoke
+Particle3DManager: Initialized successfully
+Model: Loading OBJ file: Resources/particle/effect.obj
+Model: Found MTL reference: effect.mtl
+Model: Successfully opened MTL file - Resources/particle/effect.mtl
+MTL Parser: Found texture reference: C:/Users/k023g/source/repos/CG4/CG4_Repository/DirectXGame/Resources/white1x1.png
+MTL Parser: Full texture path constructed: Resources/particle/C:/Users/k023g/source/repos/CG4/CG4_Repository/DirectXGame/Resources/white1x1.png
+Model: Texture path from MTL: Resources/particle/C:/Users/k023g/source/repos/CG4/CG4_Repository/DirectXGame/Resources/white1x1.png
+WARNING: Texture file not found at: Resources/particle/C:/Users/k023g/source/repos/CG4/CG4_Repository/DirectXGame/Resources/white1x1.png
+Model: Trying alternative path: Resources/textures/white1x1.png
+Model: Trying alternative path: Resources/particle/white1x1.png
+Model: Trying alternative path: Resources/white1x1.png
+Model: Trying alternative path: Resources/models/white1x1.png
+WARNING: Texture file not found in any location. Clearing texture path.
+Model: Loaded 6 vertices from effect.obj
+Particle3DManager: Model loaded successfully - effect.obj
+Particle3DManager: Created 3D particle group - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+Particle3DManager: Group already exists - HitEffect
+SceneManager initialized successfully
+SceneManager: Scene change requested to Title
+スレッド 0x111c はコード 0 (0x0) で終了しました。
+SceneManager: Changing scene to Title
+Model: Loading OBJ file: Resources/models/sphere.obj
+Model: Found MTL reference: sphere.mtl
+Model: Successfully opened MTL file - Resources/models/sphere.mtl
+MTL Parser: Found texture reference: GitHub/CG2/Resources/kao.png
+MTL Parser: Full texture path constructed: Resources/models/GitHub/CG2/Resources/kao.png
+Model: Texture path from MTL: Resources/models/GitHub/CG2/Resources/kao.png
+WARNING: Texture file not found at: Resources/models/GitHub/CG2/Resources/kao.png
+Model: Trying alternative path: Resources/textures/kao.png
+Model: Trying alternative path: Resources/models/kao.png
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\PhotoMetadataHandler.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\propsys.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+SrvManager: Allocated index 4
+SrvManager: Created SRV for Texture2D at index 4
+TextureManager::LoadTexture - Successfully loaded: Resources/models/kao.png
+TextureManager::LoadTexture - SRV index: 4
+Model: Texture found and loaded from: Resources/models/kao.png
+Model: Loaded 2880 vertices from sphere.obj
+Object3d::SetModel - Called
+Object3d::SetModel - model_ is not null
+Object3d::SetModel - materialData_ is not null
+Object3d::SetModel - Applying material data
+Object3d::SetModel - Model texture path: Resources/models/kao.png
+Object3d::SetModel - Texture already loaded: Resources/models/kao.png
+Object3d::SetModel - Material information:
+  - Diffuse (RGBA): 0.800000, 0.800000, 0.800000, 1.000000
+  - Texture: Resources/models/kao.png
+SrvManager: Allocated index 5
+SrvManager: Created SRV for Texture2D at index 5
+TextureManager::LoadTexture - Successfully loaded: Resources/textures/title_logo.png
+TextureManager::LoadTexture - SRV index: 5
+SceneManager: Successfully initialized scene Title
+Object3d::Update - No animation: enableAnimation_=1, animatedModel_=0
+Object3d::Update - Camera is null, skipping matrix update
+Object3d::Draw - Using texture path: Resources/models/kao.png
+Object3d::Draw - Using valid texture: Resources/models/kao.png
+Object3d::Update - Camera is null, skipping matrix update
+SceneManager: Scene change requested to GamePlay
+Object3d::Draw - Using texture path: Resources/models/kao.png
+Object3d::Draw - Using valid texture: Resources/models/kao.png
+SceneManager: Changing scene to GamePlay
+AnimatedModel: Loading from Resources/Models/human/walk.gltf
+AnimatedModel: Loading GLTF with Assimp from Resources/Models/human/walk.gltf
+AnimatedModel: Successfully loaded GLTF file
+AnimatedModel: Processing mesh with 13538 vertices and 26960 faces
+AnimatedModel: Created 80880 vertices from faces
+AnimatedModel: Found texture: Resources/Models/human/white.png
+AnimatedModel: Root node name: Armature
+AnimatedModel: Processing animation with 65 channels
+AnimatedModel: Node mixamorig:Hips - Position keys: 62, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:HeadTop_End - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:Spine - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:Spine1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:Spine2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftShoulder - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:Neck - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:Head - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftForeArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHand - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandThumb1 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandThumb2 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandThumb3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandThumb4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandIndex1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandIndex2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandIndex3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandIndex4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandMiddle1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandMiddle2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandMiddle3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandMiddle4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandRing1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandRing2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandRing3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandRing4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandPinky1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandPinky2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandPinky3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftHandPinky4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightShoulder - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightForeArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHand - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandThumb1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandThumb2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandThumb3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandThumb4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandIndex1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandIndex2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandIndex3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandIndex4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandMiddle1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandMiddle2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandMiddle3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandMiddle4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandRing1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandRing2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandRing3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandRing4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandPinky1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandPinky2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandPinky3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightHandPinky4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftUpLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftFoot - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftToeBase - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:LeftToe_End - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Node mixamorig:RightUpLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightFoot - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightToeBase - Position keys: 2, Rotation keys: 62, Scale keys: 2
+AnimatedModel: Node mixamorig:RightToe_End - Position keys: 2, Rotation keys: 2, Scale keys: 2
+AnimatedModel: Animation duration: 1.033333 seconds
+Model::CreateVertexBuffer - Created buffer for 80880 vertices
+AnimatedModel: Root node name set to: Armature
+Object3d::SetModel - Called
+Object3d::SetModel - model_ is not null
+Object3d::SetModel - materialData_ is not null
+Object3d::SetModel - Applying material data
+Object3d::SetModel - Model texture path: Resources/Models/human/white.png
+Object3d::SetModel - Loading texture: Resources/Models/human/white.png
+SrvManager: Allocated index 6
+SrvManager: Created SRV for Texture2D at index 6
+TextureManager::LoadTexture - Successfully loaded: Resources/Models/human/white.png
+TextureManager::LoadTexture - SRV index: 6
+Object3d::SetModel - Material information:
+  - Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Texture: Resources/Models/human/white.png
+SceneManager: Successfully initialized scene GamePlay
+Object3d::Update - Animation processing enabled
+Object3d::Update - Animation time: 0.000000, Duration: 1.033333, Joints: 67, NodeAnimations: 65
+ApplyAnimation - Joint: mixamorig:Hips, translate: (0.131175, -0.219476, 53.780209)
+ApplyAnimation - Joint: mixamorig:Spine, translate: (-0.000000, 6.376653, 0.981426)
+ApplyAnimation - Joint: mixamorig:Spine1, translate: (-0.000000, 7.527050, -0.000001)
+ApplyAnimation - Joint: mixamorig:Spine2, translate: (0.000000, 8.602310, -0.000000)
+ApplyAnimation - Joint: mixamorig:Neck, translate: (0.000000, 9.677631, -0.000003)
+ApplyAnimation - Joint: mixamorig:Head, translate: (0.000000, 5.918946, 0.195514)
+ApplyAnimation - Joint: mixamorig:HeadTop_End, translate: (-0.000000, 73.628029, 2.432068)
+ApplyAnimation - Joint: mixamorig:LeftShoulder, translate: (4.420063, 7.988499, 0.137429)
+ApplyAnimation - Joint: mixamorig:LeftArm, translate: (-0.000001, 9.518143, 0.000003)
+ApplyAnimation - Joint: mixamorig:LeftForeArm, translate: (0.000002, 15.122644, -0.000002)
+ApplyAnimation - Joint: mixamorig:LeftHand, translate: (-0.000000, 16.613375, -0.000001)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb1, translate: (-1.353926, 2.071246, -2.139637)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb2, translate: (-0.115088, 2.614484, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb3, translate: (0.045653, 3.026986, -0.000001)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb4, translate: (0.069439, 2.741194, -0.000008)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex1, translate: (-3.167303, 7.749428, -0.057058)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex2, translate: (0.002096, 1.903541, 0.000001)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex3, translate: (0.001980, 1.795928, 0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex4, translate: (-0.004075, 1.624152, -0.000002)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle1, translate: (-1.045273, 8.114171, 0.081653)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle2, translate: (0.022167, 1.970649, -0.000002)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle3, translate: (0.004846, 1.944357, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle4, translate: (-0.027017, 1.603820, -0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandRing1, translate: (1.237437, 8.285806, 0.071497)
+ApplyAnimation - Joint: mixamorig:LeftHandRing2, translate: (0.012142, 1.816062, 0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandRing3, translate: (-0.000653, 1.668784, 0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandRing4, translate: (-0.011487, 1.451986, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky1, translate: (2.975133, 7.284569, 0.110156)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky2, translate: (0.015521, 1.970689, 0.000002)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky3, translate: (-0.003125, 1.502931, 0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky4, translate: (-0.012404, 1.395606, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightShoulder, translate: (-4.420065, 8.025360, 0.376840)
+ApplyAnimation - Joint: mixamorig:RightArm, translate: (0.000000, 9.518151, -0.000017)
+ApplyAnimation - Joint: mixamorig:RightForeArm, translate: (0.000001, 15.047956, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHand, translate: (-0.000002, 16.610668, -0.000004)
+ApplyAnimation - Joint: mixamorig:RightHandThumb1, translate: (1.360987, 2.096295, -2.329483)
+ApplyAnimation - Joint: mixamorig:RightHandThumb2, translate: (0.180423, 2.727332, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandThumb3, translate: (0.059285, 2.969759, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandThumb4, translate: (-0.239712, 2.594729, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandIndex1, translate: (3.196697, 7.980120, -0.070043)
+ApplyAnimation - Joint: mixamorig:RightHandIndex2, translate: (0.001033, 1.844182, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandIndex3, translate: (-0.004432, 1.725138, 0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandIndex4, translate: (0.003403, 1.535929, -0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle1, translate: (1.030617, 8.156146, 0.187783)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle2, translate: (-0.008484, 1.998573, 0.000000)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle3, translate: (0.000668, 1.927965, 0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle4, translate: (0.007818, 1.785412, 0.000000)
+ApplyAnimation - Joint: mixamorig:RightHandRing1, translate: (-1.282855, 8.167819, 0.103169)
+ApplyAnimation - Joint: mixamorig:RightHandRing2, translate: (-0.007550, 1.843655, -0.000004)
+ApplyAnimation - Joint: mixamorig:RightHandRing3, translate: (0.001695, 1.760844, -0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandRing4, translate: (0.005853, 1.616527, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandPinky1, translate: (-2.944463, 7.196914, 0.119119)
+ApplyAnimation - Joint: mixamorig:RightHandPinky2, translate: (-0.003984, 1.859766, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandPinky3, translate: (0.001550, 1.556448, -0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandPinky4, translate: (0.002436, 1.398262, 0.000002)
+ApplyAnimation - Joint: mixamorig:LeftUpLeg, translate: (9.211946, -3.529934, 0.230464)
+ApplyAnimation - Joint: mixamorig:LeftLeg, translate: (-0.000001, 23.753275, 0.000002)
+ApplyAnimation - Joint: mixamorig:LeftFoot, translate: (0.000000, 20.183098, -0.000002)
+ApplyAnimation - Joint: mixamorig:LeftToeBase, translate: (0.000002, 8.507135, 0.000001)
+ApplyAnimation - Joint: mixamorig:LeftToe_End, translate: (0.000000, 3.260741, -0.000001)
+ApplyAnimation - Joint: mixamorig:RightUpLeg, translate: (-9.211947, -3.529937, 0.172989)
+ApplyAnimation - Joint: mixamorig:RightLeg, translate: (-0.000001, 23.754730, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightFoot, translate: (0.000001, 20.170218, -0.000001)
+ApplyAnimation - Joint: mixamorig:RightToeBase, translate: (-0.000000, 8.547309, -0.000001)
+ApplyAnimation - Joint: mixamorig:RightToe_End, translate: (0.000000, 3.137280, -0.000000)
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Update - Animation time: 1.000000, Duration: 1.033333, Joints: 67, NodeAnimations: 65
+ApplyAnimation - Joint: mixamorig:Hips, translate: (0.197137, -0.201173, 53.274166)
+ApplyAnimation - Joint: mixamorig:Spine, translate: (-0.000000, 6.376653, 0.981426)
+ApplyAnimation - Joint: mixamorig:Spine1, translate: (0.000000, 7.527036, -0.000001)
+ApplyAnimation - Joint: mixamorig:Spine2, translate: (-0.000000, 8.602326, 0.000001)
+ApplyAnimation - Joint: mixamorig:Neck, translate: (-0.000000, 9.677632, -0.000003)
+ApplyAnimation - Joint: mixamorig:Head, translate: (0.000000, 5.918950, 0.195513)
+ApplyAnimation - Joint: mixamorig:HeadTop_End, translate: (0.000000, 73.628021, 2.432068)
+ApplyAnimation - Joint: mixamorig:LeftShoulder, translate: (4.420060, 7.988496, 0.137429)
+ApplyAnimation - Joint: mixamorig:LeftArm, translate: (0.000001, 9.518154, 0.000010)
+ApplyAnimation - Joint: mixamorig:LeftForeArm, translate: (0.000001, 15.122647, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHand, translate: (0.000003, 16.613377, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb1, translate: (-1.353924, 2.071242, -2.139641)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb2, translate: (-0.115085, 2.614483, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb3, translate: (0.045655, 3.026991, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb4, translate: (0.069435, 2.741193, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex1, translate: (-3.167300, 7.749428, -0.057063)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex2, translate: (0.002095, 1.903542, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex3, translate: (0.001979, 1.795926, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex4, translate: (-0.004077, 1.624149, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle1, translate: (-1.045272, 8.114174, 0.081643)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle2, translate: (0.022173, 1.970645, -0.000001)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle3, translate: (0.004847, 1.944360, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle4, translate: (-0.027017, 1.603817, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftHandRing1, translate: (1.237439, 8.285809, 0.071488)
+ApplyAnimation - Joint: mixamorig:LeftHandRing2, translate: (0.012139, 1.816060, 0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandRing3, translate: (-0.000652, 1.668781, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandRing4, translate: (-0.011488, 1.451983, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky1, translate: (2.975135, 7.284571, 0.110148)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky2, translate: (0.015519, 1.970695, 0.000008)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky3, translate: (-0.003128, 1.502936, 0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky4, translate: (-0.012401, 1.395605, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightShoulder, translate: (-4.420062, 8.025340, 0.376842)
+ApplyAnimation - Joint: mixamorig:RightArm, translate: (-0.000000, 9.518149, -0.000002)
+ApplyAnimation - Joint: mixamorig:RightForeArm, translate: (0.000000, 15.047958, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHand, translate: (0.000000, 16.610659, -0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandThumb1, translate: (1.360988, 2.096302, -2.329487)
+ApplyAnimation - Joint: mixamorig:RightHandThumb2, translate: (0.180425, 2.727325, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandThumb3, translate: (0.059287, 2.969762, 0.000000)
+ApplyAnimation - Joint: mixamorig:RightHandThumb4, translate: (-0.239711, 2.594730, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandIndex1, translate: (3.196697, 7.980124, -0.070045)
+ApplyAnimation - Joint: mixamorig:RightHandIndex2, translate: (0.001032, 1.844177, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandIndex3, translate: (-0.004431, 1.725139, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandIndex4, translate: (0.003401, 1.535928, 0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle1, translate: (1.030615, 8.156146, 0.187779)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle2, translate: (-0.008484, 1.998574, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle3, translate: (0.000668, 1.927964, -0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle4, translate: (0.007817, 1.785413, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandRing1, translate: (-1.282855, 8.167823, 0.103168)
+ApplyAnimation - Joint: mixamorig:RightHandRing2, translate: (-0.007550, 1.843650, -0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandRing3, translate: (0.001696, 1.760841, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandRing4, translate: (0.005851, 1.616527, 0.000007)
+ApplyAnimation - Joint: mixamorig:RightHandPinky1, translate: (-2.944462, 7.196909, 0.119122)
+ApplyAnimation - Joint: mixamorig:RightHandPinky2, translate: (-0.003986, 1.859762, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandPinky3, translate: (0.001551, 1.556448, 0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandPinky4, translate: (0.002437, 1.398264, -0.000009)
+ApplyAnimation - Joint: mixamorig:LeftUpLeg, translate: (9.211946, -3.529933, 0.230463)
+ApplyAnimation - Joint: mixamorig:LeftLeg, translate: (-0.000001, 23.753275, -0.000002)
+ApplyAnimation - Joint: mixamorig:LeftFoot, translate: (-0.000000, 20.183098, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftToeBase, translate: (-0.000000, 8.507135, 0.000000)
+ApplyAnimation - Joint: mixamorig:LeftToe_End, translate: (-0.000002, 3.260738, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightUpLeg, translate: (-9.211946, -3.529935, 0.172989)
+ApplyAnimation - Joint: mixamorig:RightLeg, translate: (0.000000, 23.754730, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightFoot, translate: (0.000000, 20.170216, 0.000000)
+ApplyAnimation - Joint: mixamorig:RightToeBase, translate: (-0.000001, 8.547309, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightToe_End, translate: (-0.000001, 3.137279, -0.000000)
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Update - Animation time: 0.966666, Duration: 1.033333, Joints: 67, NodeAnimations: 65
+ApplyAnimation - Joint: mixamorig:Hips, translate: (0.292416, -0.297238, 52.514313)
+ApplyAnimation - Joint: mixamorig:Spine, translate: (-0.000000, 6.376653, 0.981426)
+ApplyAnimation - Joint: mixamorig:Spine1, translate: (0.000000, 7.527037, -0.000001)
+ApplyAnimation - Joint: mixamorig:Spine2, translate: (-0.000000, 8.602326, 0.000001)
+ApplyAnimation - Joint: mixamorig:Neck, translate: (-0.000000, 9.677632, -0.000003)
+ApplyAnimation - Joint: mixamorig:Head, translate: (0.000000, 5.918950, 0.195513)
+ApplyAnimation - Joint: mixamorig:HeadTop_End, translate: (0.000000, 73.628021, 2.432068)
+ApplyAnimation - Joint: mixamorig:LeftShoulder, translate: (4.420060, 7.988496, 0.137429)
+ApplyAnimation - Joint: mixamorig:LeftArm, translate: (0.000001, 9.518153, 0.000010)
+ApplyAnimation - Joint: mixamorig:LeftForeArm, translate: (0.000001, 15.122647, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHand, translate: (0.000003, 16.613377, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb1, translate: (-1.353924, 2.071242, -2.139641)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb2, translate: (-0.115085, 2.614483, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb3, translate: (0.045655, 3.026991, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb4, translate: (0.069435, 2.741193, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex1, translate: (-3.167300, 7.749428, -0.057063)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex2, translate: (0.002095, 1.903542, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex3, translate: (0.001979, 1.795926, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex4, translate: (-0.004077, 1.624149, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle1, translate: (-1.045272, 8.114174, 0.081643)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle2, translate: (0.022172, 1.970646, -0.000001)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle3, translate: (0.004847, 1.944360, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle4, translate: (-0.027017, 1.603818, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftHandRing1, translate: (1.237438, 8.285809, 0.071488)
+ApplyAnimation - Joint: mixamorig:LeftHandRing2, translate: (0.012140, 1.816060, 0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandRing3, translate: (-0.000652, 1.668781, 0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandRing4, translate: (-0.011488, 1.451983, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky1, translate: (2.975135, 7.284571, 0.110149)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky2, translate: (0.015519, 1.970695, 0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky3, translate: (-0.003128, 1.502935, 0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky4, translate: (-0.012401, 1.395605, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightShoulder, translate: (-4.420062, 8.025340, 0.376842)
+ApplyAnimation - Joint: mixamorig:RightArm, translate: (-0.000000, 9.518149, -0.000002)
+ApplyAnimation - Joint: mixamorig:RightForeArm, translate: (0.000000, 15.047958, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHand, translate: (0.000000, 16.610659, -0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandThumb1, translate: (1.360988, 2.096302, -2.329487)
+ApplyAnimation - Joint: mixamorig:RightHandThumb2, translate: (0.180425, 2.727326, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandThumb3, translate: (0.059287, 2.969761, 0.000000)
+ApplyAnimation - Joint: mixamorig:RightHandThumb4, translate: (-0.239711, 2.594730, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandIndex1, translate: (3.196697, 7.980124, -0.070045)
+ApplyAnimation - Joint: mixamorig:RightHandIndex2, translate: (0.001033, 1.844178, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandIndex3, translate: (-0.004431, 1.725139, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandIndex4, translate: (0.003401, 1.535928, 0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle1, translate: (1.030615, 8.156146, 0.187780)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle2, translate: (-0.008484, 1.998574, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle3, translate: (0.000668, 1.927964, -0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle4, translate: (0.007817, 1.785413, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandRing1, translate: (-1.282855, 8.167823, 0.103168)
+ApplyAnimation - Joint: mixamorig:RightHandRing2, translate: (-0.007550, 1.843650, -0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandRing3, translate: (0.001696, 1.760841, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandRing4, translate: (0.005851, 1.616527, 0.000007)
+ApplyAnimation - Joint: mixamorig:RightHandPinky1, translate: (-2.944462, 7.196910, 0.119122)
+ApplyAnimation - Joint: mixamorig:RightHandPinky2, translate: (-0.003986, 1.859762, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandPinky3, translate: (0.001551, 1.556448, 0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandPinky4, translate: (0.002437, 1.398264, -0.000009)
+ApplyAnimation - Joint: mixamorig:LeftUpLeg, translate: (9.211946, -3.529933, 0.230463)
+ApplyAnimation - Joint: mixamorig:LeftLeg, translate: (-0.000001, 23.753275, -0.000002)
+ApplyAnimation - Joint: mixamorig:LeftFoot, translate: (-0.000000, 20.183098, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftToeBase, translate: (-0.000000, 8.507135, 0.000000)
+ApplyAnimation - Joint: mixamorig:LeftToe_End, translate: (-0.000002, 3.260739, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightUpLeg, translate: (-9.211946, -3.529935, 0.172989)
+ApplyAnimation - Joint: mixamorig:RightLeg, translate: (0.000000, 23.754730, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightFoot, translate: (0.000000, 20.170216, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightToeBase, translate: (-0.000001, 8.547309, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightToe_End, translate: (-0.000001, 3.137279, -0.000000)
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Update - Animation time: 0.933333, Duration: 1.033333, Joints: 67, NodeAnimations: 65
+ApplyAnimation - Joint: mixamorig:Hips, translate: (0.435911, -0.406760, 51.505539)
+ApplyAnimation - Joint: mixamorig:Spine, translate: (-0.000000, 6.376653, 0.981426)
+ApplyAnimation - Joint: mixamorig:Spine1, translate: (0.000000, 7.527037, -0.000001)
+ApplyAnimation - Joint: mixamorig:Spine2, translate: (-0.000000, 8.602325, 0.000001)
+ApplyAnimation - Joint: mixamorig:Neck, translate: (-0.000000, 9.677632, -0.000003)
+ApplyAnimation - Joint: mixamorig:Head, translate: (0.000000, 5.918949, 0.195513)
+ApplyAnimation - Joint: mixamorig:HeadTop_End, translate: (0.000000, 73.628021, 2.432068)
+ApplyAnimation - Joint: mixamorig:LeftShoulder, translate: (4.420061, 7.988496, 0.137429)
+ApplyAnimation - Joint: mixamorig:LeftArm, translate: (0.000001, 9.518153, 0.000010)
+ApplyAnimation - Joint: mixamorig:LeftForeArm, translate: (0.000001, 15.122647, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHand, translate: (0.000002, 16.613377, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb1, translate: (-1.353924, 2.071242, -2.139641)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb2, translate: (-0.115085, 2.614483, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb3, translate: (0.045655, 3.026991, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb4, translate: (0.069435, 2.741193, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex1, translate: (-3.167300, 7.749428, -0.057063)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex2, translate: (0.002095, 1.903542, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex3, translate: (0.001979, 1.795926, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex4, translate: (-0.004077, 1.624149, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle1, translate: (-1.045272, 8.114174, 0.081644)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle2, translate: (0.022172, 1.970646, -0.000001)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle3, translate: (0.004847, 1.944360, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle4, translate: (-0.027017, 1.603818, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftHandRing1, translate: (1.237438, 8.285809, 0.071488)
+ApplyAnimation - Joint: mixamorig:LeftHandRing2, translate: (0.012140, 1.816060, 0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandRing3, translate: (-0.000652, 1.668781, 0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandRing4, translate: (-0.011488, 1.451983, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky1, translate: (2.975134, 7.284571, 0.110149)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky2, translate: (0.015519, 1.970695, 0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky3, translate: (-0.003128, 1.502935, 0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky4, translate: (-0.012401, 1.395605, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightShoulder, translate: (-4.420063, 8.025341, 0.376842)
+ApplyAnimation - Joint: mixamorig:RightArm, translate: (-0.000000, 9.518149, -0.000003)
+ApplyAnimation - Joint: mixamorig:RightForeArm, translate: (0.000000, 15.047958, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHand, translate: (0.000000, 16.610659, -0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandThumb1, translate: (1.360988, 2.096302, -2.329487)
+ApplyAnimation - Joint: mixamorig:RightHandThumb2, translate: (0.180425, 2.727326, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandThumb3, translate: (0.059287, 2.969761, 0.000000)
+ApplyAnimation - Joint: mixamorig:RightHandThumb4, translate: (-0.239711, 2.594730, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandIndex1, translate: (3.196697, 7.980124, -0.070045)
+ApplyAnimation - Joint: mixamorig:RightHandIndex2, translate: (0.001033, 1.844178, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandIndex3, translate: (-0.004431, 1.725139, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandIndex4, translate: (0.003401, 1.535928, 0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle1, translate: (1.030615, 8.156146, 0.187780)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle2, translate: (-0.008484, 1.998574, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle3, translate: (0.000668, 1.927964, -0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle4, translate: (0.007817, 1.785413, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandRing1, translate: (-1.282855, 8.167823, 0.103168)
+ApplyAnimation - Joint: mixamorig:RightHandRing2, translate: (-0.007550, 1.843650, -0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandRing3, translate: (0.001696, 1.760841, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandRing4, translate: (0.005851, 1.616527, 0.000007)
+ApplyAnimation - Joint: mixamorig:RightHandPinky1, translate: (-2.944462, 7.196910, 0.119122)
+ApplyAnimation - Joint: mixamorig:RightHandPinky2, translate: (-0.003986, 1.859762, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandPinky3, translate: (0.001551, 1.556448, 0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandPinky4, translate: (0.002437, 1.398264, -0.000008)
+ApplyAnimation - Joint: mixamorig:LeftUpLeg, translate: (9.211946, -3.529933, 0.230463)
+ApplyAnimation - Joint: mixamorig:LeftLeg, translate: (-0.000001, 23.753275, -0.000002)
+ApplyAnimation - Joint: mixamorig:LeftFoot, translate: (-0.000000, 20.183098, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftToeBase, translate: (-0.000000, 8.507135, 0.000000)
+ApplyAnimation - Joint: mixamorig:LeftToe_End, translate: (-0.000001, 3.260739, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightUpLeg, translate: (-9.211946, -3.529935, 0.172989)
+ApplyAnimation - Joint: mixamorig:RightLeg, translate: (0.000000, 23.754730, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightFoot, translate: (0.000000, 20.170216, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightToeBase, translate: (-0.000001, 8.547309, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightToe_End, translate: (-0.000001, 3.137279, -0.000000)
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Update - Animation time: 0.899999, Duration: 1.033333, Joints: 67, NodeAnimations: 65
+ApplyAnimation - Joint: mixamorig:Hips, translate: (0.666916, -0.390654, 50.419090)
+ApplyAnimation - Joint: mixamorig:Spine, translate: (-0.000000, 6.376653, 0.981426)
+ApplyAnimation - Joint: mixamorig:Spine1, translate: (0.000000, 7.527038, -0.000001)
+ApplyAnimation - Joint: mixamorig:Spine2, translate: (-0.000000, 8.602325, 0.000001)
+ApplyAnimation - Joint: mixamorig:Neck, translate: (-0.000000, 9.677632, -0.000003)
+ApplyAnimation - Joint: mixamorig:Head, translate: (0.000000, 5.918949, 0.195513)
+ApplyAnimation - Joint: mixamorig:HeadTop_End, translate: (0.000000, 73.628021, 2.432068)
+ApplyAnimation - Joint: mixamorig:LeftShoulder, translate: (4.420061, 7.988496, 0.137429)
+ApplyAnimation - Joint: mixamorig:LeftArm, translate: (0.000001, 9.518152, 0.000010)
+ApplyAnimation - Joint: mixamorig:LeftForeArm, translate: (0.000001, 15.122647, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHand, translate: (0.000002, 16.613377, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb1, translate: (-1.353924, 2.071242, -2.139641)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb2, translate: (-0.115085, 2.614484, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb3, translate: (0.045655, 3.026991, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandThumb4, translate: (0.069435, 2.741193, -0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex1, translate: (-3.167300, 7.749428, -0.057063)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex2, translate: (0.002095, 1.903542, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex3, translate: (0.001979, 1.795926, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandIndex4, translate: (-0.004077, 1.624149, -0.000003)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle1, translate: (-1.045272, 8.114174, 0.081644)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle2, translate: (0.022172, 1.970646, -0.000001)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle3, translate: (0.004847, 1.944360, -0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandMiddle4, translate: (-0.027017, 1.603818, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftHandRing1, translate: (1.237438, 8.285809, 0.071489)
+ApplyAnimation - Joint: mixamorig:LeftHandRing2, translate: (0.012140, 1.816060, 0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandRing3, translate: (-0.000652, 1.668781, 0.000000)
+ApplyAnimation - Joint: mixamorig:LeftHandRing4, translate: (-0.011488, 1.451983, -0.000006)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky1, translate: (2.975134, 7.284571, 0.110149)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky2, translate: (0.015519, 1.970695, 0.000007)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky3, translate: (-0.003128, 1.502935, 0.000005)
+ApplyAnimation - Joint: mixamorig:LeftHandPinky4, translate: (-0.012401, 1.395605, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightShoulder, translate: (-4.420063, 8.025342, 0.376841)
+ApplyAnimation - Joint: mixamorig:RightArm, translate: (-0.000000, 9.518149, -0.000003)
+ApplyAnimation - Joint: mixamorig:RightForeArm, translate: (0.000000, 15.047958, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHand, translate: (0.000000, 16.610661, -0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandThumb1, translate: (1.360988, 2.096302, -2.329487)
+ApplyAnimation - Joint: mixamorig:RightHandThumb2, translate: (0.180425, 2.727326, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandThumb3, translate: (0.059287, 2.969761, 0.000000)
+ApplyAnimation - Joint: mixamorig:RightHandThumb4, translate: (-0.239711, 2.594730, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandIndex1, translate: (3.196697, 7.980124, -0.070045)
+ApplyAnimation - Joint: mixamorig:RightHandIndex2, translate: (0.001033, 1.844178, 0.000003)
+ApplyAnimation - Joint: mixamorig:RightHandIndex3, translate: (-0.004431, 1.725139, 0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandIndex4, translate: (0.003401, 1.535928, 0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle1, translate: (1.030615, 8.156146, 0.187780)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle2, translate: (-0.008484, 1.998574, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle3, translate: (0.000668, 1.927964, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightHandMiddle4, translate: (0.007817, 1.785413, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandRing1, translate: (-1.282855, 8.167822, 0.103168)
+ApplyAnimation - Joint: mixamorig:RightHandRing2, translate: (-0.007550, 1.843650, -0.000002)
+ApplyAnimation - Joint: mixamorig:RightHandRing3, translate: (0.001696, 1.760841, -0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandRing4, translate: (0.005851, 1.616527, 0.000006)
+ApplyAnimation - Joint: mixamorig:RightHandPinky1, translate: (-2.944462, 7.196910, 0.119122)
+ApplyAnimation - Joint: mixamorig:RightHandPinky2, translate: (-0.003986, 1.859762, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightHandPinky3, translate: (0.001551, 1.556448, 0.000005)
+ApplyAnimation - Joint: mixamorig:RightHandPinky4, translate: (0.002437, 1.398264, -0.000008)
+ApplyAnimation - Joint: mixamorig:LeftUpLeg, translate: (9.211946, -3.529933, 0.230463)
+ApplyAnimation - Joint: mixamorig:LeftLeg, translate: (-0.000001, 23.753275, -0.000001)
+ApplyAnimation - Joint: mixamorig:LeftFoot, translate: (-0.000000, 20.183098, -0.000004)
+ApplyAnimation - Joint: mixamorig:LeftToeBase, translate: (0.000000, 8.507135, 0.000000)
+ApplyAnimation - Joint: mixamorig:LeftToe_End, translate: (-0.000001, 3.260739, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightUpLeg, translate: (-9.211946, -3.529935, 0.172989)
+ApplyAnimation - Joint: mixamorig:RightLeg, translate: (0.000000, 23.754730, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightFoot, translate: (0.000000, 20.170216, -0.000000)
+ApplyAnimation - Joint: mixamorig:RightToeBase, translate: (-0.000001, 8.547309, 0.000001)
+ApplyAnimation - Joint: mixamorig:RightToe_End, translate: (-0.000001, 3.137279, -0.000000)
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Update - Animation processing enabled
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+Object3d::Draw - Using texture path: Resources/Models/human/white.png
+Object3d::Draw - Using valid texture: Resources/Models/human/white.png
+D3D12 ERROR: ID3D12CommandList::SetGraphicsRootConstantBufferView: RootParameterIndex [4] is out of bounds for the currently set root signature, which declares 4 root parameters. [ EXECUTION ERROR #710: SET_ROOT_CONSTANT_BUFFER_VIEW_INVALID]
+SceneManager finalized successfully
+ParticleManager::ForceReleaseResources - Starting resource cleanup
+ParticleManager: Releasing particle group - smoke
+ParticleManager: All particle groups cleared
+ParticleManager: Material resource unmapped
+ParticleManager: Material resource reset
+ParticleManager: DirectionalLight resource unmapped
+ParticleManager: DirectionalLight resource reset
+ParticleManager: Vertex resource reset
+ParticleManager: Pipeline state reset
+ParticleManager: Root signature reset
+ParticleManager::ForceReleaseResources - Resource cleanup completed
+スレッド 0x1a84 はコード 0 (0x0) で終了しました。
+スレッド 0x7d8c はコード 0 (0x0) で終了しました。
+スレッド 0x2a0c はコード 0 (0x0) で終了しました。
+スレッド 0x7998 はコード 0 (0x0) で終了しました。
+0x00007FFE8FF57F9A で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::DdiThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x000000989D6FFCF0)。
+スレッド 0x36d4 はコード 0 (0x0) で終了しました。
+0x00007FFE8FF57F9A で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::IgcThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x000000989D5FF760)。
+スレッド 0xfd4 はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igc64.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igdgmm64.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\IntelControlLib.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ControlLib.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\iigd_dch.inf_amd64_b260c545909302e9\igd10iumd64.dll' がアンロードされました
+スレッド 0x7e8c はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\d3d11.dll' がアンロードされました
+スレッド 0x4604 はコード 0 (0x0) で終了しました。
+スレッド 0x80b0 はコード 0 (0x0) で終了しました。
+スレッド 0x73f0 はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 3' (0x2c20) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 0' (0x7e48) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 2' (0x27d8) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 1' (0x84e8) はコード 0 (0x0) で終了しました。
+スレッド 'NVFBCAsyncThread' (0x7300) はコード 0 (0x0) で終了しました。
+スレッド 0x8af4 はコード 0 (0x0) で終了しました。
+スレッド 0x8278 はコード 0 (0x0) で終了しました。
+スレッド 0x7f50 はコード 0 (0x0) で終了しました。
+スレッド 0x2bb4 はコード 0 (0x0) で終了しました。
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvwgf2umx.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvgpucomp64.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\NvMemMapStoragex.dll' がアンロードされました
+'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvldumdx.dll' がアンロードされました
+スレッド 0xaec はコード 0 (0x0) で終了しました。
+スレッド 0x8c94 はコード 0 (0x0) で終了しました。
+スレッド 0x7840 はコード 0 (0x0) で終了しました。
+スレッド 0xa70 はコード 0 (0x0) で終了しました。
+スレッド 0xb98 はコード 0 (0x0) で終了しました。
+スレッド 0x7d30 はコード 0 (0x0) で終了しました。
+スレッド 0x78d8 はコード 0 (0x0) で終了しました。
+スレッド 0x7a7c はコード 0 (0x0) で終了しました。
+プログラム '[0x810C] CG2_00-01.exe' はコード 0 (0x0) で終了しました。

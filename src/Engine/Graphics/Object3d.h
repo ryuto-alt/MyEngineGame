@@ -74,6 +74,13 @@ public:
     // アニメーション補間メソッド
     Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
     Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
+    
+
+    void SetAnimatedModel(class AnimatedModel* animatedModel);
+    void SetEnableAnimation(bool enable);
+    bool GetEnableAnimation() const;
+    float GetAnimationTime() const;
+    void SetAnimationTime(float time);
 
 private:
     // モデル
@@ -107,6 +114,11 @@ private:
     
     // スキニング関連
     std::vector<Matrix4x4> skeletonPose_;
+    
+
+    float animationTime_ = 0.0f;
+    bool enableAnimation_ = true;
+    class AnimatedModel* animatedModel_ = nullptr;
 
     // カメラへの参照
     Camera* camera_ = nullptr;

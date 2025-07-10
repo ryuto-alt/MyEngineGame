@@ -29,7 +29,12 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(git config:*)",
-      "Bash(\"/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe\" MyEngineGame.sln /p:Configuration=Debug /p:Platform=x64)"
+      "Bash(\"/c/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe\" MyEngineGame.sln /p:Configuration=Debug /p:Platform=x64)",
+      "Bash(devenv:*)",
+      "Bash(/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /t:Build)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /t:Build)",
+      "WebFetch(domain:lisyarus.github.io)",
+      "Bash(tasklist)"
     ],
     "deny": []
   }
