@@ -387,6 +387,11 @@ Matrix4x4 Transpose(const Matrix4x4& m)
 
 Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
 {
+    // 入力値のNaNチェック
+    assert(!std::isnan(v1.x) && !std::isnan(v1.y) && !std::isnan(v1.z));
+    assert(!std::isnan(v2.x) && !std::isnan(v2.y) && !std::isnan(v2.z));
+    assert(!std::isnan(t));
+    
     // tが0.0から1.0の範囲内にあることを確認
     assert(t >= 0.0f && t <= 1.0f);
     
@@ -395,23 +400,34 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
     result.y = v1.y + t * (v2.y - v1.y);
     result.z = v1.z + t * (v2.z - v1.z);
 
-	assert(!std::isnan(result.x));
-	assert(!std::isnan(result.y));
-	assert(!std::isnan(result.z));
+    // 結果のNaNチェック
+    assert(!std::isnan(result.x));
+    assert(!std::isnan(result.y));
+    assert(!std::isnan(result.z));
     return result;
 }
 
 Vector4 Slerp(const Vector4& befor, const Vector4& after, float t)
 {
+	// 入力値のNaNチェック
+	assert(!std::isnan(befor.x) && !std::isnan(befor.y) && !std::isnan(befor.z) && !std::isnan(befor.w));
+	assert(!std::isnan(after.x) && !std::isnan(after.y) && !std::isnan(after.z) && !std::isnan(after.w));
+	assert(!std::isnan(t));
+	
+	// tが0.0から1.0の範囲内にあることを確認
+	assert(t >= 0.0f && t <= 1.0f);
+	
 	Vector4 quat0 = befor;
 	Vector4 quat1 = after;
 	Vector4 result;
 
 	float dot = Dot(quat0, quat1);
+	assert(!std::isnan(dot));
+	
 	if (dot < 0.0f)
 	{
 		quat1 = -quat1;
-		//dot = -dot;
+		dot = -dot;
 	}
 
 	dot = std::clamp(dot, -1.0f, 1.0f);
@@ -425,12 +441,21 @@ Vector4 Slerp(const Vector4& befor, const Vector4& after, float t)
 	{
 		// なす角を求める
 		float theta = std::acos(dot);
+		assert(!std::isnan(theta));
+		
+		// ゼロ除算チェック
+		assert(std::sin(theta) != 0.0f);
+		
 		float scale0 = std::sin((1.0f - t) * theta) / std::sin(theta);
 		float scale1 = std::sin(t * theta) / std::sin(theta);
+		
+		assert(!std::isnan(scale0));
+		assert(!std::isnan(scale1));
 
 		result = Normalize(scale0 * quat0 + scale1 * quat1);
 	}
 
+	// 結果のNaNチェック
 	assert(!std::isnan(result.x));
 	assert(!std::isnan(result.y));
 	assert(!std::isnan(result.z));
@@ -441,6 +466,13 @@ Vector4 Slerp(const Vector4& befor, const Vector4& after, float t)
 
 Matrix4x4 MakeRotateMatrix(const Vector4& rotate)
 {
+    // 入力値のNaNチェック
+    assert(!std::isnan(rotate.x) && !std::isnan(rotate.y) && !std::isnan(rotate.z) && !std::isnan(rotate.w));
+    
+    // クォータニオンの長さをチェック（正規化されているべき）
+    float lengthSq = rotate.x * rotate.x + rotate.y * rotate.y + rotate.z * rotate.z + rotate.w * rotate.w;
+    assert(!std::isnan(lengthSq));
+    assert(std::abs(lengthSq - 1.0f) < 0.01f); // 正規化されているかチェック（許容誤差あり）
 
     float x2 = rotate.x + rotate.x;
     float y2 = rotate.y + rotate.y;
@@ -476,14 +508,35 @@ Matrix4x4 MakeRotateMatrix(const Vector4& rotate)
     result.m[3][2] = 0.0f;
     result.m[3][3] = 1.0f;
     
+    // 結果の行列の各要素がNaNでないことを確認
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            assert(!std::isnan(result.m[i][j]));
+        }
+    }
+    
     return result;
 }
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector4& rotate, const Vector3& translate)
 {
+    // 入力値のNaNチェック
+    assert(!std::isnan(scale.x) && !std::isnan(scale.y) && !std::isnan(scale.z));
+    assert(!std::isnan(rotate.x) && !std::isnan(rotate.y) && !std::isnan(rotate.z) && !std::isnan(rotate.w));
+    assert(!std::isnan(translate.x) && !std::isnan(translate.y) && !std::isnan(translate.z));
+    
     Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
     Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
     Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
     
-    return Multiply(Multiply(scaleMatrix, rotateMatrix), translateMatrix);
+    Matrix4x4 result = Multiply(Multiply(scaleMatrix, rotateMatrix), translateMatrix);
+    
+    // 結果の行列の各要素がNaNでないことを確認
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            assert(!std::isnan(result.m[i][j]));
+        }
+    }
+    
+    return result;
 }

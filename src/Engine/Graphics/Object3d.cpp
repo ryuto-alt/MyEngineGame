@@ -158,7 +158,7 @@ void Object3d::Update() {
     // アニメーション処理を段階的に有効化
     if (enableAnimation_ && animatedModel_ && animatedModel_->GetAnimationPlayer().GetAnimation().nodeAnimations.size() > 0) {
         // アニメーションが有効で、アニメーションデータが存在する場合のみ実行
-        OutputDebugStringA("Object3d::Update - Animation processing enabled\n");
+        //OutputDebugStringA("Object3d::Update - Animation processing enabled\n");
         Animation& animation = animatedModel_->GetAnimationPlayer().GetAnimation();
         Skeleton& skeleton = animatedModel_->GetSkeleton();
         SkinCluster& skinCluster = animatedModel_->GetSkinCluster();
@@ -166,10 +166,10 @@ void Object3d::Update() {
         // デバッグ出力
         static int frameCount = 0;
         if (frameCount % 60 == 0) {
-            OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(animationTime_) + 
-                               ", Duration: " + std::to_string(animation.duration) + 
-                               ", Joints: " + std::to_string(skeleton.joints.size()) + 
-                               ", NodeAnimations: " + std::to_string(animation.nodeAnimations.size()) + "\n").c_str());
+           // OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(animationTime_) + 
+           //                    ", Duration: " + std::to_string(animation.duration) + 
+           //                    ", Joints: " + std::to_string(skeleton.joints.size()) + 
+           //                    ", NodeAnimations: " + std::to_string(animation.nodeAnimations.size()) + "\n").c_str());
         }
         frameCount++;
         
@@ -266,16 +266,16 @@ void Object3d::Draw() {
 
     // テクスチャの場所を設定
     std::string texturePath = model_->GetTextureFilePath();
-    OutputDebugStringA(("Object3d::Draw - Using texture path: " + texturePath + "\n").c_str());
+    //OutputDebugStringA(("Object3d::Draw - Using texture path: " + texturePath + "\n").c_str());
 
     // テクスチャが空または存在しない場合の詳細なチェック
     if (texturePath.empty()) {
-        OutputDebugStringA("Object3d::Draw - Texture path is empty, using default texture\n");
+       // OutputDebugStringA("Object3d::Draw - Texture path is empty, using default texture\n");
         TextureManager::GetInstance()->LoadDefaultTexture();
         texturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
     }
     else if (!TextureManager::GetInstance()->IsTextureExists(texturePath)) {
-        OutputDebugStringA(("Object3d::Draw - Texture does not exist in TextureManager: " + texturePath + "\n").c_str());
+       // OutputDebugStringA(("Object3d::Draw - Texture does not exist in TextureManager: " + texturePath + "\n").c_str());
 
         // 試しにテクスチャを再ロードする
         bool loadSuccess = false;
@@ -284,25 +284,25 @@ void Object3d::Draw() {
         DWORD fileAttributes = GetFileAttributesA(texturePath.c_str());
         if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
             // ファイルが存在する場合はロードを試みる
-            OutputDebugStringA(("Object3d::Draw - File exists, trying to load texture: " + texturePath + "\n").c_str());
+           // OutputDebugStringA(("Object3d::Draw - File exists, trying to load texture: " + texturePath + "\n").c_str());
             TextureManager::GetInstance()->LoadTexture(texturePath);
 
             // 読み込みに成功したか確認
             if (TextureManager::GetInstance()->IsTextureExists(texturePath)) {
-                OutputDebugStringA(("Object3d::Draw - Successfully loaded texture: " + texturePath + "\n").c_str());
+              //  OutputDebugStringA(("Object3d::Draw - Successfully loaded texture: " + texturePath + "\n").c_str());
                 loadSuccess = true;
             }
         }
 
         // それでも失敗した場合はデフォルトテクスチャを使用
         if (!loadSuccess) {
-            OutputDebugStringA("Object3d::Draw - Using default texture\n");
+            //OutputDebugStringA("Object3d::Draw - Using default texture\n");
             TextureManager::GetInstance()->LoadDefaultTexture();
             texturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
         }
     }
     else {
-        OutputDebugStringA(("Object3d::Draw - Using valid texture: " + texturePath + "\n").c_str());
+        //OutputDebugStringA(("Object3d::Draw - Using valid texture: " + texturePath + "\n").c_str());
     }
 
     // テクスチャをセット（必ずテクスチャがセットされることを保証）
