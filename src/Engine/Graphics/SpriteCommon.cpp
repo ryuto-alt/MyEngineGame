@@ -121,8 +121,8 @@ void SpriteCommon::GraphicsPipelineInitialize()
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 	//RasiterzerStateの設定
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
-	//カリングをオフにする（全ての面を描画する）
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
+	//背面カリングを有効にする
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
 	//三角形の中を塗りつぶす
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	//shaderをコンパイルする
