@@ -29,13 +29,13 @@ void UnoEngine::Initialize() {
         srvManager_->Initialize(dxCommon_.get());
 
         // ここで明示的にPreDrawを呼び出し、ディスクリプタヒープを設定
-        srvManager_->PreDraw();
+        // srvManager_->PreDraw();  // 描画時に呼ぶので初期化では不要
 
         // テクスチャマネージャの初期化
         TextureManager::GetInstance()->Initialize(dxCommon_.get(), srvManager_.get());
 
-        // デフォルトテクスチャの事前読み込み
-        TextureManager::GetInstance()->LoadDefaultTexture();
+        // デフォルトテクスチャの事前読み込み（遅延）
+        // TextureManager::GetInstance()->LoadDefaultTexture();
 
         // ImGuiの初期化
         InitializeImGui();
@@ -60,8 +60,8 @@ void UnoEngine::Initialize() {
         // パーティクルマネージャの初期化
         ParticleManager::GetInstance()->Initialize(dxCommon_.get(), srvManager_.get());
 
-        // 基本的なパーティクルグループの作成
-        ParticleManager::GetInstance()->CreateParticleGroup("smoke", "Resources/particle/smoke.png");
+        // 基本的なパーティクルグループの作成（必要になったら作成）
+        // ParticleManager::GetInstance()->CreateParticleGroup("smoke", "Resources/particle/smoke.png");
 
         // 3Dパーティクルマネージャの初期化
         Particle3DManager::GetInstance()->Initialize(dxCommon_.get(), srvManager_.get(), spriteCommon_.get());
@@ -89,6 +89,9 @@ void UnoEngine::Initialize() {
         if (sceneFactory_) {
             sceneManager->Initialize(sceneFactory_.get());
         }
+        
+        // 初期化時のGPU同期を実行（削除）
+        // dxCommon_->CommandKick();
 
     }
     catch (const std::exception& e) {

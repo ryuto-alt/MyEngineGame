@@ -152,6 +152,7 @@
     <ClCompile Include="src\Engine\Animation\AnimatedModel.cpp" />
     <ClCompile Include="src\Engine\Animation\AnimationPlayer.cpp" />
     <ClCompile Include="src\Engine\Animation\AnimationUtility.cpp" />
+    <ClCompile Include="src\Engine\Resource\ResourcePreloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h" />
@@ -214,6 +215,7 @@
     <ClInclude Include="src\Engine\Animation\AnimatedModel.h" />
     <ClInclude Include="src\Engine\Animation\AnimationPlayer.h" />
     <ClInclude Include="src\Engine\Animation\AnimationUtility.h" />
+    <ClInclude Include="src\Engine\Resource\ResourcePreloader.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

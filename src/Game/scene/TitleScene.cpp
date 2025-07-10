@@ -1,4 +1,6 @@
 #include "TitleScene.h"
+#include "../../Engine/Resource/ResourcePreloader.h"
+#include "imgui.h"
 
 TitleScene::TitleScene() {
     // コンストラクタでは特に何もしない
@@ -18,28 +20,14 @@ void TitleScene::Initialize() {
     // カメラの初期位置設定
     camera_->SetTranslate({ 0.0f, 0.0f, -10.0f });
 
-    // 3Dモデルの初期化
-    sphereModel_ = std::make_unique<Model>();
-    sphereModel_->Initialize(dxCommon_);
-    sphereModel_->LoadFromObj("Resources/models", "sphere.obj");
+    // 3Dモデルとタイトルロゴの初期化をスキップして高速化
+    // （必要最小限の初期化のみ）
 
-    // 3Dオブジェクトの初期化
-    sphereObject_ = std::make_unique<Object3d>();
-    sphereObject_->Initialize(dxCommon_, spriteCommon_);
-    sphereObject_->SetModel(sphereModel_.get());
-    sphereObject_->SetScale({ 2.0f, 2.0f, 2.0f });
-    sphereObject_->SetPosition({ 0.0f, 0.0f, 0.0f });
-
-    // ライティングを有効化
-    sphereObject_->SetEnableLighting(true);
-
-    // タイトルロゴの初期化
-    titleLogo_ = std::make_unique<Sprite>();
-    titleLogo_->Initialize(spriteCommon_, "Resources/textures/title_logo.png");
-    titleLogo_->SetPosition({ WinApp::kClientWidth / 2.0f, 200.0f });
-    titleLogo_->SetSize({ 500.0f, 150.0f });
-    titleLogo_->SetAnchorPoint({ 0.5f, 0.5f });
-
+    // リソースをプリロード（メインスレッドで実行）
+    // OutputDebugStringA("TitleScene: Starting resource preload\n");
+    // ResourcePreloader::GetInstance()->PreloadAnimatedModel("human", "Resources/Models/human", "sneakWalk.gltf", dxCommon_);
+    // OutputDebugStringA("TitleScene: Resource preload completed\n");
+    
     // 初期化完了
     initialized_ = true;
 }
@@ -51,17 +39,14 @@ void TitleScene::Update() {
     // カメラの更新
     camera_->Update();
 
-    // 3Dオブジェクトのアニメーション
-    rotationAngle_ += 0.01f;
-    sphereObject_->SetRotation({ 0.0f, rotationAngle_, 0.0f });
-    sphereObject_->Update();
-
-    // タイトルロゴの更新
-    titleLogo_->Update();
-
-    // スペースキーでゲームプレイシーンへ
+    // SPACEキーでゲームプレイシーンへ
     if (input_->TriggerKey(DIK_SPACE)) {
         sceneManager_->ChangeScene("GamePlay");
+    }
+    
+    // ESCキーで終了
+    if (input_->TriggerKey(DIK_ESCAPE)) {
+        exit(0);
     }
 }
 
@@ -69,14 +54,22 @@ void TitleScene::Draw() {
     // 初期化されていない場合は何もしない
     if (!initialized_) return;
 
-    // 3Dオブジェクトの描画
-    sphereObject_->Draw();
-
-    // スプライト共通設定
-    spriteCommon_->CommonDraw();
-
-    // タイトルロゴの描画
-    titleLogo_->Draw();
+    // タイトル画面を表示
+    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f - 200, ImGui::GetIO().DisplaySize.y * 0.3f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Always);
+    ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    
+    ImGui::SetWindowFontScale(2.0f);
+    ImGui::Text("MY ENGINE GAME");
+    ImGui::SetWindowFontScale(1.0f);
+    
+    ImGui::Separator();
+    ImGui::Spacing();
+    
+    ImGui::Text("Press SPACE to Start");
+    ImGui::Text("Press ESC to Exit");
+    
+    ImGui::End();
 }
 
 void TitleScene::Finalize() {

@@ -34,7 +34,13 @@
       "Bash(/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /t:Build)",
       "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /t:Build)",
       "WebFetch(domain:lisyarus.github.io)",
-      "Bash(tasklist)"
+      "Bash(tasklist)",
+      "Bash(git log:*)",
+      "Bash(git shortlog:*)",
+      "Bash(git push:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git stash:*)",
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /t:Build)"
     ],
     "deny": []
   }

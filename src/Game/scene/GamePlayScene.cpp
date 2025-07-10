@@ -1,7 +1,9 @@
 #include "GamePlayScene.h"
+#include "../../Engine/Resource/ResourcePreloader.h"
 #include "Vector3.h"
 #include "imgui.h"
 #include "SpriteCommon.h"
+#include "../../Engine/Graphics/TextureManager.h"
 
 GamePlayScene::GamePlayScene() {
 }
@@ -24,31 +26,38 @@ void GamePlayScene::Initialize() {
 	engine_->SetCameraFovY(1.37f);
 
 
-	humanAnimatedModel_ = std::make_unique<AnimatedModel>();
-	humanAnimatedModel_->Initialize(dxCommon_);
-	humanAnimatedModel_->LoadFromFile("Resources/Models/human", "sneakWalk.gltf");
-	humanAnimatedModel_->PlayAnimation();
-
-	// デバッグ：アニメーションが読み込まれたか確認
-	const Animation& anim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
-
-	humanObject3d_ = engine_->CreateObject3D();
-	humanObject3d_->SetModel(static_cast<Model*>(humanAnimatedModel_.get()));
-	humanObject3d_->SetAnimatedModel(humanAnimatedModel_.get());
-	humanObject3d_->SetPosition(Vector3{ 0.0f, 0.0f, 0.0f });
-	humanObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
-	humanObject3d_->SetColor(Vector4{ 1.0f, 1.0f, 1.0f, 1.0f });
-	humanObject3d_->SetRotation(Vector3{ 0.0f,0.0f,0.0f });
-	humanObject3d_->SetEnableLighting(true);
-	humanObject3d_->SetEnableAnimation(true);
-	humanObject3d_->SetCamera(camera_);
-
-	// 初期化完了
+	// 初期化完了（モデルはまだ読み込まない）
 	initialized_ = true;
 }
 
 void GamePlayScene::Update() {
 	if (!initialized_) return;
+
+	// モデルがまだ読み込まれていない場合は読み込む
+	if (!modelLoaded_) {
+		// 通常の読み込み（高速化済み）
+		humanAnimatedModel_ = std::make_unique<AnimatedModel>();
+		humanAnimatedModel_->Initialize(dxCommon_);
+		humanAnimatedModel_->LoadFromFile("Resources/Models/human", "sneakWalk.gltf");
+		humanAnimatedModel_->PlayAnimation();
+
+		// デバッグ：アニメーションが読み込まれたか確認
+		const Animation& anim = humanAnimatedModel_->GetAnimationPlayer().GetAnimation();
+
+		humanObject3d_ = engine_->CreateObject3D();
+		humanObject3d_->SetModel(static_cast<Model*>(humanAnimatedModel_.get()));
+		humanObject3d_->SetAnimatedModel(humanAnimatedModel_.get());
+		humanObject3d_->SetPosition(Vector3{ 0.0f, 0.0f, 0.0f });
+		humanObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
+		humanObject3d_->SetColor(Vector4{ 1.0f, 1.0f, 1.0f, 1.0f });
+		humanObject3d_->SetRotation(Vector3{ 0.0f,0.0f,0.0f });
+		humanObject3d_->SetEnableLighting(true);
+		humanObject3d_->SetEnableAnimation(true);
+		humanObject3d_->SetCamera(camera_);
+		
+		modelLoaded_ = true;
+		return; // 読み込みフレームでは他の処理をスキップ
+	}
 
 	// ESCキーでアプリケーション終了
 	if (engine_->IsKeyTriggered(DIK_ESCAPE)) {
@@ -111,28 +120,40 @@ void GamePlayScene::Draw() {
 
 	spriteCommon_->CommonDraw();
 
-	// アニメーション付きヒューマンモデルの描画
-	if (humanObject3d_) {
-		humanObject3d_->Draw();
+	// モデルが読み込まれていない場合はローディング表示
+	if (!modelLoaded_) {
+		ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f - 100, ImGui::GetIO().DisplaySize.y * 0.5f - 25), ImGuiCond_Always);
+		ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Always);
+		ImGui::Begin("Loading", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+		ImGui::Text("Loading Model...");
+		ImGui::End();
+	} else {
+		// アニメーション付きヒューマンモデルの描画
+		if (humanObject3d_) {
+			humanObject3d_->Draw();
+		}
 	}
 
-	// シンプルなImGuiウィンドウ
-	ImGui::Begin("Human Animation Demo ");
+	// モデルが読み込まれている場合のみ操作説明を表示
+	if (modelLoaded_) {
+		// シンプルなImGuiウィンドウ
+		ImGui::Begin("Human Animation Demo ");
 
-	ImGui::Text("操作方法:");
-	ImGui::Text("WASD - カメラ移動");
-	ImGui::Text("SPACE - 上昇");
-	ImGui::Text("SHIFT - 下降");
-	ImGui::Text("↑↓←→ - ヒューマンモデル移動");
-	ImGui::Text("P - アニメーション一時停止/再開");
-	ImGui::Text("R - アニメーションリセット");
-	ImGui::Text("ESC - 終了");
+		ImGui::Text("操作方法:");
+		ImGui::Text("WASD - カメラ移動");
+		ImGui::Text("SPACE - 上昇");
+		ImGui::Text("SHIFT - 下降");
+		ImGui::Text("↑↓←→ - ヒューマンモデル移動");
+		ImGui::Text("P - アニメーション一時停止/再開");
+		ImGui::Text("R - アニメーションリセット");
+		ImGui::Text("ESC - 終了");
 
-	ImGui::Separator();
-	Vector3 cameraPos = engine_->GetCameraPosition();
-	ImGui::Text("カメラ位置: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
+		ImGui::Separator();
+		Vector3 cameraPos = engine_->GetCameraPosition();
+		ImGui::Text("カメラ位置: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
 
-	ImGui::End();
+		ImGui::End();
+	}
 }
 
 void GamePlayScene::Finalize() {

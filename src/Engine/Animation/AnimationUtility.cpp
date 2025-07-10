@@ -135,10 +135,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
     
     const aiScene* scene = importer.ReadFile(fullPath,
         aiProcess_Triangulate |
-        aiProcess_FlipUVs |
-        aiProcess_CalcTangentSpace |
-        aiProcess_JoinIdenticalVertices |
-        aiProcess_GenSmoothNormals
+        aiProcess_FlipUVs
     );
     
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {

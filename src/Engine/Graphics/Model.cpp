@@ -27,7 +27,7 @@ void Model::LoadFromObj(const std::string& directoryPath, const std::string& fil
 
     // モデルデータを最適化（UV球などの表示品質向上のため）
     // ファイル名も渡すように修正
-    OptimizeTriangles(modelData_, filename);
+    // OptimizeTriangles(modelData_, filename);  // パフォーマンス向上のため一時的に無効化
 
     // テクスチャの読み込み
     if (!modelData_.material.textureFilePath.empty()) {

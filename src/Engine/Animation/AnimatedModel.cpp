@@ -20,7 +20,7 @@ void AnimatedModel::Initialize(DirectXCommon* dxCommon) {
 
 // モデルとアニメーションの読み込み
 void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::string& filename) {
-    OutputDebugStringA(("AnimatedModel: Loading from " + directoryPath + "/" + filename + "\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Loading from " + directoryPath + "/" + filename + "\n").c_str());
     
     // ファイル拡張子をチェック
     std::string extension = filename.substr(filename.find_last_of(".") + 1);
@@ -51,7 +51,7 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
         rootNodeName_ = "root";
     }
     
-    OutputDebugStringA(("AnimatedModel: Root node name set to: " + rootNodeName_ + "\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Root node name set to: " + rootNodeName_ + "\n").c_str());
     
     // OBJファイルの場合のみダミーアニメーションを読み込み
     if (extension != "gltf") {
@@ -61,25 +61,22 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
 
 // assimpを使用したGLTFファイルからの読み込み
 void AnimatedModel::LoadFromGLTFWithAssimp(const std::string& directoryPath, const std::string& filename) {
-    OutputDebugStringA(("AnimatedModel: Loading GLTF with Assimp from " + directoryPath + "/" + filename + "\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Loading GLTF with Assimp from " + directoryPath + "/" + filename + "\n").c_str());
     
     std::string fullPath = directoryPath + "/" + filename;
     
-    // assimpでGLTFファイルを読み込み
+    // assimpでGLTFファイルを読み込み（最小限のフラグで高速化）
     const aiScene* scene = assimpImporter_.ReadFile(fullPath,
         aiProcess_Triangulate |
-        aiProcess_FlipUVs |
-        aiProcess_CalcTangentSpace |
-        aiProcess_JoinIdenticalVertices |
-        aiProcess_GenSmoothNormals
+        aiProcess_FlipUVs
     );
     
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-        OutputDebugStringA(("AnimatedModel: Error loading GLTF file: " + std::string(assimpImporter_.GetErrorString()) + "\n").c_str());
+        // OutputDebugStringA(("AnimatedModel: Error loading GLTF file: " + std::string(assimpImporter_.GetErrorString()) + "\n").c_str());
         return;
     }
     
-    OutputDebugStringA(("AnimatedModel: Successfully loaded GLTF file\n"));
+    // OutputDebugStringA(("AnimatedModel: Successfully loaded GLTF file\n"));
     
     // シーンの処理
     ProcessAssimpScene(scene, directoryPath);
@@ -204,7 +201,7 @@ SkinCluster AnimatedModel::CreateSkinCluster()
         skinCluster.paletteSrvHandle.first = srvManager->GetCPUDescriptorHandle(srvIndex);
         skinCluster.paletteSrvHandle.second = srvManager->GetGPUDescriptorHandle(srvIndex);
         
-        OutputDebugStringA(("AnimatedModel: Created palette SRV at index " + std::to_string(srvIndex) + "\n").c_str());
+        // OutputDebugStringA(("AnimatedModel: Created palette SRV at index " + std::to_string(srvIndex) + "\n").c_str());
     } else {
         OutputDebugStringA("AnimatedModel: WARNING - Could not access SrvManager\n");
         skinCluster.paletteSrvHandle.first = {};
@@ -279,7 +276,7 @@ SkinCluster AnimatedModel::CreateSkinCluster()
         }
     }
     
-    OutputDebugStringA(("AnimatedModel: Created SkinCluster with " + std::to_string(skeleton_.joints.size()) + " joints\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Created SkinCluster with " + std::to_string(skeleton_.joints.size()) + " joints\n").c_str());
     
     return skinCluster;
 }
@@ -301,7 +298,7 @@ void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& 
     // ルートノードの設定
     if (scene->mRootNode) {
         rootNodeName_ = scene->mRootNode->mName.C_Str();
-        OutputDebugStringA(("AnimatedModel: Root node name: " + rootNodeName_ + "\n").c_str());
+        // OutputDebugStringA(("AnimatedModel: Root node name: " + rootNodeName_ + "\n").c_str());
     }
     
     // アニメーションの処理
@@ -313,7 +310,7 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
     ModelData& modelData = GetModelDataInternal();
     modelData.vertices.clear();
     
-    OutputDebugStringA(("AnimatedModel: Processing mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Processing mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces\n").c_str());
     
     // まず頂点データを頂点インデックス順に格納（ボーンウェイトの参照用）
     std::vector<VertexData> indexedVertices(mesh->mNumVertices);
@@ -355,7 +352,7 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         const aiFace& face = mesh->mFaces[faceIndex];
         
         if (face.mNumIndices != 3) {
-            OutputDebugStringA(("AnimatedModel: Warning - Face " + std::to_string(faceIndex) + " has " + std::to_string(face.mNumIndices) + " indices (expected 3)\n").c_str());
+            // OutputDebugStringA(("AnimatedModel: Warning - Face " + std::to_string(faceIndex) + " has " + std::to_string(face.mNumIndices) + " indices (expected 3)\n").c_str());
             continue;
         }
         
@@ -369,14 +366,14 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
     }
     
     // ボーン情報の処理
-    OutputDebugStringA(("AnimatedModel: Processing " + std::to_string(mesh->mNumBones) + " bones\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Processing " + std::to_string(mesh->mNumBones) + " bones\n").c_str());
     
     for (unsigned int boneIndex = 0; boneIndex < mesh->mNumBones; boneIndex++) {
         aiBone* bone = mesh->mBones[boneIndex];
         std::string jointName = bone->mName.C_Str();
         JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
         
-        OutputDebugStringA(("AnimatedModel: Processing bone: " + jointName + " with " + std::to_string(bone->mNumWeights) + " weights\n").c_str());
+        // OutputDebugStringA(("AnimatedModel: Processing bone: " + jointName + " with " + std::to_string(bone->mNumWeights) + " weights\n").c_str());
         
         // InverseBindPose行列を取得（assimpのOffsetMatrixがInverseBindPose）
         aiMatrix4x4 offsetMatrix = bone->mOffsetMatrix;
@@ -422,7 +419,7 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         }
     }
     
-    OutputDebugStringA(("AnimatedModel: Created " + std::to_string(modelData.vertices.size()) + " vertices from faces\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Created " + std::to_string(modelData.vertices.size()) + " vertices from faces\n").c_str());
 }
 
 // assimpマテリアルからマテリアルデータを作成
@@ -441,12 +438,12 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std:
         if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
             std::string textureFileName = texturePath.C_Str();
             modelData.material.textureFilePath = directoryPath + "/" + textureFileName;
-            OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
+            // OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
         }
     } else {
         // デフォルトテクスチャを設定
         modelData.material.textureFilePath = directoryPath + "/" + "AnimatedCube_BaseColor.png";
-        OutputDebugStringA(("AnimatedModel: Using default texture: " + modelData.material.textureFilePath + "\n").c_str());
+        // OutputDebugStringA(("AnimatedModel: Using default texture: " + modelData.material.textureFilePath + "\n").c_str());
     }
     
     // マテリアルプロパティの取得
@@ -472,13 +469,13 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std:
 // assimpノードからアニメーションデータを作成
 void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
     if (scene->mNumAnimations == 0) {
-        OutputDebugStringA("AnimatedModel: No animations found in scene\n");
+        // OutputDebugStringA("AnimatedModel: No animations found in scene\n");
         return;
     }
     
     const aiAnimation* assimpAnimation = scene->mAnimations[0];
     
-    OutputDebugStringA(("AnimatedModel: Processing animation with " + std::to_string(assimpAnimation->mNumChannels) + " channels\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Processing animation with " + std::to_string(assimpAnimation->mNumChannels) + " channels\n").c_str());
     
     // アニメーション時間を設定
     animation_.duration = static_cast<float>(assimpAnimation->mDuration / assimpAnimation->mTicksPerSecond);
@@ -530,5 +527,5 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
     animationPlayer_.SetAnimation(animation_);
     animationPlayer_.SetLoop(true);
     
-    OutputDebugStringA(("AnimatedModel: Animation duration: " + std::to_string(animation_.duration) + " seconds\n").c_str());
+    // OutputDebugStringA(("AnimatedModel: Animation duration: " + std::to_string(animation_.duration) + " seconds\n").c_str());
 }

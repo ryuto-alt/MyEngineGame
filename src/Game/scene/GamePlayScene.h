@@ -20,6 +20,9 @@ protected:
     // 初期化済みフラグ
     bool initialized_ = false;
     
+    // モデル読み込み完了フラグ
+    bool modelLoaded_ = false;
+    
     // UnoEngineインスタンス
     UnoEngine* engine_ = nullptr;
 

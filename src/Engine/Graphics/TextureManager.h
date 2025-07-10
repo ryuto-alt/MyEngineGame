@@ -64,6 +64,15 @@ public:
         return defaultTexturePath;
     }
 
+    // バッチ処理の開始
+    void BeginBatch();
+    
+    // バッチ処理の終了（ここでCommandKickを実行）
+    void EndBatch();
+    
+    // バッチ処理用のテクスチャ読み込み（CommandKickを遅延）
+    bool LoadTextureDeferred(const std::string& filePath);
+
 private:
     // テクスチャデータ
     std::unordered_map<std::string, TextureData> textureDatas;

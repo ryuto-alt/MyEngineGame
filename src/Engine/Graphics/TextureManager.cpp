@@ -36,7 +36,7 @@ void TextureManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager)
     srvManager_ = srvManager;
 
     // デバッグ出力
-    OutputDebugStringA("TextureManager: Initialized successfully\n");
+    // OutputDebugStringA("TextureManager: Initialized successfully\n");
 }
 
 const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& filePath)
@@ -44,7 +44,7 @@ const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& fileP
     // ファイルパスをキーに持つテクスチャデータを取得
     if (textureDatas.count(filePath) <= 0) {
         // テクスチャが存在しない場合はデフォルトテクスチャを返す
-        OutputDebugStringA(("TextureManager::GetMetaData - Texture not found: " + filePath + ", using default\n").c_str());
+        // OutputDebugStringA(("TextureManager::GetMetaData - Texture not found: " + filePath + ", using default\n").c_str());
         LoadDefaultTexture();
         return textureDatas[GetDefaultTexturePath()].metadata;
     }
@@ -55,14 +55,14 @@ bool TextureManager::LoadTexture(const std::string& filePath)
 {
     // 読み込み済みテクスチャを検索
     if (textureDatas.count(filePath) > 0) {
-        OutputDebugStringA(("TextureManager::LoadTexture - Already loaded: " + filePath + "\n").c_str());
+        // OutputDebugStringA(("TextureManager::LoadTexture - Already loaded: " + filePath + "\n").c_str());
         return true; // 読み込み済みなら早期return
     }
 
     // ファイルが存在するか確認
     DWORD fileAttributes = GetFileAttributesA(filePath.c_str());
     if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
-        OutputDebugStringA(("WARNING: TextureManager::LoadTexture - File not found: " + filePath + "\n").c_str());
+        // OutputDebugStringA(("WARNING: TextureManager::LoadTexture - File not found: " + filePath + "\n").c_str());
         // デフォルトテクスチャを読み込む
         LoadDefaultTexture();
         return false;
@@ -96,6 +96,7 @@ bool TextureManager::LoadTexture(const std::string& filePath)
         textureData.resource = dxCommon_->CreateTextureResource(textureData.metadata);
 
         Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = dxCommon_->UploadTextureData(textureData.resource, mipImages);
+        // テクスチャアップロード後は必ずCommandKickが必要
         dxCommon_->CommandKick();
 
         // SRVを作成
@@ -114,8 +115,8 @@ bool TextureManager::LoadTexture(const std::string& filePath)
         // マップに追加
         textureDatas[filePath] = textureData;
 
-        OutputDebugStringA(("TextureManager::LoadTexture - Successfully loaded: " + filePath + "\n").c_str());
-        OutputDebugStringA(("TextureManager::LoadTexture - SRV index: " + std::to_string(textureData.srvIndex) + "\n").c_str());
+        // OutputDebugStringA(("TextureManager::LoadTexture - Successfully loaded: " + filePath + "\n").c_str());
+        // OutputDebugStringA(("TextureManager::LoadTexture - SRV index: " + std::to_string(textureData.srvIndex) + "\n").c_str());
         return true;
     }
     catch (const std::exception& e) {
@@ -155,6 +156,7 @@ void TextureManager::LoadDefaultTexture()
                     textureData.resource = dxCommon_->CreateTextureResource(textureData.metadata);
 
                     Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = dxCommon_->UploadTextureData(textureData.resource, mipImages);
+                    // デフォルトテクスチャは即座にCommandKick
                     dxCommon_->CommandKick();
 
                     // SRVを作成
@@ -173,14 +175,14 @@ void TextureManager::LoadDefaultTexture()
                     // マップに追加
                     textureDatas[defaultTexturePath] = textureData;
 
-                    OutputDebugStringA("TextureManager::LoadDefaultTexture - Default texture loaded from file successfully\n");
+                    // OutputDebugStringA("TextureManager::LoadDefaultTexture - Default texture loaded from file successfully\n");
                     return;
                 }
             }
         }
         catch (...) {
             // エラーが発生した場合は下のコードでメモリ上に白テクスチャを生成する
-            OutputDebugStringA("TextureManager::LoadDefaultTexture - Failed to load default texture from file, creating in memory\n");
+            // OutputDebugStringA("TextureManager::LoadDefaultTexture - Failed to load default texture from file, creating in memory\n");
         }
     }
 
@@ -207,6 +209,7 @@ void TextureManager::LoadDefaultTexture()
 
         // アップロードとSRV作成処理
         Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = dxCommon_->UploadTextureData(textureData.resource, image);
+        // デフォルトテクスチャは即座にCommandKick
         dxCommon_->CommandKick();
 
         // SRVを作成
@@ -225,7 +228,7 @@ void TextureManager::LoadDefaultTexture()
         // マップに追加
         textureDatas[defaultTexturePath] = textureData;
 
-        OutputDebugStringA("TextureManager::LoadDefaultTexture - Default white texture created in memory successfully\n");
+        // OutputDebugStringA("TextureManager::LoadDefaultTexture - Default white texture created in memory successfully\n");
     }
     catch (const std::exception& e) {
         OutputDebugStringA(("ERROR: TextureManager::LoadDefaultTexture - Failed to create default texture - " + std::string(e.what()) + "\n").c_str());
@@ -237,7 +240,7 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetSrvHandleGPU(const std::string& f
     // ファイルパスをキーに持つテクスチャデータを取得
     if (textureDatas.count(filePath) <= 0) {
         // テクスチャが存在しない場合はデフォルトテクスチャを返す
-        OutputDebugStringA(("TextureManager::GetSrvHandleGPU - Texture not found: " + filePath + ", using default\n").c_str());
+        // OutputDebugStringA(("TextureManager::GetSrvHandleGPU - Texture not found: " + filePath + ", using default\n").c_str());
         LoadDefaultTexture();
         return textureDatas[GetDefaultTexturePath()].srvHandleGPU;
     }
@@ -249,9 +252,22 @@ uint32_t TextureManager::GetSrvIndex(const std::string& filePath)
     // ファイルパスをキーに持つテクスチャデータを取得
     if (textureDatas.count(filePath) <= 0) {
         // テクスチャが存在しない場合はデフォルトテクスチャを返す
-        OutputDebugStringA(("TextureManager::GetSrvIndex - Texture not found: " + filePath + ", using default\n").c_str());
+        // OutputDebugStringA(("TextureManager::GetSrvIndex - Texture not found: " + filePath + ", using default\n").c_str());
         LoadDefaultTexture();
         return textureDatas[GetDefaultTexturePath()].srvIndex;
     }
     return textureDatas[filePath].srvIndex;
+}
+
+void TextureManager::BeginBatch() {
+    // バッチ処理のスタブ（将来の拡張用）
+}
+
+void TextureManager::EndBatch() {
+    // バッチ処理のスタブ（将来の拡張用）
+}
+
+bool TextureManager::LoadTextureDeferred(const std::string& filePath) {
+    // 通常のLoadTextureを呼ぶ
+    return LoadTexture(filePath);
 }
