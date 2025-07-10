@@ -140,8 +140,8 @@ Node AnimatedModel::ReadNode(aiNode* node)
 
     node->mTransformation.Decompose(scale, rotation, translate);
     result.transform.scale = { scale.x, scale.y, scale.z };
-    result.transform.rotate = { rotation.x, -rotation.y, -rotation.z, rotation.w };  // Y,Z成分を反転（SoraEngine-Skinning方式）
-    result.transform.translate = { -translate.x, translate.y, translate.z };  // X座標を反転（SoraEngine-Skinning方式）
+    result.transform.rotate = { rotation.x, -rotation.y, -rotation.z, rotation.w };  
+    result.transform.translate = { -translate.x, translate.y, translate.z };  
     result.localMatrix = MakeAffineMatrix(result.transform.scale, result.transform.rotate, result.transform.translate);
     result.name = node->mName.C_Str();
     result.children.resize(node->mNumChildren);
@@ -322,7 +322,7 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         
         // 位置（右手座標系→左手座標系：X座標を反転）
         vertex.position = {
-            -mesh->mVertices[i].x,  // X座標を反転（SoraEngine-Skinning方式）
+            -mesh->mVertices[i].x,  
             mesh->mVertices[i].y,
             mesh->mVertices[i].z,
             1.0f
@@ -331,7 +331,7 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         // 法線（右手座標系→左手座標系：X成分を反転）
         if (mesh->HasNormals()) {
             vertex.normal = {
-                -mesh->mNormals[i].x,  // X成分を反転（SoraEngine-Skinning方式）
+                -mesh->mNormals[i].x, 
                 mesh->mNormals[i].y,
                 mesh->mNormals[i].z
             };
@@ -381,14 +381,14 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         // InverseBindPose行列を取得（assimpのOffsetMatrixがInverseBindPose）
         aiMatrix4x4 offsetMatrix = bone->mOffsetMatrix;
         
-        // SoraEngine-Skinning方式の座標系変換を使用
+
         // InverseBindPose行列を分解して、各成分を変換してから再構築
         aiMatrix4x4 bindPoseMatrix = offsetMatrix.Inverse();
         aiVector3D scale, translate;
         aiQuaternion rotation;
         bindPoseMatrix.Decompose(scale, rotation, translate);
         
-        // 右手座標系から左手座標系への変換（SoraEngine-Skinning方式）
+     
         Matrix4x4 bindPoseMatrixConverted = MakeAffineMatrix(
             { scale.x, scale.y, scale.z },                              // スケール
             { rotation.x, -rotation.y, -rotation.z, rotation.w },       // 回転（Y,Z成分を反転）
@@ -495,7 +495,7 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
             const aiVectorKey& key = nodeAnim->mPositionKeys[j];
             KeyframeVector3 keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
-            keyframe.value = {-key.mValue.x, key.mValue.y, key.mValue.z};  // X座標を反転（SoraEngine-Skinning方式）
+            keyframe.value = {-key.mValue.x, key.mValue.y, key.mValue.z};  
             nodeAnimation.translate.push_back(keyframe);
         }
         
@@ -505,7 +505,7 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
             KeyframeQuaternion keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
             
-            // 右手座標系から左手座標系への変換（SoraEngine-Skinning方式）
+
             // Y,Z成分を反転
             keyframe.value = {key.mValue.x, -key.mValue.y, -key.mValue.z, key.mValue.w};
             nodeAnimation.rotate.push_back(keyframe);

@@ -183,7 +183,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
             const aiVectorKey& key = nodeAnim->mPositionKeys[j];
             KeyframeVector3 keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
-            keyframe.value = {-key.mValue.x, key.mValue.y, key.mValue.z};  // X座標を反転（SoraEngine-Skinning方式）
+            keyframe.value = {-key.mValue.x, key.mValue.y, key.mValue.z};  
             nodeAnimation.translate.push_back(keyframe);
         }
         
@@ -193,7 +193,7 @@ Animation LoadAnimationFile(const std::string& directoryPath, const std::string&
             KeyframeQuaternion keyframe;
             keyframe.time = static_cast<float>(key.mTime / assimpAnimation->mTicksPerSecond);
             
-            // 右手座標系から左手座標系への変換（SoraEngine-Skinning方式）
+
             // Y,Z成分を反転
             keyframe.value = {key.mValue.x, -key.mValue.y, -key.mValue.z, key.mValue.w};
             nodeAnimation.rotate.push_back(keyframe);

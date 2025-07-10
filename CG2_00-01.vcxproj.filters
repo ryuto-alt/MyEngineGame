@@ -194,6 +194,21 @@
     <ClCompile Include="src\Engine\Animation\AnimatedHumanController.cpp">
       <Filter>src\engine\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Audio\SpatialAudioListener.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Audio\SpatialAudioSource.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Animation\AnimatedModel.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Animation\AnimationPlayer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Animation\AnimationUtility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -358,6 +373,12 @@
     <ClInclude Include="src\Engine\Animation\AnimatedHumanController.h">
       <Filter>src\engine\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Audio\SpatialAudioListener.h" />
+    <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h" />
+    <ClInclude Include="src\Engine\Animation\Animation.h" />
+    <ClInclude Include="src\Engine\Animation\AnimatedModel.h" />
+    <ClInclude Include="src\Engine\Animation\AnimationPlayer.h" />
+    <ClInclude Include="src\Engine\Animation\AnimationUtility.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -383,6 +404,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Particle.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
