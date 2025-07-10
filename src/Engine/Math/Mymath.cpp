@@ -1,5 +1,6 @@
 #include "MyMath.h"
-
+#include "algorithm"
+#include <cassert>
 //float Cot(float theta)
 //{
 //	return 1 / std::tan(theta);
@@ -393,48 +394,43 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
     return result;
 }
 
-Vector4 Slerp(const Vector4& start, const Vector4& end, float t)
+Vector4 Slerp(const Vector4& befor, const Vector4& after, float t)
 {
-    // クォータニオンの内積を計算
-    float dot = start.x * end.x + start.y * end.y + start.z * end.z + start.w * end.w;
-    // 内積が負の場合は、片方のクォータニオンを反転
-    Vector4 endQuat = end;
-    if (dot < 0.0f) {
-        endQuat = { -end.x, -end.y, -end.z, -end.w };
-        dot = -dot;
-    }
-    // 内積が 1 に近い場合は、線形補間
-    if (dot > 0.9995f) {
-        Vector4 result;
-        result.x = start.x + t * (endQuat.x - start.x);
-        result.y = start.y + t * (endQuat.y - start.y);
-        result.z = start.z + t * (endQuat.z - start.z);
-        result.w = start.w + t * (endQuat.w - start.w);
-        // 正規化
-        float length = std::sqrt(result.x * result.x + result.y * result.y + result.z * result.z + result.w * result.w);
-        if (length > 0.0f) {
-            result.x /= length;
-            result.y /= length;
-            result.z /= length;
-            result.w /= length;
-        }
-        return result;
-    }
-    // クォータニオンの角度を計算
-    float theta = std::acos(dot);
-    // クォータニオンの正規化
-    float sinTheta = std::sin(theta);
-    float sinTTheta = std::sin(t * theta);
-    float sinOneMinusTTheta = std::sin((1.0f - t) * theta);
-    
-    Vector4 result;
-    result.x = (start.x * sinOneMinusTTheta + endQuat.x * sinTTheta) / sinTheta;
-    result.y = (start.y * sinOneMinusTTheta + endQuat.y * sinTTheta) / sinTheta;
-    result.z = (start.z * sinOneMinusTTheta + endQuat.z * sinTTheta) / sinTheta;
-    result.w = (start.w * sinOneMinusTTheta + endQuat.w * sinTTheta) / sinTheta;
-    
-    return result;
+	Vector4 quat0 = befor;
+	Vector4 quat1 = after;
+	Vector4 result;
+
+	float dot = Dot(quat0, quat1);
+	if (dot < 0.0f)
+	{
+		quat1 = -quat1;
+		//dot = -dot;
+	}
+
+	dot = std::clamp(dot, -1.0f, 1.0f);
+	const float epsilon = 1e-6f;
+
+	if (dot > 1.0f - epsilon)
+	{
+		result = Normalize((1.0f - t) * quat0 + t * quat1);
+	}
+	else
+	{
+		// なす角を求める
+		float theta = std::acos(dot);
+		float scale0 = std::sin((1.0f - t) * theta) / std::sin(theta);
+		float scale1 = std::sin(t * theta) / std::sin(theta);
+
+		result = Normalize(scale0 * quat0 + scale1 * quat1);
+	}
+
+	assert(!std::isnan(result.x));
+	assert(!std::isnan(result.y));
+	assert(!std::isnan(result.z));
+	assert(!std::isnan(result.w));
+	return result;
 }
+
 
 Matrix4x4 MakeRotateMatrix(const Vector4& rotate)
 {

@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <AnimationUtility.h>
 
 //float Cot(float theta);
 

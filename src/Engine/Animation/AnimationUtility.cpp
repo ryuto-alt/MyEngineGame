@@ -24,7 +24,7 @@ Quaternion Normalize(const Quaternion& q) {
     };
 }
 
-// 球面線形補間関数（削除：Mymath.cppで定義済み）
+
 
 // 指定した時刻のVector3値を計算（線形補間）
 Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time) {
