@@ -1,5 +1,6 @@
 #include "GamePlayScene.h"
 #include <stdexcept>
+#include <cmath>
 
 GamePlayScene::GamePlayScene() {
 }
@@ -110,9 +111,56 @@ void GamePlayScene::Update() {
 	if (humanObject3d_ && humanAnimatedModel_) {
 		Vector3 humanPos = humanObject3d_->GetPosition();
 
+		// Xboxコントローラーによる移動処理
+		float stickX = engine_->GetXboxLeftStickX();
+		float stickY = engine_->GetXboxLeftStickY();
+		bool bButtonPressed = engine_->IsXboxButtonPressed(0x2000); // B button
+		bool bButtonTriggered = bButtonPressed && !previousBButtonPressed_;
+		
+		// 移動入力があるかチェック
+		float stickMagnitude = std::sqrt(stickX * stickX + stickY * stickY);
+		isMoving_ = stickMagnitude > 0.1f;
+		
+		// シンプルなBボタンのトグル処理
+		if (bButtonTriggered && isMoving_ && !isBlending_) {
+			// ブレンド中でなく、移動中のみBボタンが有効
+			isSneaking_ = !isSneaking_;
+			isBlending_ = true;
+			blendTimer_ = 0.0f;
+			
+			if (isSneaking_) {
+				OutputDebugStringA("[DEBUG] B押下: スニーク開始\n");
+				humanAnimatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
+			} else {
+				OutputDebugStringA("[DEBUG] B押下: walk開始\n");
+				humanAnimatedModel_->TransitionToAnimation("walk", 0.3f);
+			}
+		}
+		
+		previousBButtonPressed_ = bButtonPressed;
+		
+		if (isMoving_) {
+			// 移動量計算
+			float moveSpeed = isSneaking_ ? humanSpeed_ * 0.5f : humanSpeed_;
+			Vector3 movement = Vector3{stickX * moveSpeed, 0.0f, stickY * moveSpeed};
+			
+			// 移動方向を保存
+			moveDirection_ = Vector3{stickX, 0.0f, stickY};
+			
+			// 移動方向に応じてモデルの向きを設定
+			if (stickMagnitude > 0.1f) {
+				float targetRotationY = std::atan2(stickX, stickY);
+				currentRotationY_ = targetRotationY;
+				humanObject3d_->SetRotation(Vector3{0.0f, currentRotationY_, 0.0f});
+			}
+			
+			// 位置を更新
+			humanPos = humanPos + movement;
+		}
+
 		humanObject3d_->SetPosition(humanPos);
 
-		// アニメーション制御
+		// アニメーション制御（コントローラー対応）
 		if (engine_->IsKeyTriggered(DIK_P)) {
 			animationPaused_ = !animationPaused_;
 			
@@ -127,7 +175,46 @@ void GamePlayScene::Update() {
 			humanObject3d_->SetAnimationTime(0.0f);
 		}
 		
+		// ブレンドタイマーの更新
+		if (isBlending_) {
+			blendTimer_ += 1.0f / 60.0f; // 60FPSを想定
+			
+			// ブレンドが完了したかチェック（タイマーベース）
+			if (blendTimer_ >= BLEND_DURATION) {
+				OutputDebugStringA("[DEBUG] ブレンド完了\n");
+				isBlending_ = false;
+				blendTimer_ = 0.0f;
+			}
+		}
 		
+		// 現在の状態をデバッグ出力（1秒に1回）
+		static int frameCount = 0;
+		frameCount++;
+		if (frameCount % 60 == 0) {
+			char debugMsg[256];
+			sprintf_s(debugMsg, "[DEBUG] 状態: isMoving_=%d, isSneaking_=%d, isBlending_=%d, blendTimer_=%.2f, currentAnim=%s\n",
+				isMoving_, isSneaking_, isBlending_, blendTimer_, 
+				humanAnimatedModel_->GetCurrentAnimationName().c_str());
+			OutputDebugStringA(debugMsg);
+		}
+		
+		// アニメーション制御（シンプル版）
+		if (isMoving_) {
+			// 移動中のアニメーション再生
+			if (animationPaused_) {
+				animationPaused_ = false;
+				humanAnimatedModel_->PlayAnimation();
+			}
+		} else {
+			// 停止中はアニメーションを一時停止
+			if (!animationPaused_) {
+				animationPaused_ = true;
+				humanAnimatedModel_->PauseAnimation();
+			}
+		}
+		
+		
+		// キーボード手動制御（デバッグ用）
 		if (engine_->IsKeyTriggered(DIK_1)) {
 			if (humanAnimatedModel_->GetCurrentAnimationName() == "walk") {
 				humanAnimatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
@@ -136,7 +223,7 @@ void GamePlayScene::Update() {
 			}
 		}
 
-		
+		// アニメーション更新
 		if (!animationPaused_) {
 			humanAnimatedModel_->Update(1.0f / 60.0f);
 		}
@@ -188,14 +275,22 @@ void GamePlayScene::Draw() {
 		ImGui::Begin("Human Animation Demo ");
 
 		ImGui::Text("操作方法:");
+		ImGui::Separator();
+		ImGui::Text("【キーボード】");
 		ImGui::Text("WASD - カメラ移動");
 		ImGui::Text("SPACE - 上昇");
 		ImGui::Text("SHIFT - 下降");
-		ImGui::Text("↑↓←→ - ヒューマンモデル移動");
 		ImGui::Text("P - アニメーション一時停止/再開");
 		ImGui::Text("R - アニメーションリセット");
 		ImGui::Text("1 - アニメーション切り替え（SneakWalk ⇔ Walk）");
 		ImGui::Text("ESC - 終了");
+		
+		ImGui::Separator();
+		ImGui::Text("【Xboxコントローラー】");
+		ImGui::Text("左スティック - ヒューマンモデル移動");
+		ImGui::Text("移動中にBボタン - スニーク状態");
+		ImGui::Text("※停止中はスニーク無効");
+		ImGui::Text("※コントローラー接続: %s", engine_->IsXboxControllerConnected() ? "接続済み" : "未接続");
 
 		ImGui::Separator();
 		Vector3 cameraPos = engine_->GetCameraPosition();
@@ -204,8 +299,21 @@ void GamePlayScene::Draw() {
 		// アニメーション情報
 		ImGui::Separator();
 		ImGui::Text("現在のアニメーション: %s", humanAnimatedModel_->GetCurrentAnimationName().c_str());
-		if (humanAnimatedModel_->IsBlending()) {
-			ImGui::Text("ブレンド中: %.1f%%", humanAnimatedModel_->GetBlendProgress() * 100.0f);
+		
+		std::string stateText;
+		if (isBlending_) {
+			stateText = "ブレンド中";
+		} else if (isSneaking_) {
+			stateText = "スニーク中";
+		} else if (isMoving_) {
+			stateText = "移動中";
+		} else {
+			stateText = "停止中";
+		}
+		ImGui::Text("状態: %s", stateText.c_str());
+		
+		if (isBlending_) {
+			ImGui::Text("ブレンド進行: %.1f%%", (blendTimer_ / BLEND_DURATION) * 100.0f);
 		}
 
 		ImGui::End();

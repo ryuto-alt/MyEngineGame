@@ -40,4 +40,16 @@ protected:
     // 移動速度
     const float moveSpeed_ = 0.01f;
     const float humanSpeed_ = 0.05f;
+    
+    // コントローラー操作関連
+    bool isMoving_ = false;
+    bool isSneaking_ = false;
+    bool previousBButtonPressed_ = false;
+    Vector3 moveDirection_ = Vector3{0.0f, 0.0f, 0.0f};
+    float currentRotationY_ = 0.0f;
+    
+    // シンプルなブレンド管理
+    bool isBlending_ = false;
+    float blendTimer_ = 0.0f;
+    const float BLEND_DURATION = 0.3f;
 };

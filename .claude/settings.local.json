@@ -41,7 +41,9 @@
       "Bash(git filter-branch:*)",
       "Bash(git stash:*)",
       "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /t:Build)",
-      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln -p:Configuration=Debug -p:Platform=x64)"
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" CG2_00-01.sln -p:Configuration=Debug -p:Platform=x64)",
+      "Bash(taskkill:*)",
+      "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/MSBuild.exe\" MyEngineGame.sln -p:Configuration=Debug -p:Platform=x64)"
     ],
     "deny": []
   }

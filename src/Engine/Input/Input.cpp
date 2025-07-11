@@ -1,8 +1,13 @@
 #include "Input.h"
 #include <cassert>
+#include <cmath>
 
 #pragma comment(lib,"dinput8.lib")
 #pragma comment(lib,"dxguid.lib")
+#pragma comment(lib,"xinput.lib")
+
+// デッドゾーン設定
+const float Input::XBOX_STICK_DEADZONE = 0.2f;
 
 void Input::Initialize(WinApp* winApp)
 {
@@ -46,6 +51,13 @@ void Input::Initialize(WinApp* winApp)
 	// マウス状態の初期化
 	memset(&mouseState_, 0, sizeof(mouseState_));
 	memset(&previousMouseState_, 0, sizeof(previousMouseState_));
+	
+	// Xboxコントローラー状態の初期化
+	for (int i = 0; i < XUSER_MAX_COUNT; ++i) {
+		memset(&xboxControllerState_[i], 0, sizeof(XINPUT_STATE));
+		memset(&previousXboxControllerState_[i], 0, sizeof(XINPUT_STATE));
+		xboxControllerConnected_[i] = false;
+	}
 }
 
 void Input::Update()
@@ -62,6 +74,16 @@ void Input::Update()
 	//マウス情報の取得
 	mouse->Acquire();
 	mouse->GetDeviceState(sizeof(mouseState_), &mouseState_);
+	
+	// Xboxコントローラー状態の更新
+	for (int i = 0; i < XUSER_MAX_COUNT; ++i) {
+		// 前回の状態を保存
+		memcpy(&previousXboxControllerState_[i], &xboxControllerState_[i], sizeof(XINPUT_STATE));
+		
+		// 現在の状態を取得
+		DWORD result = XInputGetState(i, &xboxControllerState_[i]);
+		xboxControllerConnected_[i] = (result == ERROR_SUCCESS);
+	}
 }
 
 void Input::Finalize()
@@ -135,4 +157,82 @@ void Input::ResetMouseCenter()
 	POINT centerPoint = windowCenter_;
 	ClientToScreen(winApp_->GetHwnd(), &centerPoint);
 	SetCursorPos(centerPoint.x, centerPoint.y);
+}
+
+// Xboxコントローラー関連の実装
+bool Input::IsXboxControllerConnected(int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return false;
+	return xboxControllerConnected_[playerIndex];
+}
+
+bool Input::IsXboxButtonPressed(int button, int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return false;
+	if (!xboxControllerConnected_[playerIndex]) return false;
+	
+	return (xboxControllerState_[playerIndex].Gamepad.wButtons & button) != 0;
+}
+
+bool Input::IsXboxButtonTriggered(int button, int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return false;
+	if (!xboxControllerConnected_[playerIndex]) return false;
+	
+	bool currentPressed = (xboxControllerState_[playerIndex].Gamepad.wButtons & button) != 0;
+	bool previousPressed = (previousXboxControllerState_[playerIndex].Gamepad.wButtons & button) != 0;
+	
+	return currentPressed && !previousPressed;
+}
+
+float Input::GetXboxLeftStickX(int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return 0.0f;
+	if (!xboxControllerConnected_[playerIndex]) return 0.0f;
+	
+	float x = static_cast<float>(xboxControllerState_[playerIndex].Gamepad.sThumbLX) / 32767.0f;
+	return (std::abs(x) < XBOX_STICK_DEADZONE) ? 0.0f : x;
+}
+
+float Input::GetXboxLeftStickY(int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return 0.0f;
+	if (!xboxControllerConnected_[playerIndex]) return 0.0f;
+	
+	float y = static_cast<float>(xboxControllerState_[playerIndex].Gamepad.sThumbLY) / 32767.0f;
+	return (std::abs(y) < XBOX_STICK_DEADZONE) ? 0.0f : y;
+}
+
+float Input::GetXboxRightStickX(int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return 0.0f;
+	if (!xboxControllerConnected_[playerIndex]) return 0.0f;
+	
+	float x = static_cast<float>(xboxControllerState_[playerIndex].Gamepad.sThumbRX) / 32767.0f;
+	return (std::abs(x) < XBOX_STICK_DEADZONE) ? 0.0f : x;
+}
+
+float Input::GetXboxRightStickY(int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return 0.0f;
+	if (!xboxControllerConnected_[playerIndex]) return 0.0f;
+	
+	float y = static_cast<float>(xboxControllerState_[playerIndex].Gamepad.sThumbRY) / 32767.0f;
+	return (std::abs(y) < XBOX_STICK_DEADZONE) ? 0.0f : y;
+}
+
+float Input::GetXboxLeftTrigger(int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return 0.0f;
+	if (!xboxControllerConnected_[playerIndex]) return 0.0f;
+	
+	return static_cast<float>(xboxControllerState_[playerIndex].Gamepad.bLeftTrigger) / 255.0f;
+}
+
+float Input::GetXboxRightTrigger(int playerIndex)
+{
+	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return 0.0f;
+	if (!xboxControllerConnected_[playerIndex]) return 0.0f;
+	
+	return static_cast<float>(xboxControllerState_[playerIndex].Gamepad.bRightTrigger) / 255.0f;
 }

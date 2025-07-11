@@ -98,6 +98,17 @@ public:
     void SetMouseCursor(bool visible) { input_->SetMouseCursor(visible); }
     void ResetMouseCenter() { input_->ResetMouseCenter(); }
     
+    // === Xboxコントローラー入力システム ===
+    bool IsXboxControllerConnected(int playerIndex = 0) const { return input_->IsXboxControllerConnected(playerIndex); }
+    bool IsXboxButtonPressed(int button, int playerIndex = 0) const { return input_->IsXboxButtonPressed(button, playerIndex); }
+    bool IsXboxButtonTriggered(int button, int playerIndex = 0) const { return input_->IsXboxButtonTriggered(button, playerIndex); }
+    float GetXboxLeftStickX(int playerIndex = 0) const { return input_->GetXboxLeftStickX(playerIndex); }
+    float GetXboxLeftStickY(int playerIndex = 0) const { return input_->GetXboxLeftStickY(playerIndex); }
+    float GetXboxRightStickX(int playerIndex = 0) const { return input_->GetXboxRightStickX(playerIndex); }
+    float GetXboxRightStickY(int playerIndex = 0) const { return input_->GetXboxRightStickY(playerIndex); }
+    float GetXboxLeftTrigger(int playerIndex = 0) const { return input_->GetXboxLeftTrigger(playerIndex); }
+    float GetXboxRightTrigger(int playerIndex = 0) const { return input_->GetXboxRightTrigger(playerIndex); }
+    
     // === カメラシステム ===
     void SetCameraPosition(const Vector3& position) { camera_->SetTranslate(position); }
     void SetCameraRotation(const Vector3& rotation) { camera_->SetRotate(rotation); }
