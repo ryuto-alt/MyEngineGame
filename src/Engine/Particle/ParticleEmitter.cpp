@@ -45,16 +45,14 @@ ParticleEmitter::ParticleEmitter(
     lifeTimeMin_(lifeTimeMin),
     lifeTimeMax_(lifeTimeMax) {
 
-    // トランスフォームの初期化
     transform_.scale = { 1.0f, 1.0f, 1.0f };
     transform_.rotate = { 0.0f, 0.0f, 0.0f };
     transform_.translate = position;
 
-    // 即座に多数のパーティクルを発生させる（初期状態で表示するため）
     ParticleManager::GetInstance()->Emit(
         name_,
         transform_.translate,
-        emitCount_ * 5, // 初期状態では通常の5倍のパーティクルを発生
+        emitCount_ * 5,
         velocityMin_,
         velocityMax_,
         accelMin_,
@@ -76,22 +74,16 @@ ParticleEmitter::ParticleEmitter(
 }
 
 void ParticleEmitter::Update() {
-    // 発生フラグがOFFなら処理しない
     if (!isEmitting_) {
         return;
     }
 
-    // 時間を進める
-    currentTime_ += 1.0f / 60.0f; // 60FPS想定
+    currentTime_ += 1.0f / 60.0f;
 
-    // 発生頻度から発生タイミングを計算
     float interval = 1.0f / emitRate_;
 
-    // 高い発生頻度（100.0f以上）の場合はバーストモード
     if (emitRate_ >= 100.0f) {
-        // 一度だけ発生
         if (!burstFired_) {
-            // 発生処理
             ParticleManager::GetInstance()->Emit(
                 name_,
                 transform_.translate,
@@ -116,13 +108,10 @@ void ParticleEmitter::Update() {
                 lifeTimeMax_);
 
             burstFired_ = true;
-            // バースト後は発生を停止
             isEmitting_ = false;
         }
     } else {
-        // 通常モード：発生タイミングを超えていたらパーティクルを発生
         if (currentTime_ >= interval) {
-            // 発生処理
             ParticleManager::GetInstance()->Emit(
                 name_,
                 transform_.translate,

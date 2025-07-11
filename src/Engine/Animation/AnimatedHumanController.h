@@ -6,41 +6,18 @@
 #include "UnoEngine.h"
 #include <memory>
 
-/// <summary>
-/// アニメーション付きヒューマンモデルを制御するクラス
-/// walk.gltfのアニメーションを管理
-/// </summary>
 class AnimatedHumanController {
 public:
-    /// <summary>
-    /// コンストラクタ
-    /// </summary>
     AnimatedHumanController();
     
-    /// <summary>
-    /// デストラクタ
-    /// </summary>
     ~AnimatedHumanController();
 
-    /// <summary>
-    /// 初期化処理
-    /// </summary>
-    /// <param name="dxCommon">DirectX共通クラス</param>
     void Initialize(DirectXCommon* dxCommon);
 
-    /// <summary>
-    /// 更新処理
-    /// </summary>
     void Update();
 
-    /// <summary>
-    /// 描画処理
-    /// </summary>
     void Draw();
 
-    /// <summary>
-    /// 終了処理
-    /// </summary>
     void Finalize();
 
     // セッター
@@ -60,14 +37,8 @@ public:
     bool IsAnimationPaused() const { return animationPaused_; }
     float GetAnimationTime() const { return animationTime_; }
 
-    /// <summary>
-    /// アニメーションをリセット
-    /// </summary>
     void ResetAnimation();
 
-    /// <summary>
-    /// アニメーションの一時停止/再開
-    /// </summary>
     void ToggleAnimation();
 
 private:

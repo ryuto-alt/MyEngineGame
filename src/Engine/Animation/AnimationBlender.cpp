@@ -137,7 +137,6 @@ Matrix4x4 AnimationBlender::GetLocalMatrix(const std::string& nodeName) {
     currentRotMat.m[1][0] /= currentScale.y; currentRotMat.m[1][1] /= currentScale.y; currentRotMat.m[1][2] /= currentScale.y;
     currentRotMat.m[2][0] /= currentScale.z; currentRotMat.m[2][1] /= currentScale.z; currentRotMat.m[2][2] /= currentScale.z;
     // 行列からクォータニオンを抽出
-    // https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
     float trace = currentRotMat.m[0][0] + currentRotMat.m[1][1] + currentRotMat.m[2][2];
     if (trace > 0) {
         float s = 0.5f / std::sqrt(trace + 1.0f);
@@ -229,7 +228,7 @@ Matrix4x4 AnimationBlender::GetLocalMatrix(const std::string& nodeName) {
     // 位置の線形補間
     Vector3 blendedTranslation = Lerp(currentTranslation, targetTranslation, t);
     
-    // ブレンド結果から行列を再構築（QuaternionをVector4として渡す）
+  
     Vector4 blendedRotationVec4 = {blendedRotation.x, blendedRotation.y, blendedRotation.z, blendedRotation.w};
     return MakeAffineMatrix(blendedScale, blendedRotationVec4, blendedTranslation);
 }

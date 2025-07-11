@@ -4,69 +4,55 @@
 #include <algorithm>
 #include <cctype>
 
-// コンストラクタ
 AnimatedModel::AnimatedModel() : rootNodeName_("root") {
 }
 
-// デストラクタ
 AnimatedModel::~AnimatedModel() {
 }
 
-// 初期化
 void AnimatedModel::Initialize(DirectXCommon* dxCommon) {
     Model::Initialize(dxCommon);
     dxCommon_ = dxCommon;
     animationBlender_.Initialize();
 }
 
-// モデルとアニメーションの読み込み
 void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::string& filename) {
     // OutputDebugStringA(("AnimatedModel: Loading from " + directoryPath + "/" + filename + "\n").c_str());
     
-    // ファイル拡張子をチェック
     std::string extension = filename.substr(filename.find_last_of(".") + 1);
     std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
     
     if (extension == "gltf") {
-        // GLTFファイルの場合（assimpを使用）
         LoadFromGLTFWithAssimp(directoryPath, filename);
     } else {
-        // OBJファイルの場合
         LoadFromObj(directoryPath, filename);
         
-        // マテリアル情報のデバッグ出力
         const ModelData& modelData = GetModelData();
         OutputDebugStringA(("AnimatedModel: Texture path: " + modelData.material.textureFilePath + "\n").c_str());
         
-        // マテリアル情報が空の場合、デフォルト値を設定
         ModelData& modelDataInternal2 = GetModelDataInternal();
         if (modelDataInternal2.material.textureFilePath.empty()) {
             OutputDebugStringA("AnimatedModel: No texture path found, setting default values\n");
-            // デフォルトのマテリアル設定
             modelDataInternal2.material.textureFilePath = "Resources/uvChecker.png";
             modelDataInternal2.material.diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
             OutputDebugStringA(("AnimatedModel: Set default texture: " + modelDataInternal2.material.textureFilePath + "\n").c_str());
         }
         
-        // ルートノード名を設定
         rootNodeName_ = "root";
     }
     
     // OutputDebugStringA(("AnimatedModel: Root node name set to: " + rootNodeName_ + "\n").c_str());
     
-    // OBJファイルの場合のみダミーアニメーションを読み込み
     if (extension != "gltf") {
         LoadAnimation(directoryPath, filename);
     }
 }
 
-// assimpを使用したGLTFファイルからの読み込み
 void AnimatedModel::LoadFromGLTFWithAssimp(const std::string& directoryPath, const std::string& filename) {
     // OutputDebugStringA(("AnimatedModel: Loading GLTF with Assimp from " + directoryPath + "/" + filename + "\n").c_str());
     
     std::string fullPath = directoryPath + "/" + filename;
     
-    // assimpでGLTFファイルを読み込み（最小限のフラグで高速化）
     const aiScene* scene = assimpImporter_.ReadFile(fullPath,
         aiProcess_Triangulate |
         aiProcess_FlipUVs
@@ -79,15 +65,12 @@ void AnimatedModel::LoadFromGLTFWithAssimp(const std::string& directoryPath, con
     
     // OutputDebugStringA(("AnimatedModel: Successfully loaded GLTF file\n"));
     
-    // シーンの処理
     ProcessAssimpScene(scene, directoryPath);
     
-    // スキニング処理を初期化
     Node rootNode = ReadNode(scene->mRootNode);
     skeleton_ = CreateSkeleton(rootNode);
     skinCluster_ = CreateSkinCluster();
     
-    // 初期ジョイント変換を保存
     for (const Joint& joint : skeleton_.joints) {
         JointTransform transform;
         transform.scale = joint.transform.scale;
@@ -96,42 +79,30 @@ void AnimatedModel::LoadFromGLTFWithAssimp(const std::string& directoryPath, con
         initialJointTransforms_[joint.name] = transform;
     }
     
-    // 頂点バッファを作成
     CreateVertexBuffer();
 }
 
-// アニメーションの読み込み
 void AnimatedModel::LoadAnimation(const std::string& directoryPath, const std::string& filename) {
-    // LoadAnimationFile関数を使用してアニメーションを読み込み
     animation_ = LoadAnimationFile(directoryPath, filename);
     
-    // アニメーションプレイヤーに設定（互換性のため）
     animationPlayer_.SetAnimation(animation_);
     animationPlayer_.SetLoop(true);
     
-    // AnimationBlenderにも設定
     animationBlender_.SetAnimation(animation_);
     animationBlender_.SetLoop(true);
     animationBlender_.Play();
 }
 
-// 更新（アニメーション時刻を進める）
 void AnimatedModel::Update(float deltaTime) {
-    // 現在のアニメーションを更新
     animationPlayer_.Update(deltaTime);
     
-    // ブレンド中の場合
     if (isBlending_) {
-        // ターゲットアニメーションも更新
         targetPlayer_.Update(deltaTime);
         
-        // ブレンド進行度を更新
         blendElapsedTime_ += deltaTime;
         blendProgress_ = std::min(blendElapsedTime_ / blendDuration_, 1.0f);
         
-        // ブレンド完了判定
         if (blendProgress_ >= 1.0f) {
-            // ターゲットを現在のアニメーションに切り替え
             animationPlayer_ = targetPlayer_;
             currentAnimationName_ = targetAnimationName_;
             
@@ -141,11 +112,9 @@ void AnimatedModel::Update(float deltaTime) {
         }
     }
     
-    // AnimationBlenderは使用しないのでコメントアウト
     // animationBlender_.Update(deltaTime);
 }
 
-// アニメーションのローカル変換行列を取得
 Matrix4x4 AnimatedModel::GetAnimationLocalMatrix() {
     // ブレンダーが有効な場合はブレンダーから取得
     if (!animations_.empty()) {
@@ -614,11 +583,9 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
                           ", Scale keys: " + std::to_string(nodeAnimation.scale.size()) + "\n").c_str());
     }
     
-    // アニメーションプレイヤーに設定（互換性のため）
     animationPlayer_.SetAnimation(animation_);
     animationPlayer_.SetLoop(true);
     
-    // AnimationBlenderにも設定
     animationBlender_.SetAnimation(animation_);
     animationBlender_.SetLoop(true);
     animationBlender_.Play();
@@ -658,8 +625,7 @@ JointTransform AnimatedModel::GetBlendedTransform(const std::string& jointName, 
         if (!nodeAnimation.scale.empty()) {
             currentTransform.scale = CalculateValue(nodeAnimation.scale, currentTime);
         } else {
-            // スケールキーフレームがない場合は元の値を使用
-            currentTransform.scale = originalTransform.scale;
+                currentTransform.scale = originalTransform.scale;
         }
         
         // デバッグ: アニメーションからのスケール値を確認
@@ -672,7 +638,6 @@ JointTransform AnimatedModel::GetBlendedTransform(const std::string& jointName, 
                                std::to_string(currentTransform.scale.z) + ")\n").c_str());
         }
     } else {
-        // アニメーションがない場合は元の変換値を使用
         currentTransform = originalTransform;
     }
     
@@ -705,25 +670,20 @@ JointTransform AnimatedModel::GetBlendedTransform(const std::string& jointName, 
         if (!nodeAnimation.scale.empty()) {
             targetTransform.scale = CalculateValue(nodeAnimation.scale, targetTime);
         } else {
-            // スケールキーフレームがない場合は元の値を使用
-            targetTransform.scale = originalTransform.scale;
+                targetTransform.scale = originalTransform.scale;
         }
     } else {
-        // アニメーションがない場合は元の変換値を使用
         targetTransform = originalTransform;
     }
     
-    // ブレンド（t * B + (1 - t) * A）
     JointTransform blendedTransform;
     float t = blendProgress_;
     
-    // スケールの線形補間
     blendedTransform.scale = ::Lerp(currentTransform.scale, targetTransform.scale, t);
     
-    // 回転の球面線形補間（QuaternionはVector4）
     blendedTransform.rotate = ::Slerp(currentTransform.rotate, targetTransform.rotate, t);
     
-    // 位置の線形補間  
+  
     blendedTransform.translate = ::Lerp(currentTransform.translate, targetTransform.translate, t);
     
     return blendedTransform;

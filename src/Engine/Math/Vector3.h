@@ -5,7 +5,6 @@ struct Vector3
     float y;
     float z;
     
-    // 演算子のオーバーロード
     Vector3 operator+(const Vector3& other) const {
         return Vector3{ x + other.x, y + other.y, z + other.z };
     }

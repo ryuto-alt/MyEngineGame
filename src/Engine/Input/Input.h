@@ -1,12 +1,10 @@
 #pragma once
 #include <Windows.h>
 #include <wrl.h>
-#define DIRECTINPUT_VERSION 0x0800 // DirectInputのバージョン指定
+#define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
 #include <Xinput.h>
 #include "WinApp.h"
-
-// Xboxコントローラーのボタン定数
 #define XBOX_BUTTON_A 0x1000
 #define XBOX_BUTTON_B 0x2000
 #define XBOX_BUTTON_X 0x4000
@@ -29,26 +27,17 @@ public:
 
 	template <class T>using ComPtr = Microsoft::WRL::ComPtr<T>;
 
-	//初期化
 	void Initialize(WinApp* winApp);
-	//更新
 	void Update();
-	//終了処理
 	void Finalize();
 
-	//キーの状態
 	bool PushKey(BYTE keyNumber);
 	bool TriggerKey(BYTE keyNumber);
 
-	// マウス関連の追加機能
 	HRESULT GetMouseState(DIMOUSESTATE* mouseState);
 	void SetMouseCursor(bool visible);
-	
-	// マウス移動量取得
 	void GetMouseMovement(float& deltaX, float& deltaY);
-	void ResetMouseCenter(); // マウスをウィンドウ中央にリセット
-
-	// Xboxコントローラー関連
+	void ResetMouseCenter();
 	bool IsXboxControllerConnected(int playerIndex = 0);
 	bool IsXboxButtonPressed(int button, int playerIndex = 0);
 	bool IsXboxButtonTriggered(int button, int playerIndex = 0);
@@ -63,20 +52,17 @@ private:
 	BYTE key[256] = {};
 	BYTE preKey[256] = {};
 	ComPtr<IDirectInputDevice8>keyboard;
-	ComPtr<IDirectInputDevice8>mouse;      // マウスデバイスを追加
+	ComPtr<IDirectInputDevice8>mouse;
 	ComPtr<IDirectInput8>directInput = nullptr;
 	WinApp* winApp_ = nullptr;
 	
-	// マウス移動量管理
 	DIMOUSESTATE mouseState_;
 	DIMOUSESTATE previousMouseState_;
-	POINT windowCenter_; // ウィンドウ中央座標
+	POINT windowCenter_;
 	
-	// Xboxコントローラー状態管理
 	XINPUT_STATE xboxControllerState_[XUSER_MAX_COUNT];
 	XINPUT_STATE previousXboxControllerState_[XUSER_MAX_COUNT];
 	bool xboxControllerConnected_[XUSER_MAX_COUNT];
 	
-	// デッドゾーン
 	static const float XBOX_STICK_DEADZONE;
 };
