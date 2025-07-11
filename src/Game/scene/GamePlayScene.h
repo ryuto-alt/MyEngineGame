@@ -20,12 +20,17 @@ protected:
     
     // モデル読み込み完了フラグ
     bool modelLoaded_ = false;
+    bool groundLoaded_ = false;
     
     // UnoEngineインスタンス
     UnoEngine* engine_ = nullptr;
 
     std::unique_ptr<Object3d> humanObject3d_;
     std::unique_ptr<AnimatedModel> humanAnimatedModel_;
+    
+    // Groundモデル
+    std::unique_ptr<Object3d> groundObject3d_;
+    std::unique_ptr<Model> groundModel_;
     
     // アニメーション制御
     float animationTime_ = 0.0f;

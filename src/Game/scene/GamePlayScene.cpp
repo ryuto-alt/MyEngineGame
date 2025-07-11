@@ -1,4 +1,5 @@
 #include "GamePlayScene.h"
+#include <stdexcept>
 
 GamePlayScene::GamePlayScene() {
 }
@@ -19,6 +20,7 @@ void GamePlayScene::Initialize() {
 	// カメラの初期設定
 	engine_->SetCameraPosition(Vector3{ 0.0f, 0.0f, -2.0f });
 	engine_->SetCameraFovY(1.37f);
+
 
 
 	// 初期化完了（モデルはまだ読み込まない）
@@ -63,6 +65,28 @@ void GamePlayScene::Update() {
 		return; // 読み込みフレームでは他の処理をスキップ
 	}
 
+	// Humanモデルの読み込み完了後にGroundモデルを読み込み
+	if (modelLoaded_ && !groundLoaded_) {
+		try {
+			groundModel_ = engine_->LoadModel("Resources/Models/ground/ground.obj");
+			if (groundModel_) {
+				groundObject3d_ = engine_->CreateObject3D();
+				groundObject3d_->SetModel(groundModel_.get());
+				groundObject3d_->SetPosition(Vector3{ 0.0f, -0.1f, 0.0f });
+				groundObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
+				groundObject3d_->SetColor(Vector4{ 0.8f, 0.8f, 0.8f, 1.0f });
+				groundObject3d_->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
+				groundObject3d_->SetEnableLighting(true);
+				groundObject3d_->SetCamera(camera_);
+			}
+		} catch (const std::exception&) {
+			// Ground モデルの読み込みに失敗した場合はログ出力のみ
+			// アプリケーションは継続する
+		}
+		groundLoaded_ = true;
+		return; // 読み込みフレームでは他の処理をスキップ
+	}
+
 	// ESCキーでアプリケーション終了
 	if (engine_->IsKeyTriggered(DIK_ESCAPE)) {
 		exit(0);
@@ -78,6 +102,10 @@ void GamePlayScene::Update() {
 	if (engine_->IsKeyPressed(DIK_LSHIFT)) currentPos.y -= moveSpeed_;
 	engine_->SetCameraPosition(currentPos);
 
+	// Groundオブジェクトの更新
+	if (groundObject3d_) {
+		groundObject3d_->Update();
+	}
 
 	if (humanObject3d_ && humanAnimatedModel_) {
 		Vector3 humanPos = humanObject3d_->GetPosition();
@@ -132,13 +160,22 @@ void GamePlayScene::Draw() {
 
 #pragma region imgui
 	// モデルが読み込まれていない場合はローディング表示
-	if (!modelLoaded_) {
+	if (!modelLoaded_ || !groundLoaded_) {
 		ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f - 100, ImGui::GetIO().DisplaySize.y * 0.5f - 25), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Always);
 		ImGui::Begin("Loading", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-		ImGui::Text("Loading Model...");
+		if (!modelLoaded_) {
+			ImGui::Text("Loading Human Model...");
+		} else if (!groundLoaded_) {
+			ImGui::Text("Loading Ground Model...");
+		}
 		ImGui::End();
 	} else {
+		// Groundオブジェクトの描画
+		if (groundObject3d_) {
+			groundObject3d_->Draw();
+		}
+		
 		// アニメーション付きヒューマンモデルの描画
 		if (humanObject3d_) {
 			humanObject3d_->Draw();
@@ -146,7 +183,7 @@ void GamePlayScene::Draw() {
 	}
 
 	// モデルが読み込まれている場合のみ操作説明を表示
-	if (modelLoaded_) {
+	if (modelLoaded_ && groundLoaded_) {
 		// シンプルなImGuiウィンドウ
 		ImGui::Begin("Human Animation Demo ");
 
@@ -184,5 +221,14 @@ void GamePlayScene::Finalize() {
 
 	if (humanAnimatedModel_) {
 		humanAnimatedModel_.reset();
+	}
+
+	// Groundモデルの終了処理
+	if (groundObject3d_) {
+		groundObject3d_.reset();
+	}
+
+	if (groundModel_) {
+		groundModel_.reset();
 	}
 }
