@@ -44,10 +44,4 @@ protected:
     const float BLEND_DURATION = 0.3f;
 
 private:
-    // 角度を-π～πの範囲に正規化
-    float NormalizeAngle(float angle);
-    // 角度の最短距離を計算
-    float AngleDifference(float from, float to);
-    // 角度を線形補間
-    float LerpAngle(float from, float to, float t);
 };

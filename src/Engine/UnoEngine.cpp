@@ -3,6 +3,12 @@
 #include <cassert>
 #include <algorithm>
 #include <cctype>
+#define _USE_MATH_DEFINES
+#include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 // 静的メンバ変数の実体化
 UnoEngine* UnoEngine::instance_ = nullptr;
@@ -545,4 +551,42 @@ void UnoEngine::InitializeImGui() {
     catch (const std::exception& e) {
         OutputDebugStringA(("ERROR: Failed to initialize ImGui: " + std::string(e.what()) + "\n").c_str());
     }
+}
+
+// === スムージングシステム実装 ===
+
+float UnoEngine::NormalizeAngle(float angle) {
+    while (angle > M_PI) angle -= 2.0f * M_PI;
+    while (angle < -M_PI) angle += 2.0f * M_PI;
+    return angle;
+}
+
+float UnoEngine::AngleDifference(float from, float to) {
+    float diff = to - from;
+    return NormalizeAngle(diff);
+}
+
+float UnoEngine::LerpAngle(float from, float to, float t) {
+    t = std::clamp(t, 0.0f, 1.0f);
+    float diff = AngleDifference(from, to);
+    return NormalizeAngle(from + diff * t);
+}
+
+float UnoEngine::Lerp(float from, float to, float t) {
+    t = std::clamp(t, 0.0f, 1.0f);
+    return from + (to - from) * t;
+}
+
+Vector3 UnoEngine::LerpVector3(const Vector3& from, const Vector3& to, float t) {
+    t = std::clamp(t, 0.0f, 1.0f);
+    return Vector3{
+        Lerp(from.x, to.x, t),
+        Lerp(from.y, to.y, t),
+        Lerp(from.z, to.z, t)
+    };
+}
+
+float UnoEngine::SmoothRotation(float current, float target, float speed, float deltaTime) {
+    float lerpFactor = std::min(1.0f, speed * deltaTime);
+    return LerpAngle(current, target, lerpFactor);
 }

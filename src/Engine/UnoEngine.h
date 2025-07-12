@@ -169,6 +169,20 @@ public:
     // === 衝突判定システム ===
     bool CheckCollision(const Vector3& pos1, float radius1, const Vector3& pos2, float radius2);
     
+    // === スムージングシステム ===
+    // 角度を-π～πの範囲に正規化
+    float NormalizeAngle(float angle);
+    // 角度の最短距離を計算
+    float AngleDifference(float from, float to);
+    // 角度を線形補間
+    float LerpAngle(float from, float to, float t);
+    // 値を線形補間
+    float Lerp(float from, float to, float t);
+    // Vector3を線形補間
+    Vector3 LerpVector3(const Vector3& from, const Vector3& to, float t);
+    // 回転角度をスムージング（deltaTime考慮）
+    float SmoothRotation(float current, float target, float speed, float deltaTime);
+    
     // === シーン管理 ===
     void ChangeScene(const std::string& sceneName);
     
