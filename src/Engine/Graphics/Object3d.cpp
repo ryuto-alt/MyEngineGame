@@ -89,6 +89,21 @@ void Object3d::SetModel(Model* model) {
         // アルファ値も設定
         materialData_->color.w = modelMaterial.alpha;
 
+        // UVトランスフォーム行列の作成（スケールとオフセットを適用）
+        Vector3 scale = { modelMaterial.textureScale.x, modelMaterial.textureScale.y, 1.0f };
+        Vector3 translate = { modelMaterial.textureOffset.x, modelMaterial.textureOffset.y, 0.0f };
+        
+        Matrix4x4 scaleMatrix = MakeScaleMatrix(scale);
+        Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
+        materialData_->uvTransform = Multiply(scaleMatrix, translateMatrix);
+
+        OutputDebugStringA(("Object3d::SetModel - Applied texture scale: " + 
+            std::to_string(modelMaterial.textureScale.x) + ", " + 
+            std::to_string(modelMaterial.textureScale.y) + "\n").c_str());
+        OutputDebugStringA(("Object3d::SetModel - Applied texture offset: " + 
+            std::to_string(modelMaterial.textureOffset.x) + ", " + 
+            std::to_string(modelMaterial.textureOffset.y) + "\n").c_str());
+
         // モデルのテクスチャパスの確認
         std::string texturePath = model_->GetTextureFilePath();
         OutputDebugStringA(("Object3d::SetModel - Model texture path: " + texturePath + "\n").c_str());

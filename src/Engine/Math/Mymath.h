@@ -73,6 +73,8 @@ struct MaterialData {
     Vector4 specular = { 0.0f, 0.0f, 0.0f, 1.0f }; // 鏡面反射光(Ks)
     float shininess = 0.0f;                      // 光沢度(Ns)
     float alpha = 1.0f;                          // 透明度(d)
+    Vector2 textureScale = { 1.0f, 1.0f };       // テクスチャスケール(-s option)
+    Vector2 textureOffset = { 0.0f, 0.0f };      // テクスチャオフセット(-o option)
 };
 
 // ボーンウェイト構造体

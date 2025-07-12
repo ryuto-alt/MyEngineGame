@@ -427,8 +427,51 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 
         // identifierの応じた処理
         if (identifier == "map_Kd") {
+            std::string token;
             std::string textureFilename;
-            s >> textureFilename;
+            
+            // オプション引数（-s, -o, -t など）を解析してファイル名を見つける
+            while (s >> token) {
+                if (token[0] == '-') {
+                    // オプション引数の場合
+                    if (token == "-s") {
+                        // スケールオプション：3つの値を読み取る
+                        float scaleU, scaleV, scaleW;
+                        s >> scaleU >> scaleV >> scaleW;
+                        materialData.textureScale.x = scaleU;
+                        materialData.textureScale.y = scaleV;
+                        OutputDebugStringA(("MTL Parser: Texture scale: " + std::to_string(scaleU) + ", " + std::to_string(scaleV) + "\n").c_str());
+                    }
+                    else if (token == "-o") {
+                        // オフセットオプション：3つの値を読み取る
+                        float offsetU, offsetV, offsetW;
+                        s >> offsetU >> offsetV >> offsetW;
+                        materialData.textureOffset.x = offsetU;
+                        materialData.textureOffset.y = offsetV;
+                        OutputDebugStringA(("MTL Parser: Texture offset: " + std::to_string(offsetU) + ", " + std::to_string(offsetV) + "\n").c_str());
+                    }
+                    else if (token == "-t") {
+                        // タービュレンスオプション：3つの値をスキップ
+                        std::string dummy1, dummy2, dummy3;
+                        s >> dummy1 >> dummy2 >> dummy3;
+                    }
+                    else if (token == "-mm") {
+                        // -mmオプションは2つの値をスキップ
+                        std::string dummy1, dummy2;
+                        s >> dummy1 >> dummy2;
+                    }
+                    else {
+                        // その他のオプションは1つの値をスキップ
+                        std::string dummy;
+                        s >> dummy;
+                    }
+                }
+                else {
+                    // オプションではない場合、これがテクスチャファイル名
+                    textureFilename = token;
+                    break;
+                }
+            }
 
             // テクスチャファイル名をログに出力
             OutputDebugStringA(("MTL Parser: Found texture reference: " + textureFilename + "\n").c_str());

@@ -61,7 +61,7 @@ void GamePlayScene::Update() {
 				groundObject3d_->SetModel(groundModel_.get());
 				groundObject3d_->SetPosition(Vector3{ 0.0f, -0.1f, 0.0f });
 				groundObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
-				groundObject3d_->SetColor(Vector4{ 0.8f, 0.8f, 0.8f, 1.0f });
+				//groundObject3d_->SetColor(Vector4{ 0.8f, 0.8f, 0.8f, 1.0f });
 				groundObject3d_->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
 				groundObject3d_->SetEnableLighting(true);
 				groundObject3d_->SetCamera(camera_);
