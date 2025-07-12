@@ -1,6 +1,11 @@
 #include "GamePlayScene.h"
 #include <stdexcept>
+#define _USE_MATH_DEFINES
 #include <cmath>
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 GamePlayScene::GamePlayScene() {
 }
@@ -18,6 +23,10 @@ void GamePlayScene::Initialize() {
 
 	engine_->SetCameraPosition(Vector3{ 0.0f, 0.0f, -2.0f });
 	engine_->SetCameraFovY(1.37f);
+
+	// 回転の初期化
+	currentRotationY_ = 0.0f;
+	targetRotationY_ = 0.0f;
 
 	initialized_ = true;
 }
@@ -121,9 +130,7 @@ void GamePlayScene::Update() {
 			moveDirection_ = Vector3{stickX, 0.0f, stickY};
 			
 			if (stickMagnitude > 0.1f) {
-				float targetRotationY = std::atan2(stickX, stickY);
-				currentRotationY_ = targetRotationY;
-				humanObject3d_->SetRotation(Vector3{0.0f, currentRotationY_, 0.0f});
+				targetRotationY_ = std::atan2(stickX, stickY);
 			}
 			
 			humanPos = humanPos + movement;
@@ -181,6 +188,12 @@ void GamePlayScene::Update() {
 		else {
 			humanAnimatedModel_->Update(0.0f); 
 		}
+
+		// 回転のスムーシング処理
+		float deltaTime = 1.0f / 60.0f;  // フレームレート60FPS想定
+		float lerpFactor = std::min(1.0f, rotationSmoothingSpeed_ * deltaTime);
+		currentRotationY_ = LerpAngle(currentRotationY_, targetRotationY_, lerpFactor);
+		humanObject3d_->SetRotation(Vector3{0.0f, currentRotationY_, 0.0f});
 
 		humanObject3d_->Update();
 	}
@@ -260,6 +273,13 @@ void GamePlayScene::Draw() {
 			ImGui::Text("ブレンド進行: %.1f%%", (blendTimer_ / BLEND_DURATION) * 100.0f);
 		}
 
+		// 回転スムーシング設定
+		ImGui::Separator();
+		ImGui::Text("回転スムーシング設定:");
+		ImGui::SliderFloat("スムーシング速度", &rotationSmoothingSpeed_, 0.1f, 20.0f, "%.1f");
+		ImGui::Text("現在の回転: %.2f度", currentRotationY_ * 180.0f / M_PI);
+		ImGui::Text("目標回転: %.2f度", targetRotationY_ * 180.0f / M_PI);
+
 		ImGui::End();
 	}
 }
@@ -281,4 +301,23 @@ void GamePlayScene::Finalize() {
 	if (groundModel_) {
 		groundModel_.reset();
 	}
+}
+
+// 角度を-π～πの範囲に正規化
+float GamePlayScene::NormalizeAngle(float angle) {
+	while (angle > M_PI) angle -= 2.0f * M_PI;
+	while (angle < -M_PI) angle += 2.0f * M_PI;
+	return angle;
+}
+
+// 角度の最短距離を計算
+float GamePlayScene::AngleDifference(float from, float to) {
+	float diff = to - from;
+	return NormalizeAngle(diff);
+}
+
+// 角度を線形補間
+float GamePlayScene::LerpAngle(float from, float to, float t) {
+	float diff = AngleDifference(from, to);
+	return NormalizeAngle(from + diff * t);
 }
