@@ -22,6 +22,9 @@ public:
 	// ルートシグネチャを取得
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> GetRootSignature() const { return rootSignature; }
 	
+	// 通常のパイプラインを取得
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> GetGraphicsPipelineState() const { return graphicsPipelineState; }
+	
 	// スキニング用パイプラインを取得
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> GetSkinningPipelineState() const { return skinningPipelineState; }
 

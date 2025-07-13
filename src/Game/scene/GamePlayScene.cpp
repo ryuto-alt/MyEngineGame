@@ -76,6 +76,30 @@ void GamePlayScene::Update() {
 		return;
 	}
 
+	// GLBモデルの読み込み
+	if (groundLoaded_ && !cubeGlbLoaded_) {
+		try {
+			cubeGlbModel_ = std::make_unique<Model>();
+			cubeGlbModel_->Initialize(dxCommon_);
+			cubeGlbModel_->LoadFromGLB("Resources/Models/cube/cube.glb");
+			
+			if (cubeGlbModel_) {
+				cubeGlbObject3d_ = engine_->CreateObject3D();
+				cubeGlbObject3d_->SetModel(cubeGlbModel_.get());
+				cubeGlbObject3d_->SetPosition(Vector3{ 2.0f, 0.0f, 0.0f }); // 少し右側に配置
+				cubeGlbObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
+				cubeGlbObject3d_->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
+				cubeGlbObject3d_->SetEnableLighting(true);
+				cubeGlbObject3d_->SetCamera(camera_);
+				OutputDebugStringA("GLB Cube model loaded successfully\n");
+			}
+		} catch (const std::exception& e) {
+			OutputDebugStringA(("Failed to load GLB cube model: " + std::string(e.what()) + "\n").c_str());
+		}
+		cubeGlbLoaded_ = true;
+		return;
+	}
+
 	if (engine_->IsKeyTriggered(DIK_ESCAPE)) {
 		exit(0);
 	}
@@ -91,6 +115,10 @@ void GamePlayScene::Update() {
 
 	if (groundObject3d_) {
 		groundObject3d_->Update();
+	}
+
+	if (cubeGlbObject3d_) {
+		cubeGlbObject3d_->Update();
 	}
 
 	if (humanObject3d_ && humanAnimatedModel_) {
@@ -202,7 +230,7 @@ void GamePlayScene::Draw() {
 	spriteCommon_->CommonDraw();
 
 #pragma region imgui
-	if (!modelLoaded_ || !groundLoaded_) {
+	if (!modelLoaded_ || !groundLoaded_ || !cubeGlbLoaded_) {
 		ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f - 100, ImGui::GetIO().DisplaySize.y * 0.5f - 25), ImGuiCond_Always);
 		ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Always);
 		ImGui::Begin("Loading", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
@@ -210,6 +238,8 @@ void GamePlayScene::Draw() {
 			ImGui::Text("Loading Human Model...");
 		} else if (!groundLoaded_) {
 			ImGui::Text("Loading Ground Model...");
+		} else if (!cubeGlbLoaded_) {
+			ImGui::Text("Loading GLB Cube Model...");
 		}
 		ImGui::End();
 	} else {
@@ -217,12 +247,16 @@ void GamePlayScene::Draw() {
 			groundObject3d_->Draw();
 		}
 		
+		if (cubeGlbObject3d_) {
+			cubeGlbObject3d_->Draw();
+		}
+		
 		if (humanObject3d_) {
 			humanObject3d_->Draw();
 		}
 	}
 
-	if (modelLoaded_ && groundLoaded_) {
+	if (modelLoaded_ && groundLoaded_ && cubeGlbLoaded_) {
 		ImGui::Begin("Human Animation Demo ");
 
 		ImGui::Text("操作方法:");

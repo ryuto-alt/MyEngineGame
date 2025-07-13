@@ -63,6 +63,9 @@ public:
         static const std::string defaultTexturePath = "Resources/textures/default_white.png";
         return defaultTexturePath;
     }
+    
+    // SRVディスクリプタヒープを取得（D3D12描画用）
+    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() const;
 
     // バッチ処理の開始
     void BeginBatch();

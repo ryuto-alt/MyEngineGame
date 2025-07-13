@@ -16,6 +16,7 @@ protected:
     bool initialized_ = false;
     bool modelLoaded_ = false;
     bool groundLoaded_ = false;
+    bool cubeGlbLoaded_ = false;
     
     UnoEngine* engine_ = nullptr;
 
@@ -23,6 +24,10 @@ protected:
     std::unique_ptr<AnimatedModel> humanAnimatedModel_;
     std::unique_ptr<Object3d> groundObject3d_;
     std::unique_ptr<Model> groundModel_;
+    
+    // GLBモデル用
+    std::unique_ptr<Object3d> cubeGlbObject3d_;
+    std::unique_ptr<Model> cubeGlbModel_;
     
     float animationTime_ = 0.0f;
     bool animationPaused_ = false;

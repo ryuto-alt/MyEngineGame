@@ -271,3 +271,8 @@ bool TextureManager::LoadTextureDeferred(const std::string& filePath) {
     // 通常のLoadTextureを呼ぶ
     return LoadTexture(filePath);
 }
+
+Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> TextureManager::GetSrvDescriptorHeap() const {
+    assert(srvManager_);
+    return srvManager_->GetDescriptorHeap();
+}

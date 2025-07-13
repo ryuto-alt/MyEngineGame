@@ -284,10 +284,6 @@ void Object3d::Draw() {
     assert(dxCommon_);
     assert(model_);
 
-    // SRVディスクリプタヒープの設定（重要！）
-    // 現在はSpriteCommon経由で設定済みなので、追加の設定は不要
-    // TODO: 将来的にはSrvManagerを直接参照できるようにする
-
     // パイプラインの設定
     if (enableAnimation_ && animatedModel_) {
         // スキニング用パイプラインを使用
@@ -295,7 +291,7 @@ void Object3d::Draw() {
         dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetSkinningPipelineState().Get());
         dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     } else {
-        // 通常の描画設定
+        // 通常の描画設定（静的モデル用）
         spriteCommon_->CommonDraw();
     }
 
@@ -359,10 +355,17 @@ void Object3d::Draw() {
         }
     }
     else {
-        //OutputDebugStringA(("Object3d::Draw - Using valid texture: " + texturePath + "\n").c_str());
+        OutputDebugStringA(("Object3d::Draw - Using valid texture: " + texturePath + "\n").c_str());
     }
 
-    // テクスチャをセット（必ずテクスチャがセットされることを保証）
+    // 1. ディスクリプタヒープを設定（SetGraphicsRootDescriptorTable の前に必須）
+    ID3D12DescriptorHeap* heaps[] = { TextureManager::GetInstance()->GetSrvDescriptorHeap().Get() };
+    dxCommon_->GetCommandList()->SetDescriptorHeaps(1, heaps);
+    
+    // 2. ルートシグネチャを確実に設定（SetGraphicsRootDescriptorTable の前に必須）
+    dxCommon_->GetCommandList()->SetGraphicsRootSignature(spriteCommon_->GetRootSignature().Get());
+    
+    // 3. テクスチャをセット（必ずテクスチャがセットされることを保証）
     dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2,
         TextureManager::GetInstance()->GetSrvHandleGPU(texturePath));
 
@@ -375,6 +378,14 @@ void Object3d::Draw() {
         const SkinCluster& skinCluster = animModel->GetSkinCluster();
         
         if (skinCluster.paletteSrvHandle.second.ptr != 0) {
+            // 1. ディスクリプタヒープを設定（アニメーション用SetGraphicsRootDescriptorTable の前に必須）
+            ID3D12DescriptorHeap* animHeaps[] = { TextureManager::GetInstance()->GetSrvDescriptorHeap().Get() };
+            dxCommon_->GetCommandList()->SetDescriptorHeaps(1, animHeaps);
+            
+            // 2. ルートシグネチャを確実に設定（アニメーション用SetGraphicsRootDescriptorTable の前に必須）
+            dxCommon_->GetCommandList()->SetGraphicsRootSignature(spriteCommon_->GetRootSignature().Get());
+            
+            // 3. パレットSRVをセット
             dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster.paletteSrvHandle.second);
         } else {
             // パレットSRVが無効な場合は警告
