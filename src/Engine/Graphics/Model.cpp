@@ -559,10 +559,26 @@ void Model::LoadFromGLB(const std::string& filePath) {
     
     // 頂点バッファの作成
     CreateVertexBuffer();
+    
+    // 最終的なマテリアル値の確認
+    char debugMsg[512];
+    sprintf_s(debugMsg, "GLB Final Material - Diffuse: R=%.2f, G=%.2f, B=%.2f, A=%.2f, Texture: %s\n",
+              modelData_.material.diffuse.x, modelData_.material.diffuse.y, 
+              modelData_.material.diffuse.z, modelData_.material.diffuse.w,
+              modelData_.material.textureFilePath.empty() ? "None" : modelData_.material.textureFilePath.c_str());
+    OutputDebugStringA(debugMsg);
 }
 
 ModelData Model::LoadGLBFile(const std::string& filePath) {
     ModelData result = {};
+    
+    // マテリアルのデフォルト値を設定（MaterialDataのデフォルトコンストラクタの値を使用）
+    // デバッグ用にマテリアルの初期値を出力
+    char initDebugMsg[256];
+    sprintf_s(initDebugMsg, "GLB Initial Material - Diffuse: R=%.2f, G=%.2f, B=%.2f, A=%.2f\n",
+              result.material.diffuse.x, result.material.diffuse.y, 
+              result.material.diffuse.z, result.material.diffuse.w);
+    OutputDebugStringA(initDebugMsg);
     
     tinygltf::Model gltfModel;
     tinygltf::TinyGLTF loader;
@@ -612,9 +628,6 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
     }
     
     const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene];
-    
-    // 最初のマテリアルのみを適用するためのフラグ
-    bool materialSet = false;
     
     // ノード変換行列を計算する関数
     std::function<void(const tinygltf::Model&, int, const Matrix4x4&)> processNode;
@@ -666,8 +679,11 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
         // メッシュがある場合は処理
         if (node.mesh >= 0 && node.mesh < static_cast<int>(model.meshes.size())) {
             const tinygltf::Mesh& mesh = model.meshes[node.mesh];
+            OutputDebugStringA(("GLB Processing mesh: " + mesh.name + " with " + std::to_string(mesh.primitives.size()) + " primitives\n").c_str());
             
+            int primitiveIndex = 0;
             for (const auto& primitive : mesh.primitives) {
+                OutputDebugStringA(("  Processing primitive[" + std::to_string(primitiveIndex++) + "] with material index: " + std::to_string(primitive.material) + "\n").c_str());
                 // 位置属性を取得
                 auto positionIt = primitive.attributes.find("POSITION");
                 if (positionIt == primitive.attributes.end()) {
@@ -766,8 +782,8 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                 }
                 
                 // マテリアル処理（最初のマテリアルのみ適用）
-                if (!materialSet && primitive.material >= 0 && primitive.material < static_cast<int>(model.materials.size())) {
-                    materialSet = true;
+                if (primitive.material >= 0 && primitive.material < static_cast<int>(model.materials.size())) {
+                    // materialSetは削除し、各プリミティブのマテリアルを処理する
                     const tinygltf::Material& material = model.materials[primitive.material];
                     
                     // ベースカラーテクスチャ
@@ -846,21 +862,30 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                                                    static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[3]) : 1.0f;
                         
                         // デバッグ: マテリアルカラーを出力
-                        char debugMsg[256];
-                        sprintf_s(debugMsg, "GLB Material Color: R=%.2f, G=%.2f, B=%.2f, A=%.2f\n",
+                        char debugMsg[512];
+                        sprintf_s(debugMsg, "GLB Material[%d] - %s:\n"
+                                  "  baseColorFactor: R=%.3f, G=%.3f, B=%.3f, A=%.3f\n"
+                                  "  Applied Diffuse: R=%.3f, G=%.3f, B=%.3f, A=%.3f\n"
+                                  "  metallicFactor: %.3f, roughnessFactor: %.3f\n",
+                                  primitive.material,
+                                  material.name.empty() ? "Unnamed" : material.name.c_str(),
+                                  material.pbrMetallicRoughness.baseColorFactor[0],
+                                  material.pbrMetallicRoughness.baseColorFactor[1],
+                                  material.pbrMetallicRoughness.baseColorFactor[2],
+                                  material.pbrMetallicRoughness.baseColorFactor.size() >= 4 ? material.pbrMetallicRoughness.baseColorFactor[3] : 1.0,
                                   result.material.diffuse.x, result.material.diffuse.y, 
-                                  result.material.diffuse.z, result.material.diffuse.w);
+                                  result.material.diffuse.z, result.material.diffuse.w,
+                                  material.pbrMetallicRoughness.metallicFactor,
+                                  material.pbrMetallicRoughness.roughnessFactor);
                         OutputDebugStringA(debugMsg);
                     } else {
                         result.material.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
                         OutputDebugStringA("GLB: No baseColorFactor specified, using white default\n");
                     }
-                } else if (!materialSet) {
-                    // 最初のプリミティブでマテリアルが指定されていない場合のデフォルト値
-                    materialSet = true;
-                    result.material.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
-                    result.material.alpha = 1.0f;
-                    OutputDebugStringA("GLB: No material specified, using white default color\n");
+                } else {
+                    // マテリアルが指定されていない場合のデフォルト値
+                    // 既に設定されているマテリアルがある場合はそれを保持
+                    OutputDebugStringA("GLB: No material specified for this primitive, keeping current material\n");
                 }
                 
                 // break; // すべてのプリミティブを処理するためコメントアウト
@@ -879,6 +904,14 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
     }
     
     OutputDebugStringA(("GLB processing complete. Final vertex count: " + std::to_string(result.vertices.size()) + "\n").c_str());
+    
+    // 最終的なマテリアル値の確認
+    char finalDebugMsg[512];
+    sprintf_s(finalDebugMsg, "GLB Return Material - Diffuse: R=%.2f, G=%.2f, B=%.2f, A=%.2f, Texture: %s\n",
+              result.material.diffuse.x, result.material.diffuse.y, 
+              result.material.diffuse.z, result.material.diffuse.w,
+              result.material.textureFilePath.empty() ? "None" : result.material.textureFilePath.c_str());
+    OutputDebugStringA(finalDebugMsg);
     
     return result;
 }

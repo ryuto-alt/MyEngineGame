@@ -55,6 +55,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
     materialResource_ = dxCommon_->CreateBufferResource(sizeof(Material));
     // マテリアルデータの書き込み
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+    // デフォルトカラーを白に設定（モデルのマテリアルで上書きされる）
     materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
     materialData_->enableLighting = true;
     materialData_->uvTransform = MakeIdentity4x4();
@@ -141,7 +142,12 @@ void Object3d::SetModel(Model* model) {
 
         // デバッグ情報
         OutputDebugStringA("Object3d::SetModel - Material information:\n");
-        OutputDebugStringA(("  - Diffuse (RGBA): " +
+        OutputDebugStringA(("  - Model Material Diffuse (RGBA): " +
+            std::to_string(modelMaterial.diffuse.x) + ", " +
+            std::to_string(modelMaterial.diffuse.y) + ", " +
+            std::to_string(modelMaterial.diffuse.z) + ", " +
+            std::to_string(modelMaterial.diffuse.w) + "\n").c_str());
+        OutputDebugStringA(("  - Applied to Shader (RGBA): " +
             std::to_string(materialData_->color.x) + ", " +
             std::to_string(materialData_->color.y) + ", " +
             std::to_string(materialData_->color.z) + ", " +
