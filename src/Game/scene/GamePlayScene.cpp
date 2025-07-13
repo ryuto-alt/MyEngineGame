@@ -22,6 +22,20 @@ void GamePlayScene::Initialize() {
 	// 回転の初期化
 	currentRotationY_ = 0.0f;
 	targetRotationY_ = 0.0f;
+	
+	// ディレクショナルライトの初期設定
+	directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+	directionalLight_.direction = { 0.0f, -1.0f, 0.5f };
+	directionalLight_.intensity = 1.0f;
+	
+	// スポットライトの初期設定
+	spotLight_.color = { 1.0f, 0.9f, 0.8f, 1.0f };
+	spotLight_.position = { 0.0f, 5.0f, -2.0f };
+	spotLight_.intensity = 2.0f;
+	spotLight_.direction = { 0.0f, -1.0f, 0.3f };
+	spotLight_.innerCone = cosf(12.0f * 3.14159265f / 180.0f);
+	spotLight_.attenuation = { 1.0f, 0.09f, 0.032f };
+	spotLight_.outerCone = cosf(20.0f * 3.14159265f / 180.0f);
 
 	initialized_ = true;
 }
@@ -52,6 +66,8 @@ void GamePlayScene::Update() {
 		humanObject3d_->SetEnableLighting(true);
 		humanObject3d_->SetEnableAnimation(true);
 		humanObject3d_->SetCamera(camera_);
+		humanObject3d_->SetDirectionalLight(directionalLight_);
+		humanObject3d_->SetSpotLight(spotLight_);
 		
 		modelLoaded_ = true;
 		return;
@@ -69,6 +85,8 @@ void GamePlayScene::Update() {
 				groundObject3d_->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
 				groundObject3d_->SetEnableLighting(true);
 				groundObject3d_->SetCamera(camera_);
+				groundObject3d_->SetDirectionalLight(directionalLight_);
+				groundObject3d_->SetSpotLight(spotLight_);
 			}
 		} catch (const std::exception&) {
 		}
@@ -91,6 +109,8 @@ void GamePlayScene::Update() {
 				cubeGlbObject3d_->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
 				cubeGlbObject3d_->SetEnableLighting(true);
 				cubeGlbObject3d_->SetCamera(camera_);
+				cubeGlbObject3d_->SetDirectionalLight(directionalLight_);
+				cubeGlbObject3d_->SetSpotLight(spotLight_);
 				OutputDebugStringA("GLB Cube model loaded successfully\n");
 			}
 		} catch (const std::exception& e) {
@@ -113,11 +133,20 @@ void GamePlayScene::Update() {
 	if (engine_->IsKeyPressed(DIK_LSHIFT)) currentPos.y -= moveSpeed_;
 	engine_->SetCameraPosition(currentPos);
 
+	// ライトパラメータの更新
+	if (humanObject3d_) {
+		humanObject3d_->SetDirectionalLight(directionalLight_);
+		humanObject3d_->SetSpotLight(spotLight_);
+	}
 	if (groundObject3d_) {
+		groundObject3d_->SetDirectionalLight(directionalLight_);
+		groundObject3d_->SetSpotLight(spotLight_);
 		groundObject3d_->Update();
 	}
 
 	if (cubeGlbObject3d_) {
+		cubeGlbObject3d_->SetDirectionalLight(directionalLight_);
+		cubeGlbObject3d_->SetSpotLight(spotLight_);
 		cubeGlbObject3d_->Update();
 	}
 
@@ -173,6 +202,11 @@ void GamePlayScene::Update() {
 		}
 		if (engine_->IsKeyTriggered(DIK_R)) {
 			humanObject3d_->SetAnimationTime(0.0f);
+		}
+		
+		// Fキーでライティングデバッグウィンドウの表示切り替え
+		if (engine_->IsKeyTriggered(DIK_F)) {
+			showLightingDebug_ = !showLightingDebug_;
 		}
 		
 		if (isBlending_) {
@@ -268,6 +302,7 @@ void GamePlayScene::Draw() {
 		ImGui::Text("P - アニメーション一時停止/再開");
 		ImGui::Text("R - アニメーションリセット");
 		ImGui::Text("1 - アニメーション切り替え（SneakWalk ⇔ Walk）");
+		ImGui::Text("F - ライティング設定の表示/非表示");
 		ImGui::Text("ESC - 終了");
 		
 		ImGui::Separator();
@@ -309,6 +344,99 @@ void GamePlayScene::Draw() {
 		ImGui::Text("目標回転: %.2f度", targetRotationY_ * 180.0f / 3.14159f);
 
 		ImGui::End();
+		
+		// ライティングデバッグウィンドウ
+		if (showLightingDebug_) {
+			ImGui::Begin("Lighting Settings (F キーで表示切替)");
+			
+			// ライティング状態の確認
+			ImGui::Text("ライティング状態:");
+			ImGui::Text("  Human: %s", humanObject3d_ && humanObject3d_->GetEnableLighting() ? "有効" : "無効");
+			ImGui::Text("  Ground: %s", groundObject3d_ && groundObject3d_->GetEnableLighting() ? "有効" : "無効");
+			ImGui::Text("  Cube: %s", cubeGlbObject3d_ && cubeGlbObject3d_->GetEnableLighting() ? "有効" : "無効");
+			
+			// ディレクショナルライト設定
+			ImGui::Separator();
+			ImGui::Text("Directional Light");
+			ImGui::Checkbox("Enable Directional Light", &enableDirectionalLight_);
+			if (enableDirectionalLight_) {
+				ImGui::ColorEdit3("Dir Light Color", &directionalLight_.color.x);
+				ImGui::SliderFloat3("Dir Light Direction", &directionalLight_.direction.x, -1.0f, 1.0f);
+				ImGui::SliderFloat("Dir Light Intensity", &directionalLight_.intensity, 0.0f, 3.0f);
+				
+				// 方向ベクトルを正規化
+				float dirLength = sqrtf(directionalLight_.direction.x * directionalLight_.direction.x +
+									   directionalLight_.direction.y * directionalLight_.direction.y +
+									   directionalLight_.direction.z * directionalLight_.direction.z);
+				if (dirLength > 0.001f) {
+					directionalLight_.direction.x /= dirLength;
+					directionalLight_.direction.y /= dirLength;
+					directionalLight_.direction.z /= dirLength;
+				}
+			}
+			
+			// スポットライト設定
+			ImGui::Separator();
+			ImGui::Text("Spot Light");
+			ImGui::Checkbox("Enable Spot Light", &enableSpotLight_);
+			if (enableSpotLight_) {
+				ImGui::ColorEdit3("Spot Light Color", &spotLight_.color.x);
+				ImGui::DragFloat3("Spot Light Position", &spotLight_.position.x, 0.1f);
+				ImGui::SliderFloat3("Spot Light Direction", &spotLight_.direction.x, -1.0f, 1.0f);
+				ImGui::SliderFloat("Spot Light Intensity", &spotLight_.intensity, 0.0f, 5.0f);
+				
+				// コーン角度（度数で表示）
+				float innerAngle = acosf(spotLight_.innerCone) * 180.0f / 3.14159265f;
+				float outerAngle = acosf(spotLight_.outerCone) * 180.0f / 3.14159265f;
+				
+				if (ImGui::SliderFloat("Inner Cone Angle", &innerAngle, 0.0f, 90.0f)) {
+					spotLight_.innerCone = cosf(innerAngle * 3.14159265f / 180.0f);
+				}
+				if (ImGui::SliderFloat("Outer Cone Angle", &outerAngle, 0.0f, 90.0f)) {
+					spotLight_.outerCone = cosf(outerAngle * 3.14159265f / 180.0f);
+				}
+				
+				// 減衰パラメータ
+				ImGui::Text("Attenuation");
+				ImGui::SliderFloat("Constant", &spotLight_.attenuation.x, 0.0f, 2.0f);
+				ImGui::SliderFloat("Linear", &spotLight_.attenuation.y, 0.0f, 0.5f);
+				ImGui::SliderFloat("Quadratic", &spotLight_.attenuation.z, 0.0f, 0.1f);
+			}
+			
+			// ライトを無効化する場合の処理
+			static float dirLightIntensityBackup = 1.0f;
+			static float spotLightIntensityBackup = 2.0f;
+			
+			if (!enableDirectionalLight_) {
+				if (directionalLight_.intensity > 0.0f) {
+					dirLightIntensityBackup = directionalLight_.intensity;
+				}
+				directionalLight_.intensity = 0.0f;
+			} else if (directionalLight_.intensity == 0.0f) {
+				directionalLight_.intensity = dirLightIntensityBackup;
+			}
+			
+			if (!enableSpotLight_) {
+				if (spotLight_.intensity > 0.0f) {
+					spotLightIntensityBackup = spotLight_.intensity;
+				}
+				spotLight_.intensity = 0.0f;
+			} else if (spotLight_.intensity == 0.0f) {
+				spotLight_.intensity = spotLightIntensityBackup;
+			}
+			
+			// 現在のライト値の表示
+			ImGui::Separator();
+			ImGui::Text("現在のライト値:");
+			ImGui::Text("Directional Light:");
+			ImGui::Text("  強度: %.2f", directionalLight_.intensity);
+			ImGui::Text("  方向: (%.2f, %.2f, %.2f)", directionalLight_.direction.x, directionalLight_.direction.y, directionalLight_.direction.z);
+			ImGui::Text("Spot Light:");
+			ImGui::Text("  強度: %.2f", spotLight_.intensity);
+			ImGui::Text("  位置: (%.2f, %.2f, %.2f)", spotLight_.position.x, spotLight_.position.y, spotLight_.position.z);
+			
+			ImGui::End();
+		}
 	}
 }
 #pragma endregion

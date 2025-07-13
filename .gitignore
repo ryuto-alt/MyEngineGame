@@ -359,3 +359,11 @@ DirectXGame/imgui.ini
 
 # DirectXTex Compiled Shaders
 **/DirectXTex/Shaders/Compiled/
+
+# Claude and MCP related files
+.claude/
+brave-mcp/
+.mcp.json
+
+# Screenshots
+*.png

@@ -6,6 +6,7 @@
 #include <cassert>
 #include <unordered_map>
 #include <cmath>
+#include <cstdio>
 
 // tinygltf implementation
 #define TINYGLTF_IMPLEMENTATION
@@ -612,6 +613,9 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
     
     const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene];
     
+    // 最初のマテリアルのみを適用するためのフラグ
+    bool materialSet = false;
+    
     // ノード変換行列を計算する関数
     std::function<void(const tinygltf::Model&, int, const Matrix4x4&)> processNode;
     processNode = [&](const tinygltf::Model& model, int nodeIndex, const Matrix4x4& parentTransform) {
@@ -761,8 +765,9 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                     }
                 }
                 
-                // マテリアル処理
-                if (primitive.material >= 0 && primitive.material < static_cast<int>(model.materials.size())) {
+                // マテリアル処理（最初のマテリアルのみ適用）
+                if (!materialSet && primitive.material >= 0 && primitive.material < static_cast<int>(model.materials.size())) {
+                    materialSet = true;
                     const tinygltf::Material& material = model.materials[primitive.material];
                     
                     // ベースカラーテクスチャ
@@ -775,19 +780,57 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                                 
                                 // 埋め込みテクスチャを保存
                                 if (!image.image.empty()) {
-                                    std::string textureFilename = "Resources/textures/glb_embedded_" + std::to_string(texture.source) + "_" + std::to_string(std::hash<std::string>{}(filePath)) + ".jpg";
+                                    // 画像フォーマットに基づいて拡張子を決定
+                                    std::string extension = ".png"; // デフォルト
+                                    if (image.mimeType == "image/jpeg" || image.mimeType == "image/jpg") {
+                                        extension = ".jpg";
+                                    } else if (image.mimeType == "image/png") {
+                                        extension = ".png";
+                                    }
                                     
-                                    // ディレクトリを作成
-                                    CreateDirectoryA("Resources", NULL);
-                                    CreateDirectoryA("Resources/textures", NULL);
+                                    std::string textureFilename = "Resources/textures/glb_embedded_" + std::to_string(texture.source) + "_" + std::to_string(std::hash<std::string>{}(filePath)) + extension;
                                     
-                                    // ファイルに保存
-                                    std::ofstream texFile(textureFilename, std::ios::binary);
-                                    if (texFile.is_open()) {
-                                        texFile.write(reinterpret_cast<const char*>(image.image.data()), image.image.size());
-                                        texFile.close();
+                                    // ファイルが既に存在するか確認
+                                    DWORD fileAttributes = GetFileAttributesA(textureFilename.c_str());
+                                    if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
+                                        // 既に存在する場合は再利用
                                         result.material.textureFilePath = textureFilename;
-                                        OutputDebugStringA(("GLB: Saved embedded texture to " + textureFilename + "\n").c_str());
+                                        OutputDebugStringA(("GLB: Reusing existing texture: " + textureFilename + "\n").c_str());
+                                    } else {
+                                        // ディレクトリを作成
+                                        CreateDirectoryA("Resources", NULL);
+                                        CreateDirectoryA("Resources/textures", NULL);
+                                        
+                                        // tinygltfはimage.imageにデコード済みのピクセルデータを格納している
+                                        // image.uriまたはimage.bufferViewがある場合は元のエンコード済みデータを使用
+                                        if (image.uri.empty() && image.bufferView < 0) {
+                                            // デコード済みデータしかない場合はPNGとして保存
+                                            extension = ".png";
+                                            textureFilename = "Resources/textures/glb_embedded_" + std::to_string(texture.source) + "_" + std::to_string(std::hash<std::string>{}(filePath)) + extension;
+                                            
+                                            // stb_image_writeを使用してPNGとして保存
+                                            int width = image.width;
+                                            int height = image.height;
+                                            int comp = image.component;
+                                            if (stbi_write_png(textureFilename.c_str(), width, height, comp, image.image.data(), width * comp)) {
+                                                result.material.textureFilePath = textureFilename;
+                                                OutputDebugStringA(("GLB: Saved embedded texture as PNG: " + textureFilename + "\n").c_str());
+                                            } else {
+                                                OutputDebugStringA(("GLB: Failed to save texture as PNG: " + textureFilename + "\n").c_str());
+                                            }
+                                        } else if (image.bufferView >= 0) {
+                                            // BufferViewから元のエンコード済みデータを取得
+                                            const tinygltf::BufferView& bufferView = model.bufferViews[image.bufferView];
+                                            const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
+                                            
+                                            std::ofstream texFile(textureFilename, std::ios::binary);
+                                            if (texFile.is_open()) {
+                                                texFile.write(reinterpret_cast<const char*>(buffer.data.data() + bufferView.byteOffset), bufferView.byteLength);
+                                                texFile.close();
+                                                result.material.textureFilePath = textureFilename;
+                                                OutputDebugStringA(("GLB: Saved embedded texture from buffer: " + textureFilename + "\n").c_str());
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -801,12 +844,26 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                         result.material.diffuse.z = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[2]);
                         result.material.diffuse.w = material.pbrMetallicRoughness.baseColorFactor.size() >= 4 ? 
                                                    static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[3]) : 1.0f;
+                        
+                        // デバッグ: マテリアルカラーを出力
+                        char debugMsg[256];
+                        sprintf_s(debugMsg, "GLB Material Color: R=%.2f, G=%.2f, B=%.2f, A=%.2f\n",
+                                  result.material.diffuse.x, result.material.diffuse.y, 
+                                  result.material.diffuse.z, result.material.diffuse.w);
+                        OutputDebugStringA(debugMsg);
                     } else {
                         result.material.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+                        OutputDebugStringA("GLB: No baseColorFactor specified, using white default\n");
                     }
+                } else if (!materialSet) {
+                    // 最初のプリミティブでマテリアルが指定されていない場合のデフォルト値
+                    materialSet = true;
+                    result.material.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+                    result.material.alpha = 1.0f;
+                    OutputDebugStringA("GLB: No material specified, using white default color\n");
                 }
                 
-                break; // 最初のプリミティブのみ処理
+                // break; // すべてのプリミティブを処理するためコメントアウト
             }
         }
         

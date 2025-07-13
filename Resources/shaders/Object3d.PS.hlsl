@@ -14,11 +14,23 @@ struct DirectionalLight
     float intensity;
 };
 
+struct SpotLight
+{
+    float32_t4 color;       // ライトの色
+    float32_t3 position;    // スポットライトの位置
+    float intensity;        // ライトの強度
+    float32_t3 direction;   // スポットライトの方向
+    float innerCone;        // 内側コーン角度（cos値）
+    float32_t3 attenuation; // 減衰パラメータ（定数、線形、二次）
+    float outerCone;        // 外側コーン角度（cos値）
+};
+
 ConstantBuffer<Material> gMaterial : register(b0);
 Texture2D<float32_t4> gTexture : register(t0);
 SamplerState gSample : register(s0);
 
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
+ConstantBuffer<SpotLight> gSpotLight : register(b2);
 
 struct PixelShaderOutput
 {
@@ -55,11 +67,52 @@ PixelShaderOutput main(VertexShaderOutput input)
         float rim = 1.0f - saturate(dot(normal, viewDir));
         rim = pow(rim, 3.0f) * 0.3f; // リム効果を調整
         
-        // 最終的なライティング計算
-        float3 lighting = gDirectionalLight.color.rgb * diffuse * gDirectionalLight.intensity;
-        lighting += rim * gDirectionalLight.color.rgb; // リムライトを追加
+        // ディレクショナルライトの計算
+        float3 directionalLighting = gDirectionalLight.color.rgb * diffuse * gDirectionalLight.intensity;
+        directionalLighting += rim * gDirectionalLight.color.rgb; // リムライトを追加
         
-        output.color.rgb = gMaterial.color.rgb * textureColor.rgb * lighting;
+        // スポットライトの計算
+        float3 spotLighting = float3(0.0f, 0.0f, 0.0f);
+        
+        // ピクセルからスポットライトへのベクトル
+        float3 lightToPixel = input.worldPos - gSpotLight.position;
+        float distance = length(lightToPixel);
+        lightToPixel = normalize(lightToPixel);
+        
+        // 減衰の計算
+        float attenuation = 1.0f / (
+            gSpotLight.attenuation.x +                    // 定数減衰
+            gSpotLight.attenuation.y * distance +         // 線形減衰
+            gSpotLight.attenuation.z * distance * distance // 二次減衰
+        );
+        
+        // スポットライトの方向との角度をチェック
+        float cosAngle = dot(lightToPixel, normalize(gSpotLight.direction));
+        
+        // コーン内にいるかチェック
+        if (cosAngle > gSpotLight.outerCone)
+        {
+            // 内側と外側のコーンの間でフェードアウト
+            float spotFactor = 1.0f;
+            if (cosAngle < gSpotLight.innerCone)
+            {
+                spotFactor = smoothstep(gSpotLight.outerCone, gSpotLight.innerCone, cosAngle);
+            }
+            
+            // スポットライトの拡散反射
+            float spotDiffuse = saturate(dot(normal, -lightToPixel));
+            
+            // スポットライトの最終的な寄与
+            spotLighting = gSpotLight.color.rgb * spotDiffuse * gSpotLight.intensity * attenuation * spotFactor;
+        }
+        
+        // アンビエントライトを追加（暗すぎる問題を解決）
+        float3 ambient = float3(0.15f, 0.15f, 0.15f); // 環境光を追加
+        
+        // すべてのライティングを合成
+        float3 totalLighting = directionalLighting + spotLighting + ambient;
+        
+        output.color.rgb = gMaterial.color.rgb * textureColor.rgb * totalLighting;
         output.color.a = gMaterial.color.a * textureColor.a;
     }
     else

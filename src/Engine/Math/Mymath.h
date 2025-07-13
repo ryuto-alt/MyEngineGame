@@ -59,6 +59,16 @@ struct DirectionalLight {
     float intensity;
 };
 
+struct SpotLight {
+    Vector4 color;        // ライトの色（RGBAで、Aは未使用）
+    Vector3 position;     // スポットライトの位置
+    float intensity;      // ライトの強度
+    Vector3 direction;    // スポットライトの方向
+    float innerCone;      // 内側コーン角度（cos値）
+    Vector3 attenuation;  // 減衰パラメータ（定数、線形、二次）
+    float outerCone;      // 外側コーン角度（cos値）
+};
+
 struct Transform {
     Vector3 scale;
     Vector3 rotate;

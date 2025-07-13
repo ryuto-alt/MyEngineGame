@@ -8,11 +8,12 @@
 #include "AnimatedModel.h"
 #include "AnimationUtility.h"
 #include "UnoEngine.h"
+#include <unordered_set>
 
 
 Object3d::Object3d() : model_(nullptr), dxCommon_(nullptr), spriteCommon_(nullptr),
 materialData_(nullptr), transformationMatrixData_(nullptr), directionalLightData_(nullptr),
-camera_(nullptr) {
+spotLightData_(nullptr), camera_(nullptr) {
     // 初期値設定
     transform_.scale = { 1.0f, 1.0f, 1.0f };
     transform_.rotate = { 0.0f, 0.0f, 0.0f };
@@ -33,11 +34,15 @@ Object3d::~Object3d() {
     if (directionalLightResource_) {
         directionalLightResource_.Reset();
     }
+    if (spotLightResource_) {
+        spotLightResource_.Reset();
+    }
     
     // データポインタをnullptrに設定（安全のため）
     materialData_ = nullptr;
     transformationMatrixData_ = nullptr;
     directionalLightData_ = nullptr;
+    spotLightData_ = nullptr;
 }
 
 void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
@@ -68,6 +73,18 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
     directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
     directionalLightData_->direction = { 0.0f, -1.0f, 0.0f };
     directionalLightData_->intensity = 1.0f;
+    
+    // スポットライトリソースの作成
+    spotLightResource_ = dxCommon_->CreateBufferResource(sizeof(SpotLight));
+    // スポットライトデータの書き込み
+    spotLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&spotLightData_));
+    spotLightData_->color = { 1.0f, 1.0f, 0.9f, 1.0f };  // 暖かい白色
+    spotLightData_->position = { 0.0f, 5.0f, 0.0f };     // デフォルト位置（上から）
+    spotLightData_->intensity = 2.0f;                     // 強めの光
+    spotLightData_->direction = { 0.0f, -1.0f, 0.0f };   // 下向き
+    spotLightData_->innerCone = cosf(12.0f * 3.14159265f / 180.0f);  // 内側コーン角12度
+    spotLightData_->attenuation = { 1.0f, 0.09f, 0.032f };           // 減衰パラメータ
+    spotLightData_->outerCone = cosf(20.0f * 3.14159265f / 180.0f);  // 外側コーン角20度
 }
 
 void Object3d::SetModel(Model* model) {
@@ -328,28 +345,38 @@ void Object3d::Draw() {
         texturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
     }
     else if (!TextureManager::GetInstance()->IsTextureExists(texturePath)) {
-       // OutputDebugStringA(("Object3d::Draw - Texture does not exist in TextureManager: " + texturePath + "\n").c_str());
-
-        // 試しにテクスチャを再ロードする
-        bool loadSuccess = false;
-
-        // ファイルの存在チェック
-        DWORD fileAttributes = GetFileAttributesA(texturePath.c_str());
-        if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
-            // ファイルが存在する場合はロードを試みる
-           // OutputDebugStringA(("Object3d::Draw - File exists, trying to load texture: " + texturePath + "\n").c_str());
-            TextureManager::GetInstance()->LoadTexture(texturePath);
-
-            // 読み込みに成功したか確認
-            if (TextureManager::GetInstance()->IsTextureExists(texturePath)) {
-              //  OutputDebugStringA(("Object3d::Draw - Successfully loaded texture: " + texturePath + "\n").c_str());
-                loadSuccess = true;
+        // テクスチャが存在しない場合は即座にデフォルトテクスチャを使用
+        // 毎フレーム読み込みを試みるのを防ぐ
+        static std::unordered_set<std::string> failedTextures;
+        
+        if (failedTextures.find(texturePath) == failedTextures.end()) {
+            // 初回のみエラーを出力し、読み込みを試みる
+            //OutputDebugStringA(("Object3d::Draw - Texture not found, trying once: " + texturePath + "\n").c_str());
+            
+            // ファイルの存在チェック
+            DWORD fileAttributes = GetFileAttributesA(texturePath.c_str());
+            if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
+                // ファイルが存在する場合は一度だけロードを試みる
+                try {
+                    TextureManager::GetInstance()->LoadTexture(texturePath);
+                    if (TextureManager::GetInstance()->IsTextureExists(texturePath)) {
+                        // 成功したらそのまま使用
+                        //OutputDebugStringA(("Object3d::Draw - Successfully loaded texture: " + texturePath + "\n").c_str());
+                    } else {
+                        failedTextures.insert(texturePath);
+                    }
+                } catch (...) {
+                    // 例外が発生した場合は失敗リストに追加
+                    failedTextures.insert(texturePath);
+                }
+            } else {
+                // ファイルが存在しない場合は失敗リストに追加
+                failedTextures.insert(texturePath);
             }
         }
-
-        // それでも失敗した場合はデフォルトテクスチャを使用
-        if (!loadSuccess) {
-            //OutputDebugStringA("Object3d::Draw - Using default texture\n");
+        
+        // 失敗リストにある場合は即座にデフォルトテクスチャを使用
+        if (failedTextures.find(texturePath) != failedTextures.end()) {
             TextureManager::GetInstance()->LoadDefaultTexture();
             texturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
         }
@@ -371,6 +398,9 @@ void Object3d::Draw() {
 
     // ライトCBufferの場所を設定
     dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
+    
+    // スポットライトCBufferの場所を設定
+    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, spotLightResource_->GetGPUVirtualAddress());
 
     // パレットSRVの設定（アニメーション用）
     if (enableAnimation_ && animatedModel_) {

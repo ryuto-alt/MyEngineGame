@@ -61,6 +61,8 @@ public:
     // ライトの設定
     void SetDirectionalLight(const DirectionalLight& light) { *directionalLightData_ = light; }
     const DirectionalLight& GetDirectionalLight() const { return *directionalLightData_; }
+    void SetSpotLight(const SpotLight& light) { *spotLightData_ = light; }
+    const SpotLight& GetSpotLight() const { return *spotLightData_; }
     
     // アニメーション行列の設定
     void SetAnimationMatrix(const Matrix4x4& animationMatrix) { animationMatrix_ = animationMatrix; }
@@ -100,6 +102,11 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource_;
     // ライトデータ
     DirectionalLight* directionalLightData_;
+    
+    // スポットライトリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource_;
+    // スポットライトデータ
+    SpotLight* spotLightData_;
 
     // トランスフォーム
     Transform transform_;

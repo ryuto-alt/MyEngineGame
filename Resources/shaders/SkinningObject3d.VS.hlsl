@@ -61,6 +61,10 @@ VertexShaderOutput main(VertexShaderInput input)
     output.position = mul(skinned.position, gTransformationMatrix.WVP);
     output.texcoord = input.texcoord;
     
+    // ワールド座標を計算
+    float32_t4 worldPos = mul(skinned.position, gTransformationMatrix.World);
+    output.worldPos = worldPos.xyz;
+    
     // スキニング後の法線をワールド空間に変換
     float32_t3 worldNormal = mul(skinned.normal, (float32_t3x3)gTransformationMatrix.World);
     output.normal = normalize(worldNormal);

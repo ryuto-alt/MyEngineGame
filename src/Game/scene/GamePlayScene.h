@@ -47,6 +47,15 @@ protected:
     bool isBlending_ = false;
     float blendTimer_ = 0.0f;
     const float BLEND_DURATION = 0.3f;
+    
+    // ライティングパラメータ
+    DirectionalLight directionalLight_;
+    SpotLight spotLight_;
+    
+    // ライティングデバッグ用
+    bool showLightingDebug_ = true;
+    bool enableDirectionalLight_ = true;
+    bool enableSpotLight_ = true;
 
 private:
 };

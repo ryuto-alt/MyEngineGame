@@ -45,8 +45,27 @@
       "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64)",
       "Bash(rm:*)",
       "Bash(\"/mnt/c/Program Files/Microsoft Visual Studio/2022/Community/MSBuild/Current/Bin/amd64/MSBuild.exe\" CG2_00-01.sln /p:Configuration=Debug /p:Platform=x64 /t:Build)",
-      "Bash(/mnt/c/Windows/System32/tasklist.exe)"
+      "Bash(/mnt/c/Windows/System32/tasklist.exe)",
+      "Bash(where devenv)",
+      "Bash(npm install)",
+      "Bash(echo $env:APPDATA)",
+      "Bash(npm start)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(claude mcp add:*)",
+      "Bash(/mcp)",
+      "Bash(powershell:*)",
+      "mcp__brave-browser__brave_search",
+      "mcp__brave-browser__brave_navigate",
+      "mcp__brave-browser__brave_screenshot",
+      "Bash(xcopy:*)",
+      "Bash(dir:*)",
+      "Bash(cmd /c:*)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "brave-search",
+    "brave-browser"
+  ]
 }

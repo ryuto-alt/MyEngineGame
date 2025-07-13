@@ -21,6 +21,10 @@ VertexShaderOutput main(VertexShaderInput input)
     output.position = mul(input.position, gTransformationMatrix.WVP);
     output.texcoord = input.texcoord;
     
+    // ワールド座標を計算
+    float32_t4 worldPos = mul(input.position, gTransformationMatrix.World);
+    output.worldPos = worldPos.xyz;
+    
     // 法線の計算を精密に行い、正規化を確実に行う
     float32_t3 worldNormal = mul(input.normal, (float32_t3x3) gTransformationMatrix.World);
     output.normal = normalize(worldNormal);
