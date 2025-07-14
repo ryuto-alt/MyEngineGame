@@ -171,6 +171,14 @@ void SpriteCommon::GraphicsPipelineInitialize()
 	HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
+	
+	// シェーダーBlobの解放
+	if (vertexshaderBlob) {
+		vertexshaderBlob->Release();
+	}
+	if (pixelShaderBlob) {
+		pixelShaderBlob->Release();
+	}
 }
 
 void SpriteCommon::SkinningPipelineInitialize()
@@ -251,4 +259,12 @@ void SpriteCommon::SkinningPipelineInitialize()
 	HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&skinningPipelineState));
 	assert(SUCCEEDED(hr));
+	
+	// シェーダーBlobの解放
+	if (vertexshaderBlob) {
+		vertexshaderBlob->Release();
+	}
+	if (pixelShaderBlob) {
+		pixelShaderBlob->Release();
+	}
 }

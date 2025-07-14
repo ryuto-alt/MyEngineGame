@@ -149,6 +149,15 @@
     <ClCompile Include="src\Game\MyGame.cpp">
       <Filter>src\Game</Filter>
     </ClCompile>
+    <ClCompile Include="src\Game\Player.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Ground.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\LightManager.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
     <ClCompile Include="src\Engine\Core\Framework.cpp">
       <Filter>src\engine\Core</Filter>
     </ClCompile>
@@ -323,6 +332,15 @@
       <Filter>src\engine\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\Game\MyGame.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Player.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Ground.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\LightManager.h">
       <Filter>src\Game</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Core\Framework.h">

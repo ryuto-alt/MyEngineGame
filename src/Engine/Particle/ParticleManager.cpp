@@ -4,7 +4,23 @@
 #include <algorithm>
 #include <d3d12.h>
 
-// Meyer's Singletonパターンでは、静的メンバ変数やGetInstance、Finalizeの実装は不要になります
+// 静的メンバ変数の初期化
+ParticleManager* ParticleManager::instance_ = nullptr;
+
+ParticleManager* ParticleManager::GetInstance() {
+    if (!instance_) {
+        instance_ = new ParticleManager();
+    }
+    return instance_;
+}
+
+void ParticleManager::Finalize() {
+    if (instance_) {
+        instance_->ForceReleaseResources();
+        delete instance_;
+        instance_ = nullptr;
+    }
+}
 
 ParticleManager::~ParticleManager() {
     // 全パーティクルグループのリソース解放

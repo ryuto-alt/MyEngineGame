@@ -1,5 +1,8 @@
 #pragma once
 #include "UnoEngine.h"
+#include "../Player.h"
+#include "../Ground.h"
+#include "../LightManager.h"
 
 
 class GamePlayScene : public IScene {
@@ -14,48 +17,20 @@ public:
 
 protected:
     bool initialized_ = false;
-    bool modelLoaded_ = false;
-    bool groundLoaded_ = false;
-    bool cubeGlbLoaded_ = false;
     
     UnoEngine* engine_ = nullptr;
 
-    std::unique_ptr<Object3d> humanObject3d_;
-    std::unique_ptr<AnimatedModel> humanAnimatedModel_;
-    std::unique_ptr<Object3d> groundObject3d_;
-    std::unique_ptr<Model> groundModel_;
+    // ゲームオブジェクト
+    std::unique_ptr<Player> player_;
+    std::unique_ptr<Ground> ground_;
+    std::unique_ptr<LightManager> lightManager_;
     
-    // GLBモデル用
+    // GLBモデル用（テスト用キューブ）
     std::unique_ptr<Object3d> cubeGlbObject3d_;
     std::unique_ptr<Model> cubeGlbModel_;
     
-    float animationTime_ = 0.0f;
-    bool animationPaused_ = false;
-    bool enableAnimation_ = true;
-    
-    const float moveSpeed_ = 0.01f;
-    const float humanSpeed_ = 0.05f;
-    
-    bool isMoving_ = false;
-    bool isSneaking_ = false;
-    bool previousBButtonPressed_ = false;
-    Vector3 moveDirection_ = Vector3{0.0f, 0.0f, 0.0f};
-    float currentRotationY_ = 0.0f;
-    float targetRotationY_ = 0.0f;
-    float rotationSmoothingSpeed_ = 17.0f;  // 回転スムーシング速度
-    
-    bool isBlending_ = false;
-    float blendTimer_ = 0.0f;
-    const float BLEND_DURATION = 0.3f;
-    
-    // ライティングパラメータ
-    DirectionalLight directionalLight_;
-    SpotLight spotLight_;
-    
-    // ライティングデバッグ用
-    bool showLightingDebug_ = true;
-    bool enableDirectionalLight_ = true;
-    bool enableSpotLight_ = true;
+    // カメラ移動速度
+    const float cameraSpeed_ = 0.01f;
 
 private:
 };

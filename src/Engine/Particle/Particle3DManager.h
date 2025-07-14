@@ -127,6 +127,9 @@ private:
     Particle3DManager(const Particle3DManager&) = delete;
     Particle3DManager& operator=(const Particle3DManager&) = delete;
 
+    // シングルトンインスタンス
+    static Particle3DManager* instance_;
+
     // コンストラクタ（シングルトン）
     Particle3DManager() = default;
     // デストラクタ
@@ -134,17 +137,10 @@ private:
 
 public:
     // シングルトンインスタンスの取得
-    static Particle3DManager* GetInstance() {
-        static Particle3DManager instance;
-        return &instance;
-    }
+    static Particle3DManager* GetInstance();
 
     // 終了処理
-    static void Finalize() {
-        // Meyer'sシングルトンのリソースを強制的にクリア
-        Particle3DManager* instance = GetInstance();
-        instance->ForceReleaseResources();
-    }
+    static void Finalize();
 
     // リソースの強制解放
     void ForceReleaseResources() {

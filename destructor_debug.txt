@@ -1,0 +1,10 @@
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!
+DirectXCommon destructor called!

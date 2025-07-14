@@ -1,0 +1,31 @@
+#pragma once
+#include "UnoEngine.h"
+
+class Ground {
+public:
+    Ground();
+    ~Ground();
+
+    void Initialize(Camera* camera, DirectXCommon* dxCommon);
+    void Update();
+    void Draw();
+    void Finalize();
+    
+    // ライトの設定
+    void SetDirectionalLight(const DirectionalLight& light);
+    void SetSpotLight(const SpotLight& light);
+    
+    
+    // 位置の設定
+    void SetPosition(const Vector3& position);
+    Vector3 GetPosition() const;
+
+private:
+    std::unique_ptr<Object3d> object3d_;
+    std::unique_ptr<Model> model_;
+    
+    Camera* camera_ = nullptr;
+    DirectXCommon* dxCommon_ = nullptr;
+    
+    Vector3 position_ = Vector3{0.0f, -0.1f, 0.0f};
+};

@@ -59,7 +59,11 @@
       "mcp__brave-browser__brave_screenshot",
       "Bash(xcopy:*)",
       "Bash(dir:*)",
-      "Bash(cmd /c:*)"
+      "Bash(cmd /c:*)",
+      "Bash(if [ -f GamePlayScene_backup.cpp ])",
+      "Bash(then rm GamePlayScene_backup.cpp)",
+      "Bash(fi)",
+      "mcp__brave-browser__brave_get_text"
     ],
     "deny": []
   },

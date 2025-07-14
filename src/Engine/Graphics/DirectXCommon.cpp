@@ -1,6 +1,7 @@
 #include "DirectXCommon.h"
 #include <cassert>
 #include <format>
+#include <fstream>
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #include "Logger.h"
@@ -13,6 +14,18 @@ using namespace Logger;
 using namespace StringUtility;
 
 DirectXCommon::~DirectXCommon() {
+    // デバッグログの出力
+    #ifdef _DEBUG
+    {
+        std::ofstream logFile("destructor_debug.txt", std::ios::app);
+        if (logFile.is_open()) {
+            logFile << "DirectXCommon destructor called!" << std::endl;
+            logFile.close();
+        }
+        OutputDebugStringA("DirectXCommon destructor called!\n");
+    }
+    #endif
+
     // GPUの処理が完了するまで待機
     if (commandQueue && fence) {
         // Fenceの値を更新
@@ -72,7 +85,6 @@ DirectXCommon::~DirectXCommon() {
 void DirectXCommon::DeviceInitialize()
 {
 #ifdef _DEBUG
-	Microsoft::WRL::ComPtr<ID3D12Debug1> debugController = nullptr;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
 		//デバッグレイヤーを有効にする
 		debugController->EnableDebugLayer();
@@ -529,6 +541,21 @@ IDxcBlob* DirectXCommon::CompileShader(const std::wstring& filePath, const wchar
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	Log(ConvertString(std::format(L"Complete Succeeded,path:{},profile:{}\n", filePath, profile)));
+	
+	// COMオブジェクトの解放
+	if (shaderError) {
+		shaderError->Release();
+		shaderError = nullptr;
+	}
+	if (shaderResult) {
+		shaderResult->Release();
+		shaderResult = nullptr;
+	}
+	if (shaderSource) {
+		shaderSource->Release();
+		shaderSource = nullptr;
+	}
+	
 	return shaderBlob;
 }
 
@@ -553,8 +580,10 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::CreateBufferResource(size_
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//実際に頂点リソースを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource = nullptr;
+	// D3D12では、バッファは常にD3D12_RESOURCE_STATE_COMMON状態で作成される
+	// D3D12_HEAP_TYPE_UPLOADのバッファは暗黙的にGENERIC_READ状態として扱われる
 	HRESULT hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-		&vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
+		&vertexResourceDesc, D3D12_RESOURCE_STATE_COMMON, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
 	return vertexResource;
 }
@@ -600,7 +629,9 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectXCommon::UploadTextureData(Microsof
 	barrier.Transition.pResource = texture.Get();
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+	// テクスチャはシェーダーリソースとして使用されるため、GENERIC_READではなく
+	// PIXEL_SHADER_RESOURCEとNON_PIXEL_SHADER_RESOURCEの両方を指定
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
 	commandList->ResourceBarrier(1, &barrier);
 	return intermediateResource;
 }

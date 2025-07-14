@@ -14,7 +14,7 @@ private:
     static TextureManager* instance;
 
     TextureManager() = default;
-    ~TextureManager() = default;
+    ~TextureManager(); // デストラクタを明示的に実装
     TextureManager(TextureManager&) = default;
     TextureManager& operator=(TextureManager&) = delete;
 

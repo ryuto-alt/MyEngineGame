@@ -137,6 +137,9 @@ private:
     // フレンドクラス
     friend class ParticleEmitter;
 
+    // シングルトンインスタンス
+    static ParticleManager* instance_;
+
     // コンストラクタ（シングルトン）
     ParticleManager() = default;
     // デストラクタ
@@ -144,18 +147,10 @@ private:
 
 public:
     // シングルトンインスタンスの取得
-    static ParticleManager* GetInstance() {
-        // スレッドセーフなMeyer'sシングルトンパターン
-        static ParticleManager instance;
-        return &instance;
-    }
+    static ParticleManager* GetInstance();
 
     // 終了処理
-    static void Finalize() {
-        // Meyer'sシングルトンのリソースを強制的にクリア
-        ParticleManager* instance = GetInstance();
-        instance->ForceReleaseResources();
-    }
+    static void Finalize();
 
     // リソースの強制解放
     void ForceReleaseResources() {

@@ -1,0 +1,201 @@
+#include "Player.h"
+#include <cmath>
+
+Player::Player() {
+}
+
+Player::~Player() {
+}
+
+void Player::Initialize(Camera* camera) {
+    camera_ = camera;
+    
+    // 初期位置と回転の設定
+    position_ = Vector3{0.0f, 0.0f, 0.0f};
+    currentRotationY_ = 0.0f;
+    targetRotationY_ = 0.0f;
+    
+    // モデルの読み込み
+    UnoEngine* engine = UnoEngine::GetInstance();
+    
+    animatedModel_ = engine->CreateAnimatedModel();
+    animatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
+    
+    // アニメーションの読み込みと登録
+    Animation walkAnim = animatedModel_->GetAnimationPlayer().GetAnimation();
+    animatedModel_->AddAnimation("walk", walkAnim);
+    
+    Animation sneakWalkAnim = engine->LoadAnimation("Resources/Models/human", "sneakWalk.gltf");
+    animatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
+    
+    animatedModel_->ChangeAnimation("walk");
+    animatedModel_->PlayAnimation();
+    
+    // Object3Dの作成と設定
+    object3d_ = engine->CreateObject3D();
+    object3d_->SetModel(static_cast<Model*>(animatedModel_.get()));
+    object3d_->SetAnimatedModel(animatedModel_.get());
+    object3d_->SetPosition(position_);
+    object3d_->SetScale(Vector3{1.0f, 1.0f, 1.0f});
+    object3d_->SetRotation(Vector3{0.0f, 3.14f, 0.0f});
+    object3d_->SetEnableLighting(true);
+    object3d_->SetEnableAnimation(true);
+    object3d_->SetCamera(camera_);
+}
+
+void Player::Update(UnoEngine* engine) {
+    
+    const float deltaTime = 1.0f / 60.0f;
+    
+    HandleMovement(engine);
+    UpdateAnimation(deltaTime);
+    UpdateRotation(engine, deltaTime);
+    
+    object3d_->SetPosition(position_);
+    object3d_->SetRotation(Vector3{0.0f, currentRotationY_, 0.0f});
+    object3d_->Update();
+}
+
+void Player::Draw() {
+    if (!object3d_) return;
+    object3d_->Draw();
+}
+
+void Player::Finalize() {
+    if (object3d_) {
+        object3d_.reset();
+    }
+    if (animatedModel_) {
+        animatedModel_.reset();
+    }
+}
+
+void Player::SetDirectionalLight(const DirectionalLight& light) {
+    if (object3d_) {
+        object3d_->SetDirectionalLight(light);
+    }
+}
+
+void Player::SetSpotLight(const SpotLight& light) {
+    if (object3d_) {
+        object3d_->SetSpotLight(light);
+    }
+}
+
+void Player::PauseAnimation() {
+    if (animatedModel_) {
+        animationPaused_ = true;
+        animatedModel_->PauseAnimation();
+    }
+}
+
+void Player::PlayAnimation() {
+    if (animatedModel_) {
+        animationPaused_ = false;
+        animatedModel_->PlayAnimation();
+    }
+}
+
+void Player::ResetAnimation() {
+    if (object3d_) {
+        object3d_->SetAnimationTime(0.0f);
+    }
+}
+
+void Player::ToggleSneakWalk() {
+    if (!animatedModel_ || isBlending_) return;
+    
+    if (animatedModel_->GetCurrentAnimationName() == "walk") {
+        animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
+    } else {
+        animatedModel_->TransitionToAnimation("walk", 0.3f);
+    }
+    
+    isBlending_ = true;
+    blendTimer_ = 0.0f;
+}
+
+std::string Player::GetCurrentAnimationName() const {
+    if (!animatedModel_) return "";
+    return animatedModel_->GetCurrentAnimationName();
+}
+
+float Player::GetBlendProgress() const {
+    if (!isBlending_) return 1.0f;
+    return blendTimer_ / BLEND_DURATION;
+}
+
+void Player::HandleMovement(UnoEngine* engine) {
+    float stickX = engine->GetXboxLeftStickX();
+    float stickY = engine->GetXboxLeftStickY();
+    bool bButtonPressed = engine->IsXboxButtonPressed(0x2000);
+    bool bButtonTriggered = bButtonPressed && !previousBButtonPressed_;
+    
+    float stickMagnitude = std::sqrt(stickX * stickX + stickY * stickY);
+    isMoving_ = stickMagnitude > 0.1f;
+    
+    // スニーク状態の切り替え
+    if (bButtonTriggered && isMoving_ && !isBlending_) {
+        isSneaking_ = !isSneaking_;
+        isBlending_ = true;
+        blendTimer_ = 0.0f;
+        
+        if (isSneaking_) {
+            animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
+        } else {
+            animatedModel_->TransitionToAnimation("walk", 0.3f);
+        }
+    }
+    
+    previousBButtonPressed_ = bButtonPressed;
+    
+    // 移動処理
+    if (isMoving_) {
+        float currentSpeed = isSneaking_ ? moveSpeed_ * sneakSpeedMultiplier_ : moveSpeed_;
+        Vector3 movement = Vector3{stickX * currentSpeed, 0.0f, stickY * currentSpeed};
+        
+        moveDirection_ = Vector3{stickX, 0.0f, stickY};
+        
+        if (stickMagnitude > 0.1f) {
+            targetRotationY_ = std::atan2(stickX, stickY);
+        }
+        
+        position_ = position_ + movement;
+    }
+}
+
+void Player::UpdateAnimation(float deltaTime) {
+    // ブレンドタイマーの更新
+    if (isBlending_) {
+        blendTimer_ += deltaTime;
+        
+        if (blendTimer_ >= BLEND_DURATION) {
+            isBlending_ = false;
+            blendTimer_ = 0.0f;
+        }
+    }
+    
+    // 移動状態に応じたアニメーション制御
+    if (isMoving_) {
+        if (animationPaused_) {
+            animationPaused_ = false;
+            animatedModel_->PlayAnimation();
+        }
+    } else {
+        if (!animationPaused_) {
+            animationPaused_ = true;
+            animatedModel_->PauseAnimation();
+        }
+    }
+    
+    // アニメーションの更新
+    if (!animationPaused_) {
+        animatedModel_->Update(deltaTime);
+    } else {
+        animatedModel_->Update(0.0f);
+    }
+}
+
+void Player::UpdateRotation(UnoEngine* engine, float deltaTime) {
+    currentRotationY_ = engine->SmoothRotation(currentRotationY_, targetRotationY_, rotationSmoothingSpeed_, deltaTime);
+}

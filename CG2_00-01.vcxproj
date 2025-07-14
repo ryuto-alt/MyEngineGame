@@ -60,7 +60,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;$(ProjectDir)externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Game;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;$(ProjectDir)externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,7 +86,7 @@
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;$(ProjectDir)externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\Engine\Graphics;$(ProjectDir)src\Engine\Math;$(ProjectDir)src\Engine\Input;$(ProjectDir)src\Engine\Utility;$(ProjectDir)imgui;$(ProjectDir)externals\DirectXTex;$(ProjectDir)src\Engine\Camera;$(ProjectDir)src\Engine\Particle;$(ProjectDir)src\Engine\Audio;$(ProjectDir)src\Engine\core;$(ProjectDir)src\Game\scene;$(ProjectDir)src\Game;$(ProjectDir)src\Engine;$(ProjectDir)src\Engine\Collision;$(ProjectDir)src\Engine\Animation;$(ProjectDir)externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -148,6 +148,9 @@
     <ClCompile Include="src\Game\scene\SceneFactory.cpp" />
     <ClCompile Include="src\Game\scene\SceneManager.cpp" />
     <ClCompile Include="src\Game\scene\TitleScene.cpp" />
+    <ClCompile Include="src\Game\Player.cpp" />
+    <ClCompile Include="src\Game\Ground.cpp" />
+    <ClCompile Include="src\Game\LightManager.cpp" />
     <ClCompile Include="src\Engine\Animation\AnimatedHumanController.cpp" />
     <ClCompile Include="src\Engine\Animation\AnimatedModel.cpp" />
     <ClCompile Include="src\Engine\Animation\AnimationBlender.cpp" />
@@ -211,6 +214,9 @@
     <ClInclude Include="src\Game\scene\SceneFactory.h" />
     <ClInclude Include="src\Game\scene\SceneManager.h" />
     <ClInclude Include="src\Game\scene\TitleScene.h" />
+    <ClInclude Include="src\Game\Player.h" />
+    <ClInclude Include="src\Game\Ground.h" />
+    <ClInclude Include="src\Game\LightManager.h" />
     <ClInclude Include="src\Engine\Animation\Animation.h" />
     <ClInclude Include="src\Engine\Animation\AnimatedHumanController.h" />
     <ClInclude Include="src\Engine\Animation\AnimatedModel.h" />

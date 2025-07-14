@@ -16,6 +16,16 @@ void EffectManager3D::Initialize() {
     nextEffectIndex_ = 0;
 }
 
+void EffectManager3D::Finalize() {
+    // すべてのエフェクトを停止
+    StopAllEffects();
+    
+    // エフェクトプールのクリア
+    hitEffectPool_.clear();
+    
+    nextEffectIndex_ = 0;
+}
+
 void EffectManager3D::Update() {
     // 全エフェクトの更新
     for (auto& effect : hitEffectPool_) {

@@ -4,6 +4,24 @@
 #include <cassert>
 #include <algorithm>
 
+// 静的メンバ変数の初期化
+Particle3DManager* Particle3DManager::instance_ = nullptr;
+
+Particle3DManager* Particle3DManager::GetInstance() {
+    if (!instance_) {
+        instance_ = new Particle3DManager();
+    }
+    return instance_;
+}
+
+void Particle3DManager::Finalize() {
+    if (instance_) {
+        instance_->ForceReleaseResources();
+        delete instance_;
+        instance_ = nullptr;
+    }
+}
+
 void Particle3DManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager, SpriteCommon* spriteCommon) {
     // nullptrチェック
     assert(dxCommon);

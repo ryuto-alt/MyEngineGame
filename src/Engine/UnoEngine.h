@@ -65,6 +65,9 @@ class UnoEngine {
 public:
     // シングルトンインスタンスを取得
     static UnoEngine* GetInstance();
+    
+    // シングルトンインスタンスを破棄
+    static void DestroyInstance();
 
     // コピー禁止
     UnoEngine(const UnoEngine&) = delete;
@@ -215,6 +218,9 @@ private:
     UnoEngine() = default;
     // デストラクタ（シングルトン）
     ~UnoEngine() = default;
+    
+    // 終了処理済みフラグ
+    bool finalized_ = false;
 
     // 基本コンポーネント
     std::unique_ptr<WinApp> winApp_;

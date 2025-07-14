@@ -14,6 +14,14 @@ namespace Collision {
         return instance_;
     }
 
+    void CollisionManager::DestroyInstance() {
+        if (instance_) {
+            instance_->ClearColliders();
+            delete instance_;
+            instance_ = nullptr;
+        }
+    }
+
     void CollisionManager::AddCollider(std::shared_ptr<CollisionObject> collider) {
         // 既に登録されているかチェック
         auto it = std::find_if(colliders_.begin(), colliders_.end(),

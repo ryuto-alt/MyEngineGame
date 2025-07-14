@@ -20,6 +20,14 @@ UnoEngine* UnoEngine::GetInstance() {
     return instance_;
 }
 
+void UnoEngine::DestroyInstance() {
+    if (instance_) {
+        instance_->Finalize();
+        delete instance_;
+        instance_ = nullptr;
+    }
+}
+
 void UnoEngine::Initialize() {
     try {
         // WinAppの初期化
@@ -178,6 +186,12 @@ void UnoEngine::Draw() {
 }
 
 void UnoEngine::Finalize() {
+    // 既に終了処理済みの場合は何もしない
+    if (finalized_) {
+        return;
+    }
+    finalized_ = true;
+    
     try {
         // 3D空間オーディオの解放（最初に）
         spatialAudioSources_.clear();
@@ -185,6 +199,9 @@ void UnoEngine::Finalize() {
 
         // シーンマネージャーの終了処理（オブジェクトやスプライトを解放）
         SceneManager::GetInstance()->Finalize();
+
+        // エフェクトマネージャの終了処理
+        EffectManager3D::GetInstance()->Finalize();
 
         // パーティクルマネージャーの終了処理（シーンの直後に強制解放）
         ParticleManager::Finalize();
@@ -207,7 +224,7 @@ void UnoEngine::Finalize() {
         AudioManager::DestroyInstance();
 
         // 衝突判定マネージャの終了処理
-        Collision::CollisionManager::GetInstance()->ClearColliders();
+        Collision::CollisionManager::DestroyInstance();
 
         // スプライト共通部分の解放
         spriteCommon_.reset();
@@ -226,10 +243,6 @@ void UnoEngine::Finalize() {
 
         // シーンファクトリーの解放
         sceneFactory_.reset();
-
-        // シングルトンインスタンスの解放
-        delete instance_;
-        instance_ = nullptr;
 
     }
     catch (const std::exception& e) {
@@ -251,9 +264,6 @@ void UnoEngine::Run() {
         // 描画
         Draw();
     }
-
-    // 終了処理
-    Finalize();
 }
 
 void UnoEngine::SetSceneFactory(SceneFactory* sceneFactory) {

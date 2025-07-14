@@ -111,6 +111,9 @@ namespace Collision {
     public:
         // シングルトンインスタンス取得
         static CollisionManager* GetInstance();
+        
+        // シングルトンインスタンスの破棄
+        static void DestroyInstance();
 
         // コリジョンの登録
         void AddCollider(std::shared_ptr<CollisionObject> collider);

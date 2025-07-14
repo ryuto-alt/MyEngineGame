@@ -34,8 +34,17 @@ class DirectXCommon
 	void ImguiInitialize();
 
 public:
+	// デフォルトコンストラクタ
+	DirectXCommon() = default;
+	
 	//デストラクタ
 	~DirectXCommon();
+	
+	// コピー/ムーブを禁止
+	DirectXCommon(const DirectXCommon&) = delete;
+	DirectXCommon& operator=(const DirectXCommon&) = delete;
+	DirectXCommon(DirectXCommon&&) = delete;
+	DirectXCommon& operator=(DirectXCommon&&) = delete;
 	
 	//初期化
 	void Initialize(WinApp* winApp);
@@ -124,6 +133,9 @@ private:
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 
+#ifdef _DEBUG
+	Microsoft::WRL::ComPtr<ID3D12Debug1> debugController = nullptr;
+#endif
 
 private:
 
