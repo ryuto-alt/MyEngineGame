@@ -388,7 +388,7 @@ void Object3d::Draw() {
         }
     }
     else {
-        OutputDebugStringA(("Object3d::Draw - Using valid texture: " + texturePath + "\n").c_str());
+        // OutputDebugStringA(("Object3d::Draw - Using valid texture: " + texturePath + "\n").c_str());
     }
 
     // 1. ディスクリプタヒープを設定（SetGraphicsRootDescriptorTable の前に必須）

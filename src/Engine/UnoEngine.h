@@ -1,4 +1,5 @@
 #pragma once
+#include <chrono>
 // 基本システム
 #include "WinApp.h"
 #include "DirectXCommon.h"
@@ -186,6 +187,12 @@ public:
     // 回転角度をスムージング（deltaTime考慮）
     float SmoothRotation(float current, float target, float speed, float deltaTime);
     
+    // === 時間管理 ===
+    // デルタタイムを取得（秒単位）
+    float GetDeltaTime() const { return deltaTime_; }
+    // 前フレームからの経過時間を更新（フレーム開始時に呼ぶ）
+    void UpdateDeltaTime();
+    
     // === シーン管理 ===
     void ChangeScene(const std::string& sceneName);
     
@@ -244,4 +251,8 @@ private:
 
     // 終了リクエストフラグ
     bool endRequest_ = false;
+    
+    // 時間管理
+    float deltaTime_ = 0.0f;  // 前フレームからの経過時間（秒）
+    std::chrono::steady_clock::time_point lastFrameTime_;  // 前フレームの時刻
 };

@@ -80,7 +80,9 @@ void AnimatedHumanController::Update() {
     }
     
     // アニメーションモデルの更新
-    animatedModel_->Update(1.0f / 60.0f);
+    // TODO: deltaTimeを外部から受け取るように修正する必要がある
+    // 一時的に120FPSを仮定
+    animatedModel_->Update(1.0f / 120.0f);
     
 
     if (object3d_ && animatedModel_) {

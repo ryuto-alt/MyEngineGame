@@ -29,8 +29,8 @@ protected:
     std::unique_ptr<Object3d> cubeGlbObject3d_;
     std::unique_ptr<Model> cubeGlbModel_;
     
-    // カメラ移動速度
-    const float cameraSpeed_ = 0.01f;
+    // カメラ移動速度（1秒あたりのユニット数）
+    const float cameraSpeed_ = 0.6f;  // 60FPSで0.01f = 1秒で0.6f
 
 private:
 };

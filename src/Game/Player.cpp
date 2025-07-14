@@ -45,9 +45,9 @@ void Player::Initialize(Camera* camera) {
 
 void Player::Update(UnoEngine* engine) {
     
-    const float deltaTime = 1.0f / 60.0f;
+    const float deltaTime = engine->GetDeltaTime();
     
-    HandleMovement(engine);
+    HandleMovement(engine, deltaTime);
     UpdateAnimation(deltaTime);
     UpdateRotation(engine, deltaTime);
     
@@ -125,7 +125,7 @@ float Player::GetBlendProgress() const {
     return blendTimer_ / BLEND_DURATION;
 }
 
-void Player::HandleMovement(UnoEngine* engine) {
+void Player::HandleMovement(UnoEngine* engine, float deltaTime) {
     float stickX = engine->GetXboxLeftStickX();
     float stickY = engine->GetXboxLeftStickY();
     bool bButtonPressed = engine->IsXboxButtonPressed(0x2000);
@@ -149,10 +149,10 @@ void Player::HandleMovement(UnoEngine* engine) {
     
     previousBButtonPressed_ = bButtonPressed;
     
-    // 移動処理
+    // 移動処理（デルタタイム考慮）
     if (isMoving_) {
         float currentSpeed = isSneaking_ ? moveSpeed_ * sneakSpeedMultiplier_ : moveSpeed_;
-        Vector3 movement = Vector3{stickX * currentSpeed, 0.0f, stickY * currentSpeed};
+        Vector3 movement = Vector3{stickX * currentSpeed * deltaTime, 0.0f, stickY * currentSpeed * deltaTime};
         
         moveDirection_ = Vector3{stickX, 0.0f, stickY};
         

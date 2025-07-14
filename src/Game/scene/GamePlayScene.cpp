@@ -56,19 +56,23 @@ void GamePlayScene::Initialize() {
 void GamePlayScene::Update() {
     if (!initialized_) return;
 
+    // デルタタイムを取得
+    float deltaTime = engine_->GetDeltaTime();
+
     // ESCキーで終了
     if (engine_->IsKeyTriggered(DIK_ESCAPE)) {
         exit(0);
     }
 
-    // カメラ移動
+    // カメラ移動（デルタタイム考慮）
     Vector3 currentPos = engine_->GetCameraPosition();
-    if (engine_->IsKeyPressed(DIK_W)) currentPos.z += cameraSpeed_;
-    if (engine_->IsKeyPressed(DIK_S)) currentPos.z -= cameraSpeed_;
-    if (engine_->IsKeyPressed(DIK_A)) currentPos.x -= cameraSpeed_;
-    if (engine_->IsKeyPressed(DIK_D)) currentPos.x += cameraSpeed_;
-    if (engine_->IsKeyPressed(DIK_SPACE)) currentPos.y += cameraSpeed_;
-    if (engine_->IsKeyPressed(DIK_LSHIFT)) currentPos.y -= cameraSpeed_;
+    float cameraMoveSpeed = cameraSpeed_ * deltaTime;
+    if (engine_->IsKeyPressed(DIK_W)) currentPos.z += cameraMoveSpeed;
+    if (engine_->IsKeyPressed(DIK_S)) currentPos.z -= cameraMoveSpeed;
+    if (engine_->IsKeyPressed(DIK_A)) currentPos.x -= cameraMoveSpeed;
+    if (engine_->IsKeyPressed(DIK_D)) currentPos.x += cameraMoveSpeed;
+    if (engine_->IsKeyPressed(DIK_SPACE)) currentPos.y += cameraMoveSpeed;
+    if (engine_->IsKeyPressed(DIK_LSHIFT)) currentPos.y -= cameraMoveSpeed;
     engine_->SetCameraPosition(currentPos);
 
     // Fキーでライティングデバッグウィンドウの表示切り替え

@@ -40,7 +40,7 @@ public:
     
 
 private:
-    void HandleMovement(UnoEngine* engine);
+    void HandleMovement(UnoEngine* engine, float deltaTime);
     void UpdateAnimation(float deltaTime);
     void UpdateRotation(UnoEngine* engine, float deltaTime);
     
@@ -55,7 +55,7 @@ private:
     float rotationSmoothingSpeed_ = 17.0f;
     
     // 移動関連
-    const float moveSpeed_ = 0.05f;
+    const float moveSpeed_ = 3.0f;  // 1秒あたり3ユニット（60FPSで0.05f = 1秒で3.0f）
     const float sneakSpeedMultiplier_ = 0.5f;
     bool isMoving_ = false;
     bool isSneaking_ = false;

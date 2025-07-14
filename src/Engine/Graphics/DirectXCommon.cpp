@@ -14,18 +14,6 @@ using namespace Logger;
 using namespace StringUtility;
 
 DirectXCommon::~DirectXCommon() {
-    // デバッグログの出力
-    #ifdef _DEBUG
-    {
-        std::ofstream logFile("destructor_debug.txt", std::ios::app);
-        if (logFile.is_open()) {
-            logFile << "DirectXCommon destructor called!" << std::endl;
-            logFile.close();
-        }
-        OutputDebugStringA("DirectXCommon destructor called!\n");
-    }
-    #endif
-
     // GPUの処理が完了するまで待機
     if (commandQueue && fence) {
         // Fenceの値を更新

@@ -578,9 +578,9 @@ void AnimatedModel::ProcessAssimpAnimation(const aiScene* scene) {
             nodeAnimation.scale.push_back(keyframe);
         }
         
-        OutputDebugStringA(("AnimatedModel: Node " + nodeName + " - Position keys: " + std::to_string(nodeAnimation.translate.size()) + 
-                          ", Rotation keys: " + std::to_string(nodeAnimation.rotate.size()) + 
-                          ", Scale keys: " + std::to_string(nodeAnimation.scale.size()) + "\n").c_str());
+        // OutputDebugStringA(("AnimatedModel: Node " + nodeName + " - Position keys: " + std::to_string(nodeAnimation.translate.size()) + 
+        //                   ", Rotation keys: " + std::to_string(nodeAnimation.rotate.size()) + 
+        //                   ", Scale keys: " + std::to_string(nodeAnimation.scale.size()) + "\n").c_str());
     }
     
     animationPlayer_.SetAnimation(animation_);
