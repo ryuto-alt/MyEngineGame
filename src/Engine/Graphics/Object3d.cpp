@@ -132,6 +132,7 @@ void Object3d::SetModel(Model* model) {
 		Matrix4x4 rotationMatrix = MakeIdentity4x4(); 
 		Matrix4x4 translateMatrix = MakeTranslateMatrix(translate);
 
+		//タイリング処理
 		materialData_->uvTransform = Multiply(translateMatrix, Multiply(rotationMatrix, scaleMatrix));
 		
 
