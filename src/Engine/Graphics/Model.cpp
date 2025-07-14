@@ -629,6 +629,9 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
     
     const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene];
     
+    // ルートノードのスケール情報を保存するためのフラグ
+    bool rootTransformSaved = false;
+    
     // ノード変換行列を計算する関数
     std::function<void(const tinygltf::Model&, int, const Matrix4x4&)> processNode;
     processNode = [&](const tinygltf::Model& model, int nodeIndex, const Matrix4x4& parentTransform) {
@@ -666,6 +669,21 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
                 scale.x = static_cast<float>(node.scale[0]);
                 scale.y = static_cast<float>(node.scale[1]);
                 scale.z = static_cast<float>(node.scale[2]);
+            }
+            
+            // 最初のメッシュを持つノードのスケール情報をルートTransformとして保存
+            if (!rootTransformSaved && node.mesh >= 0 && node.mesh < static_cast<int>(model.meshes.size())) {
+                result.rootTransform.scale = scale;
+                result.rootTransform.translate = translation;
+                // 回転はとりあえずデフォルト値のまま
+                result.rootTransform.rotate = {0.0f, 0.0f, 0.0f};
+                rootTransformSaved = true;
+                
+                // デバッグ情報を出力
+                char debugMsg[256];
+                sprintf_s(debugMsg, "GLB Root Transform saved - Scale: X=%.3f, Y=%.3f, Z=%.3f, Translation: X=%.3f, Y=%.3f, Z=%.3f\n",
+                         scale.x, scale.y, scale.z, translation.x, translation.y, translation.z);
+                OutputDebugStringA(debugMsg);
             }
             
             // TRS行列を作成

@@ -34,7 +34,7 @@ void GamePlayScene::Initialize() {
     try {
         cubeGlbModel_ = std::make_unique<Model>();
         cubeGlbModel_->Initialize(dxCommon_);
-        cubeGlbModel_->LoadFromGLB("Resources/Models/cube/cube.glb");
+        cubeGlbModel_->LoadFromGLB("Resources/Models/cube/obje.glb");
 
         if (cubeGlbModel_) {
             cubeGlbObject3d_ = engine_->CreateObject3D();

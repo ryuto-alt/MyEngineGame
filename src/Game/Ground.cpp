@@ -14,16 +14,28 @@ void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon) {
     UnoEngine* engine = UnoEngine::GetInstance();
     
     try {
-        model_ = engine->LoadModel("Resources/Models/ground/ground.obj");
-        if (model_) {
-            object3d_ = engine->CreateObject3D();
-            object3d_->SetModel(model_.get());
-            object3d_->SetPosition(position_);
-            object3d_->SetScale(Vector3{1.0f, 1.0f, 1.0f});
-            object3d_->SetRotation(Vector3{0.0f, 0.0f, 0.0f});
-            object3d_->SetEnableLighting(true);
-            object3d_->SetCamera(camera_);
-        }
+        model_ = std::make_unique<Model>();
+        model_->Initialize(dxCommon_);
+        model_->LoadFromGLB("Resources/Models/ground/ground.glb");
+        
+        object3d_ = engine->CreateObject3D();
+        object3d_->SetModel(model_.get());
+        object3d_->SetPosition(position_);
+        
+        // Blenderで設定されたスケール情報を使用
+        const ModelData& modelData = model_->GetModelData();
+        Vector3 blenderScale = modelData.rootTransform.scale;
+        object3d_->SetScale(blenderScale);
+        
+        // デバッグ: 適用されたスケール値を出力
+        char debugMsg[256];
+        sprintf_s(debugMsg, "Ground: Applied Blender scale - X=%.3f, Y=%.3f, Z=%.3f\n",
+                 blenderScale.x, blenderScale.y, blenderScale.z);
+        OutputDebugStringA(debugMsg);
+        
+        object3d_->SetRotation(Vector3{0.0f, 0.0f, 0.0f});
+        object3d_->SetEnableLighting(true);
+        object3d_->SetCamera(camera_);
     } catch (const std::exception& e) {
         OutputDebugStringA(("Failed to load ground model: " + std::string(e.what()) + "\n").c_str());
     }

@@ -102,4 +102,5 @@ struct ModelData {
     std::vector<VertexData>vertices;
     MaterialData material;
     std::map<std::string, JointWeightData> skinClusterData;  // ボーンウェイト情報
+    Transform rootTransform;  // ルートノードの変換情報（Blenderで設定されたスケール等）
 };
