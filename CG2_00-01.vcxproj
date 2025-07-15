@@ -124,6 +124,7 @@
     <ClCompile Include="src\Engine\Graphics\Model.cpp" />
     <ClCompile Include="src\Engine\Graphics\Object3d.cpp" />
     <ClCompile Include="src\Engine\Graphics\RenderingPipeline.cpp" />
+    <ClCompile Include="src\Engine\Graphics\Skybox.cpp" />
     <ClCompile Include="src\Engine\Graphics\Sprite.cpp" />
     <ClCompile Include="src\Engine\Graphics\SpriteCommon.cpp" />
     <ClCompile Include="src\Engine\Graphics\SRVManager.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Engine\Graphics\Object3d.h" />
     <ClInclude Include="src\Engine\Graphics\RenderingPipeline.h" />
     <ClInclude Include="src\Engine\Graphics\ResourceObject.h" />
+    <ClInclude Include="src\Engine\Graphics\Skybox.h" />
     <ClInclude Include="src\Engine\Graphics\Sprite.h" />
     <ClInclude Include="src\Engine\Graphics\SpriteCommon.h" />
     <ClInclude Include="src\Engine\Graphics\SRVManager.h" />

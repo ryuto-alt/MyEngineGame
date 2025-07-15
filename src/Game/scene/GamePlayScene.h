@@ -3,6 +3,7 @@
 #include "../Player.h"
 #include "../Ground.h"
 #include "../LightManager.h"
+#include "Skybox.h"
 
 
 class GamePlayScene : public IScene {
@@ -24,6 +25,7 @@ protected:
     std::unique_ptr<Player> player_;
     std::unique_ptr<Ground> ground_;
     std::unique_ptr<LightManager> lightManager_;
+    std::unique_ptr<Skybox> skybox_;
     
     // GLBモデル用（テスト用キューブ）
     std::unique_ptr<Object3d> cubeGlbObject3d_;

@@ -23,6 +23,9 @@ public:
     // SRV生成関数（テクスチャ用）
     void CreateSRVForTexture2D(uint32_t srvIndex, Microsoft::WRL::ComPtr<ID3D12Resource> pResource, DXGI_FORMAT format, UINT mipLevels);
 
+    // SRV生成関数（Cubemap用）
+    void CreateSRVForTextureCube(uint32_t srvIndex, Microsoft::WRL::ComPtr<ID3D12Resource> pResource, DXGI_FORMAT format, UINT mipLevels);
+
     // SRV生成関数（Structured Buffer用）
     void CreateSRVForStructuredBuffer(uint32_t srvIndex, Microsoft::WRL::ComPtr<ID3D12Resource> pResource, UINT numElements, UINT structureByteStride);
 

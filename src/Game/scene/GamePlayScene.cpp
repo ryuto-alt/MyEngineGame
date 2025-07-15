@@ -30,6 +30,13 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
+    // Skyboxの作成と初期化
+    skybox_ = std::make_unique<Skybox>();
+    skybox_->Initialize(dxCommon_, engine_->GetSrvManager(), engine_->GetTextureManager());
+    // 正しいパスのDDSファイルを読み込み
+    skybox_->LoadCubemap("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    skybox_->SetScale(1000.0f); // 大きなスケールで遠景を表現
+    
     // GLBキューブモデルの初期化
     try {
         cubeGlbModel_ = std::make_unique<Model>();
@@ -115,6 +122,7 @@ void GamePlayScene::Update() {
     }
 
     // オブジェクトの更新
+    skybox_->Update();
     player_->Update(engine_);
     ground_->Update();
 
@@ -125,6 +133,9 @@ void GamePlayScene::Draw() {
     if (!initialized_) return;
 
     spriteCommon_->CommonDraw();
+
+    // Skyboxの描画（最初に背景として描画）
+    skybox_->Draw(camera_);
 
     // オブジェクトの描画
     ground_->Draw();

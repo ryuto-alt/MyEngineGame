@@ -86,7 +86,17 @@ bool TextureManager::LoadTexture(const std::string& filePath)
         // テクスチャファイルを読んでプログラムで扱えるようにする
         DirectX::ScratchImage image{};
         std::wstring filePathW = ConvertString(filePath);
-        HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+        HRESULT hr;
+        
+        // 拡張子を確認してDDSかWICファイルかを判断
+        if (filePath.ends_with(".dds")) {
+            // DDSファイルの場合はLoadFromDDSFileを使用
+            hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+        } else {
+            // 通常のファイル（png, jpegなど）の場合はLoadFromWICFileを使用
+            hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+        }
+        
         if (FAILED(hr)) {
             OutputDebugStringA(("ERROR: TextureManager::LoadTexture - Failed to load from file: " + filePath + "\n").c_str());
             throw std::runtime_error("Failed to load texture from file");
@@ -94,10 +104,18 @@ bool TextureManager::LoadTexture(const std::string& filePath)
 
         // ミニマップの作成
         DirectX::ScratchImage mipImages{};
-        hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-        if (FAILED(hr)) {
-            OutputDebugStringA("ERROR: TextureManager::LoadTexture - Failed to generate mipmaps\n");
-            throw std::runtime_error("Failed to generate mipmaps");
+        
+        // DDSファイルで既に圧縮されている場合はそのまま使用、それ以外はミップマップ生成
+        if (DirectX::IsCompressed(image.GetMetadata().format)) {
+            // 圧縮フォーマットならそのまま使う
+            mipImages = std::move(image);
+        } else {
+            // 非圧縮フォーマットならミップマップを生成
+            hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
+            if (FAILED(hr)) {
+                OutputDebugStringA("ERROR: TextureManager::LoadTexture - Failed to generate mipmaps\n");
+                throw std::runtime_error("Failed to generate mipmaps");
+            }
         }
 
         // テクスチャデータを追加
@@ -115,13 +133,36 @@ bool TextureManager::LoadTexture(const std::string& filePath)
         textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
         textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 
-        // SRVの設定
-        srvManager_->CreateSRVForTexture2D(
-            textureData.srvIndex,
-            textureData.resource,
-            textureData.metadata.format,
-            static_cast<UINT>(textureData.metadata.mipLevels)
-        );
+        // SRVの設定（Cubemapかどうかで分岐）
+        // 複数の条件でCubemapを判定
+        bool isCubemap = textureData.metadata.IsCubemap() || 
+                        (textureData.metadata.arraySize == 6 && textureData.metadata.dimension == DirectX::TEX_DIMENSION_TEXTURE2D) ||
+                        (filePath.ends_with(".dds") && 
+                         (filePath.find("cubemap") != std::string::npos || 
+                          filePath.find("cube") != std::string::npos ||
+                          filePath.find("skybox") != std::string::npos ||
+                          filePath.find("airport") != std::string::npos ||
+                          filePath.find("rostock") != std::string::npos));
+        
+        OutputDebugStringA(("TextureManager: File: " + filePath + ", IsCubemap: " + (isCubemap ? "true" : "false") + ", ArraySize: " + std::to_string(textureData.metadata.arraySize) + ", Dimension: " + std::to_string(textureData.metadata.dimension) + "\n").c_str());
+        
+        if (isCubemap) {
+            srvManager_->CreateSRVForTextureCube(
+                textureData.srvIndex,
+                textureData.resource,
+                textureData.metadata.format,
+                static_cast<UINT>(textureData.metadata.mipLevels)
+            );
+            OutputDebugStringA("TextureManager: Created SRV as TextureCube\n");
+        } else {
+            srvManager_->CreateSRVForTexture2D(
+                textureData.srvIndex,
+                textureData.resource,
+                textureData.metadata.format,
+                static_cast<UINT>(textureData.metadata.mipLevels)
+            );
+            OutputDebugStringA("TextureManager: Created SRV as Texture2D\n");
+        }
 
         // マップに追加
         textureDatas[filePath] = textureData;

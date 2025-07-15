@@ -77,6 +77,33 @@ void SrvManager::CreateSRVForTexture2D(uint32_t srvIndex, Microsoft::WRL::ComPtr
     OutputDebugStringA(("SrvManager: Created SRV for Texture2D at index " + std::to_string(srvIndex) + "\n").c_str());
 }
 
+void SrvManager::CreateSRVForTextureCube(uint32_t srvIndex, Microsoft::WRL::ComPtr<ID3D12Resource> pResource, DXGI_FORMAT format, UINT mipLevels) {
+    // nullptrチェック
+    if (pResource == nullptr) {
+        OutputDebugStringA("WARNING: Trying to create SRV for nullptr resource\n");
+        return;
+    }
+
+    // SRVの設定（Cubemap用）
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+    srvDesc.Format = format;
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+    srvDesc.TextureCube.MostDetailedMip = 0;
+    srvDesc.TextureCube.MipLevels = mipLevels;
+    srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+
+    // SRVの作成
+    dxCommon_->GetDevice()->CreateShaderResourceView(
+        pResource.Get(),
+        &srvDesc,
+        GetCPUDescriptorHandle(srvIndex)
+    );
+
+    // デバッグ出力
+    OutputDebugStringA(("SrvManager: Created SRV for TextureCube at index " + std::to_string(srvIndex) + "\n").c_str());
+}
+
 void SrvManager::CreateSRVForStructuredBuffer(uint32_t srvIndex, Microsoft::WRL::ComPtr<ID3D12Resource> pResource, UINT numElements, UINT structureByteStride) {
     // nullptrチェック
     if (pResource == nullptr) {
