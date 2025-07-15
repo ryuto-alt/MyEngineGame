@@ -101,7 +101,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 	TextureManager::GetInstance()->LoadDefaultTexture();
 	
 	// デフォルト環境マップテクスチャを事前にロード
-	TextureManager::GetInstance()->LoadTexture("Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
+	TextureManager::GetInstance()->LoadTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
 }
 
 void Object3d::SetModel(Model* model) {
@@ -416,7 +416,7 @@ void Object3d::Draw() {
 	std::string envTexturePath = environmentTexturePath_;
 	if (envTexturePath.empty() || !TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {
 		// デフォルト環境マップテクスチャを使用（キューブマップテクスチャが必要）
-		envTexturePath = "Resources/Models/skybox/fireplace_2k_hybrid_2k.dds";
+		envTexturePath = "Resources/Models/skybox/rostock_laage_airport_4k.dds";
 		
 		// デフォルト環境マップテクスチャが存在しない場合はロード
 		if (!TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {

@@ -367,3 +367,6 @@ brave-mcp/
 
 # Screenshots
 *.png
+
+# Large texture files (DDS files)
+*.dds
