@@ -1,8 +1,8 @@
 #pragma once
 #include "UnoEngine.h"
-#include "../Player.h"
-#include "../Ground.h"
-#include "../LightManager.h"
+#include "Player.h"
+#include "Ground.h"
+#include "LightManager.h"
 #include "Skybox.h"
 
 

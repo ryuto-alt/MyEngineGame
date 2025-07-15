@@ -13,7 +13,7 @@
 
 Object3d::Object3d() : model_(nullptr), dxCommon_(nullptr), spriteCommon_(nullptr),
 materialData_(nullptr), transformationMatrixData_(nullptr), directionalLightData_(nullptr),
-spotLightData_(nullptr), camera_(nullptr) {
+spotLightData_(nullptr), cameraData_(nullptr), camera_(nullptr) {
 	// 初期値設定
 	transform_.scale = { 1.0f, 1.0f, 1.0f };
 	transform_.rotate = { 0.0f, 0.0f, 0.0f };
@@ -37,12 +37,16 @@ Object3d::~Object3d() {
 	if (spotLightResource_) {
 		spotLightResource_.Reset();
 	}
+	if (cameraResource_) {
+		cameraResource_.Reset();
+	}
 
 	// データポインタをnullptrに設定（安全のため）
 	materialData_ = nullptr;
 	transformationMatrixData_ = nullptr;
 	directionalLightData_ = nullptr;
 	spotLightData_ = nullptr;
+	cameraData_ = nullptr;
 }
 
 void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
@@ -86,6 +90,18 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 	spotLightData_->innerCone = cosf(12.0f * 3.14159265f / 180.0f);  // 内側コーン角12度
 	spotLightData_->attenuation = { 1.0f, 0.09f, 0.032f };           // 減衰パラメータ
 	spotLightData_->outerCone = cosf(20.0f * 3.14159265f / 180.0f);  // 外側コーン角20度
+	
+	// カメラデータリソースの作成
+	cameraResource_ = dxCommon_->CreateBufferResource(sizeof(CameraData));
+	// カメラデータの書き込み
+	cameraResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraData_));
+	cameraData_->worldPosition = { 0.0f, 0.0f, 0.0f };
+	
+	// デフォルトテクスチャを事前にロードして描画中の動的SRV作成を避ける
+	TextureManager::GetInstance()->LoadDefaultTexture();
+	
+	// デフォルト環境マップテクスチャを事前にロード
+	TextureManager::GetInstance()->LoadTexture("Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
 }
 
 void Object3d::SetModel(Model* model) {
@@ -327,6 +343,11 @@ void Object3d::Update() {
 	// 行列の更新
 	transformationMatrixData_->WVP = worldViewProjectionMatrix;
 	transformationMatrixData_->World = finalWorldMatrix;
+	
+	// カメラの位置情報を更新
+	if (cameraData_ && camera_) {
+		cameraData_->worldPosition = camera_->GetTranslate();
+	}
 }
 
 void Object3d::Draw() {
@@ -336,14 +357,15 @@ void Object3d::Draw() {
 	// パイプラインの設定
 	if (enableAnimation_ && animatedModel_) {
 		// スキニング用パイプラインを使用
-		dxCommon_->GetCommandList()->SetGraphicsRootSignature(spriteCommon_->GetRootSignature().Get());
 		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetSkinningPipelineState().Get());
-		dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	else {
 		// 通常の描画設定（静的モデル用）
-		spriteCommon_->CommonDraw();
+		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetGraphicsPipelineState().Get());
 	}
+	
+	// プリミティブトポロジーの設定
+	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// アニメーションモデルの場合、頂点バッファとインフルエンスバッファを設定
 	if (enableAnimation_ && animatedModel_) {
@@ -375,69 +397,44 @@ void Object3d::Draw() {
 	// テクスチャが空または存在しない場合の詳細なチェック
 	if (texturePath.empty()) {
 		// OutputDebugStringA("Object3d::Draw - Texture path is empty, using default texture\n");
-		TextureManager::GetInstance()->LoadDefaultTexture();
 		texturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
 	}
 	else if (!TextureManager::GetInstance()->IsTextureExists(texturePath)) {
-		// テクスチャが存在しない場合は即座にデフォルトテクスチャを使用
-		// 毎フレーム読み込みを試みるのを防ぐ
-		static std::unordered_set<std::string> failedTextures;
-
-		if (failedTextures.find(texturePath) == failedTextures.end()) {
-			// 初回のみエラーを出力し、読み込みを試みる
-			//OutputDebugStringA(("Object3d::Draw - Texture not found, trying once: " + texturePath + "\n").c_str());
-
-			// ファイルの存在チェック
-			DWORD fileAttributes = GetFileAttributesA(texturePath.c_str());
-			if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
-				// ファイルが存在する場合は一度だけロードを試みる
-				try {
-					TextureManager::GetInstance()->LoadTexture(texturePath);
-					if (TextureManager::GetInstance()->IsTextureExists(texturePath)) {
-						// 成功したらそのまま使用
-						//OutputDebugStringA(("Object3d::Draw - Successfully loaded texture: " + texturePath + "\n").c_str());
-					}
-					else {
-						failedTextures.insert(texturePath);
-					}
-				}
-				catch (...) {
-					// 例外が発生した場合は失敗リストに追加
-					failedTextures.insert(texturePath);
-				}
-			}
-			else {
-				// ファイルが存在しない場合は失敗リストに追加
-				failedTextures.insert(texturePath);
-			}
-		}
-
-		// 失敗リストにある場合は即座にデフォルトテクスチャを使用
-		if (failedTextures.find(texturePath) != failedTextures.end()) {
-			TextureManager::GetInstance()->LoadDefaultTexture();
-			texturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
-		}
+		// テクスチャが存在しない場合は即座にデフォルトテクスチャを使用（描画中の動的読み込みを回避）
+		OutputDebugStringA(("Object3d::Draw - WARNING: Texture not found, using default: " + texturePath + "\n").c_str());
+		texturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
 	}
 	else {
 		// OutputDebugStringA(("Object3d::Draw - Using valid texture: " + texturePath + "\n").c_str());
 	}
 
-	// 1. ディスクリプタヒープを設定（SetGraphicsRootDescriptorTable の前に必須）
-	ID3D12DescriptorHeap* heaps[] = { TextureManager::GetInstance()->GetSrvDescriptorHeap().Get() };
-	dxCommon_->GetCommandList()->SetDescriptorHeaps(1, heaps);
-
-	// 2. ルートシグネチャを確実に設定（SetGraphicsRootDescriptorTable の前に必須）
-	dxCommon_->GetCommandList()->SetGraphicsRootSignature(spriteCommon_->GetRootSignature().Get());
-
-	// 3. テクスチャをセット（必ずテクスチャがセットされることを保証）
+	// テクスチャをセット
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2,
 		TextureManager::GetInstance()->GetSrvHandleGPU(texturePath));
+	
+	// 環境マップテクスチャの設定（事前にロードされているテクスチャを使用）
+	std::string envTexturePath = environmentTexturePath_;
+	if (envTexturePath.empty() || !TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {
+		// デフォルト環境マップテクスチャを使用（キューブマップテクスチャが必要）
+		envTexturePath = "Resources/Models/skybox/fireplace_2k_hybrid_2k.dds";
+		
+		// デフォルト環境マップテクスチャが存在しない場合はロード
+		if (!TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {
+			TextureManager::GetInstance()->LoadTexture(envTexturePath);
+		}
+	}
+	
+	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(6,
+		TextureManager::GetInstance()->GetSrvHandleGPU(envTexturePath));
 
 	// ライトCBufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource_->GetGPUVirtualAddress());
 
 	// スポットライトCBufferの場所を設定
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(5, spotLightResource_->GetGPUVirtualAddress());
+	
+	// カメラデータCBufferの場所を設定
+	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(7, cameraResource_->GetGPUVirtualAddress());
 
 	// パレットSRVの設定（アニメーション用）
 	if (enableAnimation_ && animatedModel_) {
@@ -445,14 +442,7 @@ void Object3d::Draw() {
 		const SkinCluster& skinCluster = animModel->GetSkinCluster();
 
 		if (skinCluster.paletteSrvHandle.second.ptr != 0) {
-			// 1. ディスクリプタヒープを設定（アニメーション用SetGraphicsRootDescriptorTable の前に必須）
-			ID3D12DescriptorHeap* animHeaps[] = { TextureManager::GetInstance()->GetSrvDescriptorHeap().Get() };
-			dxCommon_->GetCommandList()->SetDescriptorHeaps(1, animHeaps);
-
-			// 2. ルートシグネチャを確実に設定（アニメーション用SetGraphicsRootDescriptorTable の前に必須）
-			dxCommon_->GetCommandList()->SetGraphicsRootSignature(spriteCommon_->GetRootSignature().Get());
-
-			// 3. パレットSRVをセット
+			// パレットSRVをセット
 			dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster.paletteSrvHandle.second);
 		}
 		else {
@@ -461,9 +451,8 @@ void Object3d::Draw() {
 		}
 	}
 	else {
-		// 通常のオブジェクトの場合、ダミーのSRVを設定（必要に応じて）
-		// 現在のルートシグネチャではパレットSRVは必須なので、通常のオブジェクトでは問題になる
-		// この問題は後で対処
+		// 通常のオブジェクトの場合、パレットSRVの設定をスキップ
+		// （アニメーションなしのオブジェクトではパレットSRVは不要）
 	}
 
 	// 描画

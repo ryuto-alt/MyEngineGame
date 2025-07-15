@@ -1,5 +1,6 @@
 #include "SpriteCommon.h"
 #include "Logger.h"
+#include "TextureManager.h"
 
 SpriteCommon::~SpriteCommon() {
 	// パイプラインステートとルートシグネチャの明示的な解放
@@ -21,6 +22,12 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 
 void SpriteCommon::CommonDraw()
 {
+	OutputDebugStringA("DEBUG: CommonDraw() called - Setting descriptor heap and root signature\n");
+	
+	// ディスクリプタヒープを設定（SetGraphicsRootDescriptorTableの前に必須）
+	ID3D12DescriptorHeap* heaps[] = { TextureManager::GetInstance()->GetSrvDescriptorHeap().Get() };
+	dxCommon_->GetCommandList()->SetDescriptorHeaps(1, heaps);
+	
 	// RootSignatureを設定。POSに設定しているけどベット設定が必要
 	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
 	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
@@ -33,7 +40,7 @@ void SpriteCommon::RootSignatureInitialize()
 	//RootSignature作成
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	D3D12_DESCRIPTOR_RANGE descriptorRange[2] = {};
+	D3D12_DESCRIPTOR_RANGE descriptorRange[3] = {};
 	descriptorRange[0].BaseShaderRegister = 0;
 	descriptorRange[0].NumDescriptors = 1;
 	descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -43,8 +50,13 @@ void SpriteCommon::RootSignatureInitialize()
 	descriptorRange[1].NumDescriptors = 1;
 	descriptorRange[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 	descriptorRange[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	// 環境マップテクスチャ用のSRV（t2レジスタ）
+	descriptorRange[2].BaseShaderRegister = 2;
+	descriptorRange[2].NumDescriptors = 1;
+	descriptorRange[2].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	descriptorRange[2].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 	//RootParameter作成。複数設定できるので配列。
-	D3D12_ROOT_PARAMETER rootParameters[6] = {};
+	D3D12_ROOT_PARAMETER rootParameters[8] = {};
 	//rootParameters[0]設定
 	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;//CBVを行う
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;//PixelShaderで使う
@@ -71,6 +83,15 @@ void SpriteCommon::RootSignatureInitialize()
 	rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 	rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[5].Descriptor.ShaderRegister = 2;
+	//rootParameters[6]設定（環境マップテクスチャ）
+	rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[6].DescriptorTable.pDescriptorRanges = &descriptorRange[2];
+	rootParameters[6].DescriptorTable.NumDescriptorRanges = 1;
+	//rootParameters[7]設定（カメラデータ）
+	rootParameters[7].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[7].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[7].Descriptor.ShaderRegister = 3;
 	descriptionRootSignature.pParameters = rootParameters;//ルートパラメーター配列へのポインタ
 	descriptionRootSignature.NumParameters = _countof(rootParameters);//配列の長さ
 	//staticSamplers
@@ -95,7 +116,11 @@ void SpriteCommon::RootSignatureInitialize()
 	}
 	//バイナリをもとに生成
 	hr = dxCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
-	assert(SUCCEEDED(hr));
+	if (FAILED(hr)) {
+		OutputDebugStringA("ERROR: Failed to create root signature\n");
+		assert(false);
+	}
+	OutputDebugStringA("DEBUG: Root signature created successfully\n");
 }
 
 

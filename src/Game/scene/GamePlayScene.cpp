@@ -1,5 +1,5 @@
 #include "GamePlayScene.h"
-#include <stdexcept>
+
 
 GamePlayScene::GamePlayScene() {
 }
@@ -33,12 +33,19 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
+    // 環境マップテクスチャを設定（Human/Playerモデルに環境マップを適用）
+    player_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    ground_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    
     // Skyboxの作成と初期化
     skybox_ = std::make_unique<Skybox>();
     skybox_->Initialize(dxCommon_, engine_->GetSrvManager(), engine_->GetTextureManager());
     // 正しいパスのDDSファイルを読み込み
     skybox_->LoadCubemap("Resources/Models/skybox/rostock_laage_airport_4k.dds");
     skybox_->SetScale(1000.0f); // 大きなスケールで遠景を表現
+    
+    // 環境マップテクスチャを事前にロードして描画中の動的SRV作成を避ける
+    engine_->GetTextureManager()->LoadTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
     
     // GLBキューブモデルの初期化
     try {
@@ -54,6 +61,10 @@ void GamePlayScene::Initialize() {
             cubeGlbObject3d_->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
             cubeGlbObject3d_->SetEnableLighting(true);
             cubeGlbObject3d_->SetCamera(camera_);
+            
+            // 環境マップテクスチャを設定（skyboxと同じキューブマップを使用）
+            cubeGlbObject3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+            
             OutputDebugStringA("GLB Cube model loaded successfully\n");
         }
     } catch (const std::exception& e) {
@@ -149,6 +160,9 @@ void GamePlayScene::Draw() {
 
     // Skyboxの描画（最初に背景として描画）
     skybox_->Draw(camera_);
+    
+    // Skyboxが独自のルートシグネチャを使用するため、再度CommonDrawを呼び出してルートシグネチャを復元
+    spriteCommon_->CommonDraw();
 
     // オブジェクトの描画
     ground_->Draw();

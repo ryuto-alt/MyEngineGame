@@ -72,6 +72,12 @@ void Ground::SetSpotLight(const SpotLight& light) {
     }
 }
 
+void Ground::SetEnvironmentTexture(const std::string& texturePath) {
+    if (object3d_) {
+        object3d_->SetEnvironmentTexture(texturePath);
+    }
+}
+
 void Ground::SetPosition(const Vector3& position) {
     position_ = position;
     if (object3d_) {

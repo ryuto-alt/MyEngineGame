@@ -19,6 +19,9 @@ public:
     void SetDirectionalLight(const DirectionalLight& light);
     void SetSpotLight(const SpotLight& light);
     
+    // 環境マップテクスチャの設定
+    void SetEnvironmentTexture(const std::string& texturePath);
+    
     // アニメーション制御
     void PauseAnimation();
     void PlayAnimation();

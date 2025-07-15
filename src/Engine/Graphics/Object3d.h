@@ -64,6 +64,10 @@ public:
     void SetSpotLight(const SpotLight& light) { *spotLightData_ = light; }
     const SpotLight& GetSpotLight() const { return *spotLightData_; }
     
+    // 環境マップテクスチャの設定
+    void SetEnvironmentTexture(const std::string& texturePath) { environmentTexturePath_ = texturePath; }
+    const std::string& GetEnvironmentTexture() const { return environmentTexturePath_; }
+    
     // アニメーション行列の設定
     void SetAnimationMatrix(const Matrix4x4& animationMatrix) { animationMatrix_ = animationMatrix; }
     const Matrix4x4& GetAnimationMatrix() const { return animationMatrix_; }
@@ -107,6 +111,14 @@ private:
     Microsoft::WRL::ComPtr<ID3D12Resource> spotLightResource_;
     // スポットライトデータ
     SpotLight* spotLightData_;
+    
+    // カメラデータリソース
+    Microsoft::WRL::ComPtr<ID3D12Resource> cameraResource_;
+    // カメラデータ
+    struct CameraData {
+        Vector3 worldPosition;
+    };
+    CameraData* cameraData_;
 
     // トランスフォーム
     Transform transform_;
@@ -124,4 +136,7 @@ private:
 
     // カメラへの参照
     Camera* camera_ = nullptr;
+    
+    // 環境マップテクスチャのパス
+    std::string environmentTexturePath_ = "";
 };

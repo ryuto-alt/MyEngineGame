@@ -25,12 +25,19 @@ struct SpotLight
     float outerCone;        // 外側コーン角度（cos値）
 };
 
+struct CameraData
+{
+    float32_t3 worldPosition;
+};
+
 ConstantBuffer<Material> gMaterial : register(b0);
 Texture2D<float32_t4> gTexture : register(t0);
+TextureCube<float32_t4> gEnvironmentTexture : register(t2);
 SamplerState gSample : register(s0);
 
 ConstantBuffer<DirectionalLight> gDirectionalLight : register(b1);
 ConstantBuffer<SpotLight> gSpotLight : register(b2);
+ConstantBuffer<CameraData> gCamera : register(b3);
 
 struct PixelShaderOutput
 {
@@ -106,11 +113,19 @@ PixelShaderOutput main(VertexShaderOutput input)
             spotLighting = gSpotLight.color.rgb * spotDiffuse * gSpotLight.intensity * attenuation * spotFactor;
         }
         
+        // 環境マップの計算
+        float3 cameraToPosition = normalize(input.worldPos - gCamera.worldPosition);
+        float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
+        float4 environmentColor = gEnvironmentTexture.Sample(gSample, reflectedVector);
+        
         // アンビエントライトを追加（暗すぎる問題を解決）
         float3 ambient = float3(0.15f, 0.15f, 0.15f); // 環境光を追加
         
+        // 環境マップからの反射光を追加
+        float3 environmentLighting = environmentColor.rgb * 0.3f; // 環境反射の強度を調整
+        
         // すべてのライティングを合成
-        float3 totalLighting = directionalLighting + spotLighting + ambient;
+        float3 totalLighting = directionalLighting + spotLighting + ambient + environmentLighting;
         
         output.color.rgb = gMaterial.color.rgb * textureColor.rgb * totalLighting;
         output.color.a = gMaterial.color.a * textureColor.a;

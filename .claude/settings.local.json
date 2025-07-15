@@ -66,7 +66,14 @@
       "mcp__brave-browser__brave_get_text",
       "WebFetch(domain:registry.khronos.org)",
       "Bash(\"x64/Debug/CG2_00-01.exe\")",
-      "Bash(\"x64\\Debug\\CG2_00-01.exe\")"
+      "Bash(\"x64\\Debug\\CG2_00-01.exe\")",
+      "Bash(CG2_00-01.exe)",
+      "Bash(MSBuild:*)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" MyEngineGame.sln /p:Configuration=Debug /p:Platform=x64)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" MyEngineGame.sln)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" CG2_00-01.sln)",
+      "Bash(.CG2_00-01.exe)",
+      "WebFetch(domain:stackoverflow.com)"
     ],
     "deny": []
   },

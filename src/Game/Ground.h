@@ -15,6 +15,9 @@ public:
     void SetDirectionalLight(const DirectionalLight& light);
     void SetSpotLight(const SpotLight& light);
     
+    // 環境マップテクスチャの設定
+    void SetEnvironmentTexture(const std::string& texturePath);
+    
     
     // 位置の設定
     void SetPosition(const Vector3& position);

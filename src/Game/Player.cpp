@@ -82,6 +82,12 @@ void Player::SetSpotLight(const SpotLight& light) {
     }
 }
 
+void Player::SetEnvironmentTexture(const std::string& texturePath) {
+    if (object3d_) {
+        object3d_->SetEnvironmentTexture(texturePath);
+    }
+}
+
 void Player::PauseAnimation() {
     if (animatedModel_) {
         animationPaused_ = true;
