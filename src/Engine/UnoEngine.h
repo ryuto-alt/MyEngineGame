@@ -138,6 +138,15 @@ public:
     // カメラの視野角設定
     void SetCameraFov(float fov) { camera_->SetFovY(fov); }
     
+    // カメラ感度設定
+    void SetCameraStickSensitivity(float sensitivity) { camera_->SetStickSensitivity(sensitivity); }
+    float GetCameraStickSensitivity() const { return camera_->GetStickSensitivity(); }
+    
+    // オービットカメラ設定
+    void SetCameraOrbitTarget(const Vector3& target) { camera_->SetOrbitTarget(target); }
+    void SetCameraOrbitDistance(float distance) { camera_->SetOrbitDistance(distance); }
+    void SetCameraOrbitHeight(float height) { camera_->SetOrbitHeight(height); }
+    
     // === オーディオシステム ===
     bool LoadAudio(const std::string& name, const std::string& filePath);
     void PlayAudio(const std::string& name, bool loop = false, float volume = 1.0f);
@@ -173,6 +182,7 @@ public:
     std::unique_ptr<Skybox> CreateSkybox();
     void LoadSkybox(Skybox* skybox, const std::string& path);
     void UpdateCameraMouse(); // マウス入力でカメラ更新（一括処理）
+    void UpdateCameraRightStick(); // 右スティック入力でカメラ更新（一括処理）
     
     template<typename T>
     void SetEnvMap(T* obj) {

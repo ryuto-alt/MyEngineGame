@@ -647,3 +647,15 @@ void UnoEngine::UpdateCameraMouse() {
     input_->GetMouseMovement(deltaX, deltaY);
     camera_->ProcessMouseInput(deltaX, deltaY);
 }
+
+void UnoEngine::UpdateCameraRightStick() {
+    float stickX = input_->GetXboxRightStickX();
+    float stickY = input_->GetXboxRightStickY();
+    
+    // デッドゾーンを適用（スティックが少し動いただけでは反応しない）
+    const float deadZone = 0.1f;
+    if (abs(stickX) < deadZone) stickX = 0.0f;
+    if (abs(stickY) < deadZone) stickY = 0.0f;
+    
+    camera_->ProcessRightStickInput(stickX, stickY);
+}

@@ -15,8 +15,17 @@ void GamePlayScene::Initialize() {
 
     engine_ = UnoEngine::GetInstance();
 
-    camera_->SetTranslate(Vector3{ 0.0f, 0.0f, -2.0f });
     camera_->SetFov(1.37f);
+    
+    // 右スティック感度の調整（必要に応じて）
+    engine_->SetCameraStickSensitivity(2.5f);
+    
+    // オービットカメラの初期設定
+    engine_->SetCameraOrbitDistance(3.0f);
+    engine_->SetCameraOrbitHeight(2.5f);
+    
+    // カメラの初期ターゲットを設定（プレイヤーの位置）
+    engine_->SetCameraOrbitTarget(Vector3{0.0f, 0.0f, 0.0f});
 
     // マネージャーの初期化
     lightManager_ = std::make_unique<LightManager>();
@@ -32,11 +41,11 @@ void GamePlayScene::Initialize() {
     
     // Skyboxの作成と初期化（簡易版）
     skybox_ = engine_->CreateSkybox();
-    engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
+    engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
     skybox_->SetScale(1000.0f); // 大きなスケールで遠景を表現
     
     // 環境マップテクスチャを事前にロード
-    engine_->LoadTexture("Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
+    engine_->LoadTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
     
     // 環境マップを自動適用（簡易版）
     engine_->SetEnvMap(player_);
@@ -87,17 +96,56 @@ void GamePlayScene::Update() {
     }
 #endif
 
-    // マウス入力処理（簡易版）
+    // カメラ回転処理（マウス + 右スティック）
     engine_->UpdateCameraMouse();
+    engine_->UpdateCameraRightStick();
+    
+    // カメラフォロー更新（プレイヤー移動処理の前に実行）
+    player_->UpdateCameraFollow();
+    
+    // カメラの行列を即座に更新（プレイヤー移動で正しい方向ベクトルを取得するため）
+    camera_->Update();
 
-    // カメラ移動（カメラの向きに基づく移動、デルタタイム考慮）
-    float cameraMoveSpeed = cameraSpeed_ * deltaTime;
-    if (engine_->IsKeyPressed(DIK_W)) engine_->MoveCameraForward(cameraMoveSpeed);    // 前方移動
-    if (engine_->IsKeyPressed(DIK_S)) engine_->MoveCameraForward(-cameraMoveSpeed);   // 後方移動
-    if (engine_->IsKeyPressed(DIK_A)) engine_->MoveCameraRight(-cameraMoveSpeed);     // 左移動
-    if (engine_->IsKeyPressed(DIK_D)) engine_->MoveCameraRight(cameraMoveSpeed);      // 右移動
-    if (engine_->IsKeyPressed(DIK_SPACE)) engine_->MoveCameraUp(cameraMoveSpeed);     // 上昇
-    if (engine_->IsKeyPressed(DIK_LSHIFT)) engine_->MoveCameraUp(-cameraMoveSpeed);   // 下降
+    // プレイヤー移動（カメラの向きに基づく統合移動、デルタタイム考慮）
+    float forward = 0.0f;
+    float right = 0.0f;
+    
+    // キーボード入力（WASD）
+    if (engine_->IsKeyPressed(DIK_W)) forward += 1.0f;   // 前方移動
+    if (engine_->IsKeyPressed(DIK_S)) forward -= 1.0f;   // 後方移動
+    if (engine_->IsKeyPressed(DIK_A)) right -= 1.0f;     // 左移動
+    if (engine_->IsKeyPressed(DIK_D)) right += 1.0f;     // 右移動
+    
+    // ゲームパッド入力（左スティック）
+    float stickX = engine_->GetXboxLeftStickX();
+    float stickY = engine_->GetXboxLeftStickY();
+    
+    // デッドゾーン処理
+    const float deadZone = 0.1f;
+    if (abs(stickX) < deadZone) stickX = 0.0f;
+    if (abs(stickY) < deadZone) stickY = 0.0f;
+    
+    // スティック入力を統合（Y軸は前後、X軸は左右）
+    forward += stickY;
+    right += stickX;
+    
+    // 入力値を正規化（最大値1.0にクランプ）
+    float totalMagnitude = std::sqrt(forward * forward + right * right);
+    if (totalMagnitude > 1.0f) {
+        forward /= totalMagnitude;
+        right /= totalMagnitude;
+    }
+    
+    bool isPlayerMoving = (forward != 0.0f || right != 0.0f);
+    
+    if (isPlayerMoving) {
+        player_->MoveWithCameraDirection(forward, right, deltaTime);
+    }
+    
+    // 移動停止時の処理（WASDキーが押されていない場合）
+    if (!isPlayerMoving && player_->IsMoving()) {
+        player_->StopMoving();
+    }
 
     // Fキーでライティングデバッグウィンドウの表示切り替え
     if (engine_->IsKeyTriggered(DIK_F)) {
@@ -146,8 +194,6 @@ void GamePlayScene::Update() {
     skybox_->Update();
     player_->Update(engine_);
     ground_->Update();
-
-    camera_->Update();
 }
 
 void GamePlayScene::Draw() {

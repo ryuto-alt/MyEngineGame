@@ -73,7 +73,9 @@
       "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" MyEngineGame.sln)",
       "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" CG2_00-01.sln)",
       "Bash(.CG2_00-01.exe)",
-      "WebFetch(domain:stackoverflow.com)"
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:www.braynzarsoft.net)",
+      "WebFetch(domain:blog.littlepolygon.com)"
     ],
     "deny": []
   },

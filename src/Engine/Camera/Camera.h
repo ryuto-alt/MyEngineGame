@@ -30,6 +30,20 @@ public:
     int GetCameraMode() const;
     void ToggleCameraMode();
     
+    // 右スティック視点移動関連
+    void ProcessRightStickInput(float deltaX, float deltaY);
+    void SetStickSensitivity(float sensitivity);
+    float GetStickSensitivity() const;
+    
+    // オービットカメラ機能
+    void SetOrbitTarget(const Vector3& target);
+    void SetOrbitDistance(float distance);
+    void SetOrbitHeight(float height);
+    void UpdateOrbitCamera();
+    Vector3 GetOrbitTarget() const { return orbitTarget_; }
+    float GetOrbitDistance() const { return orbitDistance_; }
+    float GetOrbitHeight() const { return orbitHeight_; }
+    
     // マウス視点制御機能
     void ToggleMouseLook();
     bool IsMouseLookEnabled() const;
@@ -76,6 +90,16 @@ private:
     // マウス視点移動関連
     float mouseSensitivity_;    // マウス感度
     int cameraMode_;            // カメラモード (0: フリーカメラ, 1: 固定カメラ)
+    
+    // 右スティック視点移動関連
+    float stickSensitivity_;    // スティック感度
+    
+    // オービットカメラ関連
+    Vector3 orbitTarget_;       // 回転の中心点
+    float orbitDistance_;       // ターゲットからの距離
+    float orbitHeight_;         // ターゲットからの高さオフセット
+    float orbitAngleX_;         // オービット縦回転角度（上下）
+    float orbitAngleY_;         // オービット横回転角度（左右）
     
     // マウス制御用変数
     bool mouseLookEnabled_;     // マウス視点移動が有効かどうか

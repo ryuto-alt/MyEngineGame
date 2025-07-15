@@ -11,6 +11,12 @@ Camera::Camera() :
     farClip_(100.0f),
     mouseSensitivity_(0.003f),
     cameraMode_(0),
+    stickSensitivity_(2.0f),
+    orbitTarget_(Vector3{0.0f, 0.0f, 0.0f}),
+    orbitDistance_(5.0f),
+    orbitHeight_(2.0f),
+    orbitAngleX_(-0.2f),  // 軽く上から見下ろす角度（約-11度）
+    orbitAngleY_(0.52f),  // 30度右から見る角度
     windowHandle_(nullptr),
     lastMousePos_({0, 0}),
     windowRect_({0, 0, 0, 0})
@@ -48,7 +54,7 @@ void Camera::Update() {
     // ワールド行列の計算
     worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 
-    // ビュー行列の計算（ワールド行列の逆行列）
+    // ビュー行列の計算（従来の方法に戻す）
     viewMatrix_ = Inverse(worldMatrix_);
 
     // プロジェクション行列の計算
@@ -135,31 +141,25 @@ void Camera::ProcessMouseInput(float deltaX, float deltaY) {
         return;
     }
     
-    if (cameraMode_ == 0) { // フリーカメラモード
-        // Y軸回転 (水平回転)
-        transform_.rotate.y += deltaX * mouseSensitivity_;
-        
-        // X軸回転 (垂直回転) - 制限あり
-        transform_.rotate.x += deltaY * mouseSensitivity_;
-        
-        // X軸回転を-90度から50度に制限
-        const float maxPitch = 1.57f;  // 90度
-        if (transform_.rotate.x > maxPitch) {
-            transform_.rotate.x = maxPitch;
-        }
-        if (transform_.rotate.x < -maxPitch) {
-            transform_.rotate.x = -maxPitch;
-        }
-        
-        // マウス視点移動中はマウスを中央に戻す
-        if (windowHandle_) {
-            POINT centerPoint = {
-                windowRect_.right / 2,
-                windowRect_.bottom / 2
-            };
-            ClientToScreen(windowHandle_, &centerPoint);
-            SetCursorPos(centerPoint.x, centerPoint.y);
-        }
+    // オービット角度を変更
+    orbitAngleY_ += deltaX * mouseSensitivity_;  // 水平回転
+    orbitAngleX_ += deltaY * mouseSensitivity_;  // 垂直回転
+    
+    // X軸回転を適切な範囲に制限（上下の回転制限）
+    // 上限: +45度（0.785ラジアン）、下限: -30度（-0.52ラジアン）
+    if (orbitAngleX_ > 0.785f) {
+        orbitAngleX_ = 0.785f;
+    }
+    if (orbitAngleX_ < -0.52f) {
+        orbitAngleX_ = -0.52f;
+    }
+    
+    // Y軸回転を-π～πの範囲に正規化
+    while (orbitAngleY_ > 3.14159f) {
+        orbitAngleY_ -= 2.0f * 3.14159f;
+    }
+    while (orbitAngleY_ < -3.14159f) {
+        orbitAngleY_ += 2.0f * 3.14159f;
     }
 }
 
@@ -288,4 +288,102 @@ void Object3dCommon::SetDefaultCamera(Camera* camera) {
 
 Camera* Object3dCommon::GetDefaultCamera() {
     return defaultCamera_;
+}
+
+// 右スティック視点移動関連
+void Camera::ProcessRightStickInput(float deltaX, float deltaY) {
+    // オービット角度を変更
+    orbitAngleY_ += deltaX * stickSensitivity_ * 0.01f;  // 水平回転
+    orbitAngleX_ += deltaY * stickSensitivity_ * 0.01f;  // 垂直回転
+    
+    // X軸回転を適切な範囲に制限（上下の回転制限）
+    // 上限: +45度（0.785ラジアン）、下限: -30度（-0.52ラジアン）
+    if (orbitAngleX_ > 0.785f) {
+        orbitAngleX_ = 0.785f;
+    }
+    if (orbitAngleX_ < -0.52f) {
+        orbitAngleX_ = -0.52f;
+    }
+    
+    // Y軸回転を-π～πの範囲に正規化
+    while (orbitAngleY_ > 3.14159f) {
+        orbitAngleY_ -= 2.0f * 3.14159f;
+    }
+    while (orbitAngleY_ < -3.14159f) {
+        orbitAngleY_ += 2.0f * 3.14159f;
+    }
+}
+
+void Camera::SetStickSensitivity(float sensitivity) {
+    stickSensitivity_ = sensitivity;
+}
+
+float Camera::GetStickSensitivity() const {
+    return stickSensitivity_;
+}
+
+// オービットカメラ機能
+void Camera::SetOrbitTarget(const Vector3& target) {
+    orbitTarget_ = target;
+}
+
+void Camera::SetOrbitDistance(float distance) {
+    orbitDistance_ = distance;
+}
+
+void Camera::SetOrbitHeight(float height) {
+    orbitHeight_ = height;
+}
+
+void Camera::UpdateOrbitCamera() {
+    // オービット角度に基づいてカメラの位置を計算
+    float cosY = cosf(orbitAngleY_);
+    float sinY = sinf(orbitAngleY_);
+    float cosX = cosf(orbitAngleX_);
+    float sinX = sinf(orbitAngleX_);
+    
+    // 簡素化されたオービット座標系計算（安定した距離と高さ）
+    Vector3 offset;
+    offset.x = orbitDistance_ * sinY * cosX;
+    offset.y = orbitDistance_ * sinX;
+    offset.z = orbitDistance_ * cosY * cosX;
+    
+    // ターゲット位置の高さを考慮してカメラ位置を決定
+    Vector3 targetWithHeight = orbitTarget_;
+    targetWithHeight.y += orbitHeight_;
+    
+    // 最終的なカメラ位置
+    Vector3 newPosition = targetWithHeight + offset;
+    
+    // カメラの位置を設定
+    transform_.translate = newPosition;
+    
+    // カメラの向きをターゲット（プレイヤー）を向くように設定
+    Vector3 lookAtTarget = orbitTarget_;
+    lookAtTarget.y += 1.0f;  // プレイヤーの少し上を見る
+    
+    Vector3 direction = lookAtTarget - newPosition;
+    float length = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+    if (length > 0.0001f) {
+        direction.x /= length;
+        direction.y /= length;
+        direction.z /= length;
+        
+        // Y方向の制限（真下を向かないようにする）
+        if (direction.y < -0.8f) {
+            direction.y = -0.8f;
+            // 正規化し直す
+            float newLength = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+            if (newLength > 0.0001f) {
+                direction.x /= newLength;
+                direction.y /= newLength;
+                direction.z /= newLength;
+            }
+        }
+        
+        // 方向ベクトルから回転角度を計算
+        transform_.rotate.y = atan2f(direction.x, direction.z);
+        transform_.rotate.x = asinf(-direction.y);
+        transform_.rotate.z = 0.0f;
+    }
 }

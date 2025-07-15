@@ -46,9 +46,25 @@ public:
     float GetRotationSmoothingSpeed() const { return rotationSmoothingSpeed_; }
     float GetTargetRotationY() const { return targetRotationY_; }
     
+    // カメラ方向ベースの移動
+    void MoveForward(float distance);
+    void MoveRight(float distance);
+    void MoveBackward(float distance);
+    void MoveLeft(float distance);
+    
+    // 統合移動関数（複数キー同時押し対応）
+    void MoveWithCameraDirection(float forward, float right, float deltaTime);
+    
+    // カメラフォロー機能
+    void UpdateCameraFollow();
+    
+    // 移動停止の管理
+    void StopMoving();
+    
 
 private:
     void HandleMovement(UnoEngine* engine, float deltaTime);
+    void HandleGamepadFeatures(UnoEngine* engine, float deltaTime);  // ゲームパッド固有機能
     void UpdateAnimation(float deltaTime);
     void UpdateRotation(UnoEngine* engine, float deltaTime);
     
