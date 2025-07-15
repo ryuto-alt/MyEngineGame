@@ -94,58 +94,99 @@ void GamePlayScene::Update() {
     if (engine_->IsKeyTriggered(DIK_TAB)) {
         camera_->ToggleMouseLook();
     }
+    
+    // F1キーでフリーカメラモード切り替え
+    if (engine_->IsKeyTriggered(DIK_F1)) {
+        camera_->ToggleFreeCameraMode();
+    }
 #endif
 
     // カメラ回転処理（マウス + 右スティック）
     engine_->UpdateCameraMouse();
     engine_->UpdateCameraRightStick();
     
-    // カメラフォロー更新（プレイヤー移動処理の前に実行）
-    player_->UpdateCameraFollow();
+#ifdef _DEBUG
+    // フリーカメラモードでない場合のみプレイヤー追従
+    if (!camera_->IsFreeCameraMode()) {
+#endif
+        // カメラフォロー更新（プレイヤー移動処理の前に実行）
+        player_->UpdateCameraFollow();
+#ifdef _DEBUG
+    }
+#endif
     
     // カメラの行列を即座に更新（プレイヤー移動で正しい方向ベクトルを取得するため）
     camera_->Update();
 
     // プレイヤー移動（カメラの向きに基づく統合移動、デルタタイム考慮）
-    float forward = 0.0f;
-    float right = 0.0f;
-    
-    // キーボード入力（WASD）
-    if (engine_->IsKeyPressed(DIK_W)) forward += 1.0f;   // 前方移動
-    if (engine_->IsKeyPressed(DIK_S)) forward -= 1.0f;   // 後方移動
-    if (engine_->IsKeyPressed(DIK_A)) right -= 1.0f;     // 左移動
-    if (engine_->IsKeyPressed(DIK_D)) right += 1.0f;     // 右移動
-    
-    // ゲームパッド入力（左スティック）
-    float stickX = engine_->GetXboxLeftStickX();
-    float stickY = engine_->GetXboxLeftStickY();
-    
-    // デッドゾーン処理
-    const float deadZone = 0.1f;
-    if (abs(stickX) < deadZone) stickX = 0.0f;
-    if (abs(stickY) < deadZone) stickY = 0.0f;
-    
-    // スティック入力を統合（Y軸は前後、X軸は左右）
-    forward += stickY;
-    right += stickX;
-    
-    // 入力値を正規化（最大値1.0にクランプ）
-    float totalMagnitude = std::sqrt(forward * forward + right * right);
-    if (totalMagnitude > 1.0f) {
-        forward /= totalMagnitude;
-        right /= totalMagnitude;
+#ifdef _DEBUG
+    // フリーカメラモードの時はカメラを直接移動
+    if (camera_->IsFreeCameraMode()) {
+        float cameraSpeed = 5.0f * deltaTime;
+        
+        if (engine_->IsKeyPressed(DIK_W)) {
+            camera_->MoveForward(cameraSpeed);
+        }
+        if (engine_->IsKeyPressed(DIK_S)) {
+            camera_->MoveForward(-cameraSpeed);
+        }
+        if (engine_->IsKeyPressed(DIK_A)) {
+            camera_->MoveRight(-cameraSpeed);
+        }
+        if (engine_->IsKeyPressed(DIK_D)) {
+            camera_->MoveRight(cameraSpeed);
+        }
+        if (engine_->IsKeyPressed(DIK_SPACE)) {
+            camera_->MoveUp(cameraSpeed);
+        }
+        if (engine_->IsKeyPressed(DIK_LSHIFT)) {
+            camera_->MoveUp(-cameraSpeed);
+        }
+    } else {
+#endif
+        // 通常のプレイヤー移動処理
+        float forward = 0.0f;
+        float right = 0.0f;
+        
+        // キーボード入力（WASD）
+        if (engine_->IsKeyPressed(DIK_W)) forward += 1.0f;   // 前方移動
+        if (engine_->IsKeyPressed(DIK_S)) forward -= 1.0f;   // 後方移動
+        if (engine_->IsKeyPressed(DIK_A)) right -= 1.0f;     // 左移動
+        if (engine_->IsKeyPressed(DIK_D)) right += 1.0f;     // 右移動
+        
+        // ゲームパッド入力（左スティック）
+        float stickX = engine_->GetXboxLeftStickX();
+        float stickY = engine_->GetXboxLeftStickY();
+        
+        // デッドゾーン処理
+        const float deadZone = 0.1f;
+        if (abs(stickX) < deadZone) stickX = 0.0f;
+        if (abs(stickY) < deadZone) stickY = 0.0f;
+        
+        // スティック入力を統合（Y軸は前後、X軸は左右）
+        forward += stickY;
+        right += stickX;
+        
+        // 入力値を正規化（最大値1.0にクランプ）
+        float totalMagnitude = std::sqrt(forward * forward + right * right);
+        if (totalMagnitude > 1.0f) {
+            forward /= totalMagnitude;
+            right /= totalMagnitude;
+        }
+        
+        bool isPlayerMoving = (forward != 0.0f || right != 0.0f);
+        
+        if (isPlayerMoving) {
+            player_->MoveWithCameraDirection(forward, right, deltaTime);
+        }
+        
+        // 移動停止時の処理（WASDキーが押されていない場合）
+        if (!isPlayerMoving && player_->IsMoving()) {
+            player_->StopMoving();
+        }
+#ifdef _DEBUG
     }
-    
-    bool isPlayerMoving = (forward != 0.0f || right != 0.0f);
-    
-    if (isPlayerMoving) {
-        player_->MoveWithCameraDirection(forward, right, deltaTime);
-    }
-    
-    // 移動停止時の処理（WASDキーが押されていない場合）
-    if (!isPlayerMoving && player_->IsMoving()) {
-        player_->StopMoving();
-    }
+#endif
 
     // Fキーでライティングデバッグウィンドウの表示切り替え
     if (engine_->IsKeyTriggered(DIK_F)) {
@@ -232,6 +273,9 @@ void GamePlayScene::Draw() {
     ImGui::Text("矢印キー - Humanモデル移動");
     ImGui::Text("F - ライティング設定の表示/非表示");
     ImGui::Text("ESC - 終了");
+#ifdef _DEBUG
+    ImGui::Text("F1 - フリーカメラモード切り替え");
+#endif
     
     ImGui::Separator();
     ImGui::Text("【Xboxコントローラー】");
@@ -249,6 +293,8 @@ void GamePlayScene::Draw() {
 #ifdef _DEBUG
     ImGui::Text("マウス視点移動: %s", camera_->IsMouseLookEnabled() ? "ON" : "OFF");
     ImGui::Text("TABキーで切り替え");
+    ImGui::Text("カメラモード: %s", camera_->IsFreeCameraMode() ? "フリーカメラ" : "プレイヤー追従");
+    ImGui::Text("F1キーで切り替え");
 #endif
     
     // アニメーション情報

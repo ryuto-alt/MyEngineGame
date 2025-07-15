@@ -4,6 +4,13 @@
 #include "Mymath.h"
 #include <Windows.h>
 
+// カメラモードの定数
+enum CameraMode {
+    CAMERA_MODE_FREE = 0,     // フリーカメラ（自由移動）
+    CAMERA_MODE_FIXED = 1,    // 固定カメラ
+    CAMERA_MODE_ORBIT = 2     // オービットカメラ（プレイヤー追従）
+};
+
 // カメラクラス - 3Dオブジェクトからカメラ機能を分離
 class Camera {
 public:
@@ -29,6 +36,12 @@ public:
     void SetCameraMode(int mode);
     int GetCameraMode() const;
     void ToggleCameraMode();
+    
+#ifdef _DEBUG
+    // デバッグ用フリーカメラモード切り替え
+    void ToggleFreeCameraMode();
+    bool IsFreeCameraMode() const;
+#endif
     
     // 右スティック視点移動関連
     void ProcessRightStickInput(float deltaX, float deltaY);

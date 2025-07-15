@@ -10,7 +10,7 @@ Camera::Camera() :
     nearClip_(0.01f),  
     farClip_(100.0f),
     mouseSensitivity_(0.003f),
-    cameraMode_(0),
+    cameraMode_(CAMERA_MODE_ORBIT),  // デフォルトはオービットカメラ
     stickSensitivity_(2.0f),
     orbitTarget_(Vector3{0.0f, 0.0f, 0.0f}),
     orbitDistance_(5.0f),
@@ -141,6 +141,20 @@ void Camera::ProcessMouseInput(float deltaX, float deltaY) {
         return;
     }
     
+#ifdef _DEBUG
+    // フリーカメラモードの時は従来のカメラ回転
+    if (cameraMode_ == CAMERA_MODE_FREE) {
+        transform_.rotate.y += deltaX * mouseSensitivity_;  // 水平回転
+        transform_.rotate.x += deltaY * mouseSensitivity_;  // 垂直回転
+        
+        // X軸回転を制限
+        if (transform_.rotate.x > 1.57f) transform_.rotate.x = 1.57f;
+        if (transform_.rotate.x < -1.57f) transform_.rotate.x = -1.57f;
+        
+        return;
+    }
+#endif
+    
     // オービット角度を変更
     orbitAngleY_ += deltaX * mouseSensitivity_;  // 水平回転
     orbitAngleX_ += deltaY * mouseSensitivity_;  // 垂直回転
@@ -178,6 +192,21 @@ int Camera::GetCameraMode() const {
 void Camera::ToggleCameraMode() {
     cameraMode_ = (cameraMode_ + 1) % 2;  // 0と 1を切り替え
 }
+
+#ifdef _DEBUG
+// デバッグ用フリーカメラモード切り替え
+void Camera::ToggleFreeCameraMode() {
+    if (cameraMode_ == CAMERA_MODE_FREE) {
+        cameraMode_ = CAMERA_MODE_ORBIT;  // オービットカメラに戻す
+    } else {
+        cameraMode_ = CAMERA_MODE_FREE;   // フリーカメラにする
+    }
+}
+
+bool Camera::IsFreeCameraMode() const {
+    return cameraMode_ == CAMERA_MODE_FREE;
+}
+#endif
 
 // カメラ移動関連（フリーカメラモード用）
 void Camera::MoveForward(float distance) {
@@ -292,6 +321,20 @@ Camera* Object3dCommon::GetDefaultCamera() {
 
 // 右スティック視点移動関連
 void Camera::ProcessRightStickInput(float deltaX, float deltaY) {
+#ifdef _DEBUG
+    // フリーカメラモードの時は従来のカメラ回転
+    if (cameraMode_ == CAMERA_MODE_FREE) {
+        transform_.rotate.y += deltaX * stickSensitivity_ * 0.01f;  // 水平回転
+        transform_.rotate.x += deltaY * stickSensitivity_ * 0.01f;  // 垂直回転
+        
+        // X軸回転を制限
+        if (transform_.rotate.x > 1.57f) transform_.rotate.x = 1.57f;
+        if (transform_.rotate.x < -1.57f) transform_.rotate.x = -1.57f;
+        
+        return;
+    }
+#endif
+    
     // オービット角度を変更
     orbitAngleY_ += deltaX * stickSensitivity_ * 0.01f;  // 水平回転
     orbitAngleX_ += deltaY * stickSensitivity_ * 0.01f;  // 垂直回転
