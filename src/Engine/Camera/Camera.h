@@ -2,6 +2,7 @@
 #include "Vector3.h"
 #include "Matrix4x4.h"
 #include "Mymath.h"
+#include <Windows.h>
 
 // カメラクラス - 3Dオブジェクトからカメラ機能を分離
 class Camera {
@@ -27,6 +28,13 @@ public:
     void SetCameraMode(int mode);
     int GetCameraMode() const;
     void ToggleCameraMode();
+    
+    // マウス視点制御機能
+    void ToggleMouseLook();
+    bool IsMouseLookEnabled() const;
+    void SetMouseLookEnabled(bool enabled);
+    void UpdateMouseControl();
+    void SetWindowHandle(HWND hwnd);
     
     // カメラ移動関連（フリーカメラモード用）
     void MoveForward(float distance);
@@ -67,6 +75,12 @@ private:
     // マウス視点移動関連
     float mouseSensitivity_;    // マウス感度
     int cameraMode_;            // カメラモード (0: フリーカメラ, 1: 固定カメラ)
+    
+    // マウス制御用変数
+    bool mouseLookEnabled_;     // マウス視点移動が有効かどうか
+    HWND windowHandle_;         // ウィンドウハンドル
+    POINT lastMousePos_;        // 前回のマウス位置
+    RECT windowRect_;           // ウィンドウ矩形
 };
 
 // 静的なデフォルトカメラの定義

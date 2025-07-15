@@ -15,8 +15,11 @@ void GamePlayScene::Initialize() {
 
     engine_ = UnoEngine::GetInstance();
 
-    engine_->SetCameraPosition(Vector3{ 0.0f, 0.0f, -2.0f });
-    engine_->SetCameraFovY(1.37f);
+    camera_->SetTranslate(Vector3{ 0.0f, 0.0f, -2.0f });
+    camera_->SetFovY(1.37f);
+    
+    // カメラにウィンドウハンドルを設定
+    camera_->SetWindowHandle(engine_->GetWinApp()->GetHwnd());
 
     // マネージャーの初期化
     lightManager_ = std::make_unique<LightManager>();
@@ -71,16 +74,26 @@ void GamePlayScene::Update() {
         exit(0);
     }
 
-    // カメラ移動（デルタタイム考慮）
-    Vector3 currentPos = engine_->GetCameraPosition();
+#ifdef _DEBUG
+    // TABキーでマウス視点移動の切り替え
+    if (engine_->IsKeyTriggered(DIK_TAB)) {
+        camera_->ToggleMouseLook();
+    }
+#endif
+
+    // マウス入力処理
+    float deltaX, deltaY;
+    engine_->GetInput()->GetMouseMovement(deltaX, deltaY);
+    camera_->ProcessMouseInput(deltaX, deltaY);
+
+    // カメラ移動（カメラの向きに基づく移動、デルタタイム考慮）
     float cameraMoveSpeed = cameraSpeed_ * deltaTime;
-    if (engine_->IsKeyPressed(DIK_W)) currentPos.z += cameraMoveSpeed;
-    if (engine_->IsKeyPressed(DIK_S)) currentPos.z -= cameraMoveSpeed;
-    if (engine_->IsKeyPressed(DIK_A)) currentPos.x -= cameraMoveSpeed;
-    if (engine_->IsKeyPressed(DIK_D)) currentPos.x += cameraMoveSpeed;
-    if (engine_->IsKeyPressed(DIK_SPACE)) currentPos.y += cameraMoveSpeed;
-    if (engine_->IsKeyPressed(DIK_LSHIFT)) currentPos.y -= cameraMoveSpeed;
-    engine_->SetCameraPosition(currentPos);
+    if (engine_->IsKeyPressed(DIK_W)) camera_->MoveForward(cameraMoveSpeed);    // 前方移動
+    if (engine_->IsKeyPressed(DIK_S)) camera_->MoveForward(-cameraMoveSpeed);   // 後方移動
+    if (engine_->IsKeyPressed(DIK_A)) camera_->MoveRight(-cameraMoveSpeed);     // 左移動
+    if (engine_->IsKeyPressed(DIK_D)) camera_->MoveRight(cameraMoveSpeed);      // 右移動
+    if (engine_->IsKeyPressed(DIK_SPACE)) camera_->MoveUp(cameraMoveSpeed);     // 上昇
+    if (engine_->IsKeyPressed(DIK_LSHIFT)) camera_->MoveUp(-cameraMoveSpeed);   // 下降
 
     // Fキーでライティングデバッグウィンドウの表示切り替え
     if (engine_->IsKeyTriggered(DIK_F)) {
@@ -170,8 +183,15 @@ void GamePlayScene::Draw() {
     ImGui::Text("※コントローラー接続: %s", engine_->IsXboxControllerConnected() ? "接続済み" : "未接続");
 
     ImGui::Separator();
-    Vector3 cameraPos = engine_->GetCameraPosition();
+    Vector3 cameraPos = camera_->GetTranslate();
+    Vector3 cameraRot = camera_->GetRotate();
     ImGui::Text("カメラ位置: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
+    ImGui::Text("カメラ回転: (%.2f, %.2f, %.2f)", cameraRot.x, cameraRot.y, cameraRot.z);
+    
+#ifdef _DEBUG
+    ImGui::Text("マウス視点移動: %s", camera_->IsMouseLookEnabled() ? "ON" : "OFF");
+    ImGui::Text("TABキーで切り替え");
+#endif
     
     // アニメーション情報
     ImGui::Separator();

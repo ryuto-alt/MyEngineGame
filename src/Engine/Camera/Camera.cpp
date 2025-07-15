@@ -10,18 +10,34 @@ Camera::Camera() :
     nearClip_(0.01f),  
     farClip_(100.0f),
     mouseSensitivity_(0.003f),
-    cameraMode_(0)
+    cameraMode_(0),
+    windowHandle_(nullptr),
+    lastMousePos_({0, 0}),
+    windowRect_({0, 0, 0, 0})
 {
     // トランスフォームの初期設定
     transform_.scale = { 1.0f, 1.0f, 1.0f };
     transform_.rotate = { 0.0f, 0.0f, 0.0f };
     transform_.translate = { 0.0f, 0.0f, -5.0f };
 
+    // マウス視点移動の初期設定
+#ifdef _DEBUG
+    mouseLookEnabled_ = false;  // デバッグ時は初期状態でOFF
+#else
+    mouseLookEnabled_ = true;   // リリース時は初期状態でON
+#endif
+
     // 初期更新
     Update();
 }
 
 Camera::~Camera() {
+    // マウス制御をクリーンアップ
+    if (mouseLookEnabled_ && windowHandle_) {
+        ShowCursor(TRUE);
+        ClipCursor(nullptr);
+    }
+    
     // デフォルトカメラが自分自身だった場合はnullptrにする
     if (Object3dCommon::GetDefaultCamera() == this) {
         Object3dCommon::SetDefaultCamera(nullptr);
@@ -110,6 +126,11 @@ float Camera::GetFarClip() const {
 
 // マウス視点移動関連
 void Camera::ProcessMouseInput(float deltaX, float deltaY) {
+    // マウス視点移動が無効な場合は処理しない
+    if (!mouseLookEnabled_) {
+        return;
+    }
+    
     if (cameraMode_ == 0) { // フリーカメラモード
         // Y軸回転 (水平回転)
         transform_.rotate.y += deltaX * mouseSensitivity_;
@@ -124,6 +145,16 @@ void Camera::ProcessMouseInput(float deltaX, float deltaY) {
         }
         if (transform_.rotate.x < -maxPitch) {
             transform_.rotate.x = -maxPitch;
+        }
+        
+        // マウス視点移動中はマウスを中央に戻す
+        if (windowHandle_) {
+            POINT centerPoint = {
+                windowRect_.right / 2,
+                windowRect_.bottom / 2
+            };
+            ClientToScreen(windowHandle_, &centerPoint);
+            SetCursorPos(centerPoint.x, centerPoint.y);
         }
     }
 }
@@ -180,6 +211,70 @@ Vector3 Camera::GetRightVector() const {
 Vector3 Camera::GetUpVector() const {
     // カメラのワールド行列からY軸方向（上方向）を取得
     return { worldMatrix_.m[1][0], worldMatrix_.m[1][1], worldMatrix_.m[1][2] };
+}
+
+// マウス視点制御機能
+void Camera::ToggleMouseLook() {
+#ifdef _DEBUG
+    mouseLookEnabled_ = !mouseLookEnabled_;
+    UpdateMouseControl();
+#endif
+}
+
+bool Camera::IsMouseLookEnabled() const {
+    return mouseLookEnabled_;
+}
+
+void Camera::SetMouseLookEnabled(bool enabled) {
+    mouseLookEnabled_ = enabled;
+    UpdateMouseControl();
+}
+
+void Camera::UpdateMouseControl() {
+    if (!windowHandle_) {
+        return;
+    }
+
+    if (mouseLookEnabled_) {
+        // マウス視点移動ON時
+        // マウスカーソルを非表示
+        ShowCursor(FALSE);
+        
+        // ウィンドウの中央座標を取得
+        GetClientRect(windowHandle_, &windowRect_);
+        POINT centerPoint = {
+            windowRect_.right / 2,
+            windowRect_.bottom / 2
+        };
+        
+        // クライアント座標をスクリーン座標に変換
+        ClientToScreen(windowHandle_, &centerPoint);
+        
+        // マウスを中央に固定
+        SetCursorPos(centerPoint.x, centerPoint.y);
+        lastMousePos_ = centerPoint;
+        
+        // マウスをウィンドウ内にクリップ
+        RECT clipRect = windowRect_;
+        ClientToScreen(windowHandle_, reinterpret_cast<POINT*>(&clipRect.left));
+        ClientToScreen(windowHandle_, reinterpret_cast<POINT*>(&clipRect.right));
+        ClipCursor(&clipRect);
+        
+    } else {
+        // マウス視点移動OFF時
+        // マウスカーソルを表示
+        ShowCursor(TRUE);
+        
+        // マウスクリップを解除
+        ClipCursor(nullptr);
+    }
+}
+
+void Camera::SetWindowHandle(HWND hwnd) {
+    windowHandle_ = hwnd;
+    if (windowHandle_) {
+        UpdateMouseControl();
+    }
 }
 
 // デフォルトカメラの設定・取得
