@@ -5,6 +5,10 @@
 #include "Mymath.h"
 #include <cassert>
 
+// 静的変数の定義
+std::string Skybox::currentEnvironmentTexturePath_ = "";
+bool Skybox::environmentTextureLoaded_ = false;
+
 Skybox::Skybox() {}
 
 Skybox::~Skybox() {}
@@ -192,6 +196,7 @@ void Skybox::LoadCubemap(const std::string& filePath) {
     if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
         OutputDebugStringA(("Skybox: DDSファイルが見つかりません: " + filePath + "\n").c_str());
         cubemapLoaded_ = false;
+        environmentTextureLoaded_ = false;
         return;
     }
     
@@ -200,6 +205,7 @@ void Skybox::LoadCubemap(const std::string& filePath) {
     if (!loadResult) {
         OutputDebugStringA(("Skybox: DDSファイルの読み込みに失敗しました: " + filePath + "\n").c_str());
         cubemapLoaded_ = false;
+        environmentTextureLoaded_ = false;
         return;
     }
     
@@ -207,7 +213,12 @@ void Skybox::LoadCubemap(const std::string& filePath) {
     cubemapSrvIndex_ = textureManager_->GetSrvIndex(filePath);
     cubemapLoaded_ = true;
     
+    // 環境マップの自動管理機能：現在のテクスチャパスを静的変数に保存
+    currentEnvironmentTexturePath_ = filePath;
+    environmentTextureLoaded_ = true;
+    
     OutputDebugStringA(("Skybox: Cubemap読み込み成功: " + filePath + ", SRVIndex: " + std::to_string(cubemapSrvIndex_) + "\n").c_str());
+    OutputDebugStringA(("Skybox: 環境マップが自動設定されました: " + filePath + "\n").c_str());
 }
 
 void Skybox::Update() {
@@ -248,4 +259,13 @@ void Skybox::Draw(Camera* camera) {
     srvManager_->SetGraphicsRootDescriptorTable(2, cubemapSrvIndex_);
 
     dxCommon_->GetCommandList()->DrawIndexedInstanced(kNumIndices, 1, 0, 0, 0);
+}
+
+// 静的関数の実装
+const std::string& Skybox::GetCurrentEnvironmentTexturePath() {
+    return currentEnvironmentTexturePath_;
+}
+
+bool Skybox::IsEnvironmentTextureLoaded() {
+    return environmentTextureLoaded_;
 }

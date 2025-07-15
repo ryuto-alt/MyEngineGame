@@ -102,7 +102,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 	TextureManager::GetInstance()->LoadDefaultTexture();
 	
 	// デフォルト環境マップテクスチャを事前にロード
-	TextureManager::GetInstance()->LoadTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+	TextureManager::GetInstance()->LoadTexture("Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
 }
 
 void Object3d::SetModel(Model* model) {

@@ -68,6 +68,8 @@ void UnoEngine::Initialize() {
         // カメラの作成と初期化
         camera_ = std::make_unique<Camera>();
         camera_->SetTranslate({ 0.0f, 0.0f, -5.0f });
+        // ウィンドウハンドルを設定（エンジンレベルで自動設定）
+        camera_->SetWindowHandle(winApp_->GetHwnd());
         // Object3dCommonは存在しないためコメントアウト
         // Object3dCommon::SetDefaultCamera(camera_.get());
 
@@ -395,12 +397,6 @@ std::unique_ptr<Sprite> UnoEngine::CreateSprite(const std::string& texturePath) 
     return sprite;
 }
 
-// === テクスチャ読み込み ===
-uint32_t UnoEngine::LoadTexture(const std::string& filePath) {
-    // テクスチャを読み込んでSRVインデックスを取得
-    TextureManager::GetInstance()->LoadTexture(filePath);
-    return TextureManager::GetInstance()->GetSrvIndex(filePath);
-}
 
 // === 衝突判定システム ===
 bool UnoEngine::CheckCollision(const Vector3& pos1, float radius1, const Vector3& pos2, float radius2) {
@@ -629,4 +625,25 @@ void UnoEngine::UpdateDeltaTime() {
     
     // 次フレームのために現在時刻を保存
     lastFrameTime_ = currentTime;
+}
+
+// === 簡易化API実装 ===
+void UnoEngine::LoadTexture(const std::string& path) {
+    TextureManager::GetInstance()->LoadTexture(path);
+}
+
+std::unique_ptr<Skybox> UnoEngine::CreateSkybox() {
+    auto skybox = std::make_unique<Skybox>();
+    skybox->Initialize(dxCommon_.get(), srvManager_.get(), TextureManager::GetInstance());
+    return skybox;
+}
+
+void UnoEngine::LoadSkybox(Skybox* skybox, const std::string& path) {
+    skybox->LoadCubemap(path);
+}
+
+void UnoEngine::UpdateCameraMouse() {
+    float deltaX, deltaY;
+    input_->GetMouseMovement(deltaX, deltaY);
+    camera_->ProcessMouseInput(deltaX, deltaY);
 }

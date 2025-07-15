@@ -6,6 +6,7 @@
 #include <d3d12.h>
 #include <wrl.h>
 #include <string>
+#include <memory>
 
 class DirectXCommon;
 class SrvManager;
@@ -27,6 +28,32 @@ public:
 
     void SetScale(float scale) { scale_ = scale; }
     float GetScale() const { return scale_; }
+
+    // 環境マップの自動管理機能
+    static const std::string& GetCurrentEnvironmentTexturePath();
+    static bool IsEnvironmentTextureLoaded();
+    
+    // 環境マップ自動適用機能（簡易版）
+    template<typename T>
+    static void SetEnvMap(T* object) {
+        if (object && IsEnvironmentTextureLoaded()) {
+            object->SetEnvironmentTexture(GetCurrentEnvironmentTexturePath());
+        }
+    }
+    
+    template<typename T>
+    static void SetEnvMap(std::unique_ptr<T>& object) {
+        if (object && IsEnvironmentTextureLoaded()) {
+            object->SetEnvironmentTexture(GetCurrentEnvironmentTexturePath());
+        }
+    }
+    
+    // 後方互換性のため古い名前も残す
+    template<typename T>
+    static void ApplyEnvironmentMapTo(T* object) { SetEnvMap(object); }
+    
+    template<typename T>
+    static void ApplyEnvironmentMapTo(std::unique_ptr<T>& object) { SetEnvMap(object); }
 
 private:
     void CreateVertexData();
@@ -59,6 +86,10 @@ private:
     uint32_t cubemapSrvIndex_ = 0;
     float scale_ = 1000.0f;
     bool cubemapLoaded_ = false;
+
+    // 環境マップの自動管理用の静的変数
+    static std::string currentEnvironmentTexturePath_;
+    static bool environmentTextureLoaded_;
 
     static const uint32_t kNumVertices = 8;
     static const uint32_t kNumIndices = 36;

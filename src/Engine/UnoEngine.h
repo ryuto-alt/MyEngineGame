@@ -13,6 +13,7 @@
 #include "TextureManager.h"
 #include "Object3d.h"
 #include "Model.h"
+#include "Skybox.h"
 #include "ParticleManager.h"
 #include "ParticleEmitter.h"
 #include "Particle3DManager.h"
@@ -135,7 +136,7 @@ public:
     Vector3 GetCameraUpVector() const { return camera_->GetUpVector(); }
     
     // カメラの視野角設定
-    void SetCameraFovY(float fovY) { camera_->SetFovY(fovY); }
+    void SetCameraFov(float fov) { camera_->SetFovY(fov); }
     
     // === オーディオシステム ===
     bool LoadAudio(const std::string& name, const std::string& filePath);
@@ -167,8 +168,21 @@ public:
     // === 2Dスプライト作成システム ===
     std::unique_ptr<Sprite> CreateSprite(const std::string& texturePath);
     
-    // === テクスチャ読み込み ===
-    uint32_t LoadTexture(const std::string& filePath);
+    // === 簡易化API ===
+    void LoadTexture(const std::string& path);
+    std::unique_ptr<Skybox> CreateSkybox();
+    void LoadSkybox(Skybox* skybox, const std::string& path);
+    void UpdateCameraMouse(); // マウス入力でカメラ更新（一括処理）
+    
+    template<typename T>
+    void SetEnvMap(T* obj) {
+        Skybox::SetEnvMap(obj);
+    }
+    
+    template<typename T>
+    void SetEnvMap(std::unique_ptr<T>& obj) {
+        Skybox::SetEnvMap(obj);
+    }
     
     // === 衝突判定システム ===
     bool CheckCollision(const Vector3& pos1, float radius1, const Vector3& pos2, float radius2);

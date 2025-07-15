@@ -17,7 +17,8 @@ public:
     // セッター
     void SetRotate(const Vector3& rotate);
     void SetTranslate(const Vector3& translate);
-    void SetFovY(float fovY);
+    void SetFov(float fov);
+    void SetFovY(float fovY);  // 後方互換性のため
     void SetAspectRatio(float aspectRatio);
     void SetNearClip(float nearClip);
     void SetFarClip(float farClip);

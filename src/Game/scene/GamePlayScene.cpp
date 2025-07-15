@@ -16,10 +16,7 @@ void GamePlayScene::Initialize() {
     engine_ = UnoEngine::GetInstance();
 
     camera_->SetTranslate(Vector3{ 0.0f, 0.0f, -2.0f });
-    camera_->SetFovY(1.37f);
-    
-    // カメラにウィンドウハンドルを設定
-    camera_->SetWindowHandle(engine_->GetWinApp()->GetHwnd());
+    camera_->SetFov(1.37f);
 
     // マネージャーの初期化
     lightManager_ = std::make_unique<LightManager>();
@@ -33,19 +30,17 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
-    // 環境マップテクスチャを設定（Human/Playerモデルに環境マップを適用）
-    player_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
-    ground_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
-    
-    // Skyboxの作成と初期化
-    skybox_ = std::make_unique<Skybox>();
-    skybox_->Initialize(dxCommon_, engine_->GetSrvManager(), engine_->GetTextureManager());
-    // 正しいパスのDDSファイルを読み込み
-    skybox_->LoadCubemap("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    // Skyboxの作成と初期化（簡易版）
+    skybox_ = engine_->CreateSkybox();
+    engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
     skybox_->SetScale(1000.0f); // 大きなスケールで遠景を表現
     
-    // 環境マップテクスチャを事前にロードして描画中の動的SRV作成を避ける
-    engine_->GetTextureManager()->LoadTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    // 環境マップテクスチャを事前にロード
+    engine_->LoadTexture("Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
+    
+    // 環境マップを自動適用（簡易版）
+    engine_->SetEnvMap(player_);
+    engine_->SetEnvMap(ground_);
     
     // GLBキューブモデルの初期化
     try {
@@ -62,8 +57,8 @@ void GamePlayScene::Initialize() {
             cubeGlbObject3d_->SetEnableLighting(true);
             cubeGlbObject3d_->SetCamera(camera_);
             
-            // 環境マップテクスチャを設定（skyboxと同じキューブマップを使用）
-            cubeGlbObject3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+            // 環境マップを自動適用（簡易版）
+            engine_->SetEnvMap(cubeGlbObject3d_);
             
             OutputDebugStringA("GLB Cube model loaded successfully\n");
         }
@@ -92,19 +87,17 @@ void GamePlayScene::Update() {
     }
 #endif
 
-    // マウス入力処理
-    float deltaX, deltaY;
-    engine_->GetInput()->GetMouseMovement(deltaX, deltaY);
-    camera_->ProcessMouseInput(deltaX, deltaY);
+    // マウス入力処理（簡易版）
+    engine_->UpdateCameraMouse();
 
     // カメラ移動（カメラの向きに基づく移動、デルタタイム考慮）
     float cameraMoveSpeed = cameraSpeed_ * deltaTime;
-    if (engine_->IsKeyPressed(DIK_W)) camera_->MoveForward(cameraMoveSpeed);    // 前方移動
-    if (engine_->IsKeyPressed(DIK_S)) camera_->MoveForward(-cameraMoveSpeed);   // 後方移動
-    if (engine_->IsKeyPressed(DIK_A)) camera_->MoveRight(-cameraMoveSpeed);     // 左移動
-    if (engine_->IsKeyPressed(DIK_D)) camera_->MoveRight(cameraMoveSpeed);      // 右移動
-    if (engine_->IsKeyPressed(DIK_SPACE)) camera_->MoveUp(cameraMoveSpeed);     // 上昇
-    if (engine_->IsKeyPressed(DIK_LSHIFT)) camera_->MoveUp(-cameraMoveSpeed);   // 下降
+    if (engine_->IsKeyPressed(DIK_W)) engine_->MoveCameraForward(cameraMoveSpeed);    // 前方移動
+    if (engine_->IsKeyPressed(DIK_S)) engine_->MoveCameraForward(-cameraMoveSpeed);   // 後方移動
+    if (engine_->IsKeyPressed(DIK_A)) engine_->MoveCameraRight(-cameraMoveSpeed);     // 左移動
+    if (engine_->IsKeyPressed(DIK_D)) engine_->MoveCameraRight(cameraMoveSpeed);      // 右移動
+    if (engine_->IsKeyPressed(DIK_SPACE)) engine_->MoveCameraUp(cameraMoveSpeed);     // 上昇
+    if (engine_->IsKeyPressed(DIK_LSHIFT)) engine_->MoveCameraUp(-cameraMoveSpeed);   // 下降
 
     // Fキーでライティングデバッグウィンドウの表示切り替え
     if (engine_->IsKeyTriggered(DIK_F)) {

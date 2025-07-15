@@ -67,8 +67,12 @@ void Camera::SetTranslate(const Vector3& translate) {
     transform_.translate = translate;
 }
 
+void Camera::SetFov(float fov) {
+    fovY_ = fov;
+}
+
 void Camera::SetFovY(float fovY) {
-    fovY_ = fovY;
+    SetFov(fovY);
 }
 
 void Camera::SetAspectRatio(float aspectRatio) {
