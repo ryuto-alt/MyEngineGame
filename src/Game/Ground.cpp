@@ -78,6 +78,19 @@ void Ground::SetEnvironmentTexture(const std::string& texturePath) {
     }
 }
 
+void Ground::SetEnableEnvironmentMap(bool enable) {
+    if (object3d_) {
+        object3d_->SetEnableEnvironmentMap(enable);
+    }
+}
+
+bool Ground::GetEnableEnvironmentMap() const {
+    if (object3d_) {
+        return object3d_->GetEnableEnvironmentMap();
+    }
+    return false;
+}
+
 void Ground::SetPosition(const Vector3& position) {
     position_ = position;
     if (object3d_) {

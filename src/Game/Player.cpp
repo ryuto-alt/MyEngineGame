@@ -88,6 +88,26 @@ void Player::SetEnvironmentTexture(const std::string& texturePath) {
     }
 }
 
+void Player::SetEnableEnvironmentMap(bool enable) {
+    if (object3d_) {
+        object3d_->SetEnableEnvironmentMap(enable);
+    }
+}
+
+bool Player::GetEnableEnvironmentMap() const {
+    if (object3d_) {
+        return object3d_->GetEnableEnvironmentMap();
+    }
+    return false;
+}
+
+void Player::SetPosition(const Vector3& position) {
+    position_ = position;
+    if (object3d_) {
+        object3d_->SetPosition(position_);
+    }
+}
+
 void Player::PauseAnimation() {
     if (animatedModel_) {
         animationPaused_ = true;
@@ -137,8 +157,47 @@ void Player::HandleMovement(UnoEngine* engine, float deltaTime) {
     bool bButtonPressed = engine->IsXboxButtonPressed(0x2000);
     bool bButtonTriggered = bButtonPressed && !previousBButtonPressed_;
     
+    // 矢印キー入力の処理
+    float keyboardInputX = 0.0f;
+    float keyboardInputY = 0.0f;
+    
+    if (engine->IsKeyPressed(DIK_LEFTARROW)) {
+        keyboardInputX = -1.0f;
+    }
+    if (engine->IsKeyPressed(DIK_RIGHTARROW)) {
+        keyboardInputX = 1.0f;
+    }
+    if (engine->IsKeyPressed(DIK_UPARROW)) {
+        keyboardInputY = 1.0f;
+    }
+    if (engine->IsKeyPressed(DIK_DOWNARROW)) {
+        keyboardInputY = -1.0f;
+    }
+    
+    // スティック入力と矢印キー入力を合成
+    float totalX = stickX + keyboardInputX;
+    float totalY = stickY + keyboardInputY;
+    
+    // 入力値を正規化（最大値1.0にクランプ）
+    float totalMagnitude = std::sqrt(totalX * totalX + totalY * totalY);
+    if (totalMagnitude > 1.0f) {
+        totalX /= totalMagnitude;
+        totalY /= totalMagnitude;
+        totalMagnitude = 1.0f;
+    }
+    
     float stickMagnitude = std::sqrt(stickX * stickX + stickY * stickY);
-    isMoving_ = stickMagnitude > 0.1f;
+    bool previouslyMoving = isMoving_;
+    isMoving_ = totalMagnitude > 0.1f;
+    
+    // 移動開始時のアニメーション設定
+    if (isMoving_ && !previouslyMoving && !isBlending_) {
+        if (isSneaking_) {
+            animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
+        } else {
+            animatedModel_->TransitionToAnimation("walk", 0.3f);
+        }
+    }
     
     // スニーク状態の切り替え
     if (bButtonTriggered && isMoving_ && !isBlending_) {
@@ -158,12 +217,12 @@ void Player::HandleMovement(UnoEngine* engine, float deltaTime) {
     // 移動処理（デルタタイム考慮）
     if (isMoving_) {
         float currentSpeed = isSneaking_ ? moveSpeed_ * sneakSpeedMultiplier_ : moveSpeed_;
-        Vector3 movement = Vector3{stickX * currentSpeed * deltaTime, 0.0f, stickY * currentSpeed * deltaTime};
+        Vector3 movement = Vector3{totalX * currentSpeed * deltaTime, 0.0f, totalY * currentSpeed * deltaTime};
         
-        moveDirection_ = Vector3{stickX, 0.0f, stickY};
+        moveDirection_ = Vector3{totalX, 0.0f, totalY};
         
-        if (stickMagnitude > 0.1f) {
-            targetRotationY_ = std::atan2(stickX, stickY);
+        if (totalMagnitude > 0.1f) {
+            targetRotationY_ = std::atan2(totalX, totalY);
         }
         
         position_ = position_ + movement;

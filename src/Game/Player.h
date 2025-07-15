@@ -11,8 +11,9 @@ public:
     void Draw();
     void Finalize();
     
-    // 位置・回転の取得
+    // 位置・回転の取得・設定
     Vector3 GetPosition() const { return position_; }
+    void SetPosition(const Vector3& position);
     float GetRotationY() const { return currentRotationY_; }
     
     // ライトの設定
@@ -21,6 +22,10 @@ public:
     
     // 環境マップテクスチャの設定
     void SetEnvironmentTexture(const std::string& texturePath);
+    
+    // 環境マップの有効/無効
+    void SetEnableEnvironmentMap(bool enable);
+    bool GetEnableEnvironmentMap() const;
     
     // アニメーション制御
     void PauseAnimation();

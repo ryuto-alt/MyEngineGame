@@ -125,6 +125,9 @@ void GamePlayScene::Update() {
     if (engine_->IsKeyTriggered(DIK_1)) {
         player_->ToggleSneakWalk();
     }
+    if (engine_->IsKeyTriggered(DIK_RSHIFT)) {
+        player_->ToggleSneakWalk();
+    }
 
     // ライトマネージャーの更新
     lightManager_->Update();
@@ -142,6 +145,7 @@ void GamePlayScene::Update() {
     if (cubeGlbObject3d_) {
         cubeGlbObject3d_->SetDirectionalLight(dirLight);
         cubeGlbObject3d_->SetSpotLight(spotLight);
+        
         cubeGlbObject3d_->Update();
     }
 
@@ -185,7 +189,8 @@ void GamePlayScene::Draw() {
     ImGui::Text("SHIFT - 下降");
     ImGui::Text("P - アニメーション一時停止/再開");
     ImGui::Text("R - アニメーションリセット");
-    ImGui::Text("1 - アニメーション切り替え（SneakWalk ⇔ Walk）");
+    ImGui::Text("1 / 右Shift - アニメーション切り替え（SneakWalk ⇔ Walk）");
+    ImGui::Text("矢印キー - Humanモデル移動");
     ImGui::Text("F - ライティング設定の表示/非表示");
     ImGui::Text("ESC - 終了");
     
@@ -236,6 +241,30 @@ void GamePlayScene::Draw() {
     }
     ImGui::Text("現在の回転: %.2f度", player_->GetRotationY() * 180.0f / 3.14159f);
     ImGui::Text("目標回転: %.2f度", player_->GetTargetRotationY() * 180.0f / 3.14159f);
+    
+    // 環境マップ設定
+    ImGui::Separator();
+    ImGui::Text("環境マップ設定:");
+    
+    // プレイヤーの環境マップ設定
+    bool playerEnvMap = player_->GetEnableEnvironmentMap();
+    if (ImGui::Checkbox("プレイヤー環境マップ", &playerEnvMap)) {
+        player_->SetEnableEnvironmentMap(playerEnvMap);
+    }
+    
+    // グラウンドの環境マップ設定
+    bool groundEnvMap = ground_->GetEnableEnvironmentMap();
+    if (ImGui::Checkbox("グラウンド環境マップ", &groundEnvMap)) {
+        ground_->SetEnableEnvironmentMap(groundEnvMap);
+    }
+    
+    // キューブの環境マップ設定
+    if (cubeGlbObject3d_) {
+        bool cubeEnvMap = cubeGlbObject3d_->GetEnableEnvironmentMap();
+        if (ImGui::Checkbox("キューブ環境マップ", &cubeEnvMap)) {
+            cubeGlbObject3d_->SetEnableEnvironmentMap(cubeEnvMap);
+        }
+    }
 
     ImGui::End();
     

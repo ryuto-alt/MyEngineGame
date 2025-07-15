@@ -44,7 +44,8 @@ struct VertexData {
 struct Material {
     Vector4 color;
     int32_t enableLighting;
-    float padding[3];
+    int32_t enableEnvironmentMap;
+    float padding[2];
     Matrix4x4 uvTransform;
 };
 

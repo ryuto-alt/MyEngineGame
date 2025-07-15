@@ -68,6 +68,10 @@ public:
     void SetEnvironmentTexture(const std::string& texturePath) { environmentTexturePath_ = texturePath; }
     const std::string& GetEnvironmentTexture() const { return environmentTexturePath_; }
     
+    // 環境マップの有効/無効
+    void SetEnableEnvironmentMap(bool enable) { enableEnvironmentMap_ = enable; }
+    bool GetEnableEnvironmentMap() const { return enableEnvironmentMap_; }
+    
     // アニメーション行列の設定
     void SetAnimationMatrix(const Matrix4x4& animationMatrix) { animationMatrix_ = animationMatrix; }
     const Matrix4x4& GetAnimationMatrix() const { return animationMatrix_; }
@@ -139,4 +143,7 @@ private:
     
     // 環境マップテクスチャのパス
     std::string environmentTexturePath_ = "";
+    
+    // 環境マップの有効/無効フラグ
+    bool enableEnvironmentMap_ = true;
 };

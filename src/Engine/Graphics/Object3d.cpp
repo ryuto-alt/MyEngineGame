@@ -62,6 +62,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 	// デフォルトカラーを白に設定（モデルのマテリアルで上書きされる）
 	materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	materialData_->enableLighting = true;
+	materialData_->enableEnvironmentMap = enableEnvironmentMap_ ? 1 : 0;
 	materialData_->uvTransform = MakeIdentity4x4();
 
 	// 変換行列リソースの作成
@@ -347,6 +348,11 @@ void Object3d::Update() {
 	// カメラの位置情報を更新
 	if (cameraData_ && camera_) {
 		cameraData_->worldPosition = camera_->GetTranslate();
+	}
+	
+	// 環境マップの有効/無効を更新
+	if (materialData_) {
+		materialData_->enableEnvironmentMap = enableEnvironmentMap_ ? 1 : 0;
 	}
 }
 
