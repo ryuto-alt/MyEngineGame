@@ -1,4 +1,7 @@
 #include "GamePlayScene.h"
+#include <string>
+#include <vector>
+#include <memory>
 
 
 GamePlayScene::GamePlayScene() {
@@ -39,66 +42,99 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
-    // Skyboxの作成と初期化（軽量版 - デバッグ時のみ有効）
-#ifdef _DEBUG
+    // Skyboxの作成と初期化（全ビルド設定で有効）
     skybox_ = engine_->CreateSkybox();
     skybox_->SetScale(1000.0f); // 大きなスケールで遠景を表現
     
-    // デバッグ時のみ軽量テクスチャを使用
+    // DDS読み込みと描画を実行
     try {
         engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
         skyboxEnabled_ = true;
-        OutputDebugStringA("Skybox: Debug mode - loaded with texture\n");
+        OutputDebugStringA("Skybox: Successfully loaded with DDS texture\n");
     } catch (const std::exception& e) {
         skyboxEnabled_ = false;
-        OutputDebugStringA(("Skybox: Failed to load texture in debug mode: " + std::string(e.what()) + "\n").c_str());
+        OutputDebugStringA(("Skybox: Failed to load DDS texture: " + std::string(e.what()) + "\n").c_str());
     }
-#else
-    // リリースビルドではSkyboxを完全に無効化（最高速度）
-    skybox_ = nullptr;
-    skyboxEnabled_ = false;
-    OutputDebugStringA("Skybox: Disabled in release build for maximum performance\n");
-#endif
     
-    // 環境マップを自動適用（Skybox有効時のみ）
+    // 環境マップを自動適用（強制的に適用）
+    engine_->SetEnvMap(player_);
+    engine_->SetEnvMap(ground_);
+    OutputDebugStringA("GamePlayScene: Environment map applied to player and ground\n");
+    
+    // Playerにさらに強制的に環境マップを有効化
+    player_->SetEnableEnvironmentMap(true);
+    player_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    OutputDebugStringA("GamePlayScene: Forced environment map enabled for player\n");
+    
     if (skyboxEnabled_) {
-        engine_->SetEnvMap(player_);
-        engine_->SetEnvMap(ground_);
-        OutputDebugStringA("GamePlayScene: Environment map applied\n");
+        OutputDebugStringA("GamePlayScene: Skybox is enabled\n");
     } else {
-        OutputDebugStringA("GamePlayScene: Environment map skipped (Skybox disabled)\n");
+        OutputDebugStringA("GamePlayScene: Skybox is disabled but environment map still applied\n");
     }
     
-    // GLBキューブモデルの初期化（遅延読み込み - デバッグ時のみ）
-#ifdef _DEBUG
+    // GLBキューブモデルの初期化（マルチマテリアル対応）
     try {
-        cubeGlbModel_ = std::make_unique<Model>();
-        cubeGlbModel_->Initialize(dxCommon_);
-        cubeGlbModel_->LoadFromGLB("Resources/Models/cube/obje.glb");
-
-        if (cubeGlbModel_) {
-            cubeGlbObject3d_ = engine_->CreateObject3D();
-            cubeGlbObject3d_->SetModel(cubeGlbModel_.get());
-            cubeGlbObject3d_->SetPosition(Vector3{ 2.0f, 0.0f, 0.0f });
-            cubeGlbObject3d_->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
-            cubeGlbObject3d_->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
-            cubeGlbObject3d_->SetEnableLighting(true);
-            cubeGlbObject3d_->SetCamera(camera_);
+        // マルチマテリアルGLBファイルを読み込み
+        Model tempModel;
+        tempModel.Initialize(dxCommon_);
+        std::vector<ModelData> multiMaterialData = tempModel.LoadMultiMaterialGLB("Resources/Models/cube/obje.glb");
+        
+        OutputDebugStringA(("GLB Multi-material: Loaded " + std::to_string(multiMaterialData.size()) + " materials\n").c_str());
+        
+        // 詳細なマテリアル情報を出力
+        for (size_t i = 0; i < multiMaterialData.size(); ++i) {
+            char debugMsg[512];
+            sprintf_s(debugMsg, "Material[%zu]: BaseColor=(%.3f,%.3f,%.3f,%.3f), Metallic=%.3f, Roughness=%.3f, Vertices=%zu, isPBR=%s\n",
+                i, multiMaterialData[i].material.baseColorFactor.x, multiMaterialData[i].material.baseColorFactor.y,
+                multiMaterialData[i].material.baseColorFactor.z, multiMaterialData[i].material.baseColorFactor.w,
+                multiMaterialData[i].material.metallicFactor, multiMaterialData[i].material.roughnessFactor,
+                multiMaterialData[i].vertices.size(), multiMaterialData[i].material.isPBR ? "true" : "false");
+            OutputDebugStringA(debugMsg);
+        }
+        
+        // 各マテリアルごとに別々のModelとObject3dを作成
+        for (size_t i = 0; i < multiMaterialData.size(); ++i) {
+            // Modelを作成
+            auto model = std::make_unique<Model>();
+            model->Initialize(dxCommon_);
+            
+            // ModelDataを手動で設定
+            ModelData& modelData = model->GetModelDataInternal();
+            modelData = multiMaterialData[i];
+            model->CreateVertexBuffer();
+            
+            // テクスチャを読み込み
+            if (!modelData.material.textureFilePath.empty()) {
+                TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
+            }
+            
+            // Object3dを作成
+            auto object3d = engine_->CreateObject3D();
+            object3d->SetModel(model.get());
+            object3d->SetPosition(Vector3{ 2.0f, 0.0f, 0.0f });
+            object3d->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
+            object3d->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
+            object3d->SetEnableLighting(true);
+            object3d->SetCamera(camera_);
             
             // 環境マップを自動適用（Skybox有効時のみ）
             if (skyboxEnabled_) {
-                engine_->SetEnvMap(cubeGlbObject3d_);
+                engine_->SetEnvMap(object3d.get());
             }
             
-            OutputDebugStringA("GLB Cube model loaded successfully (DEBUG only)\n");
+            // ベクターに追加
+            cubeGlbModels_.push_back(std::move(model));
+            cubeGlbObjects_.push_back(std::move(object3d));
+            
+            OutputDebugStringA(("GLB Material [" + std::to_string(i) + "] loaded successfully\n").c_str());
+        }
+        
+        if (!cubeGlbModels_.empty()) {
+            OutputDebugStringA(("GLB Multi-material cube model loaded successfully with " + std::to_string(cubeGlbModels_.size()) + " materials\n").c_str());
         }
     } catch (const std::exception& e) {
-        OutputDebugStringA(("Failed to load GLB cube model: " + std::string(e.what()) + "\n").c_str());
+        OutputDebugStringA(("Failed to load GLB multi-material cube model: " + std::string(e.what()) + "\n").c_str());
     }
-#else
-    // リリースビルドでは追加モデルを読み込まない（高速化）
-    OutputDebugStringA("Cube model loading skipped in release build for performance\n");
-#endif
 
     initialized_ = true;
 }
@@ -249,11 +285,13 @@ void GamePlayScene::Update() {
     ground_->SetDirectionalLight(dirLight);
     ground_->SetSpotLight(spotLight);
 
-    if (cubeGlbObject3d_) {
-        cubeGlbObject3d_->SetDirectionalLight(dirLight);
-        cubeGlbObject3d_->SetSpotLight(spotLight);
-        
-        cubeGlbObject3d_->Update();
+    // マルチマテリアルオブジェクトのUpdate
+    for (auto& object : cubeGlbObjects_) {
+        if (object) {
+            object->SetDirectionalLight(dirLight);
+            object->SetSpotLight(spotLight);
+            object->Update();
+        }
     }
 
     // オブジェクトの更新
@@ -280,8 +318,11 @@ void GamePlayScene::Draw() {
     // オブジェクトの描画
     ground_->Draw();
     
-    if (cubeGlbObject3d_) {
-        cubeGlbObject3d_->Draw();
+    // マルチマテリアルオブジェクトのDraw
+    for (auto& object : cubeGlbObjects_) {
+        if (object) {
+            object->Draw();
+        }
     }
     
     player_->Draw();
@@ -360,10 +401,22 @@ void GamePlayScene::Draw() {
     ImGui::Separator();
     ImGui::Text("環境マップ設定:");
     
-    // プレイヤーの環境マップ設定
+    // プレイヤーの環境マップ設定（強化版）
+    ImGui::Separator();
+    ImGui::Text("=== Human Model Environment Map ===");
     bool playerEnvMap = player_->GetEnableEnvironmentMap();
-    if (ImGui::Checkbox("プレイヤー環境マップ", &playerEnvMap)) {
+    if (ImGui::Checkbox("プレイヤー環境マップ (Human)", &playerEnvMap)) {
         player_->SetEnableEnvironmentMap(playerEnvMap);
+        OutputDebugStringA(playerEnvMap ? "GamePlayScene: Player environment map ENABLED\n" : "GamePlayScene: Player environment map DISABLED\n");
+    }
+    ImGui::SameLine();
+    ImGui::Text(playerEnvMap ? "[ON]" : "[OFF]");
+    
+    // 強制有効化ボタン
+    if (ImGui::Button("Force Enable Human EnvMap")) {
+        player_->SetEnableEnvironmentMap(true);
+        player_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+        OutputDebugStringA("GamePlayScene: FORCED Human environment map enabled!\n");
     }
     
     // グラウンドの環境マップ設定
@@ -372,11 +425,15 @@ void GamePlayScene::Draw() {
         ground_->SetEnableEnvironmentMap(groundEnvMap);
     }
     
-    // キューブの環境マップ設定
-    if (cubeGlbObject3d_) {
-        bool cubeEnvMap = cubeGlbObject3d_->GetEnableEnvironmentMap();
+    // マルチマテリアルキューブの環境マップ設定
+    if (!cubeGlbObjects_.empty()) {
+        bool cubeEnvMap = cubeGlbObjects_[0]->GetEnableEnvironmentMap();
         if (ImGui::Checkbox("キューブ環境マップ", &cubeEnvMap)) {
-            cubeGlbObject3d_->SetEnableEnvironmentMap(cubeEnvMap);
+            for (auto& object : cubeGlbObjects_) {
+                if (object) {
+                    object->SetEnableEnvironmentMap(cubeEnvMap);
+                }
+            }
         }
     }
 
@@ -408,11 +465,7 @@ void GamePlayScene::Finalize() {
     }
     skyboxEnabled_ = false;
 
-    if (cubeGlbObject3d_) {
-        cubeGlbObject3d_.reset();
-    }
-
-    if (cubeGlbModel_) {
-        cubeGlbModel_.reset();
-    }
+    // マルチマテリアルオブジェクトのクリーンアップ
+    cubeGlbObjects_.clear();
+    cubeGlbModels_.clear();
 }

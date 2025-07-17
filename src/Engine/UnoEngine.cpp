@@ -1,5 +1,6 @@
 #include "UnoEngine.h"
 #include "GameSceneFactory.h" // 具象クラスはcppファイルでインクルード
+#include "Collision.h" // Collision名前空間のため
 #include <cassert>
 #include <algorithm>
 #include <cctype>

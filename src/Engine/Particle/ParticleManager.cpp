@@ -102,8 +102,22 @@ void ParticleManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager
 
     // マテリアルデータの書き込み
     materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-    materialData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    // PBRマテリアルの初期化（パーティクル用）
+    materialData->baseColorFactor = { 1.0f, 1.0f, 1.0f, 1.0f };
+    materialData->metallicFactor = 0.0f;
+    materialData->roughnessFactor = 1.0f;
+    materialData->normalScale = 1.0f;
+    materialData->occlusionStrength = 1.0f;
+    materialData->emissiveFactor = { 0.0f, 0.0f, 0.0f };
+    materialData->alphaCutoff = 0.5f;
+    materialData->hasBaseColorTexture = 1; // パーティクルはテクスチャ使用
+    materialData->hasMetallicRoughnessTexture = 0;
+    materialData->hasNormalTexture = 0;
+    materialData->hasOcclusionTexture = 0;
+    materialData->hasEmissiveTexture = 0;
     materialData->enableLighting = 0; // ライティングなし
+    materialData->alphaMode = 2; // BLEND（半透明）
+    materialData->doubleSided = 0;
     materialData->uvTransform = MakeIdentity4x4(); // UVトランスフォームは単位行列
 
     // ディレクショナルライトリソースの作成
@@ -119,9 +133,9 @@ void ParticleManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager
 void ParticleManager::InitializeGraphicsPipeline() {
     // シェーダーの読み込み - パスを修正してシェーダーを正しく読み込む
     Microsoft::WRL::ComPtr<IDxcBlob> vsBlob = dxCommon_->CompileShader(
-        L"Resources/Shaders/Particle.VS.hlsl", L"vs_6_0");
+        L"Resources/shaders/Particle.VS.hlsl", L"vs_6_0");
     Microsoft::WRL::ComPtr<IDxcBlob> psBlob = dxCommon_->CompileShader(
-        L"Resources/Shaders/Particle.PS.hlsl", L"ps_6_0");
+        L"Resources/shaders/Particle.PS.hlsl", L"ps_6_0");
 
     // 頂点レイアウト - 新しいシェーダーの入力に合わせる
     D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};

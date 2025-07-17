@@ -42,11 +42,34 @@ struct VertexData {
 };
 
 struct Material {
-    Vector4 color;
+    // Base Color (従来のcolorと同等)
+    Vector4 baseColorFactor;
+    
+    // Metallic & Roughness
+    float metallicFactor;
+    float roughnessFactor;
+    float normalScale;
+    float occlusionStrength;
+    
+    // Emissive
+    Vector3 emissiveFactor;
+    float alphaCutoff;
+    
+    // Flags
+    int32_t hasBaseColorTexture;
+    int32_t hasMetallicRoughnessTexture;
+    int32_t hasNormalTexture;
+    int32_t hasOcclusionTexture;
+    int32_t hasEmissiveTexture;
     int32_t enableLighting;
-    int32_t enableEnvironmentMap;
-    float padding[2];
+    int32_t alphaMode; // 0=OPAQUE, 1=MASK, 2=BLEND
+    int32_t doubleSided;
+    
+    // UV変換
     Matrix4x4 uvTransform;
+    
+    // パディング
+    float padding[2];
 };
 
 struct TransformationMatrix {
@@ -86,6 +109,18 @@ struct MaterialData {
     float alpha = 1.0f;                          // 透明度(d)
     Vector2 textureScale = { 1.0f, 1.0f };       // テクスチャスケール(-s option)
     Vector2 textureOffset = { 0.0f, 0.0f };      // テクスチャオフセット(-o option)
+    
+    // PBR マテリアルプロパティ
+    bool isPBR = false;                          // PBRレンダリングを使用するか
+    Vector4 baseColorFactor = { 1.0f, 1.0f, 1.0f, 1.0f };  // ベースカラー係数
+    float metallicFactor = 0.0f;                 // メタリック係数
+    float roughnessFactor = 1.0f;                // ラフネス係数
+    float normalScale = 1.0f;                    // 法線マップのスケール
+    float occlusionStrength = 1.0f;              // オクルージョンの強度
+    Vector3 emissiveFactor = { 0.0f, 0.0f, 0.0f }; // エミッシブ係数
+    float alphaCutoff = 0.5f;                    // アルファカットオフ
+    std::string alphaMode = "OPAQUE";            // アルファモード
+    bool doubleSided = false;                    // 両面レンダリング
 };
 
 // ボーンウェイト構造体

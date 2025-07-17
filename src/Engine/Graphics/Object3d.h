@@ -51,8 +51,8 @@ public:
     const Vector3& GetScale() const { return transform_.scale; }
 
     // カラーの設定
-    void SetColor(const Vector4& color) { materialData_->color = color; }
-    const Vector4& GetColor() const { return materialData_->color; }
+    void SetColor(const Vector4& color) { materialData_->baseColorFactor = color; }
+    const Vector4& GetColor() const { return materialData_->baseColorFactor; }
 
     // ライトを有効にするか
     void SetEnableLighting(bool enable) { materialData_->enableLighting = enable ? 1 : 0; }

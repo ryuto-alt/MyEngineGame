@@ -75,7 +75,8 @@
       "Bash(.CG2_00-01.exe)",
       "WebFetch(domain:stackoverflow.com)",
       "WebFetch(domain:www.braynzarsoft.net)",
-      "WebFetch(domain:blog.littlepolygon.com)"
+      "WebFetch(domain:blog.littlepolygon.com)",
+      "Bash(\"./x64/Release/CG2_00-01.exe\")"
     ],
     "deny": []
   },

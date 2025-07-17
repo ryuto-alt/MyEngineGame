@@ -26,6 +26,9 @@ public:
     
     // GLBファイルの読み込み
     void LoadFromGLB(const std::string& filePath);
+    
+    // マルチマテリアル対応のGLBファイル読み込み
+    std::vector<ModelData> LoadMultiMaterialGLB(const std::string& filePath);
 
     // アクセサ
     const std::vector<VertexData>& GetVertices() const { return modelData_.vertices; }
@@ -35,13 +38,14 @@ public:
     const D3D12_VERTEX_BUFFER_VIEW& GetVBView() const { return vertexBufferView_; }
     ID3D12Resource* GetVertexResource() const { return vertexResource_.Get(); }
     const ModelData& GetModelData() const { return modelData_; }
-
-protected:
-    // モデルデータアクセサ（継承クラス用）
+    
+    // マルチマテリアル対応のためのパブリックアクセサ
     ModelData& GetModelDataInternal() { return modelData_; }
     
-    // 頂点バッファの作成（継承クラス用）
+    // 頂点バッファの作成（マルチマテリアル対応）
     void CreateVertexBuffer();
+
+protected:
 
 private:
     // モデルデータの最適化（UV球など改善のため）

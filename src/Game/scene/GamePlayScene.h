@@ -4,6 +4,9 @@
 #include "Ground.h"
 #include "LightManager.h"
 #include "Skybox.h"
+#include "TextureManager.h"
+#include <vector>
+#include <memory>
 
 
 class GamePlayScene : public IScene {
@@ -27,9 +30,9 @@ protected:
     std::unique_ptr<LightManager> lightManager_;
     std::unique_ptr<Skybox> skybox_;
     
-    // GLBモデル用（テスト用キューブ）
-    std::unique_ptr<Object3d> cubeGlbObject3d_;
-    std::unique_ptr<Model> cubeGlbModel_;
+    // GLBモデル用（テスト用キューブ）- マルチマテリアル対応
+    std::vector<std::unique_ptr<Object3d>> cubeGlbObjects_;
+    std::vector<std::unique_ptr<Model>> cubeGlbModels_;
     
     // Skybox制御フラグ
     bool skyboxEnabled_ = false;

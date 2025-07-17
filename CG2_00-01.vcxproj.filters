@@ -224,6 +224,9 @@
     <ClCompile Include="src\Engine\Audio\SpatialAudioSource.cpp">
       <Filter>src\engine\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\Skybox.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -421,6 +424,7 @@
     <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h">
       <Filter>src\engine\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -432,6 +436,12 @@
       <Filter>リソース ファイル</Filter>
     </None>
     <None Include="Resources\shaders\Particle.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\PBRObject3d.hlsli">
+      <Filter>リソース ファイル</Filter>
+    </None>
+    <None Include="Resources\shaders\Skybox.hlsli">
       <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
@@ -449,6 +459,18 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\SkinningObject3d.VS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PBRObject3d.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\PBRObject3d.VS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Skybox.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Skybox.VS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

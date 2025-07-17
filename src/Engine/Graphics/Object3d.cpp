@@ -60,9 +60,22 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 	// マテリアルデータの書き込み
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	// デフォルトカラーを白に設定（モデルのマテリアルで上書きされる）
-	materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-	materialData_->enableLighting = true;
-	materialData_->enableEnvironmentMap = enableEnvironmentMap_ ? 1 : 0;
+	// PBRマテリアルの初期化
+	materialData_->baseColorFactor = { 1.0f, 1.0f, 1.0f, 1.0f };
+	materialData_->metallicFactor = 0.0f;
+	materialData_->roughnessFactor = 1.0f;
+	materialData_->normalScale = 1.0f;
+	materialData_->occlusionStrength = 1.0f;
+	materialData_->emissiveFactor = { 0.0f, 0.0f, 0.0f };
+	materialData_->alphaCutoff = 0.5f;
+	materialData_->hasBaseColorTexture = 0;
+	materialData_->hasMetallicRoughnessTexture = 0;
+	materialData_->hasNormalTexture = 0;
+	materialData_->hasOcclusionTexture = 0;
+	materialData_->hasEmissiveTexture = 0;
+	materialData_->enableLighting = 1;
+	materialData_->alphaMode = 0; // OPAQUE
+	materialData_->doubleSided = 0;
 	materialData_->uvTransform = MakeIdentity4x4();
 
 	// 変換行列リソースの作成
@@ -102,7 +115,15 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 	TextureManager::GetInstance()->LoadDefaultTexture();
 	
 	// デフォルト環境マップテクスチャを事前にロード
-	TextureManager::GetInstance()->LoadTexture("Resources/Models/skybox/fireplace_2k_hybrid_2k.dds");
+	std::string defaultEnvMap = "Resources/Models/skybox/rostock_laage_airport_4k.dds";
+	DWORD envMapAttribs = GetFileAttributesA(defaultEnvMap.c_str());
+	if (envMapAttribs != INVALID_FILE_ATTRIBUTES) {
+		TextureManager::GetInstance()->LoadTexture(defaultEnvMap);
+		OutputDebugStringA(("Object3d::Initialize - Loaded default environment map: " + defaultEnvMap + "\n").c_str());
+	}
+	else {
+		OutputDebugStringA(("Object3d::Initialize - WARNING: Default environment map not found: " + defaultEnvMap + "\n").c_str());
+	}
 }
 
 void Object3d::SetModel(Model* model) {
@@ -117,12 +138,60 @@ void Object3d::SetModel(Model* model) {
 		OutputDebugStringA("Object3d::SetModel - Applying material data\n");
 		const MaterialData& modelMaterial = model_->GetMaterial();
 
-		// マテリアルデータをシェーダーのMaterial構造体に反映
-		// シェーダーのcolor変数にdiffuse色を設定
-		materialData_->color = modelMaterial.diffuse;
-
-		// アルファ値も設定
-		materialData_->color.w = modelMaterial.alpha;
+		// PBRマテリアルデータをシェーダーのMaterial構造体に反映
+		if (modelMaterial.isPBR) {
+			// PBRモード: baseColorFactorとPBRプロパティを使用
+			materialData_->baseColorFactor = modelMaterial.baseColorFactor;
+			materialData_->metallicFactor = modelMaterial.metallicFactor;
+			materialData_->roughnessFactor = modelMaterial.roughnessFactor;
+			materialData_->normalScale = modelMaterial.normalScale;
+			materialData_->occlusionStrength = modelMaterial.occlusionStrength;
+			materialData_->emissiveFactor = modelMaterial.emissiveFactor;
+			materialData_->alphaCutoff = modelMaterial.alphaCutoff;
+			
+			// テクスチャフラグの設定
+			materialData_->hasBaseColorTexture = !modelMaterial.textureFilePath.empty() ? 1 : 0;
+			materialData_->hasMetallicRoughnessTexture = 0;
+			materialData_->hasNormalTexture = 0;
+			materialData_->hasOcclusionTexture = 0;
+			materialData_->hasEmissiveTexture = 0;
+			materialData_->enableLighting = 1;
+			
+			// アルファモード変換
+			if (modelMaterial.alphaMode == "MASK") {
+				materialData_->alphaMode = 1;
+			} else if (modelMaterial.alphaMode == "BLEND") {
+				materialData_->alphaMode = 2;
+			} else {
+				materialData_->alphaMode = 0; // OPAQUE
+			}
+			
+			materialData_->doubleSided = modelMaterial.doubleSided ? 1 : 0;
+			
+			OutputDebugStringA("Object3d::SetModel - Applied PBR material data\n");
+			char pbrDebugMsg[512];
+			sprintf_s(pbrDebugMsg, "  BaseColor: R=%.2f, G=%.2f, B=%.2f, A=%.2f\n  Metallic=%.2f, Roughness=%.2f\n  HasTexture=%d, EnableLighting=%d\n",
+				materialData_->baseColorFactor.x, materialData_->baseColorFactor.y, 
+				materialData_->baseColorFactor.z, materialData_->baseColorFactor.w,
+				materialData_->metallicFactor, materialData_->roughnessFactor,
+				materialData_->hasBaseColorTexture, materialData_->enableLighting);
+			OutputDebugStringA(pbrDebugMsg);
+		} else {
+			// 従来モード: diffuseカラーをbaseColorFactorとして使用
+			materialData_->baseColorFactor = modelMaterial.diffuse;
+			materialData_->baseColorFactor.w = modelMaterial.alpha;
+			materialData_->metallicFactor = 0.0f;
+			materialData_->roughnessFactor = 1.0f;
+			materialData_->hasBaseColorTexture = !modelMaterial.textureFilePath.empty() ? 1 : 0;
+			materialData_->hasMetallicRoughnessTexture = 0;
+			materialData_->hasNormalTexture = 0;
+			materialData_->hasOcclusionTexture = 0;
+			materialData_->hasEmissiveTexture = 0;
+			materialData_->enableLighting = 1;
+			materialData_->alphaMode = 0; // OPAQUE
+			materialData_->doubleSided = 0;
+			OutputDebugStringA("Object3d::SetModel - Applied legacy material data\n");
+		}
 
 
 		Vector3 physicalScale = model_->GetModelData().rootTransform.scale;
@@ -187,10 +256,10 @@ void Object3d::SetModel(Model* model) {
 			std::to_string(modelMaterial.diffuse.z) + ", " +
 			std::to_string(modelMaterial.diffuse.w) + "\n").c_str());
 		OutputDebugStringA(("  - Applied to Shader (RGBA): " +
-			std::to_string(materialData_->color.x) + ", " +
-			std::to_string(materialData_->color.y) + ", " +
-			std::to_string(materialData_->color.z) + ", " +
-			std::to_string(materialData_->color.w) + "\n").c_str());
+			std::to_string(materialData_->baseColorFactor.x) + ", " +
+			std::to_string(materialData_->baseColorFactor.y) + ", " +
+			std::to_string(materialData_->baseColorFactor.z) + ", " +
+			std::to_string(materialData_->baseColorFactor.w) + "\n").c_str());
 		OutputDebugStringA(("  - Texture: " + (texturePath.empty() ? "None" : texturePath) + "\n").c_str());
 	}
 	else {
@@ -350,31 +419,49 @@ void Object3d::Update() {
 		cameraData_->worldPosition = camera_->GetTranslate();
 	}
 	
-	// 環境マップの有効/無効を更新
-	if (materialData_) {
-		materialData_->enableEnvironmentMap = enableEnvironmentMap_ ? 1 : 0;
-	}
+	// 環境マップの有効/無効を更新（PBR実装では使用しない）
+	// PBRでは環境マップは自動的に処理される
 }
 
 void Object3d::Draw() {
 	assert(dxCommon_);
 	assert(model_);
 
-	// パイプラインの設定
-	if (enableAnimation_ && animatedModel_) {
-		// スキニング用パイプラインを使用
+	// パイプラインの設定（PBRとアニメーションの組み合わせに対応）
+	bool usePBR = false;
+	if (model_) {
+		const MaterialData& material = model_->GetMaterial();
+		usePBR = material.isPBR;
+	}
+	
+	bool useAnimation = enableAnimation_ && animatedModel_;
+	
+	if (usePBR && useAnimation) {
+		// PBR + アニメーションの場合はPBRスキニングパイプラインを使用
+		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetPBRSkinningPipelineState().Get());
+		OutputDebugStringA("Object3d::Draw - Using PBR skinning pipeline\n");
+	}
+	else if (usePBR) {
+		// PBRマテリアルのみの場合はPBRパイプラインを使用
+		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetPBRPipelineState().Get());
+		OutputDebugStringA("Object3d::Draw - Using PBR pipeline\n");
+	}
+	else if (useAnimation) {
+		// アニメーションのみの場合はスキニングパイプラインを使用
 		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetSkinningPipelineState().Get());
+		OutputDebugStringA("Object3d::Draw - Using skinning pipeline\n");
 	}
 	else {
 		// 通常の描画設定（静的モデル用）
 		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetGraphicsPipelineState().Get());
+		OutputDebugStringA("Object3d::Draw - Using legacy pipeline\n");
 	}
 	
 	// プリミティブトポロジーの設定
 	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// アニメーションモデルの場合、頂点バッファとインフルエンスバッファを設定
-	if (enableAnimation_ && animatedModel_) {
+	if (useAnimation) {
 		AnimatedModel* animModel = static_cast<AnimatedModel*>(animatedModel_);
 		const SkinCluster& skinCluster = animModel->GetSkinCluster();
 
@@ -426,8 +513,15 @@ void Object3d::Draw() {
 		
 		// デフォルト環境マップテクスチャが存在しない場合はロード
 		if (!TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {
+			OutputDebugStringA(("Object3d::Draw - Loading default environment map: " + envTexturePath + "\n").c_str());
 			TextureManager::GetInstance()->LoadTexture(envTexturePath);
 		}
+		else {
+			OutputDebugStringA(("Object3d::Draw - Using existing environment map: " + envTexturePath + "\n").c_str());
+		}
+	}
+	else {
+		OutputDebugStringA(("Object3d::Draw - Using custom environment map: " + envTexturePath + "\n").c_str());
 	}
 	
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(6,
@@ -443,7 +537,7 @@ void Object3d::Draw() {
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(7, cameraResource_->GetGPUVirtualAddress());
 
 	// パレットSRVの設定（アニメーション用）
-	if (enableAnimation_ && animatedModel_) {
+	if (useAnimation) {
 		AnimatedModel* animModel = static_cast<AnimatedModel*>(animatedModel_);
 		const SkinCluster& skinCluster = animModel->GetSkinCluster();
 

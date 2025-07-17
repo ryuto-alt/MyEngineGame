@@ -258,29 +258,60 @@ bool GLBLoader::ConvertVertexData(const GLTF::Primitive& primitive, std::vector<
 }
 
 bool GLBLoader::ConvertMaterialData(const GLTF::Material& gltfMaterial, MaterialData& outMaterial) {
-    // 既存のレンダリングパイプラインとの互換性のため、PBRフラグをfalseに設定
-    outMaterial.isPBR = false;
+    // PBRレンダリングを有効にする
+    outMaterial.isPBR = true;
     
-    // 従来のマテリアルプロパティに変換（地面に適した色合い）
-    outMaterial.diffuse = {0.6f, 0.8f, 0.4f, 1.0f};  // 薄緑色（草っぽい色）
-    outMaterial.ambient = {0.2f, 0.3f, 0.1f, 1.0f};  // 暗めの緑色環境光
-    outMaterial.specular = {0.1f, 0.1f, 0.1f, 1.0f}; // 低い鏡面反射
-    outMaterial.shininess = 8.0f;                      // 低い光沢度（マットな感じ）
-    outMaterial.alpha = 1.0f;                          // 完全不透明
-    outMaterial.textureFilePath = "";                  // テクスチャパスはクリア
+    // PBR マテリアルプロパティの読み取り
+    const auto& pbr = gltfMaterial.pbrMetallicRoughness;
     
-    // PBRプロパティも一応設定（将来の拡張用）
-    outMaterial.baseColorFactor = {0.6f, 0.8f, 0.4f, 1.0f};  // diffuseと同じ色
-    outMaterial.metallicFactor = 0.0f;                         // 非金属
-    outMaterial.roughnessFactor = 0.9f;                        // 高い粗さ
-    outMaterial.normalScale = 1.0f;
-    outMaterial.occlusionStrength = 1.0f;
-    outMaterial.emissiveFactor = {0.0f, 0.0f, 0.0f};
-    outMaterial.alphaCutoff = 0.5f;
-    outMaterial.alphaMode = "OPAQUE";
-    outMaterial.doubleSided = false;
+    // ベースカラー係数
+    outMaterial.baseColorFactor = pbr.baseColorFactor;
     
-    LogInfo("Material converted - Ground color: greenish (0.6, 0.8, 0.4)");
+    // 従来のdiffuseにも反映（後方互換性のため）
+    outMaterial.diffuse = pbr.baseColorFactor;
+    
+    // メタリック・ラフネス係数
+    outMaterial.metallicFactor = pbr.metallicFactor;
+    outMaterial.roughnessFactor = pbr.roughnessFactor;
+    
+    // その他のマテリアルプロパティ
+    outMaterial.emissiveFactor = gltfMaterial.emissiveFactor;
+    outMaterial.alphaCutoff = gltfMaterial.alphaCutoff;
+    outMaterial.alphaMode = gltfMaterial.alphaMode;
+    outMaterial.doubleSided = gltfMaterial.doubleSided;
+    
+    // 法線マップのスケール
+    if (gltfMaterial.normalTexture.has_value()) {
+        outMaterial.normalScale = gltfMaterial.normalTexture->scale;
+    } else {
+        outMaterial.normalScale = 1.0f;
+    }
+    
+    // オクルージョンの強度
+    if (gltfMaterial.occlusionTexture.has_value()) {
+        outMaterial.occlusionStrength = gltfMaterial.occlusionTexture->strength;
+    } else {
+        outMaterial.occlusionStrength = 1.0f;
+    }
+    
+    // 従来のマテリアルプロパティも設定（フォールバック用）
+    outMaterial.ambient = {0.1f, 0.1f, 0.1f, 1.0f};
+    outMaterial.specular = {0.04f, 0.04f, 0.04f, 1.0f}; // 非金属のデフォルト反射率
+    outMaterial.shininess = (1.0f - outMaterial.roughnessFactor) * 128.0f; // ラフネスから光沢度を計算
+    outMaterial.alpha = outMaterial.baseColorFactor.w;
+    outMaterial.textureFilePath = "";
+    
+    // デバッグ出力
+    LogInfo("Material converted - PBR enabled");
+    LogInfo("  BaseColor: R=" + std::to_string(outMaterial.baseColorFactor.x) + 
+            ", G=" + std::to_string(outMaterial.baseColorFactor.y) + 
+            ", B=" + std::to_string(outMaterial.baseColorFactor.z) + 
+            ", A=" + std::to_string(outMaterial.baseColorFactor.w));
+    LogInfo("  Metallic: " + std::to_string(outMaterial.metallicFactor) + 
+            ", Roughness: " + std::to_string(outMaterial.roughnessFactor));
+    LogInfo("  AlphaMode: " + outMaterial.alphaMode + 
+            ", DoubleSided: " + (outMaterial.doubleSided ? "true" : "false"));
+    
     return true;
 }
 

@@ -503,6 +503,7 @@ IDxcBlob* DirectXCommon::CompileShader(const std::wstring& filePath, const wchar
 		filePath.c_str(),//コンパイル対象のhlslファイル名
 		L"-E",L"main",//エントリーpointの指定。基本的にmain以外にはしない
 		L"-T",profile,//shaderProfileの設定
+		L"-I", L"Resources/shaders/",//インクルードパスの追加
 		L"-Zi",L"-Qembed_debug",//デバック用の情報を埋め込む
 		L"-Od",//最適化を外しておく
 		L"-Zpr",//メモリレイアウトは行優先

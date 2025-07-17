@@ -130,6 +130,13 @@ bool TextureManager::LoadTexture(const std::string& filePath)
 
         // SRVを作成
         textureData.srvIndex = srvManager_->Allocate();
+        
+        // SRVインデックスの有効性チェック
+        if (textureData.srvIndex == UINT32_MAX || srvManager_->IsMaxCount()) {
+            OutputDebugStringA(("ERROR: TextureManager::LoadTexture - Failed to allocate SRV index for: " + filePath + "\n").c_str());
+            throw std::runtime_error("SRV allocation failed - descriptor heap may be full");
+        }
+        
         textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
         textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 
@@ -266,6 +273,13 @@ void TextureManager::LoadDefaultTexture()
 
         // SRVを作成
         textureData.srvIndex = srvManager_->Allocate();
+        
+        // SRVインデックスの有効性チェック
+        if (textureData.srvIndex == UINT32_MAX || srvManager_->IsMaxCount()) {
+            OutputDebugStringA(("ERROR: TextureManager::LoadDefaultTexture - Failed to allocate SRV index for: " + defaultTexturePath + "\n").c_str());
+            throw std::runtime_error("SRV allocation failed - descriptor heap may be full");
+        }
+        
         textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
         textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 
@@ -304,11 +318,28 @@ uint32_t TextureManager::GetSrvIndex(const std::string& filePath)
     // ファイルパスをキーに持つテクスチャデータを取得
     if (textureDatas.count(filePath) <= 0) {
         // テクスチャが存在しない場合はデフォルトテクスチャを返す
-        // OutputDebugStringA(("TextureManager::GetSrvIndex - Texture not found: " + filePath + ", using default\n").c_str());
+        OutputDebugStringA(("TextureManager::GetSrvIndex - Texture not found: " + filePath + ", using default\n").c_str());
         LoadDefaultTexture();
-        return textureDatas[GetDefaultTexturePath()].srvIndex;
+        
+        // デフォルトテクスチャも存在しない場合の安全チェック
+        const std::string& defaultPath = GetDefaultTexturePath();
+        if (textureDatas.count(defaultPath) <= 0) {
+            OutputDebugStringA("ERROR: TextureManager::GetSrvIndex - Default texture also not found\n");
+            return UINT32_MAX; // 無効値を返す
+        }
+        return textureDatas[defaultPath].srvIndex;
     }
-    return textureDatas[filePath].srvIndex;
+    
+    // 指定されたテクスチャのSRVインデックスを取得
+    uint32_t srvIndex = textureDatas[filePath].srvIndex;
+    
+    // SRVインデックスの有効性チェック
+    if (srvIndex == UINT32_MAX) {
+        OutputDebugStringA(("TextureManager::GetSrvIndex - Invalid SRV index for: " + filePath + "\n").c_str());
+        return UINT32_MAX;
+    }
+    
+    return srvIndex;
 }
 
 void TextureManager::BeginBatch() {

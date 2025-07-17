@@ -80,8 +80,23 @@ void Skybox::CreateIndexData() {
 void Skybox::CreateMaterial() {
     materialResource_ = dxCommon_->CreateBufferResource(sizeof(Material));
     materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-    materialData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
-    materialData_->enableLighting = 0;
+    // PBRマテリアルの初期化（Skybox用）
+    materialData_->baseColorFactor = { 1.0f, 1.0f, 1.0f, 1.0f };
+    materialData_->metallicFactor = 0.0f;
+    materialData_->roughnessFactor = 1.0f;
+    materialData_->normalScale = 1.0f;
+    materialData_->occlusionStrength = 1.0f;
+    materialData_->emissiveFactor = { 0.0f, 0.0f, 0.0f };
+    materialData_->alphaCutoff = 0.5f;
+    materialData_->hasBaseColorTexture = 1; // Skyboxはテクスチャ使用
+    materialData_->hasMetallicRoughnessTexture = 0;
+    materialData_->hasNormalTexture = 0;
+    materialData_->hasOcclusionTexture = 0;
+    materialData_->hasEmissiveTexture = 0;
+    materialData_->enableLighting = 0; // Skyboxはライティング無効
+    materialData_->alphaMode = 0; // OPAQUE
+    materialData_->doubleSided = 0;
+    materialData_->uvTransform = MakeIdentity4x4();
 
     transformationMatrixResource_ = dxCommon_->CreateBufferResource(sizeof(TransformationMatrix));
     transformationMatrixResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrixData_));
@@ -189,13 +204,22 @@ void Skybox::CreateGraphicsPipelineState() {
 }
 
 void Skybox::LoadCubemap(const std::string& filePath) {
+    // 初期化状態をリセット
+    cubemapLoaded_ = false;
+    cubemapSrvIndex_ = UINT32_MAX;
     cubemapFilePath_ = filePath;
+    
+    // 基本的な安全性チェック
+    if (!textureManager_) {
+        OutputDebugStringA("Skybox: TextureManagerが無効です\n");
+        environmentTextureLoaded_ = false;
+        return;
+    }
     
     // ファイルの存在確認
     DWORD fileAttributes = GetFileAttributesA(filePath.c_str());
     if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
         OutputDebugStringA(("Skybox: DDSファイルが見つかりません: " + filePath + "\n").c_str());
-        cubemapLoaded_ = false;
         environmentTextureLoaded_ = false;
         return;
     }
@@ -204,13 +228,20 @@ void Skybox::LoadCubemap(const std::string& filePath) {
     bool loadResult = textureManager_->LoadTexture(filePath);
     if (!loadResult) {
         OutputDebugStringA(("Skybox: DDSファイルの読み込みに失敗しました: " + filePath + "\n").c_str());
-        cubemapLoaded_ = false;
         environmentTextureLoaded_ = false;
         return;
     }
     
     // CubemapのSRVインデックスを取得
-    cubemapSrvIndex_ = textureManager_->GetSrvIndex(filePath);
+    uint32_t srvIndex = textureManager_->GetSrvIndex(filePath);
+    if (srvIndex == UINT32_MAX) {
+        OutputDebugStringA(("Skybox: 無効なSRVインデックスが返されました: " + filePath + "\n").c_str());
+        environmentTextureLoaded_ = false;
+        return;
+    }
+    
+    // 全ての検証が成功した場合のみ設定を適用
+    cubemapSrvIndex_ = srvIndex;
     cubemapLoaded_ = true;
     
     // 環境マップの自動管理機能：現在のテクスチャパスを静的変数に保存

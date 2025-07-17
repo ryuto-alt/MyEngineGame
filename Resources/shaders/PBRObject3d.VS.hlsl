@@ -1,10 +1,20 @@
-#include "PBRObject3d.hlsli"
+// PBRオブジェクト3D頂点シェーダー
+// インクルードエラーを回避するため直接定義
+
+struct VertexShaderOutput
+{
+    float32_t4 position : SV_POSITION;
+    float32_t2 texcoord : TEXCOORD0;
+    float32_t3 normal : NORMAL0;
+    float32_t3 worldPosition : POSITION0;
+    float32_t3 tangent : TANGENT0;
+    float32_t3 bitangent : BITANGENT0;
+};
 
 struct TransformationMatrix
 {
     float32_t4x4 WVP;
     float32_t4x4 World;
-    float32_t4x4 WorldInverseTranspose;
 };
 ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
 
@@ -13,7 +23,6 @@ struct VertexShaderInput
     float32_t4 position : POSITION0;
     float32_t2 texcoord : TEXCOORD0;
     float32_t3 normal : NORMAL0;
-    float32_t4 tangent : TANGENT0; // w成分はハンドネス（右手系/左手系）
 };
 
 VertexShaderOutput main(VertexShaderInput input)
@@ -27,16 +36,12 @@ VertexShaderOutput main(VertexShaderInput input)
     // テクスチャ座標
     output.texcoord = input.texcoord;
     
-    // 法線の変換（法線行列を使用）
-    output.normal = normalize(mul(input.normal, (float32_t3x3)gTransformationMatrix.WorldInverseTranspose));
+    // 法線の変換
+    output.normal = normalize(mul(input.normal, (float32_t3x3)gTransformationMatrix.World));
     
-    // タンジェントの変換
-    output.tangent = normalize(mul(input.tangent.xyz, (float32_t3x3)gTransformationMatrix.World));
-    
-    // バイタンジェントの計算
-    // glTFではタンジェントのw成分がハンドネス（-1 or 1）を表す
-    float32_t handedness = input.tangent.w;
-    output.bitangent = normalize(cross(output.normal, output.tangent) * handedness);
+    // タンジェントとバイタンジェントは後で対応
+    output.tangent = float32_t3(1.0, 0.0, 0.0);
+    output.bitangent = float32_t3(0.0, 1.0, 0.0);
     
     return output;
 }

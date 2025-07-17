@@ -7,6 +7,15 @@ SpriteCommon::~SpriteCommon() {
 	if (graphicsPipelineState) {
 		graphicsPipelineState.Reset();
 	}
+	if (skinningPipelineState) {
+		skinningPipelineState.Reset();
+	}
+	if (pbrPipelineState) {
+		pbrPipelineState.Reset();
+	}
+	if (pbrSkinningPipelineState) {
+		pbrSkinningPipelineState.Reset();
+	}
 	if (rootSignature) {
 		rootSignature.Reset();
 	}
@@ -17,6 +26,8 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	dxCommon_ = dxCommon;
 	GraphicsPipelineInitialize();
 	SkinningPipelineInitialize();
+	PBRPipelineInitialize();
+	PBRSkinningPipelineInitialize();
 }
 
 
@@ -175,10 +186,10 @@ void SpriteCommon::GraphicsPipelineInitialize()
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	//shaderをコンパイルする
 	// 通常の描画用シェーダーに戻す
-	IDxcBlob* vertexshaderBlob = dxCommon_->CompileShader(L"Resources/Shaders/Object3D.VS.hlsl",
+	IDxcBlob* vertexshaderBlob = dxCommon_->CompileShader(L"Resources/shaders/Object3D.VS.hlsl",
 		L"vs_6_0");
 	assert(vertexshaderBlob != nullptr);
-	IDxcBlob* pixelShaderBlob = dxCommon_->CompileShader(L"Resources/Shaders/Object3D.PS.hlsl",
+	IDxcBlob* pixelShaderBlob = dxCommon_->CompileShader(L"Resources/shaders/Object3D.PS.hlsl",
 		L"ps_6_0");
 	assert(pixelShaderBlob != nullptr);
 	//DepthStencilStateの設定
@@ -268,10 +279,10 @@ void SpriteCommon::SkinningPipelineInitialize()
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 	
 	// スキニング用シェーダーをコンパイル
-	IDxcBlob* vertexshaderBlob = dxCommon_->CompileShader(L"Resources/Shaders/SkinningObject3d.VS.hlsl",
+	IDxcBlob* vertexshaderBlob = dxCommon_->CompileShader(L"Resources/shaders/SkinningObject3d.VS.hlsl",
 		L"vs_6_0");
 	assert(vertexshaderBlob != nullptr);
-	IDxcBlob* pixelShaderBlob = dxCommon_->CompileShader(L"Resources/Shaders/Object3D.PS.hlsl",
+	IDxcBlob* pixelShaderBlob = dxCommon_->CompileShader(L"Resources/shaders/Object3D.PS.hlsl",
 		L"ps_6_0");
 	assert(pixelShaderBlob != nullptr);
 	
@@ -311,4 +322,181 @@ void SpriteCommon::SkinningPipelineInitialize()
 	if (pixelShaderBlob) {
 		pixelShaderBlob->Release();
 	}
+}
+void SpriteCommon::PBRPipelineInitialize()
+{
+	// ルートシグネチャは既に作成済みなので再利用
+	
+	//InputLayout（通常）
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
+	inputElementDescs[0].SemanticName = "POSITION";
+	inputElementDescs[0].SemanticIndex = 0;
+	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[1].SemanticName = "TEXCOORD";
+	inputElementDescs[1].SemanticIndex = 0;
+	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[2].SemanticName = "NORMAL";
+	inputElementDescs[2].SemanticIndex = 0;
+	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
+	inputLayoutDesc.pInputElementDescs = inputElementDescs;
+	inputLayoutDesc.NumElements = _countof(inputElementDescs);
+	
+	//BlendStateの設定
+	D3D12_BLEND_DESC blendDesc{};
+	//すべての色素要素を書き込む
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	
+	//RasiterzerStateの設定
+	D3D12_RASTERIZER_DESC rasterizerDesc{};
+	//背面カリングを有効にする
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	//三角形の中を塗りつぶす
+	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+	
+	//PBRシェーダーをコンパイルする
+	IDxcBlob* vertexshaderBlob = dxCommon_->CompileShader(L"Resources/shaders/PBRObject3d.VS.hlsl",
+		L"vs_6_0");
+	assert(vertexshaderBlob != nullptr);
+	IDxcBlob* pixelShaderBlob = dxCommon_->CompileShader(L"Resources/shaders/PBRObject3d.PS.hlsl",
+		L"ps_6_0");
+	assert(pixelShaderBlob != nullptr);
+	
+	//DepthStencilStateの設定
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+	//Depthの機能を有効化する
+	depthStencilDesc.DepthEnable = true;
+	//書き込みします
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//比較関数はLessEqual。つまり、近ければ描画される
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	
+	//POSを生成する
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
+	graphicsPipelineStateDesc.pRootSignature = rootSignature.Get();//RootSignature
+	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;//InputLayout
+	graphicsPipelineStateDesc.VS = { vertexshaderBlob->GetBufferPointer(),vertexshaderBlob->GetBufferSize() };//VertexShader
+	graphicsPipelineStateDesc.PS = { pixelShaderBlob->GetBufferPointer(),pixelShaderBlob->GetBufferSize() };//PixelShader
+	graphicsPipelineStateDesc.BlendState = blendDesc;//BlendState
+	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;//RasterizerState
+	//書き込むRTVの情報
+	graphicsPipelineStateDesc.NumRenderTargets = 1;
+	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//利用するトポロジ（形状）のタイプ。三角形
+	graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	//どのように画面に色を打ち込むかの設定（気にしなくて良い）
+	graphicsPipelineStateDesc.SampleDesc.Count = 1;
+	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	//DepthStencilの設定
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//実際に生成
+	HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pbrPipelineState));
+	assert(SUCCEEDED(hr));
+	
+	// シェーダーBlobの解放
+	if (vertexshaderBlob) {
+		vertexshaderBlob->Release();
+	}
+	if (pixelShaderBlob) {
+		pixelShaderBlob->Release();
+	}
+	
+	OutputDebugStringA("SpriteCommon::PBRPipelineInitialize - PBR pipeline created successfully\n");
+}
+
+void SpriteCommon::PBRSkinningPipelineInitialize()
+{
+	// PBRスキニング用のInputLayout（スキニング + PBR）
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[5] = {};
+	inputElementDescs[0].SemanticName = "POSITION";
+	inputElementDescs[0].SemanticIndex = 0;
+	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[1].SemanticName = "TEXCOORD";
+	inputElementDescs[1].SemanticIndex = 0;
+	inputElementDescs[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+	inputElementDescs[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[2].SemanticName = "NORMAL";
+	inputElementDescs[2].SemanticIndex = 0;
+	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	// スキニング用の追加属性
+	inputElementDescs[3].SemanticName = "WEIGHT";
+	inputElementDescs[3].SemanticIndex = 0;
+	inputElementDescs[3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescs[3].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[3].InputSlot = 1;  // 2番目のバッファスロット
+	inputElementDescs[3].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+	inputElementDescs[4].SemanticName = "INDEX";
+	inputElementDescs[4].SemanticIndex = 0;
+	inputElementDescs[4].Format = DXGI_FORMAT_R32G32B32A32_SINT;
+	inputElementDescs[4].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputElementDescs[4].InputSlot = 1;  // 2番目のバッファスロット
+	inputElementDescs[4].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
+	inputLayoutDesc.pInputElementDescs = inputElementDescs;
+	inputLayoutDesc.NumElements = _countof(inputElementDescs);
+	
+	//BlendStateの設定
+	D3D12_BLEND_DESC blendDesc{};
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	
+	//RasiterzerStateの設定
+	D3D12_RASTERIZER_DESC rasterizerDesc{};
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+	
+	// PBRスキニング用シェーダーをコンパイル（専用の頂点シェーダーとPBRピクセルシェーダー）
+	IDxcBlob* vertexshaderBlob = dxCommon_->CompileShader(L"Resources/shaders/PBRSkinningObject3d.VS.hlsl",
+		L"vs_6_0");
+	assert(vertexshaderBlob != nullptr);
+	IDxcBlob* pixelShaderBlob = dxCommon_->CompileShader(L"Resources/shaders/PBRObject3d.PS.hlsl",
+		L"ps_6_0");
+	assert(pixelShaderBlob != nullptr);
+	
+	//DepthStencilStateの設定
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+	//Depthの機能を有効化する
+	depthStencilDesc.DepthEnable = true;
+	//書き込みします
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//比較関数はLessEqual。つまり、近ければ描画される
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+	
+	//POSを生成する
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
+	graphicsPipelineStateDesc.pRootSignature = rootSignature.Get();//RootSignature
+	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;//InputLayout
+	graphicsPipelineStateDesc.VS = { vertexshaderBlob->GetBufferPointer(),vertexshaderBlob->GetBufferSize() };//VertexShader
+	graphicsPipelineStateDesc.PS = { pixelShaderBlob->GetBufferPointer(),pixelShaderBlob->GetBufferSize() };//PixelShader
+	graphicsPipelineStateDesc.BlendState = blendDesc;//BlendState
+	graphicsPipelineStateDesc.RasterizerState = rasterizerDesc;//RasterizerState
+	//書き込むRTVの情報
+	graphicsPipelineStateDesc.NumRenderTargets = 1;
+	graphicsPipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//利用するトポロジ（形状）のタイプ。三角形
+	graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	//どのように画面に色を打ち込むかの設定（気にしなくて良い）
+	graphicsPipelineStateDesc.SampleDesc.Count = 1;
+	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	//DepthStencilの設定
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//実際に生成
+	HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&pbrSkinningPipelineState));
+	assert(SUCCEEDED(hr));
+	
+	// シェーダーBlobの解放
+	if (vertexshaderBlob) {
+		vertexshaderBlob->Release();
+	}
+	if (pixelShaderBlob) {
+		pixelShaderBlob->Release();
+	}
+	
+	OutputDebugStringA("SpriteCommon::PBRSkinningPipelineInitialize - PBR skinning pipeline created successfully\n");
 }

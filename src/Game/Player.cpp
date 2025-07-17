@@ -65,6 +65,48 @@ void Player::Initialize(Camera* camera) {
     object3d_->SetEnableLighting(true);
     object3d_->SetEnableAnimation(true);
     object3d_->SetCamera(camera_);
+    
+    // humanモデルのマテリアル情報を確認
+    if (animatedModel_) {
+        const MaterialData& material = animatedModel_->GetMaterial();
+        char debugMsg[512];
+        sprintf_s(debugMsg, "Player Human Model Material:\n"
+            "  isPBR: %s\n"
+            "  BaseColor: R=%.3f, G=%.3f, B=%.3f, A=%.3f\n"
+            "  Metallic=%.3f, Roughness=%.3f\n"
+            "  Texture: %s\n",
+            material.isPBR ? "true" : "false",
+            material.baseColorFactor.x, material.baseColorFactor.y,
+            material.baseColorFactor.z, material.baseColorFactor.w,
+            material.metallicFactor, material.roughnessFactor,
+            material.textureFilePath.empty() ? "None" : material.textureFilePath.c_str());
+        OutputDebugStringA(debugMsg);
+        
+        // PBRマテリアルでない場合、強制的にPBRを有効化
+        if (!material.isPBR) {
+            OutputDebugStringA("Player: Human model is not PBR, forcing PBR settings...\n");
+            // モデルのマテリアルをPBRモードに強制変更
+            MaterialData& mutableMaterial = const_cast<MaterialData&>(animatedModel_->GetMaterial());
+            mutableMaterial.isPBR = true;
+            mutableMaterial.baseColorFactor = { 0.8f, 0.7f, 0.6f, 1.0f };  // 人間っぽい肌色
+            mutableMaterial.metallicFactor = 0.0f;   // 非金属
+            mutableMaterial.roughnessFactor = 0.8f;  // 少し粗い表面
+            mutableMaterial.emissiveFactor = { 0.0f, 0.0f, 0.0f };
+            mutableMaterial.alphaMode = "OPAQUE";
+            mutableMaterial.doubleSided = false;
+            
+            OutputDebugStringA("Player: Applied PBR material settings to human model\n");
+            // SetModelを再呼び出しして更新されたマテリアルを適用
+            object3d_->SetModel(static_cast<Model*>(animatedModel_.get()));
+        }
+        
+        // humanモデルに強制的に環境マップを適用
+        OutputDebugStringA("Player: Enabling environment map for human model\n");
+        object3d_->SetEnableEnvironmentMap(true);
+        
+        // デフォルトの環境マップテクスチャを設定
+        object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    }
 }
 
 void Player::Update(UnoEngine* engine) {

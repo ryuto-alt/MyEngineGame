@@ -154,6 +154,8 @@ bool isCubemap = textureData.metadata.IsCubemap() ||
 - CommandKickによる適切なGPU同期
 - SRVの効率的な管理
 
+
+sk-hVxE0Z8PRfPCd56xttb3hbchRKlNEjPLv7JpnJUE6Atja4lS
 10-3. メモリ管理
 - ComPtrによる自動リソース管理
 - デストラクタでの明示的なリソース解放
@@ -172,3 +174,5 @@ bool isCubemap = textureData.metadata.IsCubemap() ||
 8. 管理用データ構造への登録
 9. エラーハンドリングとフォールバック
 10. 描画時の使用方法実装
+
+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

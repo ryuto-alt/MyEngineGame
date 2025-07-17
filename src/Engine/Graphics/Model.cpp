@@ -769,6 +769,9 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 				const uint8_t* normalData = normalBuffer ? normalBuffer->data.data() + normalBufferView->byteOffset + normalAccessor->byteOffset : nullptr;
 				const uint8_t* texcoordData = texcoordBuffer ? texcoordBuffer->data.data() + texcoordBufferView->byteOffset + texcoordAccessor->byteOffset : nullptr;
 
+				// 各プリミティブごとに別々のModelDataを作成（マルチマテリアル対応）
+				ModelData primitiveModelData;
+				
 				// 三角形ごとに頂点を処理（逆順で追加）
 				for (size_t i = 0; i < indices.size(); i += 3) {
 					if (i + 2 < indices.size()) {
@@ -801,20 +804,19 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 								vertex.texcoord = { 0.0f, 0.0f }; // デフォルトUV
 							}
 
-							result.vertices.push_back(vertex);
+							primitiveModelData.vertices.push_back(vertex);
 						}
 					}
 				}
 
-				// マテリアル処理（最初のマテリアルのみ適用）
+				// マテリアル処理（現在のプリミティブのマテリアルを適用）
 				if (primitive.material >= 0 && primitive.material < static_cast<int>(model.materials.size())) {
-					// materialSetは削除し、各プリミティブのマテリアルを処理する
+					// 各プリミティブのマテリアルを処理する
 					const tinygltf::Material& material = model.materials[primitive.material];
 
 					// ベースカラーテクスチャ
 					if (material.pbrMetallicRoughness.baseColorTexture.index >= 0) {
 						int textureIndex = material.pbrMetallicRoughness.baseColorTexture.index;
-
 
 						auto extensionIt = material.pbrMetallicRoughness.baseColorTexture.extensions.find("KHR_texture_transform");
 						if (extensionIt != material.pbrMetallicRoughness.baseColorTexture.extensions.end()) {
@@ -824,8 +826,8 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 							if (transform.Has("scale") && transform.Get("scale").IsArray()) {
 								const tinygltf::Value::Array& scaleArray = transform.Get("scale").Get<tinygltf::Value::Array>();
 								if (scaleArray.size() >= 2) {
-									result.material.textureScale.x = static_cast<float>(scaleArray[0].Get<double>());
-									result.material.textureScale.y = static_cast<float>(scaleArray[1].Get<double>());
+									primitiveModelData.material.textureScale.x = static_cast<float>(scaleArray[0].Get<double>());
+									primitiveModelData.material.textureScale.y = static_cast<float>(scaleArray[1].Get<double>());
 								}
 							}
 
@@ -833,16 +835,16 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 							if (transform.Has("offset") && transform.Get("offset").IsArray()) {
 								const tinygltf::Value::Array& offsetArray = transform.Get("offset").Get<tinygltf::Value::Array>();
 								if (offsetArray.size() >= 2) {
-									result.material.textureOffset.x = static_cast<float>(offsetArray[0].Get<double>());
-									result.material.textureOffset.y = static_cast<float>(offsetArray[1].Get<double>());
+									primitiveModelData.material.textureOffset.x = static_cast<float>(offsetArray[0].Get<double>());
+									primitiveModelData.material.textureOffset.y = static_cast<float>(offsetArray[1].Get<double>());
 								}
 							}
 
 							// デバッグ: テクスチャ変換情報を出力
 							char debugMsg[256];
 							sprintf_s(debugMsg, "GLB KHR_texture_transform - Scale: X=%.3f, Y=%.3f, Offset: X=%.3f, Y=%.3f\n",
-								result.material.textureScale.x, result.material.textureScale.y,
-								result.material.textureOffset.x, result.material.textureOffset.y);
+								primitiveModelData.material.textureScale.x, primitiveModelData.material.textureScale.y,
+								primitiveModelData.material.textureOffset.x, primitiveModelData.material.textureOffset.y);
 							OutputDebugStringA(debugMsg);
 						}
 						if (textureIndex < static_cast<int>(model.textures.size())) {
@@ -867,7 +869,7 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 									DWORD fileAttributes = GetFileAttributesA(textureFilename.c_str());
 									if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
 										// 既に存在する場合は再利用
-										result.material.textureFilePath = textureFilename;
+										primitiveModelData.material.textureFilePath = textureFilename;
 										OutputDebugStringA(("GLB: Reusing existing texture: " + textureFilename + "\n").c_str());
 									}
 									else {
@@ -887,7 +889,7 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 											int height = image.height;
 											int comp = image.component;
 											if (stbi_write_png(textureFilename.c_str(), width, height, comp, image.image.data(), width * comp)) {
-												result.material.textureFilePath = textureFilename;
+												primitiveModelData.material.textureFilePath = textureFilename;
 												OutputDebugStringA(("GLB: Saved embedded texture as PNG: " + textureFilename + "\n").c_str());
 											}
 											else {
@@ -903,7 +905,7 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 											if (texFile.is_open()) {
 												texFile.write(reinterpret_cast<const char*>(buffer.data.data() + bufferView.byteOffset), bufferView.byteLength);
 												texFile.close();
-												result.material.textureFilePath = textureFilename;
+												primitiveModelData.material.textureFilePath = textureFilename;
 												OutputDebugStringA(("GLB: Saved embedded texture from buffer: " + textureFilename + "\n").c_str());
 											}
 										}
@@ -913,44 +915,88 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 						}
 					}
 
-					// マテリアルカラー
+					// PBRマテリアルデータの設定
+					primitiveModelData.material.isPBR = true;  // PBRレンダリングを有効化
+					
+					// ベースカラー係数の設定
 					if (material.pbrMetallicRoughness.baseColorFactor.size() >= 3) {
-						result.material.diffuse.x = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[0]);
-						result.material.diffuse.y = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[1]);
-						result.material.diffuse.z = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[2]);
-						result.material.diffuse.w = material.pbrMetallicRoughness.baseColorFactor.size() >= 4 ?
+						primitiveModelData.material.baseColorFactor.x = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[0]);
+						primitiveModelData.material.baseColorFactor.y = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[1]);
+						primitiveModelData.material.baseColorFactor.z = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[2]);
+						primitiveModelData.material.baseColorFactor.w = material.pbrMetallicRoughness.baseColorFactor.size() >= 4 ?
 							static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[3]) : 1.0f;
-
-						// デバッグ: マテリアルカラーを出力
-						char debugMsg[512];
-						sprintf_s(debugMsg, "GLB Material[%d] - %s:\n"
-							"  baseColorFactor: R=%.3f, G=%.3f, B=%.3f, A=%.3f\n"
-							"  Applied Diffuse: R=%.3f, G=%.3f, B=%.3f, A=%.3f\n"
-							"  metallicFactor: %.3f, roughnessFactor: %.3f\n",
-							primitive.material,
-							material.name.empty() ? "Unnamed" : material.name.c_str(),
-							material.pbrMetallicRoughness.baseColorFactor[0],
-							material.pbrMetallicRoughness.baseColorFactor[1],
-							material.pbrMetallicRoughness.baseColorFactor[2],
-							material.pbrMetallicRoughness.baseColorFactor.size() >= 4 ? material.pbrMetallicRoughness.baseColorFactor[3] : 1.0,
-							result.material.diffuse.x, result.material.diffuse.y,
-							result.material.diffuse.z, result.material.diffuse.w,
-							material.pbrMetallicRoughness.metallicFactor,
-							material.pbrMetallicRoughness.roughnessFactor);
-						OutputDebugStringA(debugMsg);
+						
+						// 従来のdiffuseにも反映（後方互換性）
+						primitiveModelData.material.diffuse = primitiveModelData.material.baseColorFactor;
 					}
 					else {
-						result.material.diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+						primitiveModelData.material.baseColorFactor = { 1.0f, 1.0f, 1.0f, 1.0f };
+						primitiveModelData.material.diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
 						OutputDebugStringA("GLB: No baseColorFactor specified, using white default\n");
 					}
+					
+					// PBRプロパティの設定
+					primitiveModelData.material.metallicFactor = static_cast<float>(material.pbrMetallicRoughness.metallicFactor);
+					primitiveModelData.material.roughnessFactor = static_cast<float>(material.pbrMetallicRoughness.roughnessFactor);
+					primitiveModelData.material.emissiveFactor.x = material.emissiveFactor.size() > 0 ? static_cast<float>(material.emissiveFactor[0]) : 0.0f;
+					primitiveModelData.material.emissiveFactor.y = material.emissiveFactor.size() > 1 ? static_cast<float>(material.emissiveFactor[1]) : 0.0f;
+					primitiveModelData.material.emissiveFactor.z = material.emissiveFactor.size() > 2 ? static_cast<float>(material.emissiveFactor[2]) : 0.0f;
+					
+					// アルファモードとカットオフ
+					if (material.alphaMode == "MASK") {
+						primitiveModelData.material.alphaMode = "MASK";
+						primitiveModelData.material.alphaCutoff = static_cast<float>(material.alphaCutoff);
+					} else if (material.alphaMode == "BLEND") {
+						primitiveModelData.material.alphaMode = "BLEND";
+					} else {
+						primitiveModelData.material.alphaMode = "OPAQUE";
+					}
+					
+					primitiveModelData.material.doubleSided = material.doubleSided;
+
+					// デバッグ: PBRマテリアルデータを出力
+					char debugMsg[512];
+					sprintf_s(debugMsg, "GLB PBR Material[%d] - %s:\n"
+						"  baseColorFactor: R=%.3f, G=%.3f, B=%.3f, A=%.3f\n"
+						"  metallicFactor: %.3f, roughnessFactor: %.3f\n"
+						"  emissiveFactor: R=%.3f, G=%.3f, B=%.3f\n"
+						"  alphaMode: %s, doubleSided: %s\n",
+						primitive.material,
+						material.name.empty() ? "Unnamed" : material.name.c_str(),
+						primitiveModelData.material.baseColorFactor.x, primitiveModelData.material.baseColorFactor.y,
+						primitiveModelData.material.baseColorFactor.z, primitiveModelData.material.baseColorFactor.w,
+						primitiveModelData.material.metallicFactor, primitiveModelData.material.roughnessFactor,
+						primitiveModelData.material.emissiveFactor.x, primitiveModelData.material.emissiveFactor.y, primitiveModelData.material.emissiveFactor.z,
+						primitiveModelData.material.alphaMode.c_str(), primitiveModelData.material.doubleSided ? "true" : "false");
+					OutputDebugStringA(debugMsg);
 				}
 				else {
 					// マテリアルが指定されていない場合のデフォルト値
-					// 既に設定されているマテリアルがある場合はそれを保持
-					OutputDebugStringA("GLB: No material specified for this primitive, keeping current material\n");
+					// PBRマテリアルのデフォルト値を設定
+					primitiveModelData.material.isPBR = true;
+					primitiveModelData.material.baseColorFactor = { 0.8f, 0.8f, 0.8f, 1.0f };
+					primitiveModelData.material.diffuse = primitiveModelData.material.baseColorFactor;
+					primitiveModelData.material.metallicFactor = 0.0f;
+					primitiveModelData.material.roughnessFactor = 0.9f;
+					primitiveModelData.material.emissiveFactor = { 0.0f, 0.0f, 0.0f };
+					primitiveModelData.material.alphaMode = "OPAQUE";
+					primitiveModelData.material.doubleSided = false;
+					OutputDebugStringA("GLB: No material specified for this primitive, using default PBR material\n");
 				}
-
-				// break; // すべてのプリミティブを処理するためコメントアウト
+				
+				// 各プリミティブのModelDataを結果に追加
+				primitiveModelData.rootTransform = result.rootTransform;
+				if (!primitiveModelData.vertices.empty()) {
+					// 最初のプリミティブは既存のresultに統合
+					if (result.vertices.empty()) {
+						result = primitiveModelData;
+					} else {
+						// 2番目以降のプリミティブは頂点データを統合（一時的な解決策）
+						result.vertices.insert(result.vertices.end(), 
+							primitiveModelData.vertices.begin(), 
+							primitiveModelData.vertices.end());
+					}
+				}
 			}
 		}
 
@@ -976,4 +1022,348 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 	OutputDebugStringA(finalDebugMsg);
 
 	return result;
+}
+
+std::vector<ModelData> Model::LoadMultiMaterialGLB(const std::string& filePath) {
+	std::vector<ModelData> resultList;
+	
+	tinygltf::Model gltfModel;
+	tinygltf::TinyGLTF loader;
+	std::string err;
+	std::string warn;
+
+	// GLBファイルを読み込む
+	OutputDebugStringA(("Loading GLB file for multi-material: " + filePath + "\n").c_str());
+
+	// ファイルの存在確認
+	DWORD fileAttributes = GetFileAttributesA(filePath.c_str());
+	if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
+		OutputDebugStringA(("ERROR: GLB file not found: " + filePath + "\n").c_str());
+		return resultList;
+	}
+
+	bool success = loader.LoadBinaryFromFile(&gltfModel, &err, &warn, filePath);
+
+	if (!warn.empty()) {
+		OutputDebugStringA(("GLTF Warning: " + warn + "\n").c_str());
+	}
+
+	if (!err.empty()) {
+		OutputDebugStringA(("GLTF Error: " + err + "\n").c_str());
+	}
+
+	if (!success) {
+		OutputDebugStringA("Failed to load GLB file\n");
+		return resultList;
+	}
+
+	// デフォルトシーンを取得
+	if (gltfModel.defaultScene < 0 || gltfModel.defaultScene >= static_cast<int>(gltfModel.scenes.size())) {
+		OutputDebugStringA("No default scene found in GLB file, using scene 0\n");
+		if (!gltfModel.scenes.empty()) {
+			gltfModel.defaultScene = 0;
+		}
+		else {
+			OutputDebugStringA("ERROR: No scenes found in GLB file\n");
+			return resultList;
+		}
+	}
+
+	const tinygltf::Scene& scene = gltfModel.scenes[gltfModel.defaultScene];
+
+	// ノード変換行列を計算する関数
+	std::function<void(const tinygltf::Model&, int, const Matrix4x4&)> processNode;
+	processNode = [&](const tinygltf::Model& model, int nodeIndex, const Matrix4x4& parentTransform) {
+		if (nodeIndex < 0 || nodeIndex >= static_cast<int>(model.nodes.size())) {
+			return;
+		}
+
+		const tinygltf::Node& node = model.nodes[nodeIndex];
+
+		// ノードの変換行列を計算
+		Matrix4x4 nodeTransform = MakeIdentity4x4();
+		
+		// 簡易的なTRS処理（詳細は省略）
+		Vector3 translation = { 0.0f, 0.0f, 0.0f };
+		Vector3 scale = { 1.0f, 1.0f, 1.0f };
+		
+		if (node.translation.size() == 3) {
+			translation.x = static_cast<float>(node.translation[0]);
+			translation.y = static_cast<float>(node.translation[1]);
+			translation.z = static_cast<float>(node.translation[2]);
+		}
+		
+		if (node.scale.size() == 3) {
+			scale.x = static_cast<float>(node.scale[0]);
+			scale.y = static_cast<float>(node.scale[1]);
+			scale.z = static_cast<float>(node.scale[2]);
+		}
+
+		Matrix4x4 worldTransform = Multiply(nodeTransform, parentTransform);
+
+		// メッシュがある場合は各プリミティブを別々のModelDataとして処理
+		if (node.mesh >= 0 && node.mesh < static_cast<int>(model.meshes.size())) {
+			const tinygltf::Mesh& mesh = model.meshes[node.mesh];
+			
+			for (const auto& primitive : mesh.primitives) {
+				ModelData primitiveModelData;
+				primitiveModelData.rootTransform.scale = scale;
+				primitiveModelData.rootTransform.translate = translation;
+				primitiveModelData.rootTransform.rotate = { 0.0f, 0.0f, 0.0f };
+				
+				// 位置属性を取得
+				auto positionIt = primitive.attributes.find("POSITION");
+				if (positionIt == primitive.attributes.end()) {
+					continue;
+				}
+
+				const tinygltf::Accessor& positionAccessor = model.accessors[positionIt->second];
+				const tinygltf::BufferView& positionBufferView = model.bufferViews[positionAccessor.bufferView];
+				const tinygltf::Buffer& positionBuffer = model.buffers[positionBufferView.buffer];
+
+				// 法線属性を取得
+				const tinygltf::Accessor* normalAccessor = nullptr;
+				const tinygltf::BufferView* normalBufferView = nullptr;
+				const tinygltf::Buffer* normalBuffer = nullptr;
+				auto normalIt = primitive.attributes.find("NORMAL");
+				if (normalIt != primitive.attributes.end()) {
+					normalAccessor = &model.accessors[normalIt->second];
+					normalBufferView = &model.bufferViews[normalAccessor->bufferView];
+					normalBuffer = &model.buffers[normalBufferView->buffer];
+				}
+
+				// テクスチャ座標属性を取得
+				const tinygltf::Accessor* texcoordAccessor = nullptr;
+				const tinygltf::BufferView* texcoordBufferView = nullptr;
+				const tinygltf::Buffer* texcoordBuffer = nullptr;
+				auto texcoordIt = primitive.attributes.find("TEXCOORD_0");
+				if (texcoordIt != primitive.attributes.end()) {
+					texcoordAccessor = &model.accessors[texcoordIt->second];
+					texcoordBufferView = &model.bufferViews[texcoordAccessor->bufferView];
+					texcoordBuffer = &model.buffers[texcoordBufferView->buffer];
+				}
+
+				// インデックスを取得
+				std::vector<uint32_t> indices;
+				if (primitive.indices >= 0) {
+					const tinygltf::Accessor& indexAccessor = model.accessors[primitive.indices];
+					const tinygltf::BufferView& indexBufferView = model.bufferViews[indexAccessor.bufferView];
+					const tinygltf::Buffer& indexBuffer = model.buffers[indexBufferView.buffer];
+
+					const uint8_t* indexData = indexBuffer.data.data() + indexBufferView.byteOffset + indexAccessor.byteOffset;
+
+					for (size_t i = 0; i < indexAccessor.count; ++i) {
+						uint32_t index = 0;
+						if (indexAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+							index = *reinterpret_cast<const uint16_t*>(indexData + i * sizeof(uint16_t));
+						}
+						else if (indexAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) {
+							index = *reinterpret_cast<const uint32_t*>(indexData + i * sizeof(uint32_t));
+						}
+						indices.push_back(index);
+					}
+				}
+				else {
+					// インデックスなしの場合、順番に頂点を使用
+					for (size_t i = 0; i < positionAccessor.count; ++i) {
+						indices.push_back(static_cast<uint32_t>(i));
+					}
+				}
+
+				// 頂点データを構築
+				const uint8_t* positionData = positionBuffer.data.data() + positionBufferView.byteOffset + positionAccessor.byteOffset;
+				const uint8_t* normalData = normalBuffer ? normalBuffer->data.data() + normalBufferView->byteOffset + normalAccessor->byteOffset : nullptr;
+				const uint8_t* texcoordData = texcoordBuffer ? texcoordBuffer->data.data() + texcoordBufferView->byteOffset + texcoordAccessor->byteOffset : nullptr;
+
+				// 三角形ごとに頂点を処理（逆順で追加）
+				for (size_t i = 0; i < indices.size(); i += 3) {
+					if (i + 2 < indices.size()) {
+						for (int j = 2; j >= 0; --j) {
+							uint32_t vertexIndex = indices[i + j];
+
+							VertexData vertex = {};
+
+							// 位置
+							if (vertexIndex < positionAccessor.count) {
+								const float* pos = reinterpret_cast<const float*>(positionData + vertexIndex * 3 * sizeof(float));
+								vertex.position = { -pos[0], pos[1], pos[2], 1.0f };
+							}
+
+							// 法線
+							if (normalData && vertexIndex < normalAccessor->count) {
+								const float* norm = reinterpret_cast<const float*>(normalData + vertexIndex * 3 * sizeof(float));
+								vertex.normal = { -norm[0], norm[1], norm[2] };
+							}
+							else {
+								vertex.normal = { 0.0f, 1.0f, 0.0f };
+							}
+
+							// テクスチャ座標
+							if (texcoordData && vertexIndex < texcoordAccessor->count) {
+								const float* tex = reinterpret_cast<const float*>(texcoordData + vertexIndex * 2 * sizeof(float));
+								vertex.texcoord = { tex[0], 1.0f - tex[1] };
+							}
+							else {
+								vertex.texcoord = { 0.0f, 0.0f };
+							}
+
+							primitiveModelData.vertices.push_back(vertex);
+						}
+					}
+				}
+
+				// マテリアル処理
+				if (primitive.material >= 0 && primitive.material < static_cast<int>(model.materials.size())) {
+					const tinygltf::Material& material = model.materials[primitive.material];
+
+					// ベースカラーテクスチャの処理
+					if (material.pbrMetallicRoughness.baseColorTexture.index >= 0) {
+						int textureIndex = material.pbrMetallicRoughness.baseColorTexture.index;
+						if (textureIndex < static_cast<int>(model.textures.size())) {
+							const tinygltf::Texture& texture = model.textures[textureIndex];
+							if (texture.source >= 0 && texture.source < static_cast<int>(model.images.size())) {
+								const tinygltf::Image& image = model.images[texture.source];
+								
+								// 埋め込みテクスチャを保存
+								if (!image.image.empty()) {
+									std::string extension = ".png";
+									if (image.mimeType == "image/jpeg" || image.mimeType == "image/jpg") {
+										extension = ".jpg";
+									}
+									
+									std::string textureFilename = "Resources/textures/glb_embedded_" + std::to_string(texture.source) + "_" + std::to_string(std::hash<std::string>{}(filePath)) + extension;
+									
+									// ファイルが既に存在するか確認
+									DWORD fileAttributes = GetFileAttributesA(textureFilename.c_str());
+									if (fileAttributes != INVALID_FILE_ATTRIBUTES) {
+										primitiveModelData.material.textureFilePath = textureFilename;
+										OutputDebugStringA(("GLB Multi-Material: Reusing existing texture: " + textureFilename + "\n").c_str());
+									}
+									else {
+										// ディレクトリを作成
+										CreateDirectoryA("Resources", NULL);
+										CreateDirectoryA("Resources/textures", NULL);
+										
+										if (image.bufferView >= 0) {
+											const tinygltf::BufferView& bufferView = model.bufferViews[image.bufferView];
+											const tinygltf::Buffer& buffer = model.buffers[bufferView.buffer];
+											
+											std::ofstream texFile(textureFilename, std::ios::binary);
+											if (texFile.is_open()) {
+												texFile.write(reinterpret_cast<const char*>(buffer.data.data() + bufferView.byteOffset), bufferView.byteLength);
+												texFile.close();
+												primitiveModelData.material.textureFilePath = textureFilename;
+												OutputDebugStringA(("GLB Multi-Material: Saved embedded texture: " + textureFilename + "\n").c_str());
+											}
+										}
+										else {
+											// デコード済みデータをPNGとして保存
+											extension = ".png";
+											textureFilename = "Resources/textures/glb_embedded_" + std::to_string(texture.source) + "_" + std::to_string(std::hash<std::string>{}(filePath)) + extension;
+											
+											int width = image.width;
+											int height = image.height;
+											int comp = image.component;
+											if (stbi_write_png(textureFilename.c_str(), width, height, comp, image.image.data(), width * comp)) {
+												primitiveModelData.material.textureFilePath = textureFilename;
+												OutputDebugStringA(("GLB Multi-Material: Saved embedded texture as PNG: " + textureFilename + "\n").c_str());
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					
+					// PBRマテリアルデータの設定
+					primitiveModelData.material.isPBR = true;
+					
+					// ベースカラー係数の設定
+					if (material.pbrMetallicRoughness.baseColorFactor.size() >= 3) {
+						primitiveModelData.material.baseColorFactor.x = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[0]);
+						primitiveModelData.material.baseColorFactor.y = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[1]);
+						primitiveModelData.material.baseColorFactor.z = static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[2]);
+						primitiveModelData.material.baseColorFactor.w = material.pbrMetallicRoughness.baseColorFactor.size() >= 4 ?
+							static_cast<float>(material.pbrMetallicRoughness.baseColorFactor[3]) : 1.0f;
+						
+						primitiveModelData.material.diffuse = primitiveModelData.material.baseColorFactor;
+					}
+					else {
+						primitiveModelData.material.baseColorFactor = { 1.0f, 1.0f, 1.0f, 1.0f };
+						primitiveModelData.material.diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+					}
+					
+					// PBRプロパティの設定
+					primitiveModelData.material.metallicFactor = static_cast<float>(material.pbrMetallicRoughness.metallicFactor);
+					primitiveModelData.material.roughnessFactor = static_cast<float>(material.pbrMetallicRoughness.roughnessFactor);
+					primitiveModelData.material.emissiveFactor.x = material.emissiveFactor.size() > 0 ? static_cast<float>(material.emissiveFactor[0]) : 0.0f;
+					primitiveModelData.material.emissiveFactor.y = material.emissiveFactor.size() > 1 ? static_cast<float>(material.emissiveFactor[1]) : 0.0f;
+					primitiveModelData.material.emissiveFactor.z = material.emissiveFactor.size() > 2 ? static_cast<float>(material.emissiveFactor[2]) : 0.0f;
+					
+					// アルファモード
+					if (material.alphaMode == "MASK") {
+						primitiveModelData.material.alphaMode = "MASK";
+						primitiveModelData.material.alphaCutoff = static_cast<float>(material.alphaCutoff);
+					} else if (material.alphaMode == "BLEND") {
+						primitiveModelData.material.alphaMode = "BLEND";
+					} else {
+						primitiveModelData.material.alphaMode = "OPAQUE";
+					}
+					
+					primitiveModelData.material.doubleSided = material.doubleSided;
+
+					// デバッグ: 各プリミティブのマテリアルを出力
+					char debugMsg[512];
+					sprintf_s(debugMsg, "GLB Multi-Material[%d] - BaseColor: R=%.3f, G=%.3f, B=%.3f, A=%.3f, Texture: %s\n",
+						primitive.material,
+						primitiveModelData.material.baseColorFactor.x, primitiveModelData.material.baseColorFactor.y,
+						primitiveModelData.material.baseColorFactor.z, primitiveModelData.material.baseColorFactor.w,
+						primitiveModelData.material.textureFilePath.empty() ? "None" : primitiveModelData.material.textureFilePath.c_str());
+					OutputDebugStringA(debugMsg);
+				}
+				else {
+					// デフォルトマテリアル
+					primitiveModelData.material.isPBR = true;
+					primitiveModelData.material.baseColorFactor = { 0.8f, 0.8f, 0.8f, 1.0f };
+					primitiveModelData.material.diffuse = primitiveModelData.material.baseColorFactor;
+					primitiveModelData.material.metallicFactor = 0.0f;
+					primitiveModelData.material.roughnessFactor = 0.9f;
+					primitiveModelData.material.emissiveFactor = { 0.0f, 0.0f, 0.0f };
+					primitiveModelData.material.alphaMode = "OPAQUE";
+					primitiveModelData.material.doubleSided = false;
+				}
+
+				// 頂点が存在する場合のみ追加
+				if (!primitiveModelData.vertices.empty()) {
+					resultList.push_back(primitiveModelData);
+				}
+			}
+		}
+
+		// 子ノードを再帰的に処理
+		for (int childIndex : node.children) {
+			processNode(model, childIndex, worldTransform);
+		}
+	};
+
+	// シーンのルートノードから開始
+	for (int nodeIndex : scene.nodes) {
+		processNode(gltfModel, nodeIndex, MakeIdentity4x4());
+	}
+
+	// マルチマテリアル処理結果の詳細なデバッグ情報
+	OutputDebugStringA(("GLB multi-material processing complete. Created " + std::to_string(resultList.size()) + " ModelData objects\n").c_str());
+	
+	for (size_t i = 0; i < resultList.size(); ++i) {
+		char debugMsg[512];
+		sprintf_s(debugMsg, "ModelData[%zu]: Vertices=%zu, BaseColor=(%.3f,%.3f,%.3f,%.3f), Metallic=%.3f, Roughness=%.3f, isPBR=%s\n",
+			i, resultList[i].vertices.size(),
+			resultList[i].material.baseColorFactor.x, resultList[i].material.baseColorFactor.y,
+			resultList[i].material.baseColorFactor.z, resultList[i].material.baseColorFactor.w,
+			resultList[i].material.metallicFactor, resultList[i].material.roughnessFactor,
+			resultList[i].material.isPBR ? "true" : "false");
+		OutputDebugStringA(debugMsg);
+	}
+
+	return resultList;
 }
