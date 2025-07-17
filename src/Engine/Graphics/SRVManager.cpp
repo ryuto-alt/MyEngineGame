@@ -148,9 +148,32 @@ void SrvManager::PreDraw() {
 }
 
 void SrvManager::SetGraphicsRootDescriptorTable(UINT rootParameterIndex, uint32_t srvIndex) {
+    // 基本的な安全性チェック
+    if (!dxCommon_) {
+        OutputDebugStringA("ERROR: SrvManager::SetGraphicsRootDescriptorTable - dxCommon_ is null\n");
+        return;
+    }
+
+    auto commandList = dxCommon_->GetCommandList();
+    if (!commandList) {
+        OutputDebugStringA("ERROR: SrvManager::SetGraphicsRootDescriptorTable - CommandList is null\n");
+        return;
+    }
+
+    if (!descriptorHeap) {
+        OutputDebugStringA("ERROR: SrvManager::SetGraphicsRootDescriptorTable - DescriptorHeap is null\n");
+        return;
+    }
+
     // インデックスの範囲チェック
     if (srvIndex >= kMaxSRVCount) {
         OutputDebugStringA(("ERROR: SrvManager::SetGraphicsRootDescriptorTable called with invalid index: " + std::to_string(srvIndex) + "\n").c_str());
+        return;
+    }
+
+    // 無効なSRVインデックスチェック
+    if (srvIndex == UINT32_MAX) {
+        OutputDebugStringA("ERROR: SrvManager::SetGraphicsRootDescriptorTable called with UINT32_MAX (invalid index)\n");
         return;
     }
 
@@ -158,7 +181,7 @@ void SrvManager::SetGraphicsRootDescriptorTable(UINT rootParameterIndex, uint32_
     D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = GetGPUDescriptorHandle(srvIndex);
 
     // ルートパラメータにSRVをセット
-    dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(rootParameterIndex, handleGPU);
+    commandList->SetGraphicsRootDescriptorTable(rootParameterIndex, handleGPU);
 
     // デバッグ出力 (頻繁に呼ばれるので無効化)
     // OutputDebugStringA(("SrvManager: Set SRV index " + std::to_string(srvIndex) + " to root parameter " + std::to_string(rootParameterIndex) + "\n").c_str());

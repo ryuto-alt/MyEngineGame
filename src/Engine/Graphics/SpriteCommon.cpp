@@ -22,16 +22,35 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 
 void SpriteCommon::CommonDraw()
 {
-	OutputDebugStringA("DEBUG: CommonDraw() called - Setting descriptor heap and root signature\n");
+	// デバッグ出力は頻繁すぎるため無効化
+	// OutputDebugStringA("DEBUG: CommonDraw() called - Setting descriptor heap and root signature\n");
+	
+	// 基本的な安全性チェック
+	if (!dxCommon_ || !rootSignature || !graphicsPipelineState) {
+		OutputDebugStringA("ERROR: SpriteCommon::CommonDraw - Required resources are null\n");
+		return;
+	}
+
+	auto commandList = dxCommon_->GetCommandList();
+	if (!commandList) {
+		OutputDebugStringA("ERROR: SpriteCommon::CommonDraw - CommandList is null\n");
+		return;
+	}
 	
 	// ディスクリプタヒープを設定（SetGraphicsRootDescriptorTableの前に必須）
-	ID3D12DescriptorHeap* heaps[] = { TextureManager::GetInstance()->GetSrvDescriptorHeap().Get() };
-	dxCommon_->GetCommandList()->SetDescriptorHeaps(1, heaps);
+	auto textureManager = TextureManager::GetInstance();
+	if (textureManager) {
+		auto srvHeap = textureManager->GetSrvDescriptorHeap();
+		if (srvHeap) {
+			ID3D12DescriptorHeap* heaps[] = { srvHeap.Get() };
+			commandList->SetDescriptorHeaps(1, heaps);
+		}
+	}
 	
 	// RootSignatureを設定。POSに設定しているけどベット設定が必要
-	dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
-	dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
-	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	commandList->SetGraphicsRootSignature(rootSignature.Get());
+	commandList->SetPipelineState(graphicsPipelineState.Get());
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 

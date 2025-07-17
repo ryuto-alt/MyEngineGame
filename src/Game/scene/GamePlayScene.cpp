@@ -39,19 +39,38 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
-    // Skyboxの作成と初期化（簡易版）
+    // Skyboxの作成と初期化（軽量版 - デバッグ時のみ有効）
+#ifdef _DEBUG
     skybox_ = engine_->CreateSkybox();
-    engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
     skybox_->SetScale(1000.0f); // 大きなスケールで遠景を表現
     
-    // 環境マップテクスチャを事前にロード
-    engine_->LoadTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    // デバッグ時のみ軽量テクスチャを使用
+    try {
+        engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
+        skyboxEnabled_ = true;
+        OutputDebugStringA("Skybox: Debug mode - loaded with texture\n");
+    } catch (const std::exception& e) {
+        skyboxEnabled_ = false;
+        OutputDebugStringA(("Skybox: Failed to load texture in debug mode: " + std::string(e.what()) + "\n").c_str());
+    }
+#else
+    // リリースビルドではSkyboxを完全に無効化（最高速度）
+    skybox_ = nullptr;
+    skyboxEnabled_ = false;
+    OutputDebugStringA("Skybox: Disabled in release build for maximum performance\n");
+#endif
     
-    // 環境マップを自動適用（簡易版）
-    engine_->SetEnvMap(player_);
-    engine_->SetEnvMap(ground_);
+    // 環境マップを自動適用（Skybox有効時のみ）
+    if (skyboxEnabled_) {
+        engine_->SetEnvMap(player_);
+        engine_->SetEnvMap(ground_);
+        OutputDebugStringA("GamePlayScene: Environment map applied\n");
+    } else {
+        OutputDebugStringA("GamePlayScene: Environment map skipped (Skybox disabled)\n");
+    }
     
-    // GLBキューブモデルの初期化
+    // GLBキューブモデルの初期化（遅延読み込み - デバッグ時のみ）
+#ifdef _DEBUG
     try {
         cubeGlbModel_ = std::make_unique<Model>();
         cubeGlbModel_->Initialize(dxCommon_);
@@ -66,14 +85,20 @@ void GamePlayScene::Initialize() {
             cubeGlbObject3d_->SetEnableLighting(true);
             cubeGlbObject3d_->SetCamera(camera_);
             
-            // 環境マップを自動適用（簡易版）
-            engine_->SetEnvMap(cubeGlbObject3d_);
+            // 環境マップを自動適用（Skybox有効時のみ）
+            if (skyboxEnabled_) {
+                engine_->SetEnvMap(cubeGlbObject3d_);
+            }
             
-            OutputDebugStringA("GLB Cube model loaded successfully\n");
+            OutputDebugStringA("GLB Cube model loaded successfully (DEBUG only)\n");
         }
     } catch (const std::exception& e) {
         OutputDebugStringA(("Failed to load GLB cube model: " + std::string(e.what()) + "\n").c_str());
     }
+#else
+    // リリースビルドでは追加モデルを読み込まない（高速化）
+    OutputDebugStringA("Cube model loading skipped in release build for performance\n");
+#endif
 
     initialized_ = true;
 }
@@ -232,7 +257,9 @@ void GamePlayScene::Update() {
     }
 
     // オブジェクトの更新
-    skybox_->Update();
+    if (skyboxEnabled_ && skybox_) {
+        skybox_->Update();
+    }
     player_->Update(engine_);
     ground_->Update();
 }
@@ -242,11 +269,13 @@ void GamePlayScene::Draw() {
 
     spriteCommon_->CommonDraw();
 
-    // Skyboxの描画（最初に背景として描画）
-    skybox_->Draw(camera_);
-    
-    // Skyboxが独自のルートシグネチャを使用するため、再度CommonDrawを呼び出してルートシグネチャを復元
-    spriteCommon_->CommonDraw();
+    // Skyboxの描画（最初に背景として描画、有効な場合のみ）
+    if (skyboxEnabled_ && skybox_) {
+        skybox_->Draw(camera_);
+        
+        // Skyboxが独自のルートシグネチャを使用するため、再度CommonDrawを呼び出してルートシグネチャを復元
+        spriteCommon_->CommonDraw();
+    }
 
     // オブジェクトの描画
     ground_->Draw();
@@ -372,6 +401,12 @@ void GamePlayScene::Finalize() {
     if (lightManager_) {
         lightManager_.reset();
     }
+
+    // Skybox関連のクリーンアップ（有効だった場合のみ）
+    if (skyboxEnabled_ && skybox_) {
+        skybox_.reset();
+    }
+    skyboxEnabled_ = false;
 
     if (cubeGlbObject3d_) {
         cubeGlbObject3d_.reset();

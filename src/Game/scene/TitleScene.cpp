@@ -23,10 +23,13 @@ void TitleScene::Initialize() {
     // 3Dモデルとタイトルロゴの初期化をスキップして高速化
     // （必要最小限の初期化のみ）
 
-    // リソースをプリロード（メインスレッドで実行）
-    // OutputDebugStringA("TitleScene: Starting resource preload\n");
-    // ResourcePreloader::GetInstance()->PreloadAnimatedModel("human", "Resources/Models/human", "sneakWalk.gltf", dxCommon_);
-    // OutputDebugStringA("TitleScene: Resource preload completed\n");
+    // リソースを軽量プリロード（高速起動）
+    OutputDebugStringA("TitleScene: Starting lightweight resource preload\n");
+    ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_walk", "Resources/Models/human", "walk.gltf", dxCommon_);
+    ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_sneak", "Resources/Models/human", "sneakWalk.gltf", dxCommon_);
+    
+    float progress = ResourcePreloader::GetInstance()->GetPreloadProgress();
+    OutputDebugStringA(("TitleScene: Lightweight preload completed (" + std::to_string(int(progress * 100)) + "%)\n").c_str());
     
     // 初期化完了
     initialized_ = true;

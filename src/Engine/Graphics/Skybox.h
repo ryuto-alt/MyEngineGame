@@ -83,7 +83,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_;
 
     std::string cubemapFilePath_;
-    uint32_t cubemapSrvIndex_ = 0;
+    uint32_t cubemapSrvIndex_ = UINT32_MAX; // 無効値で初期化
     float scale_ = 1000.0f;
     bool cubemapLoaded_ = false;
 

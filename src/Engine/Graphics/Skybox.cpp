@@ -228,13 +228,33 @@ void Skybox::Update() {
 void Skybox::Draw(Camera* camera) {
     assert(camera);
     
+    // 安全性チェック：必要なリソースが全て有効かチェック
+    if (!dxCommon_ || !srvManager_ || !rootSignature_ || !graphicsPipelineState_) {
+        OutputDebugStringA("Skybox: 必要なリソースが初期化されていません\n");
+        return;
+    }
+    
     // Cubemapが正しく読み込まれていない場合は描画をスキップ
     if (!cubemapLoaded_) {
         OutputDebugStringA("Skybox: Cubemap読み込み未完了のため描画をスキップ\n");
         return;
     }
+    
+    // SRVインデックスの有効性チェック
+    if (cubemapSrvIndex_ == UINT32_MAX) {
+        OutputDebugStringA("Skybox: 無効なSRVインデックスのため描画をスキップ\n");
+        return;
+    }
 
-    OutputDebugStringA(("Skybox: 描画開始 - SRVIndex: " + std::to_string(cubemapSrvIndex_) + ", ファイル: " + cubemapFilePath_ + "\n").c_str());
+    // デバッグ出力は初回のみまたは重要な場合のみ
+    // OutputDebugStringA(("Skybox: 描画開始 - SRVIndex: " + std::to_string(cubemapSrvIndex_) + ", ファイル: " + cubemapFilePath_ + "\n").c_str());
+
+    // コマンドリストの有効性チェック
+    auto commandList = dxCommon_->GetCommandList();
+    if (!commandList) {
+        OutputDebugStringA("Skybox: CommandListが無効です\n");
+        return;
+    }
 
     // ワールド行列（スケールのみ）
     Matrix4x4 worldMatrix = MakeScaleMatrix({ scale_, scale_, scale_ });
@@ -248,17 +268,28 @@ void Skybox::Draw(Camera* camera) {
     transformationMatrixData_->WVP = worldViewProjectionMatrix;
     transformationMatrixData_->World = worldMatrix;
 
-    dxCommon_->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
-    dxCommon_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());
-    dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);
-    dxCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
-    dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    // ルートシグネチャとパイプラインステートを設定
+    commandList->SetGraphicsRootSignature(rootSignature_.Get());
+    commandList->SetPipelineState(graphicsPipelineState_.Get());
+    commandList->IASetVertexBuffers(0, 1, &vertexBufferView_);
+    commandList->IASetIndexBuffer(&indexBufferView_);
+    commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, transformationMatrixResource_->GetGPUVirtualAddress());
-    dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
-    srvManager_->SetGraphicsRootDescriptorTable(2, cubemapSrvIndex_);
+    // 定数バッファとSRVを設定
+    commandList->SetGraphicsRootConstantBufferView(0, transformationMatrixResource_->GetGPUVirtualAddress());
+    commandList->SetGraphicsRootConstantBufferView(1, materialResource_->GetGPUVirtualAddress());
+    
+    // SRVManagerの有効性を再確認してからディスクリプタテーブルを設定
+    if (srvManager_) {
+        srvManager_->SetGraphicsRootDescriptorTable(2, cubemapSrvIndex_);
+    } else {
+        OutputDebugStringA("Skybox: SrvManagerが無効のため、ディスクリプタテーブル設定をスキップ\n");
+        return;
+    }
 
-    dxCommon_->GetCommandList()->DrawIndexedInstanced(kNumIndices, 1, 0, 0, 0);
+    commandList->DrawIndexedInstanced(kNumIndices, 1, 0, 0, 0);
+    // 描画完了のメッセージは頻繁すぎるため無効化
+    // OutputDebugStringA("Skybox: 描画完了\n");
 }
 
 // 静的関数の実装

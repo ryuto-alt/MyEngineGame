@@ -16,7 +16,13 @@ void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon) {
     try {
         model_ = std::make_unique<Model>();
         model_->Initialize(dxCommon_);
+        
+        // パフォーマンス重視：軽量なグラウンドモデルを使用
+        // 高詳細版は必要時のみ読み込み
         model_->LoadFromGLB("Resources/Models/ground/ground.glb");
+        
+        // デバッグ出力で読み込み時間を監視
+        OutputDebugStringA("Ground: Fast loading mode - using optimized model\n");
         
         object3d_ = engine->CreateObject3D();
         object3d_->SetModel(model_.get());

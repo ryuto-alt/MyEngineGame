@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "../Engine/Resource/ResourcePreloader.h"
 #include <cmath>
 
 Player::Player() {
@@ -15,18 +16,41 @@ void Player::Initialize(Camera* camera) {
     currentRotationY_ = 0.0f;
     targetRotationY_ = 0.0f;
     
-    // モデルの読み込み
+    // プリロードされたモデルの取得を試行
     UnoEngine* engine = UnoEngine::GetInstance();
     
-    animatedModel_ = engine->CreateAnimatedModel();
-    animatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
-    
-    // アニメーションの読み込みと登録
-    Animation walkAnim = animatedModel_->GetAnimationPlayer().GetAnimation();
-    animatedModel_->AddAnimation("walk", walkAnim);
-    
-    Animation sneakWalkAnim = engine->LoadAnimation("Resources/Models/human", "sneakWalk.gltf");
-    animatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
+    auto preloadedWalk = ResourcePreloader::GetInstance()->GetPreloadedModel("human_walk");
+    if (preloadedWalk) {
+        OutputDebugStringA("Player: Using preloaded walk model\n");
+        animatedModel_ = std::move(preloadedWalk);
+        
+        // アニメーション登録
+        Animation walkAnim = animatedModel_->GetAnimationPlayer().GetAnimation();
+        animatedModel_->AddAnimation("walk", walkAnim);
+        
+        // スニークモデルもプリロード済みを使用
+        auto preloadedSneak = ResourcePreloader::GetInstance()->GetPreloadedModel("human_sneak");
+        if (preloadedSneak) {
+            Animation sneakWalkAnim = preloadedSneak->GetAnimationPlayer().GetAnimation();
+            animatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
+            OutputDebugStringA("Player: Using preloaded sneak animation\n");
+        } else {
+            // フォールバック: 通常読み込み
+            Animation sneakWalkAnim = engine->LoadAnimation("Resources/Models/human", "sneakWalk.gltf");
+            animatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
+        }
+    } else {
+        OutputDebugStringA("Player: Preloaded model not found, loading normally\n");
+        // フォールバック: 通常読み込み
+        animatedModel_ = engine->CreateAnimatedModel();
+        animatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
+        
+        Animation walkAnim = animatedModel_->GetAnimationPlayer().GetAnimation();
+        animatedModel_->AddAnimation("walk", walkAnim);
+        
+        Animation sneakWalkAnim = engine->LoadAnimation("Resources/Models/human", "sneakWalk.gltf");
+        animatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
+    }
     
     animatedModel_->ChangeAnimation("walk");
     animatedModel_->PlayAnimation();
