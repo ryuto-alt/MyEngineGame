@@ -111,7 +111,8 @@ void UnoEngine::Initialize() {
 
     }
     catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Initialize: " + std::string(e.what()) + "\n").c_str());
+        std::string errorMsg = "ERROR: Exception in UnoEngine::Initialize: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
     }
 }
 
@@ -156,38 +157,68 @@ void UnoEngine::Update() {
         SceneManager::GetInstance()->Update();
     }
     catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Update: " + std::string(e.what()) + "\n").c_str());
+        std::string errorMsg = "ERROR: Exception in UnoEngine::Update: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
     }
 }
 
 void UnoEngine::Draw() {
     try {
-        // DirectXの描画準備
-        dxCommon_->Begin();
+        // 現在のシーン名を取得してオフスクリーンレンダリングモードかどうか判定
+        std::string currentSceneName = SceneManager::GetInstance()->GetCurrentSceneName();
+        bool isOffscreenMode = (currentSceneName == "GamePlay");
+        
+        std::string modeMsg = "UnoEngine::Draw - Current scene: " + currentSceneName + ", Offscreen mode: " + (isOffscreenMode ? "YES" : "NO") + "\n";
+        OutputDebugStringA(modeMsg.c_str());
+        
+        if (isOffscreenMode) {
+            // 【GamePlayScene専用】オフスクリーンレンダリング専用モード
+            OutputDebugStringA("UnoEngine::Draw - *** ENTERING OFFSCREEN RENDERING MODE ***\n");
+            
+            // シーンマネージャーの描画（オフスクリーンレンダリングを含む）
+            SceneManager::GetInstance()->Draw();
+            
+            // 【重要修正】オフスクリーンモードでもImGuiのRender()を呼び出してフレーム管理を正しく行う
+            ImGui::Render();
+            
+            // 【重要修正】オフスクリーンレンダリング後に手動でPresent()を呼び出して画面を更新
+            dxCommon_->GetSwapChain()->Present(1, 0);
+            OutputDebugStringA("UnoEngine::Draw - SwapChain Present() called in offscreen mode\n");
+            
+            // 通常の描画パイプラインは無効化（GamePlaySceneが独自に管理）
+        } else {
+            // 【他のシーン用】通常の描画パイプライン
+            std::string normalMsg = "UnoEngine::Draw - Normal rendering mode for " + currentSceneName + " scene\n";
+            OutputDebugStringA(normalMsg.c_str());
+            
+            // DirectXの描画準備
+            dxCommon_->Begin();
 
-        // SRVヒープを描画前に明示的に設定
-        if (srvManager_) {
-            srvManager_->PreDraw();
+            // SRVヒープを描画前に明示的に設定
+            if (srvManager_) {
+                srvManager_->PreDraw();
+            }
+
+            // シーンマネージャーの描画
+            SceneManager::GetInstance()->Draw();
+
+            // パーティクルの描画
+            ParticleManager::GetInstance()->Draw();
+
+            // 3Dパーティクルの描画
+            Particle3DManager::GetInstance()->Draw(camera_.get());
+
+            // ImGuiの準備と描画
+            ImGui::Render();
+            ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
+
+            // 描画終了
+            dxCommon_->End();
         }
-
-        // シーンマネージャーの描画
-        SceneManager::GetInstance()->Draw();
-
-        // パーティクルの描画
-        ParticleManager::GetInstance()->Draw();
-
-        // 3Dパーティクルの描画
-        Particle3DManager::GetInstance()->Draw(camera_.get());
-
-        // ImGuiの準備と描画
-        ImGui::Render();
-        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
-
-        // 描画終了
-        dxCommon_->End();
     }
     catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Draw: " + std::string(e.what()) + "\n").c_str());
+        std::string errorMsg = "ERROR: Exception in UnoEngine::Draw: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
     }
 }
 
@@ -252,7 +283,8 @@ void UnoEngine::Finalize() {
 
     }
     catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Finalize: " + std::string(e.what()) + "\n").c_str());
+        std::string errorMsg = "ERROR: Exception in UnoEngine::Finalize: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
     }
 }
 
@@ -302,7 +334,8 @@ bool UnoEngine::LoadAudio(const std::string& name, const std::string& filePath) 
         return audioManager->LoadMP3(name, filePath);
     }
     
-    OutputDebugStringA(("警告: サポートされていないオーディオ形式です: " + filePath + "\n").c_str());
+    std::string warningMsg = "警告: サポートされていないオーディオ形式です: " + filePath + "\n";
+    OutputDebugStringA(warningMsg.c_str());
     return false;
 }
 
@@ -536,7 +569,8 @@ void UnoEngine::InitializeImGui() {
             for (const char* fallbackFont : fallbackFonts) {
                 io.Fonts->AddFontFromFileTTF(fallbackFont, 16.0f, &fontConfig, japaneseFontRanges);
                 if (io.Fonts->Fonts.Size > 1) {
-                    OutputDebugStringA(("日本語フォールバックフォントを読み込みました: " + std::string(fallbackFont) + "\n").c_str());
+                    std::string fontMsg = "日本語フォールバックフォントを読み込みました: " + std::string(fallbackFont) + "\n";
+                    OutputDebugStringA(fontMsg.c_str());
                     break;
                 }
             }
@@ -559,7 +593,8 @@ void UnoEngine::InitializeImGui() {
 
     }
     catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Failed to initialize ImGui: " + std::string(e.what()) + "\n").c_str());
+        std::string errorMsg = "ERROR: Failed to initialize ImGui: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
     }
 }
 

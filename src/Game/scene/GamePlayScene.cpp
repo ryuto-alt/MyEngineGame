@@ -18,18 +18,37 @@ void GamePlayScene::Initialize() {
 
     engine_ = UnoEngine::GetInstance();
 
+    // オフスクリーンレンダリングマネージャーの初期化（テスト用に赤色の背景で初期化）
+    offscreenRenderingManager_ = std::make_unique<OffscreenRenderingManager>();
+    Vector4 redClearColor = { 1.0f, 0.0f, 0.0f, 1.0f }; // 【テスト用】赤色でオフスクリーンレンダリング確認
+    offscreenRenderingManager_->Initialize(
+        engine_->GetDirectXCommon(),
+        engine_->GetSrvManager(),
+        1280, // WinApp::kClientWidth
+        720,  // WinApp::kClientHeight
+        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
+        redClearColor
+    );
+
     camera_->SetFov(1.37f);
+    
+    // 【重要修正】カメラを3Dオブジェクトが見える位置に明示的に配置
+    camera_->SetTranslate(Vector3{ 0.0f, 2.0f, -10.0f }); // プレイヤーの後ろ上方から見下ろす
+    camera_->SetRotate(Vector3{ 0.1f, 0.0f, 0.0f }); // 少し下向き
     
     // 右スティック感度の調整（必要に応じて）
     engine_->SetCameraStickSensitivity(2.5f);
     
     // オービットカメラの初期設定
-    engine_->SetCameraOrbitDistance(3.0f);
-    engine_->SetCameraOrbitHeight(2.5f);
+    engine_->SetCameraOrbitDistance(8.0f); // 距離を広げて全体が見えるように
+    engine_->SetCameraOrbitHeight(3.0f);   // 高さを上げて俯瞰視点に
     
     // カメラの初期ターゲットを設定（プレイヤーの位置）
     engine_->SetCameraOrbitTarget(Vector3{0.0f, 0.0f, 0.0f});
 
+    // 【修正】オフスクリーンレンダリングと3Dモデル描画を両方有効化
+    // Skyboxは無効のまま（ddsファイルは使わない）
+    
     // マネージャーの初期化
     lightManager_ = std::make_unique<LightManager>();
     lightManager_->Initialize();
@@ -42,35 +61,23 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
-    // Skyboxの作成と初期化（全ビルド設定で有効）
+    // Skybox関連は無効のまま（ddsファイルは使わない）
+    /*
     skybox_ = engine_->CreateSkybox();
-    skybox_->SetScale(1000.0f); // 大きなスケールで遠景を表現
-    
-    // DDS読み込みと描画を実行
+    skybox_->SetScale(1000.0f);
     try {
         engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
         skyboxEnabled_ = true;
-        OutputDebugStringA("Skybox: Successfully loaded with DDS texture\n");
     } catch (const std::exception& e) {
         skyboxEnabled_ = false;
-        OutputDebugStringA(("Skybox: Failed to load DDS texture: " + std::string(e.what()) + "\n").c_str());
     }
+    */
+    skyboxEnabled_ = false;
     
-    // 環境マップを自動適用（強制的に適用）
-    engine_->SetEnvMap(player_);
-    engine_->SetEnvMap(ground_);
-    OutputDebugStringA("GamePlayScene: Environment map applied to player and ground\n");
+    OutputDebugStringA("GamePlayScene: 3D models initialized (Player, Ground, LightManager)\n");
     
-    // Playerにさらに強制的に環境マップを有効化
-    player_->SetEnableEnvironmentMap(true);
-    player_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
-    OutputDebugStringA("GamePlayScene: Forced environment map enabled for player\n");
-    
-    if (skyboxEnabled_) {
-        OutputDebugStringA("GamePlayScene: Skybox is enabled\n");
-    } else {
-        OutputDebugStringA("GamePlayScene: Skybox is disabled but environment map still applied\n");
-    }
+    // オフスクリーンレンダリング専用モードで動作
+    OutputDebugStringA("GamePlayScene: Running in Offscreen Rendering Only Mode\n");
     
     // GLBキューブモデルの初期化（マルチマテリアル対応）
     try {
@@ -79,7 +86,8 @@ void GamePlayScene::Initialize() {
         tempModel.Initialize(dxCommon_);
         std::vector<ModelData> multiMaterialData = tempModel.LoadMultiMaterialGLB("Resources/Models/cube/obje.glb");
         
-        OutputDebugStringA(("GLB Multi-material: Loaded " + std::to_string(multiMaterialData.size()) + " materials\n").c_str());
+        std::string matCountMsg = "GLB Multi-material: Loaded " + std::to_string(multiMaterialData.size()) + " materials\n";
+        OutputDebugStringA(matCountMsg.c_str());
         
         // 詳細なマテリアル情報を出力
         for (size_t i = 0; i < multiMaterialData.size(); ++i) {
@@ -111,29 +119,29 @@ void GamePlayScene::Initialize() {
             // Object3dを作成
             auto object3d = engine_->CreateObject3D();
             object3d->SetModel(model.get());
-            object3d->SetPosition(Vector3{ 2.0f, 0.0f, 0.0f });
-            object3d->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
+            object3d->SetPosition(Vector3{ 3.0f, 1.0f, 2.0f }); // カメラから見える位置に配置
+            object3d->SetScale(Vector3{ 2.0f, 2.0f, 2.0f }); // 大きくして見えやすく
             object3d->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
             object3d->SetEnableLighting(true);
             object3d->SetCamera(camera_);
             
-            // 環境マップを自動適用（Skybox有効時のみ）
-            if (skyboxEnabled_) {
-                engine_->SetEnvMap(object3d.get());
-            }
+            // 環境マップは無効（skyboxが無効のため）
             
             // ベクターに追加
             cubeGlbModels_.push_back(std::move(model));
             cubeGlbObjects_.push_back(std::move(object3d));
             
-            OutputDebugStringA(("GLB Material [" + std::to_string(i) + "] loaded successfully\n").c_str());
+            std::string matLoadMsg = "GLB Material [" + std::to_string(i) + "] loaded successfully\n";
+            OutputDebugStringA(matLoadMsg.c_str());
         }
         
         if (!cubeGlbModels_.empty()) {
-            OutputDebugStringA(("GLB Multi-material cube model loaded successfully with " + std::to_string(cubeGlbModels_.size()) + " materials\n").c_str());
+            std::string successMsg = "GLB Multi-material cube model loaded successfully with " + std::to_string(cubeGlbModels_.size()) + " materials\n";
+            OutputDebugStringA(successMsg.c_str());
         }
     } catch (const std::exception& e) {
-        OutputDebugStringA(("Failed to load GLB multi-material cube model: " + std::string(e.what()) + "\n").c_str());
+        std::string errorMsg = "Failed to load GLB multi-material cube model: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
     }
 
     initialized_ = true;
@@ -294,64 +302,91 @@ void GamePlayScene::Update() {
         }
     }
 
-    // オブジェクトの更新
-    if (skyboxEnabled_ && skybox_) {
-        skybox_->Update();
-    }
+    // オブジェクトの更新（skyboxは無効）
     player_->Update(engine_);
     ground_->Update();
 }
 
 void GamePlayScene::Draw() {
-    if (!initialized_) return;
-
-    spriteCommon_->CommonDraw();
-
-    // Skyboxの描画（最初に背景として描画、有効な場合のみ）
-    if (skyboxEnabled_ && skybox_) {
-        skybox_->Draw(camera_);
-        
-        // Skyboxが独自のルートシグネチャを使用するため、再度CommonDrawを呼び出してルートシグネチャを復元
-        spriteCommon_->CommonDraw();
+    if (!initialized_) {
+        OutputDebugStringA("GamePlayScene::Draw - Not initialized, returning\n");
+        return;
     }
 
+    OutputDebugStringA("GamePlayScene::Draw - Starting draw process\n");
+    
+    if (!offscreenRenderingManager_) {
+        OutputDebugStringA("GamePlayScene::Draw - ERROR: offscreenRenderingManager_ is null!\n");
+        return;
+    }
+
+    OutputDebugStringA("GamePlayScene::Draw - About to call BeginRenderToTexture()\n");
+    
+    // オフスクリーンレンダリング開始（赤い背景でクリア）
+    offscreenRenderingManager_->BeginRenderToTexture();
+
+    OutputDebugStringA("GamePlayScene::Draw - BeginRenderToTexture() completed\n");
+
+    // 【重要】オフスクリーンレンダリング内で3Dオブジェクトを描画
+    spriteCommon_->CommonDraw();
+    OutputDebugStringA("GamePlayScene::Draw - SpriteCommon CommonDraw completed\n");
+
+    // Skyboxは無効（ddsファイルは使わない）
+
     // オブジェクトの描画
+    OutputDebugStringA("GamePlayScene::Draw - About to draw Ground\n");
     ground_->Draw();
+    OutputDebugStringA("GamePlayScene::Draw - Ground Draw completed\n");
     
     // マルチマテリアルオブジェクトのDraw
+    OutputDebugStringA("GamePlayScene::Draw - About to draw GLB cube objects\n");
     for (auto& object : cubeGlbObjects_) {
         if (object) {
+            OutputDebugStringA("GamePlayScene::Draw - Drawing GLB cube object\n");
             object->Draw();
         }
     }
+    OutputDebugStringA("GamePlayScene::Draw - GLB cube objects Draw completed\n");
     
+    OutputDebugStringA("GamePlayScene::Draw - About to draw Player\n");
     player_->Draw();
+    OutputDebugStringA("GamePlayScene::Draw - Player Draw completed\n");
 
-    // ImGUI描画
+    OutputDebugStringA("GamePlayScene::Draw - About to call EndRenderToTexture()\n");
+
+    // オフスクリーンレンダリング終了
+    offscreenRenderingManager_->EndRenderToTexture();
+
+    OutputDebugStringA("GamePlayScene::Draw - EndRenderToTexture() completed\n");
+    OutputDebugStringA("GamePlayScene::Draw - About to call CopyToSwapChain()\n");
+
+    // SwapChainに赤い画面をコピー
+    offscreenRenderingManager_->CopyToSwapChain();
+
+    OutputDebugStringA("GamePlayScene::Draw - CopyToSwapChain() completed\n");
+
+    // ImGUI描画（オフスクリーンレンダリング後に通常のスワップチェインに描画）
 #pragma region imgui
-    ImGui::Begin("Human Animation Demo ");
+    ImGui::Begin("Human Animation Demo");
 
     ImGui::Text("操作方法:");
     ImGui::Separator();
     ImGui::Text("【キーボード】");
-    ImGui::Text("WASD - カメラ移動");
-    ImGui::Text("SPACE - 上昇");
-    ImGui::Text("SHIFT - 下降");
+    ImGui::Text("WASD - プレイヤー移動");
     ImGui::Text("P - アニメーション一時停止/再開");
     ImGui::Text("R - アニメーションリセット");
-    ImGui::Text("1 / 右Shift - アニメーション切り替え（SneakWalk ⇔ Walk）");
-    ImGui::Text("矢印キー - Humanモデル移動");
+    ImGui::Text("1 / 右Shift - アニメーション切り替え");
     ImGui::Text("F - ライティング設定の表示/非表示");
     ImGui::Text("ESC - 終了");
 #ifdef _DEBUG
     ImGui::Text("F1 - フリーカメラモード切り替え");
+    ImGui::Text("TAB - マウス視点移動切り替え");
 #endif
     
     ImGui::Separator();
     ImGui::Text("【Xboxコントローラー】");
-    ImGui::Text("左スティック - ヒューマンモデル移動");
-    ImGui::Text("移動中にBボタン - スニーク状態");
-    ImGui::Text("※停止中はスニーク無効");
+    ImGui::Text("左スティック - プレイヤー移動");
+    ImGui::Text("右スティック - カメラ回転");
     ImGui::Text("※コントローラー接続: %s", engine_->IsXboxControllerConnected() ? "接続済み" : "未接続");
 
     ImGui::Separator();
@@ -362,9 +397,7 @@ void GamePlayScene::Draw() {
     
 #ifdef _DEBUG
     ImGui::Text("マウス視点移動: %s", camera_->IsMouseLookEnabled() ? "ON" : "OFF");
-    ImGui::Text("TABキーで切り替え");
     ImGui::Text("カメラモード: %s", camera_->IsFreeCameraMode() ? "フリーカメラ" : "プレイヤー追従");
-    ImGui::Text("F1キーで切り替え");
 #endif
     
     // アニメーション情報
@@ -396,46 +429,6 @@ void GamePlayScene::Draw() {
     }
     ImGui::Text("現在の回転: %.2f度", player_->GetRotationY() * 180.0f / 3.14159f);
     ImGui::Text("目標回転: %.2f度", player_->GetTargetRotationY() * 180.0f / 3.14159f);
-    
-    // 環境マップ設定
-    ImGui::Separator();
-    ImGui::Text("環境マップ設定:");
-    
-    // プレイヤーの環境マップ設定（強化版）
-    ImGui::Separator();
-    ImGui::Text("=== Human Model Environment Map ===");
-    bool playerEnvMap = player_->GetEnableEnvironmentMap();
-    if (ImGui::Checkbox("プレイヤー環境マップ (Human)", &playerEnvMap)) {
-        player_->SetEnableEnvironmentMap(playerEnvMap);
-        OutputDebugStringA(playerEnvMap ? "GamePlayScene: Player environment map ENABLED\n" : "GamePlayScene: Player environment map DISABLED\n");
-    }
-    ImGui::SameLine();
-    ImGui::Text(playerEnvMap ? "[ON]" : "[OFF]");
-    
-    // 強制有効化ボタン
-    if (ImGui::Button("Force Enable Human EnvMap")) {
-        player_->SetEnableEnvironmentMap(true);
-        player_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
-        OutputDebugStringA("GamePlayScene: FORCED Human environment map enabled!\n");
-    }
-    
-    // グラウンドの環境マップ設定
-    bool groundEnvMap = ground_->GetEnableEnvironmentMap();
-    if (ImGui::Checkbox("グラウンド環境マップ", &groundEnvMap)) {
-        ground_->SetEnableEnvironmentMap(groundEnvMap);
-    }
-    
-    // マルチマテリアルキューブの環境マップ設定
-    if (!cubeGlbObjects_.empty()) {
-        bool cubeEnvMap = cubeGlbObjects_[0]->GetEnableEnvironmentMap();
-        if (ImGui::Checkbox("キューブ環境マップ", &cubeEnvMap)) {
-            for (auto& object : cubeGlbObjects_) {
-                if (object) {
-                    object->SetEnableEnvironmentMap(cubeEnvMap);
-                }
-            }
-        }
-    }
 
     ImGui::End();
     
@@ -457,6 +450,11 @@ void GamePlayScene::Finalize() {
 
     if (lightManager_) {
         lightManager_.reset();
+    }
+
+    // オフスクリーンレンダリングマネージャーのクリーンアップ
+    if (offscreenRenderingManager_) {
+        offscreenRenderingManager_.reset();
     }
 
     // Skybox関連のクリーンアップ（有効だった場合のみ）

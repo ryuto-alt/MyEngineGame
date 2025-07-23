@@ -203,8 +203,8 @@ void DirectXCommon::DescriptorHeapInitialize()
 	//サイズを取得
 	descriptorSizeRTV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	descriptorSizeDSV = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-	rtvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);//RTV
-	dsvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+	rtvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, kMaxRTVCount, false);//RTV（RenderTexture対応で拡張）
+	dsvDescriptorHeap = CreateDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 2, false); // RenderTexture用に拡張
 }
 
 
@@ -400,6 +400,23 @@ void DirectXCommon::End()
 	assert(SUCCEEDED(hr));
 	hr = commandList->Reset(commandAllocator.Get(), nullptr);
 	assert(SUCCEEDED(hr));
+}
+
+// RTV管理用機能（RenderTexture対応）
+uint32_t DirectXCommon::AllocateRTVIndex() {
+	assert(nextRTVIndex < kMaxRTVCount && "RTV index out of range");
+	return nextRTVIndex++;
+}
+
+void DirectXCommon::CreateRenderTargetViewAt(uint32_t index, Microsoft::WRL::ComPtr<ID3D12Resource> resource, DXGI_FORMAT format) {
+	assert(index < kMaxRTVCount && "RTV index out of range");
+	
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	rtvDesc.Format = format;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle = GetRTVCPUDescriptorHandle(index);
+	device->CreateRenderTargetView(resource.Get(), &rtvDesc, rtvHandle);
 }
 
 

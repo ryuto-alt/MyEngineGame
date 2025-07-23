@@ -46,6 +46,9 @@ public:
     // シーン切り替え
     void ChangeScene(const std::string& sceneName);
 
+    // 現在のシーン名を取得
+    std::string GetCurrentSceneName() const { return currentSceneName_; }
+
     // リソース設定メソッド
     void SetDirectXCommon(DirectXCommon* dxCommon) { dxCommon_ = dxCommon; }
     void SetInput(Input* input) { input_ = input; }
@@ -63,6 +66,9 @@ private:
 
     // 現在のシーン
     std::unique_ptr<IScene> currentScene_;
+
+    // 現在のシーン名
+    std::string currentSceneName_;
 
     // 次のシーン名（シーン切り替え用）
     std::string nextScene_;

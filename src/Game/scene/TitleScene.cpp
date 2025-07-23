@@ -1,6 +1,8 @@
 #include "TitleScene.h"
 #include "../../Engine/Resource/ResourcePreloader.h"
 #include "imgui.h"
+#define DIRECTINPUT_VERSION 0x0800
+#include <dinput.h>
 
 TitleScene::TitleScene() {
     // コンストラクタでは特に何もしない
@@ -16,6 +18,10 @@ void TitleScene::Initialize() {
     assert(input_);
     assert(spriteCommon_);
     assert(camera_);
+
+    // デバッグ出力
+    OutputDebugStringA("TitleScene::Initialize - Starting initialization\n");
+    OutputDebugStringA(input_ ? "TitleScene::Initialize - Input object is valid\n" : "TitleScene::Initialize - ERROR: Input object is null!\n");
 
     // カメラの初期位置設定
     camera_->SetTranslate({ 0.0f, 0.0f, -10.0f });
@@ -42,14 +48,45 @@ void TitleScene::Update() {
     // カメラの更新
     camera_->Update();
 
-    // SPACEキーでゲームプレイシーンへ
-    if (input_->TriggerKey(DIK_SPACE)) {
+    // Win32 APIを使った代替キー入力検出（ImGuiの影響を受けない）
+    static bool spaceWasPressed = false;
+    static bool escWasPressed = false;
+    
+    bool spaceIsPressed = (GetAsyncKeyState(VK_SPACE) & 0x8000) != 0;
+    bool escIsPressed = (GetAsyncKeyState(VK_ESCAPE) & 0x8000) != 0;
+    
+    // スペースキーのトリガー検出（押した瞬間を検出）
+    if (spaceIsPressed && !spaceWasPressed) {
+        OutputDebugStringA("TitleScene: SPACE key triggered via Win32 API! Changing to GamePlay scene\n");
         sceneManager_->ChangeScene("GamePlay");
     }
     
-    // ESCキーで終了
-    if (input_->TriggerKey(DIK_ESCAPE)) {
+    // ESCキーのトリガー検出
+    if (escIsPressed && !escWasPressed) {
+        OutputDebugStringA("TitleScene: ESC key triggered via Win32 API! Exiting game\n");
         exit(0);
+    }
+    
+    // 前フレームの状態を保存
+    spaceWasPressed = spaceIsPressed;
+    escWasPressed = escIsPressed;
+
+    // デバッグ：入力状態を監視
+    static int frameCount = 0;
+    frameCount++;
+    if (frameCount % 60 == 0) { // 1秒ごとに出力
+        OutputDebugStringA("TitleScene: Waiting for input...\n");
+        if (spaceIsPressed) {
+            OutputDebugStringA("TitleScene: SPACE key is being held down (Win32)\n");
+        }
+        if (input_) {
+            OutputDebugStringA("TitleScene: DirectInput object is valid\n");
+            if (input_->PushKey(DIK_SPACE)) {
+                OutputDebugStringA("TitleScene: SPACE key detected via DirectInput\n");
+            }
+        } else {
+            OutputDebugStringA("TitleScene: ERROR - DirectInput object is null!\n");
+        }
     }
 }
 
@@ -59,7 +96,7 @@ void TitleScene::Draw() {
 
     // タイトル画面を表示
     ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f - 200, ImGui::GetIO().DisplaySize.y * 0.3f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(400, 250), ImGuiCond_Always);
     ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
     
     ImGui::SetWindowFontScale(2.0f);
@@ -69,8 +106,20 @@ void TitleScene::Draw() {
     ImGui::Separator();
     ImGui::Spacing();
     
-    ImGui::Text("Press SPACE to Start");
+    ImGui::Text("Press SPACE to Start GamePlay Scene");
+    ImGui::Text("(Red background will be displayed)");
     ImGui::Text("Press ESC to Exit");
+    
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Text("Input Status:");
+    
+    // リアルタイムでキー入力状態を表示
+    bool spacePressed = (GetAsyncKeyState(VK_SPACE) & 0x8000) != 0;
+    bool escPressed = (GetAsyncKeyState(VK_ESCAPE) & 0x8000) != 0;
+    
+    ImGui::Text("SPACE: %s", spacePressed ? "PRESSED" : "Not pressed");
+    ImGui::Text("ESC: %s", escPressed ? "PRESSED" : "Not pressed");
     
     ImGui::End();
 }

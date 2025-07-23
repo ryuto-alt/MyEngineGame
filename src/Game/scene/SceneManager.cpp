@@ -31,17 +31,50 @@ void SceneManager::Update() {
 
     // シーン切り替えチェック
     if (!nextScene_.empty()) {
-        // デバッグ出力
-        OutputDebugStringA(("SceneManager: Changing scene to " + nextScene_ + "\n").c_str());
+        // 詳細なデバッグ出力
+        OutputDebugStringA("SceneManager: *** SCENE TRANSITION START ***\n");
+        std::string currentMsg = "SceneManager: Current scene: " + currentSceneName_ + "\n";
+        OutputDebugStringA(currentMsg.c_str());
+        std::string changeMsg = "SceneManager: Changing to scene: " + nextScene_ + "\n";
+        OutputDebugStringA(changeMsg.c_str());
 
         // 現在のシーンの終了処理
         if (currentScene_) {
-            currentScene_->Finalize();
+            std::string finalizeMsg = "SceneManager: Finalizing current scene: " + currentSceneName_ + "\n";
+            OutputDebugStringA(finalizeMsg.c_str());
+            try {
+                currentScene_->Finalize();
+                std::string successMsg = "SceneManager: Successfully finalized scene: " + currentSceneName_ + "\n";
+                OutputDebugStringA(successMsg.c_str());
+            }
+            catch (const std::exception& e) {
+                std::string errorMsg = "ERROR: Failed to finalize scene " + currentSceneName_ + ": " + std::string(e.what()) + "\n";
+                OutputDebugStringA(errorMsg.c_str());
+            }
             currentScene_.reset(); // unique_ptrをクリア
+            OutputDebugStringA("SceneManager: Current scene reset\n");
         }
 
         // 次のシーンを生成
-        currentScene_ = sceneFactory_->CreateScene(nextScene_);
+        std::string createMsg = "SceneManager: Creating new scene: " + nextScene_ + "\n";
+        OutputDebugStringA(createMsg.c_str());
+        try {
+            currentScene_ = sceneFactory_->CreateScene(nextScene_);
+            if (!currentScene_) {
+                std::string nullMsg = "ERROR: SceneFactory returned null for scene: " + nextScene_ + "\n";
+                OutputDebugStringA(nullMsg.c_str());
+                nextScene_.clear();
+                return;
+            }
+            std::string createdMsg = "SceneManager: Successfully created scene: " + nextScene_ + "\n";
+            OutputDebugStringA(createdMsg.c_str());
+        }
+        catch (const std::exception& e) {
+            std::string createErrorMsg = "ERROR: Failed to create scene " + nextScene_ + ": " + std::string(e.what()) + "\n";
+            OutputDebugStringA(createErrorMsg.c_str());
+            nextScene_.clear();
+            return;
+        }
 
         // シーンマネージャーのポインタをセット
         currentScene_->SetSceneManager(this);
@@ -52,14 +85,26 @@ void SceneManager::Update() {
         currentScene_->SetSpriteCommon(spriteCommon_);
         currentScene_->SetSrvManager(srvManager_);
         currentScene_->SetCamera(camera_);
+        OutputDebugStringA("SceneManager: Common resources set\n");
 
         try {
             // シーンの初期化（例外をキャッチ）
+            std::string initMsg = "SceneManager: Initializing scene: " + nextScene_ + "\n";
+            OutputDebugStringA(initMsg.c_str());
             currentScene_->Initialize();
-            OutputDebugStringA(("SceneManager: Successfully initialized scene " + nextScene_ + "\n").c_str());
+            
+            // 現在のシーン名を更新
+            currentSceneName_ = nextScene_;
+            
+            OutputDebugStringA("SceneManager: *** SCENE TRANSITION COMPLETE ***\n");
+            std::string initSuccessMsg = "SceneManager: Successfully initialized scene: " + nextScene_ + "\n";
+            OutputDebugStringA(initSuccessMsg.c_str());
         }
         catch (const std::exception& e) {
-            OutputDebugStringA(("ERROR: Failed to initialize scene " + nextScene_ + ": " + e.what() + "\n").c_str());
+            std::string initErrorMsg = "ERROR: Failed to initialize scene " + nextScene_ + ": " + std::string(e.what()) + "\n";
+            OutputDebugStringA(initErrorMsg.c_str());
+            currentScene_.reset();
+            currentSceneName_ = "None";
         }
 
         // 次のシーン名をクリア
@@ -74,6 +119,8 @@ void SceneManager::Update() {
         catch (const std::exception& e) {
             OutputDebugStringA(("ERROR: Exception in scene update: " + std::string(e.what()) + "\n").c_str());
         }
+    } else {
+        OutputDebugStringA("WARNING: No current scene to update\n");
     }
 }
 
@@ -119,5 +166,6 @@ void SceneManager::ChangeScene(const std::string& sceneName) {
     nextScene_ = sceneName;
 
     // デバッグ出力
-    OutputDebugStringA(("SceneManager: Scene change requested to " + sceneName + "\n").c_str());
+    std::string requestMsg = "SceneManager: Scene change requested to " + sceneName + "\n";
+    OutputDebugStringA(requestMsg.c_str());
 }

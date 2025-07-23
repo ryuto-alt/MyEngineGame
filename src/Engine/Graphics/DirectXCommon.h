@@ -58,6 +58,10 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDSVCPUDescriptorHandle(uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetDSVGPUDescriptorHandle(uint32_t index);
 
+	// RTV管理用機能（RenderTexture対応）
+	uint32_t AllocateRTVIndex();
+	void CreateRenderTargetViewAt(uint32_t index, Microsoft::WRL::ComPtr<ID3D12Resource> resource, DXGI_FORMAT format);
+
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(
 		Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap,
 		uint32_t descriptorSize, uint32_t index);
@@ -68,6 +72,8 @@ public:
 
 	ID3D12Device* GetDevice() const { return device.Get(); }
 	ID3D12GraphicsCommandList* GetCommandList()const { return commandList.Get(); }
+	IDXGISwapChain4* GetSwapChain() const { return swapChain.Get(); }
+	Microsoft::WRL::ComPtr<ID3D12Resource> GetSwapChainResource(uint32_t index) const { return swapChainResources[index]; }
 
 	IDxcBlob* CompileShader(
 		//ComilerするSahaderファイルへのパス
@@ -114,6 +120,10 @@ private:
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStarHandle{};
 	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 2> rtvHandles{};
+
+	// RTV管理用（RenderTexture対応）
+	static const uint32_t kMaxRTVCount = 10; // SwapChain用2つ + RenderTexture用8つ
+	uint32_t nextRTVIndex = 2; // SwapChain用のインデックス0,1の後から開始
 
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence = nullptr;
 	HANDLE fenceEvent = nullptr;
