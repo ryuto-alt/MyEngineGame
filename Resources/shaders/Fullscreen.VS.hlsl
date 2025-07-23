@@ -1,4 +1,4 @@
-// CopyImage用のVertex Shader
+// Fullscreen処理用のVertex Shader
 // 資料に基づく実装：頂点データを入力しない、3頂点を想定
 
 struct VertexShaderOutput

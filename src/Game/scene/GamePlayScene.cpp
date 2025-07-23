@@ -29,6 +29,12 @@ void GamePlayScene::Initialize() {
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
         redClearColor
     );
+    
+    // 【テスト用】初期状態で強制的にグレースケールモードに設定
+    OutputDebugStringA("GamePlayScene::Initialize - *** FORCING GRAYSCALE MODE FOR TESTING ***\n");
+    offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Grayscale);
+    OutputDebugStringA("GamePlayScene::Initialize - Grayscale mode set at initialization\n");
+    OutputDebugStringA("GamePlayScene::Initialize - Press 1=Normal, 2=Grayscale, 3=Sepia to switch modes\n");
 
     camera_->SetFov(1.37f);
     
@@ -168,7 +174,39 @@ void GamePlayScene::Update() {
     if (engine_->IsKeyTriggered(DIK_F1)) {
         camera_->ToggleFreeCameraMode();
     }
+    
 #endif
+
+    // フィルター効果切り替えキーバインド（授業資料に基づく実装）
+    // デバッグ用：キーの状態を常に監視（デバッグモード関係なく動作）
+    static bool key1Pressed = false, key2Pressed = false, key3Pressed = false;
+    
+    if (engine_->IsKeyPressed(DIK_1) && !key1Pressed) {
+        OutputDebugStringA("*** DEBUG: Key 1 pressed - Switching to Normal mode ***\n");
+        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
+        OutputDebugStringA("GamePlayScene: Switched to Normal mode\n");
+        key1Pressed = true;
+    } else if (!engine_->IsKeyPressed(DIK_1)) {
+        key1Pressed = false;
+    }
+    
+    if (engine_->IsKeyPressed(DIK_2) && !key2Pressed) {
+        OutputDebugStringA("*** DEBUG: Key 2 pressed - Switching to Grayscale mode ***\n");
+        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Grayscale);
+        OutputDebugStringA("GamePlayScene: Switched to Grayscale mode\n");
+        key2Pressed = true;
+    } else if (!engine_->IsKeyPressed(DIK_2)) {
+        key2Pressed = false;
+    }
+    
+    if (engine_->IsKeyPressed(DIK_3) && !key3Pressed) {
+        OutputDebugStringA("*** DEBUG: Key 3 pressed - Switching to Sepia mode ***\n");
+        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Sepia);
+        OutputDebugStringA("GamePlayScene: Switched to Sepia mode\n");
+        key3Pressed = true;
+    } else if (!engine_->IsKeyPressed(DIK_3)) {
+        key3Pressed = false;
+    }
 
     // カメラ回転処理（マウス + 右スティック）
     engine_->UpdateCameraMouse();

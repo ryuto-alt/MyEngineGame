@@ -227,6 +227,12 @@
     <ClCompile Include="src\Engine\Graphics\Skybox.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\OffscreenRenderingManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\RenderTexture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -425,6 +431,8 @@
       <Filter>src\engine\Audio</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Graphics\Skybox.h" />
+    <ClInclude Include="src\Engine\Graphics\OffscreenRenderingManager.h" />
+    <ClInclude Include="src\Engine\Graphics\RenderTexture.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -471,6 +479,12 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\Skybox.VS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\CopyImage.PS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\CopyImage.VS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

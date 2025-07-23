@@ -9,6 +9,13 @@
 class DirectXCommon;
 class SrvManager;
 
+// 処理モード
+enum class ProcessingMode {
+    Normal,      // 通常（そのままコピー）
+    Grayscale,   // グレースケール
+    Sepia        // セピア調
+};
+
 // オフスクリーンレンダリング管理クラス
 class OffscreenRenderingManager {
 public:
@@ -33,9 +40,17 @@ public:
     // RenderTextureの取得
     RenderTexture* GetRenderTexture() const { return renderTexture_.get(); }
 
+    // 処理モードの設定
+    void SetProcessingMode(ProcessingMode mode) { processingMode_ = mode; }
+    
+    // 現在の処理モード取得
+    ProcessingMode GetProcessingMode() const { return processingMode_; }
+
 private:
-    // CopyImage用のパイプラインステートオブジェクトを作成
+    // 各種パイプラインステートオブジェクトを作成
     void CreateCopyImagePSO();
+    void CreateGrayscalePSO();
+    void CreateSepiaPSO();
 
     // RootSignatureの作成
     void CreateRootSignature();
@@ -50,13 +65,22 @@ private:
     // RenderTexture
     std::unique_ptr<RenderTexture> renderTexture_;
 
-    // CopyImage用のパイプライン
+    // 共通のRootSignature（全ての処理で同じものを使用）
     Microsoft::WRL::ComPtr<ID3D12RootSignature> copyImageRootSignature_;
+    
+    // 各種パイプラインステート
     Microsoft::WRL::ComPtr<ID3D12PipelineState> copyImagePipelineState_;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> grayscalePipelineState_;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> sepiaPipelineState_;
 
     // シェーダー
-    IDxcBlob* copyImageVertexShader_ = nullptr;
+    IDxcBlob* copyImageVertexShader_ = nullptr;  // 共通のVertex Shader
     IDxcBlob* copyImagePixelShader_ = nullptr;
+    IDxcBlob* grayscalePixelShader_ = nullptr;
+    IDxcBlob* sepiaPixelShader_ = nullptr;
+    
+    // 現在の処理モード
+    ProcessingMode processingMode_ = ProcessingMode::Normal;
 
     // テクスチャサイズ
     uint32_t textureWidth_ = 0;

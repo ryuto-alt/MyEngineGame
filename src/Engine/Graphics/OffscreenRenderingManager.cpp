@@ -14,6 +14,14 @@ OffscreenRenderingManager::~OffscreenRenderingManager() {
         copyImagePixelShader_->Release();
         copyImagePixelShader_ = nullptr;
     }
+    if (grayscalePixelShader_) {
+        grayscalePixelShader_->Release();
+        grayscalePixelShader_ = nullptr;
+    }
+    if (sepiaPixelShader_) {
+        sepiaPixelShader_->Release();
+        sepiaPixelShader_ = nullptr;
+    }
 }
 
 void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager,
@@ -56,21 +64,62 @@ void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* 
     CreateRootSignature();
     OutputDebugStringA("OffscreenRenderingManager::Initialize - Root signature created\n");
 
-    // CopyImage用のパイプラインステートオブジェクトを作成
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Creating pipeline state\n");
+    // 各種パイプラインステートオブジェクトを作成
+    OutputDebugStringA("OffscreenRenderingManager::Initialize - Creating pipeline states\n");
     CreateCopyImagePSO();
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Pipeline state created\n");
+    CreateGrayscalePSO();
+    CreateSepiaPSO();
+    OutputDebugStringA("OffscreenRenderingManager::Initialize - All pipeline states created\n");
     
     OutputDebugStringA("OffscreenRenderingManager::Initialize - Initialization completed successfully\n");
 }
 
 void OffscreenRenderingManager::CompileShaders() {
-    // CopyImage用のシェーダーをコンパイル
-    copyImageVertexShader_ = dxCommon_->CompileShader(L"Resources/shaders/CopyImage.VS.hlsl", L"vs_6_0");
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Starting shader compilation\n");
+    
+    // フルスクリーン処理用の共通VertexShaderをコンパイル
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Fullscreen.VS.hlsl\n");
+    copyImageVertexShader_ = dxCommon_->CompileShader(L"Resources/shaders/Fullscreen.VS.hlsl", L"vs_6_0");
+    if (!copyImageVertexShader_) {
+        OutputDebugStringA("ERROR: Failed to compile Fullscreen.VS.hlsl\n");
+        assert(false);
+    }
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Fullscreen.VS.hlsl compiled successfully\n");
+    
+    // CopyImage用PixelShaderをコンパイル
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling CopyImage.PS.hlsl\n");
     copyImagePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/CopyImage.PS.hlsl", L"ps_6_0");
-
-    assert(copyImageVertexShader_);
-    assert(copyImagePixelShader_);
+    if (!copyImagePixelShader_) {
+        OutputDebugStringA("ERROR: Failed to compile CopyImage.PS.hlsl\n");
+        assert(false);
+    }
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - CopyImage.PS.hlsl compiled successfully\n");
+    
+    // 【テスト用】BlueTest用PixelShaderをコンパイル（確実な動作確認のため）
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling BlueTest.PS.hlsl for testing\n");
+    grayscalePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/BlueTest.PS.hlsl", L"ps_6_0");
+    if (!grayscalePixelShader_) {
+        OutputDebugStringA("ERROR: Failed to compile BlueTest.PS.hlsl\n");
+        // Grayscale.PS.hlslにフォールバック
+        OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Fallback to Grayscale.PS.hlsl\n");
+        grayscalePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Grayscale.PS.hlsl", L"ps_6_0");
+        if (!grayscalePixelShader_) {
+            OutputDebugStringA("ERROR: Failed to compile Grayscale.PS.hlsl as well\n");
+            assert(false);
+        }
+    }
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Test shader compiled successfully\n");
+    
+    // Sepia用PixelShaderをコンパイル
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Sepia.PS.hlsl\n");
+    sepiaPixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Sepia.PS.hlsl", L"ps_6_0");
+    if (!sepiaPixelShader_) {
+        OutputDebugStringA("ERROR: Failed to compile Sepia.PS.hlsl\n");
+        assert(false);
+    }
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Sepia.PS.hlsl compiled successfully\n");
+    
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - All shaders compiled successfully\n");
 }
 
 void OffscreenRenderingManager::CreateRootSignature() {
@@ -179,6 +228,100 @@ void OffscreenRenderingManager::CreateCopyImagePSO() {
     // PipelineState作成
     HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineStateDesc,
         IID_PPV_ARGS(&copyImagePipelineState_));
+    assert(SUCCEEDED(hr));
+}
+
+void OffscreenRenderingManager::CreateGrayscalePSO() {
+    // グレースケール用のパイプラインステート作成
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc{};
+
+    // RootSignature（共通のものを使用）
+    pipelineStateDesc.pRootSignature = copyImageRootSignature_.Get();
+
+    // InputLayout（共通：頂点データなし）
+    pipelineStateDesc.InputLayout.pInputElementDescs = nullptr;
+    pipelineStateDesc.InputLayout.NumElements = 0;
+
+    // Shader（VertexShaderは共通、PixelShaderはグレースケール用）
+    pipelineStateDesc.VS.pShaderBytecode = copyImageVertexShader_->GetBufferPointer();
+    pipelineStateDesc.VS.BytecodeLength = copyImageVertexShader_->GetBufferSize();
+    pipelineStateDesc.PS.pShaderBytecode = grayscalePixelShader_->GetBufferPointer();
+    pipelineStateDesc.PS.BytecodeLength = grayscalePixelShader_->GetBufferSize();
+
+    // BlendState（共通）
+    pipelineStateDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+    // RasterizerState（共通）
+    pipelineStateDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+
+    // DepthStencilState（共通：無効）
+    pipelineStateDesc.DepthStencilState.DepthEnable = false;
+    pipelineStateDesc.DepthStencilState.StencilEnable = false;
+
+    // DSVFormat（共通）
+    pipelineStateDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
+
+    // PrimitiveTopology（共通）
+    pipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    // RTVFormat（共通）
+    pipelineStateDesc.NumRenderTargets = 1;
+    pipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+    // Sample（共通）
+    pipelineStateDesc.SampleDesc.Count = 1;
+    pipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+    // PipelineState作成
+    HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineStateDesc,
+        IID_PPV_ARGS(&grayscalePipelineState_));
+    assert(SUCCEEDED(hr));
+}
+
+void OffscreenRenderingManager::CreateSepiaPSO() {
+    // セピア調用のパイプラインステート作成
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc{};
+
+    // RootSignature（共通のものを使用）
+    pipelineStateDesc.pRootSignature = copyImageRootSignature_.Get();
+
+    // InputLayout（共通：頂点データなし）
+    pipelineStateDesc.InputLayout.pInputElementDescs = nullptr;
+    pipelineStateDesc.InputLayout.NumElements = 0;
+
+    // Shader（VertexShaderは共通、PixelShaderはセピア用）
+    pipelineStateDesc.VS.pShaderBytecode = copyImageVertexShader_->GetBufferPointer();
+    pipelineStateDesc.VS.BytecodeLength = copyImageVertexShader_->GetBufferSize();
+    pipelineStateDesc.PS.pShaderBytecode = sepiaPixelShader_->GetBufferPointer();
+    pipelineStateDesc.PS.BytecodeLength = sepiaPixelShader_->GetBufferSize();
+
+    // BlendState（共通）
+    pipelineStateDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+    // RasterizerState（共通）
+    pipelineStateDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+
+    // DepthStencilState（共通：無効）
+    pipelineStateDesc.DepthStencilState.DepthEnable = false;
+    pipelineStateDesc.DepthStencilState.StencilEnable = false;
+
+    // DSVFormat（共通）
+    pipelineStateDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
+
+    // PrimitiveTopology（共通）
+    pipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    // RTVFormat（共通）
+    pipelineStateDesc.NumRenderTargets = 1;
+    pipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+    // Sample（共通）
+    pipelineStateDesc.SampleDesc.Count = 1;
+    pipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+    // PipelineState作成
+    HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineStateDesc,
+        IID_PPV_ARGS(&sepiaPipelineState_));
     assert(SUCCEEDED(hr));
 }
 
@@ -294,8 +437,41 @@ void OffscreenRenderingManager::CopyToSwapChain() {
     // RootSignature設定
     commandList->SetGraphicsRootSignature(copyImageRootSignature_.Get());
 
-    // PipelineState設定
-    commandList->SetPipelineState(copyImagePipelineState_.Get());
+    // 処理モードに応じてPipelineState設定
+    char modeDebug[256];
+    sprintf_s(modeDebug, "OffscreenRenderingManager::CopyToSwapChain - Current processing mode: %d\n", (int)processingMode_);
+    OutputDebugStringA(modeDebug);
+    
+    switch (processingMode_) {
+    case ProcessingMode::Normal:
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Normal pipeline\n");
+        if (!copyImagePipelineState_) {
+            OutputDebugStringA("ERROR: copyImagePipelineState_ is null!\n");
+        }
+        commandList->SetPipelineState(copyImagePipelineState_.Get());
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Normal pipeline set successfully\n");
+        break;
+    case ProcessingMode::Grayscale:
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Grayscale pipeline\n");
+        if (!grayscalePipelineState_) {
+            OutputDebugStringA("ERROR: grayscalePipelineState_ is null!\n");
+        }
+        commandList->SetPipelineState(grayscalePipelineState_.Get());
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Grayscale pipeline set successfully\n");
+        break;
+    case ProcessingMode::Sepia:
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Sepia pipeline\n");
+        if (!sepiaPipelineState_) {
+            OutputDebugStringA("ERROR: sepiaPipelineState_ is null!\n");
+        }
+        commandList->SetPipelineState(sepiaPipelineState_.Get());
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Sepia pipeline set successfully\n");
+        break;
+    default:
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Using default Normal mode (unknown mode)\n");
+        commandList->SetPipelineState(copyImagePipelineState_.Get());
+        break;
+    }
 
     // PrimitiveTopology設定
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
