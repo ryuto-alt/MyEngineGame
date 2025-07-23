@@ -573,12 +573,21 @@ void Model::LoadFromGLB(const std::string& filePath) {
 ModelData Model::LoadGLBFile(const std::string& filePath) {
 	ModelData result = {};
 
-	// マテリアルのデフォルト値を設定（MaterialDataのデフォルトコンストラクタの値を使用）
+	// マテリアルのデフォルト値を適切に設定
+	result.material.isPBR = true;
+	result.material.baseColorFactor = { 0.8f, 0.8f, 0.8f, 1.0f }; // デフォルトは白ではなくライトグレー
+	result.material.diffuse = result.material.baseColorFactor;
+	result.material.metallicFactor = 0.0f;
+	result.material.roughnessFactor = 0.9f;
+	result.material.emissiveFactor = { 0.0f, 0.0f, 0.0f };
+	result.material.alphaMode = "OPAQUE";
+	result.material.doubleSided = false;
+	
 	// デバッグ用にマテリアルの初期値を出力
 	char initDebugMsg[256];
-	sprintf_s(initDebugMsg, "GLB Initial Material - Diffuse: R=%.2f, G=%.2f, B=%.2f, A=%.2f\n",
-		result.material.diffuse.x, result.material.diffuse.y,
-		result.material.diffuse.z, result.material.diffuse.w);
+	sprintf_s(initDebugMsg, "GLB Initial Material - BaseColor: R=%.2f, G=%.2f, B=%.2f, A=%.2f\n",
+		result.material.baseColorFactor.x, result.material.baseColorFactor.y,
+		result.material.baseColorFactor.z, result.material.baseColorFactor.w);
 	OutputDebugStringA(initDebugMsg);
 
 	tinygltf::Model gltfModel;
@@ -972,16 +981,16 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 				}
 				else {
 					// マテリアルが指定されていない場合のデフォルト値
-					// PBRマテリアルのデフォルト値を設定
+					// PBRマテリアルのデフォルト値を設定（目立つ色で区別）
 					primitiveModelData.material.isPBR = true;
-					primitiveModelData.material.baseColorFactor = { 0.8f, 0.8f, 0.8f, 1.0f };
+					primitiveModelData.material.baseColorFactor = { 0.9f, 0.7f, 0.7f, 1.0f }; // 薄ピンク色で区別
 					primitiveModelData.material.diffuse = primitiveModelData.material.baseColorFactor;
 					primitiveModelData.material.metallicFactor = 0.0f;
 					primitiveModelData.material.roughnessFactor = 0.9f;
 					primitiveModelData.material.emissiveFactor = { 0.0f, 0.0f, 0.0f };
 					primitiveModelData.material.alphaMode = "OPAQUE";
 					primitiveModelData.material.doubleSided = false;
-					OutputDebugStringA("GLB: No material specified for this primitive, using default PBR material\n");
+					OutputDebugStringA("GLB: No material specified for this primitive, using distinctive default PBR material (light pink)\n");
 				}
 				
 				// 各プリミティブのModelDataを結果に追加
@@ -991,10 +1000,29 @@ ModelData Model::LoadGLBFile(const std::string& filePath) {
 					if (result.vertices.empty()) {
 						result = primitiveModelData;
 					} else {
-						// 2番目以降のプリミティブは頂点データを統合（一時的な解決策）
+						// 2番目以降のプリミティブは頂点データを統合
 						result.vertices.insert(result.vertices.end(), 
 							primitiveModelData.vertices.begin(), 
 							primitiveModelData.vertices.end());
+						
+						// マテリアル情報を更新：最初に有効なテクスチャを持つマテリアルを優先
+						if (!primitiveModelData.material.textureFilePath.empty() && 
+							result.material.textureFilePath.empty()) {
+							result.material = primitiveModelData.material;
+							OutputDebugStringA(("GLB: Updated material from primitive - texture: " + 
+								primitiveModelData.material.textureFilePath + "\n").c_str());
+						}
+						// より詳細なベースカラーを持つマテリアルを優先
+						else if (primitiveModelData.material.isPBR && 
+								(primitiveModelData.material.baseColorFactor.x != 1.0f || 
+								 primitiveModelData.material.baseColorFactor.y != 1.0f || 
+								 primitiveModelData.material.baseColorFactor.z != 1.0f)) {
+							result.material = primitiveModelData.material;
+							OutputDebugStringA(("GLB: Updated material from primitive - color: " + 
+								std::to_string(primitiveModelData.material.baseColorFactor.x) + ", " +
+								std::to_string(primitiveModelData.material.baseColorFactor.y) + ", " +
+								std::to_string(primitiveModelData.material.baseColorFactor.z) + "\n").c_str());
+						}
 					}
 				}
 			}
@@ -1322,15 +1350,16 @@ std::vector<ModelData> Model::LoadMultiMaterialGLB(const std::string& filePath) 
 					OutputDebugStringA(debugMsg);
 				}
 				else {
-					// デフォルトマテリアル
+					// デフォルトマテリアル（より目立つ色で設定）
 					primitiveModelData.material.isPBR = true;
-					primitiveModelData.material.baseColorFactor = { 0.8f, 0.8f, 0.8f, 1.0f };
+					primitiveModelData.material.baseColorFactor = { 0.7f, 0.7f, 0.9f, 1.0f }; // 薄青色で区別しやすく
 					primitiveModelData.material.diffuse = primitiveModelData.material.baseColorFactor;
 					primitiveModelData.material.metallicFactor = 0.0f;
 					primitiveModelData.material.roughnessFactor = 0.9f;
 					primitiveModelData.material.emissiveFactor = { 0.0f, 0.0f, 0.0f };
 					primitiveModelData.material.alphaMode = "OPAQUE";
 					primitiveModelData.material.doubleSided = false;
+					OutputDebugStringA("GLB Multi-Material: Using distinctive default material (light blue)\n");
 				}
 
 				// 頂点が存在する場合のみ追加
