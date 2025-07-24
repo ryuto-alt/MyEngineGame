@@ -27,8 +27,6 @@ OffscreenRenderingManager::~OffscreenRenderingManager() {
 void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager,
     uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor) {
     
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Starting initialization\n");
-    
     assert(dxCommon);
     assert(srvManager);
 
@@ -37,12 +35,7 @@ void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* 
     textureWidth_ = width;
     textureHeight_ = height;
 
-    char initDebug[256];
-    sprintf_s(initDebug, "OffscreenRenderingManager::Initialize - Size: %dx%d, Format: %d\n", width, height, format);
-    OutputDebugStringA(initDebug);
-
     // RenderTextureの作成
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Creating RenderTexture\n");
     renderTexture_ = std::make_unique<RenderTexture>();
     
     if (!renderTexture_) {
@@ -50,70 +43,48 @@ void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* 
         return;
     }
     
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Initializing RenderTexture\n");
     renderTexture_->Initialize(dxCommon_, srvManager_, width, height, format, clearColor);
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - RenderTexture initialized\n");
 
     // シェーダーコンパイル
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Compiling shaders\n");
     CompileShaders();
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Shaders compiled\n");
 
     // RootSignatureの作成
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Creating root signature\n");
     CreateRootSignature();
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Root signature created\n");
 
     // 各種パイプラインステートオブジェクトを作成
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Creating pipeline states\n");
     CreateCopyImagePSO();
     CreateGrayscalePSO();
     CreateVignettePSO();
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - All pipeline states created\n");
-    
-    OutputDebugStringA("OffscreenRenderingManager::Initialize - Initialization completed successfully\n");
 }
 
 void OffscreenRenderingManager::CompileShaders() {
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Starting shader compilation\n");
-    
     // フルスクリーン処理用の共通VertexShaderをコンパイル
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Fullscreen.VS.hlsl\n");
     copyImageVertexShader_ = dxCommon_->CompileShader(L"Resources/shaders/Fullscreen.VS.hlsl", L"vs_6_0");
     if (!copyImageVertexShader_) {
         OutputDebugStringA("ERROR: Failed to compile Fullscreen.VS.hlsl\n");
         assert(false);
     }
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Fullscreen.VS.hlsl compiled successfully\n");
     
     // CopyImage用PixelShaderをコンパイル
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling CopyImage.PS.hlsl\n");
     copyImagePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/CopyImage.PS.hlsl", L"ps_6_0");
     if (!copyImagePixelShader_) {
         OutputDebugStringA("ERROR: Failed to compile CopyImage.PS.hlsl\n");
         assert(false);
     }
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - CopyImage.PS.hlsl compiled successfully\n");
     
     // Grayscale用PixelShaderをコンパイル
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Grayscale.PS.hlsl\n");
     grayscalePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Grayscale.PS.hlsl", L"ps_6_0");
     if (!grayscalePixelShader_) {
         OutputDebugStringA("ERROR: Failed to compile Grayscale.PS.hlsl\n");
         assert(false);
     }
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Grayscale.PS.hlsl compiled successfully\n");
     
     // Vignette用PixelShaderをコンパイル
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Vignette.PS.hlsl\n");
     vignettePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Vignette.PS.hlsl", L"ps_6_0");
     if (!vignettePixelShader_) {
         OutputDebugStringA("ERROR: Failed to compile Vignette.PS.hlsl\n");
         assert(false);
     }
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Vignette.PS.hlsl compiled successfully\n");
-    
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - All shaders compiled successfully\n");
 }
 
 void OffscreenRenderingManager::CreateRootSignature() {
@@ -320,9 +291,6 @@ void OffscreenRenderingManager::CreateVignettePSO() {
 }
 
 void OffscreenRenderingManager::BeginRenderToTexture() {
-    // フレーム開始時の状態管理強化
-    OutputDebugStringA("OffscreenRenderingManager::BeginRenderToTexture - Frame start\n");
-    
     // リソースの有効性チェック
     if (!renderTexture_) {
         OutputDebugStringA("OffscreenRenderingManager::BeginRenderToTexture - ERROR: renderTexture_ is null!\n");
@@ -334,17 +302,11 @@ void OffscreenRenderingManager::BeginRenderToTexture() {
         return;
     }
     
-    OutputDebugStringA("OffscreenRenderingManager::BeginRenderToTexture - About to call renderTexture_->BeginRenderTarget()\n");
-    
     // RenderTextureをレンダーターゲットとして設定
     renderTexture_->BeginRenderTarget();
-    
-    OutputDebugStringA("OffscreenRenderingManager::BeginRenderToTexture - renderTexture_->BeginRenderTarget() completed\n");
 }
 
 void OffscreenRenderingManager::EndRenderToTexture() {
-    OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - Starting\n");
-    
     if (!renderTexture_) {
         OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - ERROR: renderTexture_ is null!\n");
         return;
@@ -355,21 +317,14 @@ void OffscreenRenderingManager::EndRenderToTexture() {
         return;
     }
     
-    OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - About to call renderTexture_->EndRenderTarget()\n");
-    
     // RenderTextureのレンダーターゲット使用を終了
     renderTexture_->EndRenderTarget();
     
-    OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - renderTexture_->EndRenderTarget() completed\n");
-    
     // 【重要修正】CommandKick()を呼ばずにリソース状態遷移のみ実行
     // 同一コマンドリスト内でRenderTexture → SwapChain描画を継続
-    OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - CommandKick() skipped to maintain command list continuity\n");
 }
 
 void OffscreenRenderingManager::CopyToSwapChain() {
-    OutputDebugStringA("*** OffscreenRenderingManager::CopyToSwapChain - STARTING COPY OPERATION ***\n");
-    
     if (!dxCommon_) {
         OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - ERROR: dxCommon_ is null!\n");
         return;
@@ -386,12 +341,8 @@ void OffscreenRenderingManager::CopyToSwapChain() {
         return;
     }
     
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Got command list\n");
-    
     // 【重要修正】RenderTextureがSHADER_RESOURCE状態になっていることを確実にする
-    // EndRenderToTexture()でリソース状態遷移が完了していることを再確認
     renderTexture_->EnsureShaderResourceState();
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - RenderTexture shader resource state ensured\n");
     
     // 【重要修正】UnoEngine::Begin()で既にSwapChainはRENDER_TARGET状態のため、リソースバリアは不要
     if (!dxCommon_->GetSwapChain()) {
@@ -407,16 +358,9 @@ void OffscreenRenderingManager::CopyToSwapChain() {
         return;
     }
     
-    // SwapChainは既にRENDER_TARGET状態（UnoEngine::Begin()で設定済み）
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - SwapChain already in RENDER_TARGET state (set by UnoEngine::Begin())\n");
-    
     // 【重要】SwapChainを明示的にRenderTargetとして設定（RenderTextureのアクティブ状態を解除）
     D3D12_CPU_DESCRIPTOR_HANDLE swapChainRtvHandle = dxCommon_->GetRTVCPUDescriptorHandle(backBufferIndex);
     commandList->OMSetRenderTargets(1, &swapChainRtvHandle, FALSE, nullptr);
-    
-    // 【修正】UnoEngine::Begin()でクリア済みのため、ここでは追加クリアを行わない
-    // オフスクリーンレンダリング結果をそのまま描画する
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - SwapChain RenderTarget set (no additional clear)\n");
 
     // ビューポートとシザー矩形の明示的設定（DirectXCommonの設定を確実に適用）
     D3D12_VIEWPORT viewport{};
@@ -439,37 +383,26 @@ void OffscreenRenderingManager::CopyToSwapChain() {
     commandList->SetGraphicsRootSignature(copyImageRootSignature_.Get());
 
     // 処理モードに応じてPipelineState設定
-    char modeDebug[256];
-    sprintf_s(modeDebug, "OffscreenRenderingManager::CopyToSwapChain - Current processing mode: %d\n", (int)processingMode_);
-    OutputDebugStringA(modeDebug);
-    
     switch (processingMode_) {
     case ProcessingMode::Normal:
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Normal pipeline\n");
         if (!copyImagePipelineState_) {
             OutputDebugStringA("ERROR: copyImagePipelineState_ is null!\n");
         }
         commandList->SetPipelineState(copyImagePipelineState_.Get());
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Normal pipeline set successfully\n");
         break;
     case ProcessingMode::Grayscale:
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Grayscale pipeline\n");
         if (!grayscalePipelineState_) {
             OutputDebugStringA("ERROR: grayscalePipelineState_ is null!\n");
         }
         commandList->SetPipelineState(grayscalePipelineState_.Get());
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Grayscale pipeline set successfully\n");
         break;
     case ProcessingMode::Vignetting:
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Vignette pipeline\n");
         if (!vignettePipelineState_) {
             OutputDebugStringA("ERROR: vignettePipelineState_ is null!\n");
         }
         commandList->SetPipelineState(vignettePipelineState_.Get());
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Vignette pipeline set successfully\n");
         break;
     default:
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Using default Normal mode (unknown mode)\n");
         commandList->SetPipelineState(copyImagePipelineState_.Get());
         break;
     }
@@ -478,33 +411,19 @@ void OffscreenRenderingManager::CopyToSwapChain() {
     commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // 【重要修正】CommandKick後の新しいCommandListにDescriptor Heapをセット
-    // これがないとSetGraphicsRootDescriptorTableでエラーが発生する
     if (!srvManager_) {
         OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - ERROR: srvManager_ is null!\n");
         return;
     }
     
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - About to call srvManager_->PreDraw()\n");
     srvManager_->PreDraw();
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - srvManager_->PreDraw() completed\n");
 
     // テクスチャをシェーダーリソースとして設定
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - About to call renderTexture_->SetShaderResource()\n");
     renderTexture_->SetShaderResource(0);
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - renderTexture_->SetShaderResource() completed\n");
 
     // DrawCall発行（資料より：VertexShaderは3頂点を想定しているので、DrawInstancedで3頂点描画する指定をする）
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - About to call DrawInstanced\n");
     commandList->DrawInstanced(3, 1, 0, 0);
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - DrawInstanced completed\n");
     
     // 【重要修正】ImGui描画のため、SwapChainのリソース状態をRENDER_TARGETのままにしておく
-    // Present前にDirectXCommonでPRESENT状態に変更される
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - SwapChain remains in RENDER_TARGET state for ImGui\n");
-    
     // 【重要修正】CommandKick()をここで呼ばない - ImGui描画のためにコマンドリストを保持
-    // UnoEngineのフレーム管理に委ね、ImGui描画後にCommandKick()を実行する
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - CommandKick() skipped for ImGui rendering\n");
-    
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - All operations completed successfully\n");
 }

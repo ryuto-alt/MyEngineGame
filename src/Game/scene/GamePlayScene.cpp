@@ -34,9 +34,7 @@ void GamePlayScene::Initialize() {
     );
     
     // 初期状態はNormalモードに設定
-    OutputDebugStringA("GamePlayScene::Initialize - Setting Normal mode as default\n");
     offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
-    OutputDebugStringA("GamePlayScene::Initialize - Normal mode set at initialization\n");
 
     camera_->SetFov(1.37f);
     
@@ -82,10 +80,7 @@ void GamePlayScene::Initialize() {
     */
     skyboxEnabled_ = false;
     
-    OutputDebugStringA("GamePlayScene: 3D models initialized (Player, Ground, LightManager)\n");
-    
     // オフスクリーンレンダリング専用モードで動作
-    OutputDebugStringA("GamePlayScene: Running in Offscreen Rendering Only Mode\n");
     
     // GLBキューブモデルの初期化（マルチマテリアル対応）
     try {
@@ -94,19 +89,7 @@ void GamePlayScene::Initialize() {
         tempModel.Initialize(dxCommon_);
         std::vector<ModelData> multiMaterialData = tempModel.LoadMultiMaterialGLB("Resources/Models/cube/obje.glb");
         
-        std::string matCountMsg = "GLB Multi-material: Loaded " + std::to_string(multiMaterialData.size()) + " materials\n";
-        OutputDebugStringA(matCountMsg.c_str());
-        
-        // 詳細なマテリアル情報を出力
-        for (size_t i = 0; i < multiMaterialData.size(); ++i) {
-            char debugMsg[512];
-            sprintf_s(debugMsg, "Material[%zu]: BaseColor=(%.3f,%.3f,%.3f,%.3f), Metallic=%.3f, Roughness=%.3f, Vertices=%zu, isPBR=%s\n",
-                i, multiMaterialData[i].material.baseColorFactor.x, multiMaterialData[i].material.baseColorFactor.y,
-                multiMaterialData[i].material.baseColorFactor.z, multiMaterialData[i].material.baseColorFactor.w,
-                multiMaterialData[i].material.metallicFactor, multiMaterialData[i].material.roughnessFactor,
-                multiMaterialData[i].vertices.size(), multiMaterialData[i].material.isPBR ? "true" : "false");
-            OutputDebugStringA(debugMsg);
-        }
+        // GLBマルチマテリアル読み込み完了
         
         // 各マテリアルごとに別々のModelとObject3dを作成
         for (size_t i = 0; i < multiMaterialData.size(); ++i) {
@@ -139,14 +122,10 @@ void GamePlayScene::Initialize() {
             cubeGlbModels_.push_back(std::move(model));
             cubeGlbObjects_.push_back(std::move(object3d));
             
-            std::string matLoadMsg = "GLB Material [" + std::to_string(i) + "] loaded successfully\n";
-            OutputDebugStringA(matLoadMsg.c_str());
+            // マテリアル読み込み完了
         }
         
-        if (!cubeGlbModels_.empty()) {
-            std::string successMsg = "GLB Multi-material cube model loaded successfully with " + std::to_string(cubeGlbModels_.size()) + " materials\n";
-            OutputDebugStringA(successMsg.c_str());
-        }
+        // GLBモデル読み込み完了
     } catch (const std::exception& e) {
         std::string errorMsg = "Failed to load GLB multi-material cube model: " + std::string(e.what()) + "\n";
         OutputDebugStringA(errorMsg.c_str());
@@ -352,7 +331,7 @@ void GamePlayScene::Draw() {
     offscreenRenderingManager_->BeginRenderToTexture();
 
 
-    // 【重要】オフスクリーンレンダリング内で3Dオブジェクトを描画
+ 
     spriteCommon_->CommonDraw();
 
     // Skyboxは無効（ddsファイルは使わない）
@@ -379,7 +358,6 @@ void GamePlayScene::Draw() {
 void GamePlayScene::BuildImGuiWindows() {
     // ImGuiの初期化状態をチェック
     if (!ImGui::GetCurrentContext()) {
-        OutputDebugStringA("GamePlayScene::BuildImGuiWindows - ImGui context is null - skipping ImGui windows\n");
         return;
     }
     

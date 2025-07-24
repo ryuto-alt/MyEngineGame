@@ -168,12 +168,8 @@ void UnoEngine::Draw() {
         std::string currentSceneName = SceneManager::GetInstance()->GetCurrentSceneName();
         bool isOffscreenMode = (currentSceneName == "GamePlay");
         
-        std::string modeMsg = "UnoEngine::Draw - Current scene: " + currentSceneName + ", Offscreen mode: " + (isOffscreenMode ? "YES" : "NO") + "\n";
-        OutputDebugStringA(modeMsg.c_str());
-        
         if (isOffscreenMode) {
             // 【GamePlayScene専用】オフスクリーンレンダリング専用モード
-            OutputDebugStringA("UnoEngine::Draw - *** ENTERING OFFSCREEN RENDERING MODE ***\n");
             
             // 【重要修正】オフスクリーンモードでもBegin()を呼び出してコマンドリストを準備
             dxCommon_->Begin();
@@ -190,17 +186,13 @@ void UnoEngine::Draw() {
             // 【重要修正】シーン描画後にImGuiのRender()とRenderDrawData()を実行
             ImGui::Render();
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
-            OutputDebugStringA("UnoEngine::Draw - ImGui rendered in offscreen mode\n");
             
             // 【重要修正】End()を呼び出してリソースバリアとPresent()を正しく実行
             dxCommon_->End();
-            OutputDebugStringA("UnoEngine::Draw - End() called in offscreen mode for proper Present\n");
             
             // 通常の描画パイプラインは無効化（GamePlaySceneが独自に管理）
         } else {
             // 【他のシーン用】通常の描画パイプライン
-            std::string normalMsg = "UnoEngine::Draw - Normal rendering mode for " + currentSceneName + " scene\n";
-            OutputDebugStringA(normalMsg.c_str());
             
             // DirectXの描画準備
             dxCommon_->Begin();
