@@ -1,4 +1,5 @@
 #include "GamePlayScene.h"
+#include "OffscreenRenderingManager.h"
 #include <string>
 #include <vector>
 #include <memory>

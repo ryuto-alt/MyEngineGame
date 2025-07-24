@@ -5,7 +5,8 @@
 #include "LightManager.h"
 #include "Skybox.h"
 #include "TextureManager.h"
-#include "OffscreenRenderingManager.h"
+class OffscreenRenderingManager;
+enum class ProcessingMode;
 #include <vector>
 #include <memory>
 
