@@ -363,3 +363,31 @@ void RenderTexture::SetShaderResource(UINT rootParameterIndex) {
     
     OutputDebugStringA("RenderTexture::SetShaderResource completed\n");
 }
+
+void RenderTexture::EnsureShaderResourceState() {
+    OutputDebugStringA("RenderTexture::EnsureShaderResourceState - Starting state check\n");
+    
+    // デバッグ出力で現在の状態を確認
+    char debugMsg[256];
+    sprintf_s(debugMsg, "RenderTexture::EnsureShaderResourceState - CurrentState: %d\n", currentState);
+    OutputDebugStringA(debugMsg);
+    
+    if (currentState != D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE) {
+        OutputDebugStringA("RenderTexture::EnsureShaderResourceState - Transitioning to SHADER_RESOURCE\n");
+        
+        D3D12_RESOURCE_BARRIER barrier{};
+        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        barrier.Transition.pResource = renderTextureResource.Get();
+        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        barrier.Transition.StateBefore = currentState;
+        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+
+        dxCommon_->GetCommandList()->ResourceBarrier(1, &barrier);
+        currentState = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+        
+        OutputDebugStringA("RenderTexture::EnsureShaderResourceState - Transition completed\n");
+    } else {
+        OutputDebugStringA("RenderTexture::EnsureShaderResourceState - Already in SHADER_RESOURCE state\n");
+    }
+}

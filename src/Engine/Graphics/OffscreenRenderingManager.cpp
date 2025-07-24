@@ -18,9 +18,9 @@ OffscreenRenderingManager::~OffscreenRenderingManager() {
         grayscalePixelShader_->Release();
         grayscalePixelShader_ = nullptr;
     }
-    if (sepiaPixelShader_) {
-        sepiaPixelShader_->Release();
-        sepiaPixelShader_ = nullptr;
+    if (vignettePixelShader_) {
+        vignettePixelShader_->Release();
+        vignettePixelShader_ = nullptr;
     }
 }
 
@@ -68,7 +68,7 @@ void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* 
     OutputDebugStringA("OffscreenRenderingManager::Initialize - Creating pipeline states\n");
     CreateCopyImagePSO();
     CreateGrayscalePSO();
-    CreateSepiaPSO();
+    CreateVignettePSO();
     OutputDebugStringA("OffscreenRenderingManager::Initialize - All pipeline states created\n");
     
     OutputDebugStringA("OffscreenRenderingManager::Initialize - Initialization completed successfully\n");
@@ -95,29 +95,23 @@ void OffscreenRenderingManager::CompileShaders() {
     }
     OutputDebugStringA("OffscreenRenderingManager::CompileShaders - CopyImage.PS.hlsl compiled successfully\n");
     
-    // 【テスト用】BlueTest用PixelShaderをコンパイル（確実な動作確認のため）
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling BlueTest.PS.hlsl for testing\n");
-    grayscalePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/BlueTest.PS.hlsl", L"ps_6_0");
+    // Grayscale用PixelShaderをコンパイル
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Grayscale.PS.hlsl\n");
+    grayscalePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Grayscale.PS.hlsl", L"ps_6_0");
     if (!grayscalePixelShader_) {
-        OutputDebugStringA("ERROR: Failed to compile BlueTest.PS.hlsl\n");
-        // Grayscale.PS.hlslにフォールバック
-        OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Fallback to Grayscale.PS.hlsl\n");
-        grayscalePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Grayscale.PS.hlsl", L"ps_6_0");
-        if (!grayscalePixelShader_) {
-            OutputDebugStringA("ERROR: Failed to compile Grayscale.PS.hlsl as well\n");
-            assert(false);
-        }
-    }
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Test shader compiled successfully\n");
-    
-    // Sepia用PixelShaderをコンパイル
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Sepia.PS.hlsl\n");
-    sepiaPixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Sepia.PS.hlsl", L"ps_6_0");
-    if (!sepiaPixelShader_) {
-        OutputDebugStringA("ERROR: Failed to compile Sepia.PS.hlsl\n");
+        OutputDebugStringA("ERROR: Failed to compile Grayscale.PS.hlsl\n");
         assert(false);
     }
-    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Sepia.PS.hlsl compiled successfully\n");
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Grayscale.PS.hlsl compiled successfully\n");
+    
+    // Vignette用PixelShaderをコンパイル
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Compiling Vignette.PS.hlsl\n");
+    vignettePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Vignette.PS.hlsl", L"ps_6_0");
+    if (!vignettePixelShader_) {
+        OutputDebugStringA("ERROR: Failed to compile Vignette.PS.hlsl\n");
+        assert(false);
+    }
+    OutputDebugStringA("OffscreenRenderingManager::CompileShaders - Vignette.PS.hlsl compiled successfully\n");
     
     OutputDebugStringA("OffscreenRenderingManager::CompileShaders - All shaders compiled successfully\n");
 }
@@ -278,8 +272,8 @@ void OffscreenRenderingManager::CreateGrayscalePSO() {
     assert(SUCCEEDED(hr));
 }
 
-void OffscreenRenderingManager::CreateSepiaPSO() {
-    // セピア調用のパイプラインステート作成
+void OffscreenRenderingManager::CreateVignettePSO() {
+    // Vignetting用のパイプラインステート作成
     D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc{};
 
     // RootSignature（共通のものを使用）
@@ -289,11 +283,11 @@ void OffscreenRenderingManager::CreateSepiaPSO() {
     pipelineStateDesc.InputLayout.pInputElementDescs = nullptr;
     pipelineStateDesc.InputLayout.NumElements = 0;
 
-    // Shader（VertexShaderは共通、PixelShaderはセピア用）
+    // Shader（VertexShaderは共通、PixelShaderはVignette用）
     pipelineStateDesc.VS.pShaderBytecode = copyImageVertexShader_->GetBufferPointer();
     pipelineStateDesc.VS.BytecodeLength = copyImageVertexShader_->GetBufferSize();
-    pipelineStateDesc.PS.pShaderBytecode = sepiaPixelShader_->GetBufferPointer();
-    pipelineStateDesc.PS.BytecodeLength = sepiaPixelShader_->GetBufferSize();
+    pipelineStateDesc.PS.pShaderBytecode = vignettePixelShader_->GetBufferPointer();
+    pipelineStateDesc.PS.BytecodeLength = vignettePixelShader_->GetBufferSize();
 
     // BlendState（共通）
     pipelineStateDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
@@ -321,7 +315,7 @@ void OffscreenRenderingManager::CreateSepiaPSO() {
 
     // PipelineState作成
     HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineStateDesc,
-        IID_PPV_ARGS(&sepiaPipelineState_));
+        IID_PPV_ARGS(&vignettePipelineState_));
     assert(SUCCEEDED(hr));
 }
 
@@ -368,20 +362,21 @@ void OffscreenRenderingManager::EndRenderToTexture() {
     
     OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - renderTexture_->EndRenderTarget() completed\n");
     
-    // 【重要】D3D12エラー修正：オフスクリーンレンダリング完了後にコマンドリストを実行
-    // 同一コマンドリストで複数のSwapChainバッファへの書き込みを避けるため
-    OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - About to call dxCommon_->CommandKick()\n");
-    dxCommon_->CommandKick();
-    OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - dxCommon_->CommandKick() completed\n");
+    // 【重要修正】CommandKick()を呼ばずにリソース状態遷移のみ実行
+    // 同一コマンドリスト内でRenderTexture → SwapChain描画を継続
+    OutputDebugStringA("OffscreenRenderingManager::EndRenderToTexture - CommandKick() skipped to maintain command list continuity\n");
 }
 
 void OffscreenRenderingManager::CopyToSwapChain() {
     OutputDebugStringA("*** OffscreenRenderingManager::CopyToSwapChain - STARTING COPY OPERATION ***\n");
     
-    // D3D12エラー修正：EndRenderToTexture()でCommandKick()を呼び出したため、
-    // ここでは新しいコマンドリストを使用してSwapChainへのコピーを実行
     if (!dxCommon_) {
         OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - ERROR: dxCommon_ is null!\n");
+        return;
+    }
+    
+    if (!renderTexture_) {
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - ERROR: renderTexture_ is null!\n");
         return;
     }
     
@@ -393,29 +388,35 @@ void OffscreenRenderingManager::CopyToSwapChain() {
     
     OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Got command list\n");
     
-    // 【重要修正】SwapChainのリソース状態をPRESENTからRENDER_TARGETに遷移
+    // 【重要修正】RenderTextureがSHADER_RESOURCE状態になっていることを確実にする
+    // EndRenderToTexture()でリソース状態遷移が完了していることを再確認
+    renderTexture_->EnsureShaderResourceState();
+    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - RenderTexture shader resource state ensured\n");
+    
+    // 【重要修正】UnoEngine::Begin()で既にSwapChainはRENDER_TARGET状態のため、リソースバリアは不要
+    if (!dxCommon_->GetSwapChain()) {
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - ERROR: SwapChain is null!\n");
+        return;
+    }
+    
     UINT backBufferIndex = dxCommon_->GetSwapChain()->GetCurrentBackBufferIndex();
     Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource = dxCommon_->GetSwapChainResource(backBufferIndex);
     
-    // リソースバリアを作成してPRESENTからRENDER_TARGETに遷移
-    D3D12_RESOURCE_BARRIER presentToRenderTarget{};
-    presentToRenderTarget.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    presentToRenderTarget.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    presentToRenderTarget.Transition.pResource = swapChainResource.Get();
-    presentToRenderTarget.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-    presentToRenderTarget.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    commandList->ResourceBarrier(1, &presentToRenderTarget);
+    if (!swapChainResource) {
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - ERROR: SwapChain resource is null!\n");
+        return;
+    }
+    
+    // SwapChainは既にRENDER_TARGET状態（UnoEngine::Begin()で設定済み）
+    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - SwapChain already in RENDER_TARGET state (set by UnoEngine::Begin())\n");
     
     // 【重要】SwapChainを明示的にRenderTargetとして設定（RenderTextureのアクティブ状態を解除）
     D3D12_CPU_DESCRIPTOR_HANDLE swapChainRtvHandle = dxCommon_->GetRTVCPUDescriptorHandle(backBufferIndex);
     commandList->OMSetRenderTargets(1, &swapChainRtvHandle, FALSE, nullptr);
     
-    // 【重要修正】スワップチェインを黒色でクリアして確実に描画される状態にする
-    float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f }; // 黒色
-    commandList->ClearRenderTargetView(swapChainRtvHandle, clearColor, 0, nullptr);
-    
-    // デバッグ出力
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - SwapChain set as RenderTarget and cleared\n");
+    // 【修正】UnoEngine::Begin()でクリア済みのため、ここでは追加クリアを行わない
+    // オフスクリーンレンダリング結果をそのまま描画する
+    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - SwapChain RenderTarget set (no additional clear)\n");
 
     // ビューポートとシザー矩形の明示的設定（DirectXCommonの設定を確実に適用）
     D3D12_VIEWPORT viewport{};
@@ -459,13 +460,13 @@ void OffscreenRenderingManager::CopyToSwapChain() {
         commandList->SetPipelineState(grayscalePipelineState_.Get());
         OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Grayscale pipeline set successfully\n");
         break;
-    case ProcessingMode::Sepia:
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Sepia pipeline\n");
-        if (!sepiaPipelineState_) {
-            OutputDebugStringA("ERROR: sepiaPipelineState_ is null!\n");
+    case ProcessingMode::Vignetting:
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Setting Vignette pipeline\n");
+        if (!vignettePipelineState_) {
+            OutputDebugStringA("ERROR: vignettePipelineState_ is null!\n");
         }
-        commandList->SetPipelineState(sepiaPipelineState_.Get());
-        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Sepia pipeline set successfully\n");
+        commandList->SetPipelineState(vignettePipelineState_.Get());
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Vignette pipeline set successfully\n");
         break;
     default:
         OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Using default Normal mode (unknown mode)\n");
@@ -478,6 +479,11 @@ void OffscreenRenderingManager::CopyToSwapChain() {
 
     // 【重要修正】CommandKick後の新しいCommandListにDescriptor Heapをセット
     // これがないとSetGraphicsRootDescriptorTableでエラーが発生する
+    if (!srvManager_) {
+        OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - ERROR: srvManager_ is null!\n");
+        return;
+    }
+    
     OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - About to call srvManager_->PreDraw()\n");
     srvManager_->PreDraw();
     OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - srvManager_->PreDraw() completed\n");
@@ -492,20 +498,13 @@ void OffscreenRenderingManager::CopyToSwapChain() {
     commandList->DrawInstanced(3, 1, 0, 0);
     OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - DrawInstanced completed\n");
     
-    // 【重要修正】SwapChainのリソース状態をRENDER_TARGETからPRESENTに戻す
-    D3D12_RESOURCE_BARRIER renderTargetToPresent{};
-    renderTargetToPresent.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    renderTargetToPresent.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-    renderTargetToPresent.Transition.pResource = swapChainResource.Get();
-    renderTargetToPresent.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-    renderTargetToPresent.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-    commandList->ResourceBarrier(1, &renderTargetToPresent);
+    // 【重要修正】ImGui描画のため、SwapChainのリソース状態をRENDER_TARGETのままにしておく
+    // Present前にDirectXCommonでPRESENT状態に変更される
+    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - SwapChain remains in RENDER_TARGET state for ImGui\n");
     
-    // 【重要修正】SwapChain描画完了後にコマンドリストを実行・リセット
-    // 同一コマンドリストでの複数SwapChainバッファアクセスを避けるため
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - About to call final CommandKick()\n");
-    dxCommon_->CommandKick();
-    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - Final CommandKick() completed\n");
+    // 【重要修正】CommandKick()をここで呼ばない - ImGui描画のためにコマンドリストを保持
+    // UnoEngineのフレーム管理に委ね、ImGui描画後にCommandKick()を実行する
+    OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - CommandKick() skipped for ImGui rendering\n");
     
     OutputDebugStringA("OffscreenRenderingManager::CopyToSwapChain - All operations completed successfully\n");
 }

@@ -175,15 +175,26 @@ void UnoEngine::Draw() {
             // 【GamePlayScene専用】オフスクリーンレンダリング専用モード
             OutputDebugStringA("UnoEngine::Draw - *** ENTERING OFFSCREEN RENDERING MODE ***\n");
             
+            // 【重要修正】オフスクリーンモードでもBegin()を呼び出してコマンドリストを準備
+            dxCommon_->Begin();
+            
+            // SRVヒープを描画前に明示的に設定
+            if (srvManager_) {
+                srvManager_->PreDraw();
+            }
+            
             // シーンマネージャーの描画（オフスクリーンレンダリングを含む）
+            // 注意：GamePlayScene::Draw()内でImGuiウィンドウが構築される
             SceneManager::GetInstance()->Draw();
             
-            // 【重要修正】オフスクリーンモードでもImGuiのRender()を呼び出してフレーム管理を正しく行う
+            // 【重要修正】シーン描画後にImGuiのRender()とRenderDrawData()を実行
             ImGui::Render();
+            ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
+            OutputDebugStringA("UnoEngine::Draw - ImGui rendered in offscreen mode\n");
             
-            // 【重要修正】オフスクリーンレンダリング後に手動でPresent()を呼び出して画面を更新
-            dxCommon_->GetSwapChain()->Present(1, 0);
-            OutputDebugStringA("UnoEngine::Draw - SwapChain Present() called in offscreen mode\n");
+            // 【重要修正】End()を呼び出してリソースバリアとPresent()を正しく実行
+            dxCommon_->End();
+            OutputDebugStringA("UnoEngine::Draw - End() called in offscreen mode for proper Present\n");
             
             // 通常の描画パイプラインは無効化（GamePlaySceneが独自に管理）
         } else {

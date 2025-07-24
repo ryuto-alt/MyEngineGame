@@ -13,7 +13,7 @@ class SrvManager;
 enum class ProcessingMode {
     Normal,      // 通常（そのままコピー）
     Grayscale,   // グレースケール
-    Sepia        // セピア調
+    Vignetting   // ヴィネッティング（周囲を暗くする効果）
 };
 
 // オフスクリーンレンダリング管理クラス
@@ -50,7 +50,7 @@ private:
     // 各種パイプラインステートオブジェクトを作成
     void CreateCopyImagePSO();
     void CreateGrayscalePSO();
-    void CreateSepiaPSO();
+    void CreateVignettePSO();
 
     // RootSignatureの作成
     void CreateRootSignature();
@@ -71,13 +71,13 @@ private:
     // 各種パイプラインステート
     Microsoft::WRL::ComPtr<ID3D12PipelineState> copyImagePipelineState_;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> grayscalePipelineState_;
-    Microsoft::WRL::ComPtr<ID3D12PipelineState> sepiaPipelineState_;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> vignettePipelineState_;
 
     // シェーダー
     IDxcBlob* copyImageVertexShader_ = nullptr;  // 共通のVertex Shader
     IDxcBlob* copyImagePixelShader_ = nullptr;
     IDxcBlob* grayscalePixelShader_ = nullptr;
-    IDxcBlob* sepiaPixelShader_ = nullptr;
+    IDxcBlob* vignettePixelShader_ = nullptr;
     
     // 現在の処理モード
     ProcessingMode processingMode_ = ProcessingMode::Normal;

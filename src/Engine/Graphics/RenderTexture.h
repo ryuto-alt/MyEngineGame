@@ -27,6 +27,9 @@ public:
 
     // テクスチャとして使用するためのSRV設定
     void SetShaderResource(UINT rootParameterIndex);
+    
+    // リソース状態をSHADER_RESOURCEにする
+    void EnsureShaderResourceState();
 
     // CPUハンドル取得
     D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle() const { return rtvHandle; }

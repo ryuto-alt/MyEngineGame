@@ -1,5 +1,7 @@
 #include "GamePlayScene.h"
 #include "OffscreenRenderingManager.h"
+#include "imgui.h"
+#include "imgui_impl_dx12.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -31,11 +33,10 @@ void GamePlayScene::Initialize() {
         redClearColor
     );
     
-    // 【テスト用】初期状態で強制的にグレースケールモードに設定
-    OutputDebugStringA("GamePlayScene::Initialize - *** FORCING GRAYSCALE MODE FOR TESTING ***\n");
-    offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Grayscale);
-    OutputDebugStringA("GamePlayScene::Initialize - Grayscale mode set at initialization\n");
-    OutputDebugStringA("GamePlayScene::Initialize - Press 1=Normal, 2=Grayscale, 3=Sepia to switch modes\n");
+    // 初期状態はNormalモードに設定
+    OutputDebugStringA("GamePlayScene::Initialize - Setting Normal mode as default\n");
+    offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
+    OutputDebugStringA("GamePlayScene::Initialize - Normal mode set at initialization\n");
 
     camera_->SetFov(1.37f);
     
@@ -179,31 +180,28 @@ void GamePlayScene::Update() {
 #endif
 
     // フィルター効果切り替えキーバインド（授業資料に基づく実装）
-    // デバッグ用：キーの状態を常に監視（デバッグモード関係なく動作）
+    // キーボードでの簡単な切り替えも残しておく
     static bool key1Pressed = false, key2Pressed = false, key3Pressed = false;
     
     if (engine_->IsKeyPressed(DIK_1) && !key1Pressed) {
-        OutputDebugStringA("*** DEBUG: Key 1 pressed - Switching to Normal mode ***\n");
         offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
-        OutputDebugStringA("GamePlayScene: Switched to Normal mode\n");
+        OutputDebugStringA("GamePlayScene: Switched to Normal mode via keyboard\n");
         key1Pressed = true;
     } else if (!engine_->IsKeyPressed(DIK_1)) {
         key1Pressed = false;
     }
     
     if (engine_->IsKeyPressed(DIK_2) && !key2Pressed) {
-        OutputDebugStringA("*** DEBUG: Key 2 pressed - Switching to Grayscale mode ***\n");
         offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Grayscale);
-        OutputDebugStringA("GamePlayScene: Switched to Grayscale mode\n");
+        OutputDebugStringA("GamePlayScene: Switched to Grayscale mode via keyboard\n");
         key2Pressed = true;
     } else if (!engine_->IsKeyPressed(DIK_2)) {
         key2Pressed = false;
     }
     
     if (engine_->IsKeyPressed(DIK_3) && !key3Pressed) {
-        OutputDebugStringA("*** DEBUG: Key 3 pressed - Switching to Sepia mode ***\n");
-        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Sepia);
-        OutputDebugStringA("GamePlayScene: Switched to Sepia mode\n");
+        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Vignetting);
+        OutputDebugStringA("GamePlayScene: Switched to Vignetting mode via keyboard\n");
         key3Pressed = true;
     } else if (!engine_->IsKeyPressed(DIK_3)) {
         key3Pressed = false;
@@ -347,132 +345,80 @@ void GamePlayScene::Update() {
 }
 
 void GamePlayScene::Draw() {
-    if (!initialized_) {
-        OutputDebugStringA("GamePlayScene::Draw - Not initialized, returning\n");
-        return;
-    }
+    // 【重要修正】ImGuiウィンドウを最初に構築（Render()前に実行する必要がある）
+    BuildImGuiWindows();
 
-    OutputDebugStringA("GamePlayScene::Draw - Starting draw process\n");
-    
-    if (!offscreenRenderingManager_) {
-        OutputDebugStringA("GamePlayScene::Draw - ERROR: offscreenRenderingManager_ is null!\n");
-        return;
-    }
-
-    OutputDebugStringA("GamePlayScene::Draw - About to call BeginRenderToTexture()\n");
-    
     // オフスクリーンレンダリング開始（赤い背景でクリア）
     offscreenRenderingManager_->BeginRenderToTexture();
 
-    OutputDebugStringA("GamePlayScene::Draw - BeginRenderToTexture() completed\n");
 
     // 【重要】オフスクリーンレンダリング内で3Dオブジェクトを描画
     spriteCommon_->CommonDraw();
-    OutputDebugStringA("GamePlayScene::Draw - SpriteCommon CommonDraw completed\n");
 
     // Skyboxは無効（ddsファイルは使わない）
 
     // オブジェクトの描画
-    OutputDebugStringA("GamePlayScene::Draw - About to draw Ground\n");
     ground_->Draw();
-    OutputDebugStringA("GamePlayScene::Draw - Ground Draw completed\n");
     
     // マルチマテリアルオブジェクトのDraw
-    OutputDebugStringA("GamePlayScene::Draw - About to draw GLB cube objects\n");
     for (auto& object : cubeGlbObjects_) {
         if (object) {
-            OutputDebugStringA("GamePlayScene::Draw - Drawing GLB cube object\n");
             object->Draw();
         }
     }
-    OutputDebugStringA("GamePlayScene::Draw - GLB cube objects Draw completed\n");
-    
-    OutputDebugStringA("GamePlayScene::Draw - About to draw Player\n");
-    player_->Draw();
-    OutputDebugStringA("GamePlayScene::Draw - Player Draw completed\n");
 
-    OutputDebugStringA("GamePlayScene::Draw - About to call EndRenderToTexture()\n");
+    player_->Draw();
 
     // オフスクリーンレンダリング終了
     offscreenRenderingManager_->EndRenderToTexture();
 
-    OutputDebugStringA("GamePlayScene::Draw - EndRenderToTexture() completed\n");
-    OutputDebugStringA("GamePlayScene::Draw - About to call CopyToSwapChain()\n");
-
     // SwapChainに赤い画面をコピー
     offscreenRenderingManager_->CopyToSwapChain();
+}
 
-    OutputDebugStringA("GamePlayScene::Draw - CopyToSwapChain() completed\n");
-
-    // ImGUI描画（オフスクリーンレンダリング後に通常のスワップチェインに描画）
+void GamePlayScene::BuildImGuiWindows() {
+    // ImGuiの初期化状態をチェック
+    if (!ImGui::GetCurrentContext()) {
+        OutputDebugStringA("GamePlayScene::BuildImGuiWindows - ImGui context is null - skipping ImGui windows\n");
+        return;
+    }
+    
 #pragma region imgui
-    ImGui::Begin("Human Animation Demo");
-
-    ImGui::Text("操作方法:");
-    ImGui::Separator();
-    ImGui::Text("【キーボード】");
-    ImGui::Text("WASD - プレイヤー移動");
-    ImGui::Text("P - アニメーション一時停止/再開");
-    ImGui::Text("R - アニメーションリセット");
-    ImGui::Text("1 / 右Shift - アニメーション切り替え");
-    ImGui::Text("F - ライティング設定の表示/非表示");
-    ImGui::Text("ESC - 終了");
-#ifdef _DEBUG
-    ImGui::Text("F1 - フリーカメラモード切り替え");
-    ImGui::Text("TAB - マウス視点移動切り替え");
-#endif
-    
-    ImGui::Separator();
-    ImGui::Text("【Xboxコントローラー】");
-    ImGui::Text("左スティック - プレイヤー移動");
-    ImGui::Text("右スティック - カメラ回転");
-    ImGui::Text("※コントローラー接続: %s", engine_->IsXboxControllerConnected() ? "接続済み" : "未接続");
-
-    ImGui::Separator();
-    Vector3 cameraPos = camera_->GetTranslate();
-    Vector3 cameraRot = camera_->GetRotate();
-    ImGui::Text("カメラ位置: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
-    ImGui::Text("カメラ回転: (%.2f, %.2f, %.2f)", cameraRot.x, cameraRot.y, cameraRot.z);
-    
-#ifdef _DEBUG
-    ImGui::Text("マウス視点移動: %s", camera_->IsMouseLookEnabled() ? "ON" : "OFF");
-    ImGui::Text("カメラモード: %s", camera_->IsFreeCameraMode() ? "フリーカメラ" : "プレイヤー追従");
-#endif
-    
-    // アニメーション情報
-    ImGui::Separator();
-    ImGui::Text("現在のアニメーション: %s", player_->GetCurrentAnimationName().c_str());
-    
-    std::string stateText;
-    if (player_->IsBlending()) {
-        stateText = "ブレンド中";
-    } else if (player_->IsSneaking()) {
-        stateText = "スニーク中";
-    } else if (player_->IsMoving()) {
-        stateText = "移動中";
-    } else {
-        stateText = "停止中";
-    }
-    ImGui::Text("状態: %s", stateText.c_str());
-    
-    if (player_->IsBlending()) {
-        ImGui::Text("ブレンド進行: %.1f%%", player_->GetBlendProgress() * 100.0f);
-    }
-
-    // 回転スムーシング設定
-    ImGui::Separator();
-    ImGui::Text("回転スムーシング設定:");
-    float smoothingSpeed = player_->GetRotationSmoothingSpeed();
-    if (ImGui::SliderFloat("スムーシング速度", &smoothingSpeed, 0.1f, 20.0f, "%.1f")) {
-        player_->SetRotationSmoothingSpeed(smoothingSpeed);
-    }
-    ImGui::Text("現在の回転: %.2f度", player_->GetRotationY() * 180.0f / 3.14159f);
-    ImGui::Text("目標回転: %.2f度", player_->GetTargetRotationY() * 180.0f / 3.14159f);
-
-    ImGui::End();
+  
     
     // ライティング設定の描画
     lightManager_->DrawImGui();
+    
+    // ポストプロセス効果選択UI
+    if (ImGui::Begin("Post-Processing Effects")) {
+        ImGui::Text("Select Rendering Mode:");
+        ImGui::Separator();
+        
+        ProcessingMode currentMode = offscreenRenderingManager_->GetProcessingMode();
+        
+        if (ImGui::RadioButton("Normal", currentMode == ProcessingMode::Normal)) {
+            offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
+            OutputDebugStringA("GamePlayScene: Switched to Normal mode via ImGui\n");
+        }
+        
+        if (ImGui::RadioButton("Grayscale", currentMode == ProcessingMode::Grayscale)) {
+            offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Grayscale);
+            OutputDebugStringA("GamePlayScene: Switched to Grayscale mode via ImGui\n");
+        }
+        
+        if (ImGui::RadioButton("Vignetting", currentMode == ProcessingMode::Vignetting)) {
+            offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Vignetting);
+            OutputDebugStringA("GamePlayScene: Switched to Vignetting mode via ImGui\n");
+        }
+        
+        ImGui::Separator();
+        ImGui::Text("Keyboard shortcuts:");
+        ImGui::Text("1 - Normal mode");
+        ImGui::Text("2 - Grayscale mode");
+        ImGui::Text("3 - Vignetting mode");
+    }
+    ImGui::End();
+    
 #pragma endregion
 }
 

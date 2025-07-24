@@ -22,8 +22,9 @@ PixelShaderOutput main(VertexShaderOutput input)
     // テクスチャをサンプリング
     output.color = gTexture.Sample(gSampler, input.texcoord);
     
-    // 最もシンプルなグレースケール変換（平均値使用）
-    float32_t gray = (output.color.r + output.color.g + output.color.b) / 3.0f;
+    // 人間の視覚特性を考慮したグレースケール変換（ITU-R BT.709準拠）
+    // 緑色に最も敏感で、青色に最も敏感でない人間の目の特性を反映
+    float32_t gray = 0.2126f * output.color.r + 0.7152f * output.color.g + 0.0722f * output.color.b;
     output.color.r = gray;
     output.color.g = gray;
     output.color.b = gray;

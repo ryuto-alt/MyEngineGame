@@ -46,4 +46,6 @@ protected:
     const float cameraSpeed_ = 0.6f;  // 60FPSで0.01f = 1秒で0.6f
 
 private:
+    // ImGuiウィンドウ構築
+    void BuildImGuiWindows();
 };
