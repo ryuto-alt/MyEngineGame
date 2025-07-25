@@ -1,0 +1,2 @@
+GLB file inspection
+dir: cannot access 'ResourcesModelscubeobje.glb': No such file or directory

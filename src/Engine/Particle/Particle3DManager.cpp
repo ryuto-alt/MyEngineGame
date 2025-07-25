@@ -56,14 +56,14 @@ void Particle3DManager::CreateParticle3DGroup(const std::string& name, const std
     group.model->Initialize(dxCommon_);
     
     // モデルファイルの読み込み（Resources/particle/から読み込み）
-    try {
+   /* try {
         group.model->LoadFromObj("Resources/particle", modelFilePath);
         OutputDebugStringA(("Particle3DManager: Model loaded successfully - " + modelFilePath + "\n").c_str());
     }
     catch (const std::exception& e) {
         OutputDebugStringA(("Particle3DManager: Failed to load model - " + modelFilePath + ": " + e.what() + "\n").c_str());
         return;
-    }
+    }*/
 
     // 3Dパーティクルグループを登録
     particle3DGroups[name] = std::move(group);
