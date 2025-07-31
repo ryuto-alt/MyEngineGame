@@ -5,6 +5,7 @@
 #include "LightManager.h"
 #include "Skybox.h"
 #include "TextureManager.h"
+#include "BlenderJSONLoader.h"
 class OffscreenRenderingManager;
 enum class ProcessingMode;
 #include <vector>
@@ -38,6 +39,9 @@ protected:
     // GLBモデル用（テスト用キューブ）- マルチマテリアル対応
     std::vector<std::unique_ptr<Object3d>> cubeGlbObjects_;
     std::vector<std::unique_ptr<Model>> cubeGlbModels_;
+    
+    // Blender JSONローダー
+    std::unique_ptr<BlenderJSONLoader> blenderJsonLoader_;
     
     // Skybox制御フラグ
     bool skyboxEnabled_ = false;

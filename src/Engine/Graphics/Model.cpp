@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <cmath>
 #include <cstdio>
+#include <filesystem>
 
 // tinygltf implementation
 #define TINYGLTF_IMPLEMENTATION
@@ -497,6 +498,10 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 
 			// 連結してファイルパスにする
 			materialData.textureFilePath = directoryPath + "/" + textureFilename;
+
+			// パスを正規化（..を解決）
+			std::filesystem::path texPath(materialData.textureFilePath);
+			materialData.textureFilePath = texPath.lexically_normal().string();
 
 			// フルパスをログに出力
 			OutputDebugStringA(("MTL Parser: Full texture path constructed: " + materialData.textureFilePath + "\n").c_str());

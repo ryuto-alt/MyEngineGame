@@ -428,3 +428,75 @@ void GLBLoader::TraverseNode(GLTF::Index nodeIndex, std::vector<ModelData>& outM
         TraverseNode(childIndex, outModelDataList);
     }
 }
+
+// GLB名前空間の実装
+namespace GLB {
+    
+    Parser::Parser() {
+    }
+    
+    Parser::~Parser() {
+    }
+    
+    bool Parser::LoadFromFile(const std::string& filePath) {
+        std::ifstream file(filePath, std::ios::binary);
+        if (!file) {
+            errorMessage_ = "Failed to open file: " + filePath;
+            return false;
+        }
+        
+        // ファイルサイズを取得
+        file.seekg(0, std::ios::end);
+        size_t fileSize = file.tellg();
+        file.seekg(0, std::ios::beg);
+        
+        // GLBヘッダーの読み込み
+        file.read(reinterpret_cast<char*>(&file_.header), sizeof(file_.header));
+        
+        // マジックナンバーの確認
+        if (file_.header.magic != 0x46546C67) { // 'glTF'
+            errorMessage_ = "Invalid GLB magic number";
+            return false;
+        }
+        
+        // チャンクの読み込み
+        size_t offset = sizeof(file_.header);
+        while (offset < fileSize) {
+            Chunk chunk;
+            file.read(reinterpret_cast<char*>(&chunk.header), sizeof(chunk.header));
+            
+            chunk.data.resize(chunk.header.length);
+            file.read(reinterpret_cast<char*>(chunk.data.data()), chunk.header.length);
+            
+            file_.chunks.push_back(std::move(chunk));
+            
+            offset += sizeof(chunk.header) + chunk.header.length;
+            
+            // パディングをスキップ
+            while (offset % 4 != 0) {
+                file.ignore(1);
+                offset++;
+            }
+        }
+        
+        return true;
+    }
+    
+    const Chunk* File::GetJsonChunk() const {
+        for (const auto& chunk : chunks) {
+            if (chunk.header.type == CHUNK_TYPE_JSON) {
+                return &chunk;
+            }
+        }
+        return nullptr;
+    }
+    
+    const Chunk* File::GetBinaryChunk() const {
+        for (const auto& chunk : chunks) {
+            if (chunk.header.type == CHUNK_TYPE_BIN) {
+                return &chunk;
+            }
+        }
+        return nullptr;
+    }
+}

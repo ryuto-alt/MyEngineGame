@@ -111,7 +111,7 @@ void GamePlayScene::Initialize() {
             auto object3d = engine_->CreateObject3D();
             object3d->SetModel(model.get());
             object3d->SetPosition(Vector3{ 3.0f, 1.0f, 2.0f }); // カメラから見える位置に配置
-            object3d->SetScale(Vector3{ 2.0f, 2.0f, 2.0f }); // 大きくして見えやすく
+            object3d->SetScale(Vector3{ 1.0f, 1.0f, 1.0f }); // 大きくして見えやすく
             object3d->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
             object3d->SetEnableLighting(true);
             object3d->SetCamera(camera_);
@@ -128,6 +128,20 @@ void GamePlayScene::Initialize() {
         // GLBモデル読み込み完了
     } catch (const std::exception& e) {
         std::string errorMsg = "Failed to load GLB multi-material cube model: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
+    }
+
+    // Blender JSONシーンの読み込み
+    blenderJsonLoader_ = std::make_unique<BlenderJSONLoader>();
+    if (blenderJsonLoader_->LoadScene("Resources/blender/obje.json", dxCommon_, spriteCommon_)) {
+        // ロードされたメッシュにカメラとライティングを設定
+        for (auto& mesh : blenderJsonLoader_->GetLoadedMeshes()) {
+            mesh.object3d->SetCamera(camera_);
+            mesh.object3d->SetEnableLighting(true);
+        }
+        OutputDebugStringA("Blender JSON scene loaded successfully\n");
+    } else {
+        std::string errorMsg = "Failed to load Blender JSON scene: " + blenderJsonLoader_->GetErrorMessage() + "\n";
         OutputDebugStringA(errorMsg.c_str());
     }
 
@@ -318,6 +332,17 @@ void GamePlayScene::Update() {
         }
     }
 
+    // Blender JSONオブジェクトのUpdate
+    if (blenderJsonLoader_) {
+        for (const auto& mesh : blenderJsonLoader_->GetLoadedMeshes()) {
+            if (mesh.object3d) {
+                mesh.object3d->SetDirectionalLight(dirLight);
+                mesh.object3d->SetSpotLight(spotLight);
+                mesh.object3d->Update();
+            }
+        }
+    }
+
     // オブジェクトの更新（skyboxは無効）
     player_->Update(engine_);
     ground_->Update();
@@ -343,6 +368,15 @@ void GamePlayScene::Draw() {
     for (auto& object : cubeGlbObjects_) {
         if (object) {
             object->Draw();
+        }
+    }
+
+    // Blender JSONオブジェクトのDraw
+    if (blenderJsonLoader_) {
+        for (const auto& mesh : blenderJsonLoader_->GetLoadedMeshes()) {
+            if (mesh.object3d) {
+                mesh.object3d->Draw();
+            }
         }
     }
 
