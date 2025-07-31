@@ -181,7 +181,7 @@ bool BlenderJSONLoader::LoadMeshObject(const BlenderObject& obj, const std::stri
     // Blender: X=右, Y=前, Z=上
     // DirectX: X=右, Y=上, Z=前
     Vector3 position;
-    position.x = -obj.transform.translate.x;  // X座標を反転（左右反転の修正）
+    position.x = obj.transform.translate.x;   // X座標はそのまま（反転しない）
     position.y = obj.transform.translate.z;   // BlenderのZ（上下）をDirectXのY（上下）へ
     position.z = obj.transform.translate.y;   // BlenderのY（前後）をDirectXのZ（前後）へ
     object3d->SetPosition(position);
@@ -189,7 +189,7 @@ bool BlenderJSONLoader::LoadMeshObject(const BlenderObject& obj, const std::stri
     // 回転も同様に軸を入れ替え
     Vector3 rotation;
     rotation.x = obj.transform.rotate.x;      // X軸回転はそのまま
-    rotation.y = -obj.transform.rotate.z;     // Z軸回転をY軸回転へ（反転）
+    rotation.y = obj.transform.rotate.z;      // Z軸回転をY軸回転へ
     rotation.z = obj.transform.rotate.y;      // Y軸回転をZ軸回転へ
     object3d->SetRotation(rotation);
     
