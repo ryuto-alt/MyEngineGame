@@ -178,14 +178,19 @@ bool BlenderJSONLoader::LoadMeshObject(const BlenderObject& obj, const std::stri
     object3d->SetModel(cachedModel->get());
 
     // Transformを適用（Blenderの右手座標系からDirectXの左手座標系への変換）
-    // X座標を反転（左右反転の修正）
-    Vector3 position = obj.transform.translate;
-    position.x = -position.x;
+    // Blender: X=右, Y=前, Z=上
+    // DirectX: X=右, Y=上, Z=前
+    Vector3 position;
+    position.x = -obj.transform.translate.x;  // X座標を反転（左右反転の修正）
+    position.y = obj.transform.translate.z;   // BlenderのZ（上下）をDirectXのY（上下）へ
+    position.z = obj.transform.translate.y;   // BlenderのY（前後）をDirectXのZ（前後）へ
     object3d->SetPosition(position);
     
-    // 回転もY軸を反転
-    Vector3 rotation = obj.transform.rotate;
-    rotation.y = -rotation.y;
+    // 回転も同様に軸を入れ替え
+    Vector3 rotation;
+    rotation.x = obj.transform.rotate.x;      // X軸回転はそのまま
+    rotation.y = -obj.transform.rotate.z;     // Z軸回転をY軸回転へ（反転）
+    rotation.z = obj.transform.rotate.y;      // Y軸回転をZ軸回転へ
     object3d->SetRotation(rotation);
     
     // Blenderのスケール値をそのまま使用
