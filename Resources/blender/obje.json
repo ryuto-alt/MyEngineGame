@@ -21,7 +21,20 @@
                     0.30000001192092896
                 ]
             },
-            "file_name": "door"
+            "file_name": "door",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
         },
         {
             "type": "LIGHT",
@@ -85,7 +98,20 @@
                     0.10000000149011612
                 ]
             },
-            "file_name": "key"
+            "file_name": "key",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
         },
         {
             "type": "MESH",
@@ -107,7 +133,20 @@
                     0.10000000149011612
                 ]
             },
-            "file_name": "key"
+            "file_name": "key",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
         },
         {
             "type": "MESH",
@@ -129,7 +168,20 @@
                     0.10000000149011612
                 ]
             },
-            "file_name": "key"
+            "file_name": "key",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
         },
         {
             "type": "MESH",
@@ -151,7 +203,20 @@
                     0.10000000149011612
                 ]
             },
-            "file_name": "spring"
+            "file_name": "spring",
+            "collider": {
+                "type": "BOX",
+                "center": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "size": [
+                    2.0,
+                    2.0,
+                    2.0
+                ]
+            }
         }
     ]
 }
