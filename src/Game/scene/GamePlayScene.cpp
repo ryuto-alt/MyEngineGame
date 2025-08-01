@@ -21,16 +21,16 @@ void GamePlayScene::Initialize() {
 
     engine_ = UnoEngine::GetInstance();
 
-    // オフスクリーンレンダリングマネージャーの初期化（テスト用に赤色の背景で初期化）
+    // オフスクリーンレンダリングマネージャーの初期化
     offscreenRenderingManager_ = std::make_unique<OffscreenRenderingManager>();
-    Vector4 redClearColor = { 1.0f, 0.0f, 0.0f, 1.0f }; // 【テスト用】赤色でオフスクリーンレンダリング確認
+    Vector4 clearColor = { 0.0f, 0.0f, 0.0f, 1.0f }; // 黒色の背景
     offscreenRenderingManager_->Initialize(
         engine_->GetDirectXCommon(),
         engine_->GetSrvManager(),
         1280, // WinApp::kClientWidth
         720,  // WinApp::kClientHeight
         DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-        redClearColor
+        clearColor
     );
     
     // 初期状態はNormalモードに設定
@@ -51,9 +51,6 @@ void GamePlayScene::Initialize() {
     
     // カメラの初期ターゲットを設定（プレイヤーの位置）
     engine_->SetCameraOrbitTarget(Vector3{0.0f, 0.0f, 0.0f});
-
-    // 【修正】オフスクリーンレンダリングと3Dモデル描画を両方有効化
-    // Skyboxは無効のまま（ddsファイルは使わない）
     
     // マネージャーの初期化
     lightManager_ = std::make_unique<LightManager>();
@@ -67,18 +64,18 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
-    // Skybox関連は無効のまま（ddsファイルは使わない）
-    /*
+    // スカイボックスの作成と初期化
     skybox_ = engine_->CreateSkybox();
     skybox_->SetScale(1000.0f);
     try {
         engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
         skyboxEnabled_ = true;
+        OutputDebugStringA("Skybox loaded successfully\n");
     } catch (const std::exception& e) {
         skyboxEnabled_ = false;
+        std::string errorMsg = "Failed to load skybox: " + std::string(e.what()) + "\n";
+        OutputDebugStringA(errorMsg.c_str());
     }
-    */
-    skyboxEnabled_ = false;
     
     // オフスクリーンレンダリング専用モードで動作
     
@@ -343,23 +340,24 @@ void GamePlayScene::Update() {
         }
     }
 
-    // オブジェクトの更新（skyboxは無効）
+    // オブジェクトの更新
     player_->Update(engine_);
     ground_->Update();
 }
 
 void GamePlayScene::Draw() {
-    // 【重要修正】ImGuiウィンドウを最初に構築（Render()前に実行する必要がある）
+
     BuildImGuiWindows();
 
-    // オフスクリーンレンダリング開始（赤い背景でクリア）
+    // オフスクリーンレンダリング開始
     offscreenRenderingManager_->BeginRenderToTexture();
 
-
+    // スカイボックスの描画（有効な場合）
+    if (skyboxEnabled_ && skybox_) {
+        skybox_->Draw(camera_);
+    }
  
     spriteCommon_->CommonDraw();
-
-    // Skyboxは無効（ddsファイルは使わない）
 
     // オブジェクトの描画
     ground_->Draw();
@@ -385,7 +383,7 @@ void GamePlayScene::Draw() {
     // オフスクリーンレンダリング終了
     offscreenRenderingManager_->EndRenderToTexture();
 
-    // SwapChainに赤い画面をコピー
+    // SwapChainに画面をコピー
     offscreenRenderingManager_->CopyToSwapChain();
 }
 
