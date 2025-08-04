@@ -1,7 +1,8 @@
 #include "GamePlayScene.h"
-#include "OffscreenRenderingManager.h"
+#ifdef _DEBUG
 #include "imgui.h"
 #include "imgui_impl_dx12.h"
+#endif
 #include <string>
 #include <vector>
 #include <memory>
@@ -20,37 +21,21 @@ void GamePlayScene::Initialize() {
     assert(camera_);
 
     engine_ = UnoEngine::GetInstance();
+    
+    // ポストプロセスを有効化
+    engine_->EnablePostProcessing(true);
+    engine_->SetPostProcessMode(0); // Normalモード
 
-    // オフスクリーンレンダリングマネージャーの初期化
-    offscreenRenderingManager_ = std::make_unique<OffscreenRenderingManager>();
-    Vector4 clearColor = { 0.0f, 0.0f, 0.0f, 1.0f }; // 黒色の背景
-    offscreenRenderingManager_->Initialize(
-        engine_->GetDirectXCommon(),
-        engine_->GetSrvManager(),
-        1280, // WinApp::kClientWidth
-        720,  // WinApp::kClientHeight
-        DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
-        clearColor
-    );
+    // カメラの初期設定
+    engine_->SetCameraFov(1.37f);
+    engine_->SetCameraPosition(Vector3{ 0.0f, 2.0f, -10.0f });
+    engine_->SetCameraRotation(Vector3{ 0.1f, 0.0f, 0.0f });
+    engine_->SetStickSensitivity(2.5f);
     
-    // 初期状態はNormalモードに設定
-    offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
-
-    camera_->SetFov(1.37f);
-    
-    // 【重要修正】カメラを3Dオブジェクトが見える位置に明示的に配置
-    camera_->SetTranslate(Vector3{ 0.0f, 2.0f, -10.0f }); // プレイヤーの後ろ上方から見下ろす
-    camera_->SetRotate(Vector3{ 0.1f, 0.0f, 0.0f }); // 少し下向き
-    
-    // 右スティック感度の調整（必要に応じて）
-    engine_->SetCameraStickSensitivity(2.5f);
-    
-    // オービットカメラの初期設定
-    engine_->SetCameraOrbitDistance(8.0f); // 距離を広げて全体が見えるように
-    engine_->SetCameraOrbitHeight(3.0f);   // 高さを上げて俯瞰視点に
-    
-    // カメラの初期ターゲットを設定（プレイヤーの位置）
-    engine_->SetCameraOrbitTarget(Vector3{0.0f, 0.0f, 0.0f});
+    // 追従カメラ設定
+    engine_->SetCameraDistance(8.0f);
+    engine_->SetCameraHeight(3.0f);
+    engine_->SetCameraTarget(Vector3{0.0f, 0.0f, 0.0f});
     
     // マネージャーの初期化
     lightManager_ = std::make_unique<LightManager>();
@@ -70,11 +55,8 @@ void GamePlayScene::Initialize() {
     try {
         engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
         skyboxEnabled_ = true;
-        OutputDebugStringA("Skybox loaded successfully\n");
-    } catch (const std::exception& e) {
+    } catch (const std::exception&) {
         skyboxEnabled_ = false;
-        std::string errorMsg = "Failed to load skybox: " + std::string(e.what()) + "\n";
-        OutputDebugStringA(errorMsg.c_str());
     }
     
     // オフスクリーンレンダリング専用モードで動作
@@ -123,9 +105,8 @@ void GamePlayScene::Initialize() {
         }
         
         // GLBモデル読み込み完了
-    } catch (const std::exception& e) {
-        std::string errorMsg = "Failed to load GLB multi-material cube model: " + std::string(e.what()) + "\n";
-        OutputDebugStringA(errorMsg.c_str());
+    } catch (const std::exception&) {
+        // エラー処理
     }
 
     // Blender JSONシーンの読み込み
@@ -136,10 +117,8 @@ void GamePlayScene::Initialize() {
             mesh.object3d->SetCamera(camera_);
             mesh.object3d->SetEnableLighting(true);
         }
-        OutputDebugStringA("Blender JSON scene loaded successfully\n");
     } else {
-        std::string errorMsg = "Failed to load Blender JSON scene: " + blenderJsonLoader_->GetErrorMessage() + "\n";
-        OutputDebugStringA(errorMsg.c_str());
+        // エラー処理
     }
 
     initialized_ = true;
@@ -152,7 +131,7 @@ void GamePlayScene::Update() {
     float deltaTime = engine_->GetDeltaTime();
 
     // ESCキーで終了
-    if (engine_->IsKeyTriggered(DIK_ESCAPE)) {
+    if (engine_->IsPause()) {
         exit(0);
     }
 
@@ -169,41 +148,23 @@ void GamePlayScene::Update() {
     
 #endif
 
-    // フィルター効果切り替えキーバインド（授業資料に基づく実装）
-    // キーボードでの簡単な切り替えも残しておく
-    static bool key1Pressed = false, key2Pressed = false, key3Pressed = false;
-    
-    if (engine_->IsKeyPressed(DIK_1) && !key1Pressed) {
-        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
-        OutputDebugStringA("GamePlayScene: Switched to Normal mode via keyboard\n");
-        key1Pressed = true;
-    } else if (!engine_->IsKeyPressed(DIK_1)) {
-        key1Pressed = false;
+    // フィルター効果切り替え
+    if (engine_->IsKeyTriggered(DIK_1)) {
+        engine_->SetPostProcessMode(0); // Normal
     }
-    
-    if (engine_->IsKeyPressed(DIK_2) && !key2Pressed) {
-        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Grayscale);
-        OutputDebugStringA("GamePlayScene: Switched to Grayscale mode via keyboard\n");
-        key2Pressed = true;
-    } else if (!engine_->IsKeyPressed(DIK_2)) {
-        key2Pressed = false;
+    if (engine_->IsKeyTriggered(DIK_2)) {
+        engine_->SetPostProcessMode(1); // Grayscale
     }
-    
-    if (engine_->IsKeyPressed(DIK_3) && !key3Pressed) {
-        offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Vignetting);
-        OutputDebugStringA("GamePlayScene: Switched to Vignetting mode via keyboard\n");
-        key3Pressed = true;
-    } else if (!engine_->IsKeyPressed(DIK_3)) {
-        key3Pressed = false;
+    if (engine_->IsKeyTriggered(DIK_3)) {
+        engine_->SetPostProcessMode(2); // Vignetting
     }
 
-    // カメラ回転処理（マウス + 右スティック）
-    engine_->UpdateCameraMouse();
-    engine_->UpdateCameraRightStick();
+    // カメラ入力処理（マウス + 右スティックを統合）
+    engine_->UpdateCameraInput();
     
 #ifdef _DEBUG
     // フリーカメラモードでない場合のみプレイヤー追従
-    if (!camera_->IsFreeCameraMode()) {
+    if (!engine_->IsFreeCameraMode()) {
 #endif
         // カメラフォロー更新（プレイヤー移動処理の前に実行）
         player_->UpdateCameraFollow();
@@ -216,68 +177,17 @@ void GamePlayScene::Update() {
 
     // プレイヤー移動（カメラの向きに基づく統合移動、デルタタイム考慮）
 #ifdef _DEBUG
-    // フリーカメラモードの時はカメラを直接移動
-    if (camera_->IsFreeCameraMode()) {
-        float cameraSpeed = 5.0f * deltaTime;
-        
-        if (engine_->IsKeyPressed(DIK_W)) {
-            camera_->MoveForward(cameraSpeed);
-        }
-        if (engine_->IsKeyPressed(DIK_S)) {
-            camera_->MoveForward(-cameraSpeed);
-        }
-        if (engine_->IsKeyPressed(DIK_A)) {
-            camera_->MoveRight(-cameraSpeed);
-        }
-        if (engine_->IsKeyPressed(DIK_D)) {
-            camera_->MoveRight(cameraSpeed);
-        }
-        if (engine_->IsKeyPressed(DIK_SPACE)) {
-            camera_->MoveUp(cameraSpeed);
-        }
-        if (engine_->IsKeyPressed(DIK_LSHIFT)) {
-            camera_->MoveUp(-cameraSpeed);
-        }
-    } else {
+    // フリーカメラモードの移動処理
+    engine_->UpdateFreeCameraMovement();
+    
+    if (!engine_->IsFreeCameraMode()) {
 #endif
-        // 通常のプレイヤー移動処理
-        float forward = 0.0f;
-        float right = 0.0f;
+        // 統合移動入力を取得
+        Vector2 movement = engine_->GetMovementInput();
         
-        // キーボード入力（WASD）
-        if (engine_->IsKeyPressed(DIK_W)) forward += 1.0f;   // 前方移動
-        if (engine_->IsKeyPressed(DIK_S)) forward -= 1.0f;   // 後方移動
-        if (engine_->IsKeyPressed(DIK_A)) right -= 1.0f;     // 左移動
-        if (engine_->IsKeyPressed(DIK_D)) right += 1.0f;     // 右移動
-        
-        // ゲームパッド入力（左スティック）
-        float stickX = engine_->GetXboxLeftStickX();
-        float stickY = engine_->GetXboxLeftStickY();
-        
-        // デッドゾーン処理
-        const float deadZone = 0.1f;
-        if (abs(stickX) < deadZone) stickX = 0.0f;
-        if (abs(stickY) < deadZone) stickY = 0.0f;
-        
-        // スティック入力を統合（Y軸は前後、X軸は左右）
-        forward += stickY;
-        right += stickX;
-        
-        // 入力値を正規化（最大値1.0にクランプ）
-        float totalMagnitude = std::sqrt(forward * forward + right * right);
-        if (totalMagnitude > 1.0f) {
-            forward /= totalMagnitude;
-            right /= totalMagnitude;
-        }
-        
-        bool isPlayerMoving = (forward != 0.0f || right != 0.0f);
-        
-        if (isPlayerMoving) {
-            player_->MoveWithCameraDirection(forward, right, deltaTime);
-        }
-        
-        // 移動停止時の処理（WASDキーが押されていない場合）
-        if (!isPlayerMoving && player_->IsMoving()) {
+        if (engine_->IsMoving()) {
+            player_->MoveWithCameraDirection(movement.y, movement.x, deltaTime);
+        } else if (player_->IsMoving()) {
             player_->StopMoving();
         }
 #ifdef _DEBUG
@@ -285,7 +195,7 @@ void GamePlayScene::Update() {
 #endif
 
     // Fキーでライティングデバッグウィンドウの表示切り替え
-    if (engine_->IsKeyTriggered(DIK_F)) {
+    if (engine_->IsInteract()) {
         lightManager_->ToggleDebugDisplay();
     }
 
@@ -346,11 +256,12 @@ void GamePlayScene::Update() {
 }
 
 void GamePlayScene::Draw() {
-
+#ifdef _DEBUG
     BuildImGuiWindows();
+#endif
 
     // オフスクリーンレンダリング開始
-    offscreenRenderingManager_->BeginRenderToTexture();
+    engine_->BeginOffscreenRendering();
 
     // スカイボックスの描画（有効な場合）
     if (skyboxEnabled_ && skybox_) {
@@ -381,20 +292,15 @@ void GamePlayScene::Draw() {
     player_->Draw();
 
     // オフスクリーンレンダリング終了
-    offscreenRenderingManager_->EndRenderToTexture();
-
-    // SwapChainに画面をコピー
-    offscreenRenderingManager_->CopyToSwapChain();
+    engine_->EndOffscreenRendering();
 }
 
+#ifdef _DEBUG
 void GamePlayScene::BuildImGuiWindows() {
     // ImGuiの初期化状態をチェック
     if (!ImGui::GetCurrentContext()) {
         return;
     }
-    
-#pragma region imgui
-  
     
     // ライティング設定の描画
     lightManager_->DrawImGui();
@@ -404,21 +310,21 @@ void GamePlayScene::BuildImGuiWindows() {
         ImGui::Text("Select Rendering Mode:");
         ImGui::Separator();
         
-        ProcessingMode currentMode = offscreenRenderingManager_->GetProcessingMode();
+        static int currentMode = 0;
         
-        if (ImGui::RadioButton("Normal", currentMode == ProcessingMode::Normal)) {
-            offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Normal);
-            OutputDebugStringA("GamePlayScene: Switched to Normal mode via ImGui\n");
+        if (ImGui::RadioButton("Normal", currentMode == 0)) {
+            currentMode = 0;
+            engine_->SetPostProcessMode(0);
         }
         
-        if (ImGui::RadioButton("Grayscale", currentMode == ProcessingMode::Grayscale)) {
-            offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Grayscale);
-            OutputDebugStringA("GamePlayScene: Switched to Grayscale mode via ImGui\n");
+        if (ImGui::RadioButton("Grayscale", currentMode == 1)) {
+            currentMode = 1;
+            engine_->SetPostProcessMode(1);
         }
         
-        if (ImGui::RadioButton("Vignetting", currentMode == ProcessingMode::Vignetting)) {
-            offscreenRenderingManager_->SetProcessingMode(ProcessingMode::Vignetting);
-            OutputDebugStringA("GamePlayScene: Switched to Vignetting mode via ImGui\n");
+        if (ImGui::RadioButton("Vignetting", currentMode == 2)) {
+            currentMode = 2;
+            engine_->SetPostProcessMode(2);
         }
         
         ImGui::Separator();
@@ -428,9 +334,12 @@ void GamePlayScene::BuildImGuiWindows() {
         ImGui::Text("3 - Vignetting mode");
     }
     ImGui::End();
-    
-#pragma endregion
 }
+#else
+void GamePlayScene::BuildImGuiWindows() {
+    // Releaseビルドでは何もしない
+}
+#endif
 
 void GamePlayScene::Finalize() {
     if (player_) {
@@ -447,10 +356,8 @@ void GamePlayScene::Finalize() {
         lightManager_.reset();
     }
 
-    // オフスクリーンレンダリングマネージャーのクリーンアップ
-    if (offscreenRenderingManager_) {
-        offscreenRenderingManager_.reset();
-    }
+    // ポストプロセスを無効化
+    engine_->EnablePostProcessing(false);
 
     // Skybox関連のクリーンアップ（有効だった場合のみ）
     if (skyboxEnabled_ && skybox_) {

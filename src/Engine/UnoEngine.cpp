@@ -1,6 +1,7 @@
 #include "UnoEngine.h"
 #include "GameSceneFactory.h" // 具象クラスはcppファイルでインクルード
 #include "Collision.h" // Collision名前空間のため
+#include "OffscreenRenderingManager.h"
 #include <cassert>
 #include <algorithm>
 #include <cctype>
@@ -681,20 +682,124 @@ void UnoEngine::LoadSkybox(Skybox* skybox, const std::string& path) {
     skybox->LoadCubemap(path);
 }
 
-void UnoEngine::UpdateCameraMouse() {
-    float deltaX, deltaY;
-    input_->GetMouseMovement(deltaX, deltaY);
+Vector2 UnoEngine::GetMovementInput(float deadZone) const {
+    Vector2 movement = {0.0f, 0.0f};
+    
+    // キーボード入力
+    if (IsKeyPressed(DIK_W)) movement.y += 1.0f;
+    if (IsKeyPressed(DIK_S)) movement.y -= 1.0f;
+    if (IsKeyPressed(DIK_A)) movement.x -= 1.0f;
+    if (IsKeyPressed(DIK_D)) movement.x += 1.0f;
+    
+    // ゲームパッド入力
+    if (IsGamepadConnected()) {
+        float stickX = input_->GetXboxLeftStickX();
+        float stickY = input_->GetXboxLeftStickY();
+        
+        // デッドゾーン処理
+        if (abs(stickX) < deadZone) stickX = 0.0f;
+        if (abs(stickY) < deadZone) stickY = 0.0f;
+        
+        movement.x += stickX;
+        movement.y += stickY;
+    }
+    
+    // 正規化（最大値1.0にクランプ）
+    float magnitude = std::sqrt(movement.x * movement.x + movement.y * movement.y);
+    if (magnitude > 1.0f) {
+        movement.x /= magnitude;
+        movement.y /= magnitude;
+    }
+    
+    return movement;
+}
+
+Vector2 UnoEngine::GetLeftStick(float deadZone, int playerIndex) const {
+    float x = input_->GetXboxLeftStickX(playerIndex);
+    float y = input_->GetXboxLeftStickY(playerIndex);
+    
+    // デッドゾーン処理
+    if (abs(x) < deadZone) x = 0.0f;
+    if (abs(y) < deadZone) y = 0.0f;
+    
+    return Vector2{x, y};
+}
+
+Vector2 UnoEngine::GetRightStick(float deadZone, int playerIndex) const {
+    float x = input_->GetXboxRightStickX(playerIndex);
+    float y = input_->GetXboxRightStickY(playerIndex);
+    
+    // デッドゾーン処理
+    if (abs(x) < deadZone) x = 0.0f;
+    if (abs(y) < deadZone) y = 0.0f;
+    
+    return Vector2{x, y};
+}
+
+void UnoEngine::UpdateCameraInput() {
+    // マウス入力
+    float deltaX = 0.0f, deltaY = 0.0f;
+    GetMouseMovement(deltaX, deltaY);
     camera_->ProcessMouseInput(deltaX, deltaY);
+    
+    // 右スティック入力
+    if (IsGamepadConnected()) {
+        Vector2 rightStick = GetRightStick();
+        camera_->ProcessRightStickInput(rightStick.x, rightStick.y);
+    }
+}
+
+#ifdef _DEBUG
+void UnoEngine::UpdateFreeCameraMovement() {
+    if (!camera_->IsFreeCameraMode()) return;
+    
+    float speed = 5.0f * GetDeltaTime();
+    
+    if (IsKeyPressed(DIK_W)) camera_->MoveForward(speed);
+    if (IsKeyPressed(DIK_S)) camera_->MoveForward(-speed);
+    if (IsKeyPressed(DIK_A)) camera_->MoveRight(-speed);
+    if (IsKeyPressed(DIK_D)) camera_->MoveRight(speed);
+    if (IsKeyPressed(DIK_SPACE)) camera_->MoveUp(speed);
+    if (IsKeyPressed(DIK_LSHIFT)) camera_->MoveUp(-speed);
+}
+#else
+void UnoEngine::UpdateFreeCameraMovement() {
+    // リリースビルドでは何もしない
+}
+#endif
+
+void UnoEngine::EnablePostProcessing(bool enable) {
+    postProcessingEnabled_ = enable;
+}
+
+void UnoEngine::SetPostProcessMode(int mode) {
+    if (!offscreenManager_) return;
+    offscreenManager_->SetProcessingMode(static_cast<ProcessingMode>(mode));
+}
+
+void UnoEngine::BeginOffscreenRendering() {
+    if (!postProcessingEnabled_ || !offscreenManager_) return;
+    offscreenManager_->BeginRenderToTexture();
+}
+
+void UnoEngine::EndOffscreenRendering() {
+    if (!postProcessingEnabled_ || !offscreenManager_) return;
+    offscreenManager_->EndRenderToTexture();
+    offscreenManager_->CopyToSwapChain();
+}
+
+void UnoEngine::UpdateCameraMouse() {
+    // 旧API、UpdateCameraInputで処理
+    UpdateCameraInput();
 }
 
 void UnoEngine::UpdateCameraRightStick() {
-    float stickX = input_->GetXboxRightStickX();
-    float stickY = input_->GetXboxRightStickY();
-    
-    // デッドゾーンを適用（スティックが少し動いただけでは反応しない）
-    const float deadZone = 0.1f;
-    if (abs(stickX) < deadZone) stickX = 0.0f;
-    if (abs(stickY) < deadZone) stickY = 0.0f;
-    
-    camera_->ProcessRightStickInput(stickX, stickY);
+    // 旧API、UpdateCameraInputで処理
+    UpdateCameraInput();
+}
+
+bool UnoEngine::IsMoving() const {
+    Vector2 movement = GetMovementInput();
+    float magnitude = std::sqrt(movement.x * movement.x + movement.y * movement.y);
+    return magnitude > 0.01f;
 }

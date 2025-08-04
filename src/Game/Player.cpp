@@ -125,7 +125,7 @@ void Player::Update(UnoEngine* engine) {
 
 // ゲームパッド固有機能処理（スニーク切り替えなど）
 void Player::HandleGamepadFeatures(UnoEngine* engine, float deltaTime) {
-    bool bButtonPressed = engine->IsXboxButtonPressed(0x2000);
+    bool bButtonPressed = engine->IsGamepadButtonPressed(XBOX_BUTTON_B);
     bool bButtonTriggered = bButtonPressed && !previousBButtonPressed_;
     
     // スニーク状態の切り替え（移動中のみ）
@@ -240,9 +240,10 @@ float Player::GetBlendProgress() const {
 }
 
 void Player::HandleMovement(UnoEngine* engine, float deltaTime) {
-    float stickX = engine->GetXboxLeftStickX();
-    float stickY = engine->GetXboxLeftStickY();
-    bool bButtonPressed = engine->IsXboxButtonPressed(0x2000);
+    Vector2 leftStick = engine->GetLeftStick();
+    float stickX = leftStick.x;
+    float stickY = leftStick.y;
+    bool bButtonPressed = engine->IsGamepadButtonPressed(XBOX_BUTTON_B);
     bool bButtonTriggered = bButtonPressed && !previousBButtonPressed_;
     
     // 矢印キー入力の処理

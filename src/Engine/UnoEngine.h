@@ -62,6 +62,10 @@
 #include <string>
 #include <vector>
 
+// 前方宣言
+class OffscreenRenderingManager;
+enum class ProcessingMode;
+
 // UnoEngineクラス - DirectX12ゲームエンジン統合クラス
 class UnoEngine {
 public:
@@ -97,55 +101,80 @@ public:
     // === 統一された直感的API ===
     
     // === 入力システム ===
+    // キーボード入力
     bool IsKeyPressed(int key) const { return input_->PushKey(key); }
     bool IsKeyTriggered(int key) const { return input_->TriggerKey(key); }
+    
+    // 統合移動入力（キーボード＋ゲームパッド）
+    Vector2 GetMovementInput(float deadZone = 0.1f) const;
+    bool IsMoving() const;
+    
+    // 簡易キー入力（よく使うキー）
+    bool IsMoveForward() const { return IsKeyPressed(DIK_W); }
+    bool IsMoveBackward() const { return IsKeyPressed(DIK_S); }
+    bool IsMoveLeft() const { return IsKeyPressed(DIK_A); }
+    bool IsMoveRight() const { return IsKeyPressed(DIK_D); }
+    bool IsJump() const { return IsKeyPressed(DIK_SPACE); }
+    bool IsSprint() const { return IsKeyPressed(DIK_LSHIFT); }
+    bool IsInteract() const { return IsKeyTriggered(DIK_F); }
+    bool IsPause() const { return IsKeyTriggered(DIK_ESCAPE); }
+    
+    // マウス入力
     void GetMouseMovement(float& deltaX, float& deltaY) { input_->GetMouseMovement(deltaX, deltaY); }
     void SetMouseCursor(bool visible) { input_->SetMouseCursor(visible); }
     void ResetMouseCenter() { input_->ResetMouseCenter(); }
     
     // === Xboxコントローラー入力システム ===
-    bool IsXboxControllerConnected(int playerIndex = 0) const { return input_->IsXboxControllerConnected(playerIndex); }
-    bool IsXboxButtonPressed(int button, int playerIndex = 0) const { return input_->IsXboxButtonPressed(button, playerIndex); }
-    bool IsXboxButtonTriggered(int button, int playerIndex = 0) const { return input_->IsXboxButtonTriggered(button, playerIndex); }
-    float GetXboxLeftStickX(int playerIndex = 0) const { return input_->GetXboxLeftStickX(playerIndex); }
-    float GetXboxLeftStickY(int playerIndex = 0) const { return input_->GetXboxLeftStickY(playerIndex); }
-    float GetXboxRightStickX(int playerIndex = 0) const { return input_->GetXboxRightStickX(playerIndex); }
-    float GetXboxRightStickY(int playerIndex = 0) const { return input_->GetXboxRightStickY(playerIndex); }
-    float GetXboxLeftTrigger(int playerIndex = 0) const { return input_->GetXboxLeftTrigger(playerIndex); }
-    float GetXboxRightTrigger(int playerIndex = 0) const { return input_->GetXboxRightTrigger(playerIndex); }
+    bool IsGamepadConnected(int playerIndex = 0) const { return input_->IsXboxControllerConnected(playerIndex); }
+    bool IsGamepadButtonPressed(int button, int playerIndex = 0) const { return input_->IsXboxButtonPressed(button, playerIndex); }
+    bool IsGamepadButtonTriggered(int button, int playerIndex = 0) const { return input_->IsXboxButtonTriggered(button, playerIndex); }
+    
+    // スティック入力（デッドゾーン処理済み）
+    Vector2 GetLeftStick(float deadZone = 0.1f, int playerIndex = 0) const;
+    Vector2 GetRightStick(float deadZone = 0.1f, int playerIndex = 0) const;
+    
+    // トリガー入力
+    float GetLeftTrigger(int playerIndex = 0) const { return input_->GetXboxLeftTrigger(playerIndex); }
+    float GetRightTrigger(int playerIndex = 0) const { return input_->GetXboxRightTrigger(playerIndex); }
     
     // === カメラシステム ===
+    // 基本カメラ操作
     void SetCameraPosition(const Vector3& position) { camera_->SetTranslate(position); }
     void SetCameraRotation(const Vector3& rotation) { camera_->SetRotate(rotation); }
     Vector3 GetCameraPosition() const { return camera_->GetTranslate(); }
     Vector3 GetCameraRotation() const { return camera_->GetRotate(); }
-    void ProcessCameraMouseInput(float deltaX, float deltaY) { camera_->ProcessMouseInput(deltaX, deltaY); }
-    void SetCameraMouseSensitivity(float sensitivity) { camera_->SetMouseSensitivity(sensitivity); }
-    void SetCameraMode(int mode) { camera_->SetCameraMode(mode); }
-    int GetCameraMode() const { return camera_->GetCameraMode(); }
-    void ToggleCameraMode() { camera_->ToggleCameraMode(); }
-    
-    // カメラ移動（フリーカメラモード用）
-    void MoveCameraForward(float distance) { camera_->MoveForward(distance); }
-    void MoveCameraRight(float distance) { camera_->MoveRight(distance); }
-    void MoveCameraUp(float distance) { camera_->MoveUp(distance); }
-    
-    // カメラの方向ベクトル取得
-    Vector3 GetCameraForwardVector() const { return camera_->GetForwardVector(); }
-    Vector3 GetCameraRightVector() const { return camera_->GetRightVector(); }
-    Vector3 GetCameraUpVector() const { return camera_->GetUpVector(); }
-    
-    // カメラの視野角設定
     void SetCameraFov(float fov) { camera_->SetFovY(fov); }
     
-    // カメラ感度設定
-    void SetCameraStickSensitivity(float sensitivity) { camera_->SetStickSensitivity(sensitivity); }
-    float GetCameraStickSensitivity() const { return camera_->GetStickSensitivity(); }
+    // カメラの方向ベクトル
+    Vector3 GetCameraForward() const { return camera_->GetForwardVector(); }
+    Vector3 GetCameraRight() const { return camera_->GetRightVector(); }
+    Vector3 GetCameraUp() const { return camera_->GetUpVector(); }
     
-    // オービットカメラ設定
-    void SetCameraOrbitTarget(const Vector3& target) { camera_->SetOrbitTarget(target); }
-    void SetCameraOrbitDistance(float distance) { camera_->SetOrbitDistance(distance); }
-    void SetCameraOrbitHeight(float height) { camera_->SetOrbitHeight(height); }
+    // カメラ入力処理（統合版）
+    void UpdateCameraInput();  // マウス＋右スティック入力を自動処理
+    
+    // カメラ感度設定
+    void SetMouseSensitivity(float sensitivity) { camera_->SetMouseSensitivity(sensitivity); }
+    void SetStickSensitivity(float sensitivity) { camera_->SetStickSensitivity(sensitivity); }
+    
+    // オービットカメラ（追従カメラ）
+    void SetCameraTarget(const Vector3& target) { camera_->SetOrbitTarget(target); }
+    void SetCameraDistance(float distance) { camera_->SetOrbitDistance(distance); }
+    void SetCameraHeight(float height) { camera_->SetOrbitHeight(height); }
+    
+    // フリーカメラモード
+    void UpdateFreeCameraMovement();  // WASDキーでカメラを直接移動
+#ifdef _DEBUG
+    bool IsFreeCameraMode() const { return camera_->IsFreeCameraMode(); }
+    void ToggleFreeCameraMode() { camera_->ToggleFreeCameraMode(); }
+#else
+    bool IsFreeCameraMode() const { return false; }
+    void ToggleFreeCameraMode() {}
+#endif
+    
+    // 旧API（互換性のため残す）
+    void UpdateCameraMouse();
+    void UpdateCameraRightStick();
     
     // === オーディオシステム ===
     bool LoadAudio(const std::string& name, const std::string& filePath);
@@ -170,6 +199,12 @@ public:
     std::unique_ptr<Object3d> CreateObject3D();
     std::unique_ptr<Model> LoadModel(const std::string& modelPath);
     
+    // === オフスクリーンレンダリング ===
+    void EnablePostProcessing(bool enable = true);
+    void SetPostProcessMode(int mode);  // 0:Normal, 1:Grayscale, 2:Vignetting
+    void BeginOffscreenRendering();
+    void EndOffscreenRendering();
+    
     // === アニメーションシステム ===
     std::unique_ptr<AnimatedModel> CreateAnimatedModel();
     Animation LoadAnimation(const std::string& directoryPath, const std::string& filename);
@@ -177,12 +212,10 @@ public:
     // === 2Dスプライト作成システム ===
     std::unique_ptr<Sprite> CreateSprite(const std::string& texturePath);
     
-    // === 簡易化API ===
+    // === 簡榁化API ===
     void LoadTexture(const std::string& path);
     std::unique_ptr<Skybox> CreateSkybox();
     void LoadSkybox(Skybox* skybox, const std::string& path);
-    void UpdateCameraMouse(); // マウス入力でカメラ更新（一括処理）
-    void UpdateCameraRightStick(); // 右スティック入力でカメラ更新（一括処理）
     
     template<typename T>
     void SetEnvMap(T* obj) {
@@ -244,6 +277,10 @@ public:
 private:
     // シングルトンインスタンス
     static UnoEngine* instance_;
+    
+    // オフスクリーンレンダリング
+    class OffscreenRenderingManager* offscreenManager_ = nullptr;
+    bool postProcessingEnabled_ = false;
 
     // コンストラクタ（シングルトン）
     UnoEngine() = default;

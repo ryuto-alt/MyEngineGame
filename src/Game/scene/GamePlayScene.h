@@ -6,8 +6,6 @@
 #include "Skybox.h"
 #include "TextureManager.h"
 #include "BlenderJSONLoader.h"
-class OffscreenRenderingManager;
-enum class ProcessingMode;
 #include <vector>
 #include <memory>
 
@@ -33,8 +31,6 @@ protected:
     std::unique_ptr<LightManager> lightManager_;
     std::unique_ptr<Skybox> skybox_;
     
-    // オフスクリーンレンダリング
-    std::unique_ptr<OffscreenRenderingManager> offscreenRenderingManager_;
     
     // GLBモデル用（テスト用キューブ）- マルチマテリアル対応
     std::vector<std::unique_ptr<Object3d>> cubeGlbObjects_;
