@@ -1,5 +1,6 @@
 #include "TitleScene.h"
 #include "../../Engine/Resource/ResourcePreloader.h"
+#include "../../Engine/UnoEngine.h"
 #include "imgui.h"
 #define DIRECTINPUT_VERSION 0x0800
 #include <dinput.h>
@@ -63,8 +64,8 @@ void TitleScene::Update() {
     
     // ESCキーのトリガー検出
     if (escIsPressed && !escWasPressed) {
-        OutputDebugStringA("TitleScene: ESC key triggered via Win32 API! Exiting game\n");
-        exit(0);
+        OutputDebugStringA("TitleScene: ESC key triggered via Win32 API! Requesting engine shutdown\n");
+        UnoEngine::GetInstance()->RequestEnd();
     }
     
     // 前フレームの状態を保存

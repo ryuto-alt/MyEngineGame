@@ -67,7 +67,7 @@ void GamePlayScene::Update() {
 
     // ESCキーで終了
     if (engine_->IsPause()) {
-        exit(0);
+        engine_->RequestEnd();
     }
 
 #ifdef _DEBUG
