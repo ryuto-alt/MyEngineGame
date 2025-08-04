@@ -13,7 +13,8 @@ class SrvManager;
 enum class ProcessingMode {
     Normal,      // 通常（そのままコピー）
     Grayscale,   // グレースケール
-    Vignetting   // ヴィネッティング（周囲を暗くする効果）
+    Vignetting,  // ヴィネッティング（周囲を暗くする効果）
+    Horror       // ホラー効果（VHSノイズ、色収差、血しぶき）
 };
 
 // オフスクリーンレンダリング管理クラス
@@ -51,12 +52,20 @@ private:
     void CreateCopyImagePSO();
     void CreateGrayscalePSO();
     void CreateVignettePSO();
+    void CreateHorrorPSO();
 
     // RootSignatureの作成
     void CreateRootSignature();
+    void CreateHorrorRootSignature();
 
     // シェーダーコンパイル
     void CompileShaders();
+    
+    // ホラー効果用Constant Bufferの作成
+    void CreateHorrorConstantBuffer();
+    
+    // ホラー効果用Constant Bufferの更新
+    void UpdateHorrorConstantBuffer();
 
 private:
     DirectXCommon* dxCommon_ = nullptr;
@@ -65,19 +74,24 @@ private:
     // RenderTexture
     std::unique_ptr<RenderTexture> renderTexture_;
 
-    // 共通のRootSignature（全ての処理で同じものを使用）
+    // 共通のRootSignature（Normal, Grayscale, Vignetting用）
     Microsoft::WRL::ComPtr<ID3D12RootSignature> copyImageRootSignature_;
+    
+    // Horror用のRootSignature（Constant Bufferを含む）
+    Microsoft::WRL::ComPtr<ID3D12RootSignature> horrorRootSignature_;
     
     // 各種パイプラインステート
     Microsoft::WRL::ComPtr<ID3D12PipelineState> copyImagePipelineState_;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> grayscalePipelineState_;
     Microsoft::WRL::ComPtr<ID3D12PipelineState> vignettePipelineState_;
+    Microsoft::WRL::ComPtr<ID3D12PipelineState> horrorPipelineState_;
 
     // シェーダー
     IDxcBlob* copyImageVertexShader_ = nullptr;  // 共通のVertex Shader
     IDxcBlob* copyImagePixelShader_ = nullptr;
     IDxcBlob* grayscalePixelShader_ = nullptr;
     IDxcBlob* vignettePixelShader_ = nullptr;
+    IDxcBlob* horrorPixelShader_ = nullptr;
     
     // 現在の処理モード
     ProcessingMode processingMode_ = ProcessingMode::Normal;
@@ -85,4 +99,31 @@ private:
     // テクスチャサイズ
     uint32_t textureWidth_ = 0;
     uint32_t textureHeight_ = 0;
+    
+    // ホラーエフェクトパラメータ
+    struct HorrorParams {
+        float time = 0.0f;
+        float noiseIntensity = 0.5f;
+        float distortionAmount = 0.3f;
+        float bloodAmount = 0.4f;
+    };
+    HorrorParams horrorParams_;
+    Microsoft::WRL::ComPtr<ID3D12Resource> horrorConstantBuffer_;
+    
+    // 経過時間（ホラーエフェクト用）
+    float elapsedTime_ = 0.0f;
+    
+public:
+    // ホラーエフェクトパラメータの設定
+    void SetHorrorParams(float noiseIntensity, float distortionAmount, float bloodAmount) {
+        horrorParams_.noiseIntensity = noiseIntensity;
+        horrorParams_.distortionAmount = distortionAmount;
+        horrorParams_.bloodAmount = bloodAmount;
+    }
+    
+    // デルタタイムの更新（アニメーション用）
+    void UpdateTime(float deltaTime) {
+        elapsedTime_ += deltaTime;
+        horrorParams_.time = elapsedTime_;
+    }
 };

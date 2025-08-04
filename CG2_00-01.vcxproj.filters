@@ -233,6 +233,15 @@
     <ClCompile Include="src\Engine\Graphics\RenderTexture.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\BlenderJSONLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\GLBLoader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\JsonParser.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="externals\imgui\imconfig.h">
@@ -433,6 +442,9 @@
     <ClInclude Include="src\Engine\Graphics\Skybox.h" />
     <ClInclude Include="src\Engine\Graphics\OffscreenRenderingManager.h" />
     <ClInclude Include="src\Engine\Graphics\RenderTexture.h" />
+    <ClInclude Include="src\Engine\Graphics\BlenderJSONLoader.h" />
+    <ClInclude Include="src\Engine\Graphics\GLBLoader.h" />
+    <ClInclude Include="src\Engine\Graphics\JsonParser.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt">
@@ -485,6 +497,9 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="Resources\shaders\CopyImage.VS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="Resources\shaders\Horror.PS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

@@ -22,6 +22,10 @@ OffscreenRenderingManager::~OffscreenRenderingManager() {
         vignettePixelShader_->Release();
         vignettePixelShader_ = nullptr;
     }
+    if (horrorPixelShader_) {
+        horrorPixelShader_->Release();
+        horrorPixelShader_ = nullptr;
+    }
 }
 
 void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager,
@@ -49,11 +53,16 @@ void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* 
 
     // RootSignatureの作成
     CreateRootSignature();
+    CreateHorrorRootSignature();
 
     // 各種パイプラインステートオブジェクトを作成
     CreateCopyImagePSO();
     CreateGrayscalePSO();
     CreateVignettePSO();
+    CreateHorrorPSO();
+    
+    // ホラーエフェクト用Constant Bufferの作成
+    CreateHorrorConstantBuffer();
 }
 
 void OffscreenRenderingManager::CompileShaders() {
@@ -82,6 +91,13 @@ void OffscreenRenderingManager::CompileShaders() {
     vignettePixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Vignette.PS.hlsl", L"ps_6_0");
     if (!vignettePixelShader_) {
         OutputDebugStringA("ERROR: Failed to compile Vignette.PS.hlsl\n");
+        assert(false);
+    }
+    
+    // Horror用PixelShaderをコンパイル
+    horrorPixelShader_ = dxCommon_->CompileShader(L"Resources/shaders/Horror.PS.hlsl", L"ps_6_0");
+    if (!horrorPixelShader_) {
+        OutputDebugStringA("ERROR: Failed to compile Horror.PS.hlsl\n");
         assert(false);
     }
 }
@@ -289,6 +305,53 @@ void OffscreenRenderingManager::CreateVignettePSO() {
     assert(SUCCEEDED(hr));
 }
 
+void OffscreenRenderingManager::CreateHorrorPSO() {
+    // Horror用のパイプラインステート作成
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDesc{};
+
+    // RootSignature（Horror専用のものを使用）
+    pipelineStateDesc.pRootSignature = horrorRootSignature_.Get();
+
+    // InputLayout（共通：頂点データなし）
+    pipelineStateDesc.InputLayout.pInputElementDescs = nullptr;
+    pipelineStateDesc.InputLayout.NumElements = 0;
+
+    // Shader（VertexShaderは共通、PixelShaderはHorror用）
+    pipelineStateDesc.VS.pShaderBytecode = copyImageVertexShader_->GetBufferPointer();
+    pipelineStateDesc.VS.BytecodeLength = copyImageVertexShader_->GetBufferSize();
+    pipelineStateDesc.PS.pShaderBytecode = horrorPixelShader_->GetBufferPointer();
+    pipelineStateDesc.PS.BytecodeLength = horrorPixelShader_->GetBufferSize();
+
+    // BlendState（共通）
+    pipelineStateDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+    // RasterizerState（共通）
+    pipelineStateDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+
+    // DepthStencilState（共通：無効）
+    pipelineStateDesc.DepthStencilState.DepthEnable = false;
+    pipelineStateDesc.DepthStencilState.StencilEnable = false;
+
+    // DSVFormat（共通）
+    pipelineStateDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
+
+    // PrimitiveTopology（共通）
+    pipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+    // RTVFormat（共通）
+    pipelineStateDesc.NumRenderTargets = 1;
+    pipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+    // Sample（共通）
+    pipelineStateDesc.SampleDesc.Count = 1;
+    pipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+    // PipelineState作成
+    HRESULT hr = dxCommon_->GetDevice()->CreateGraphicsPipelineState(&pipelineStateDesc,
+        IID_PPV_ARGS(&horrorPipelineState_));
+    assert(SUCCEEDED(hr));
+}
+
 void OffscreenRenderingManager::BeginRenderToTexture() {
     // リソースの有効性チェック
     if (!renderTexture_) {
@@ -378,21 +441,28 @@ void OffscreenRenderingManager::CopyToSwapChain() {
     scissorRect.bottom = textureHeight_;
     commandList->RSSetScissorRects(1, &scissorRect);
 
-    // RootSignature設定
-    commandList->SetGraphicsRootSignature(copyImageRootSignature_.Get());
-
-    // 処理モードに応じてPipelineState設定
+    // 処理モードに応じてRootSignatureとPipelineState設定
     switch (processingMode_) {
     case ProcessingMode::Normal:
+        commandList->SetGraphicsRootSignature(copyImageRootSignature_.Get());
         commandList->SetPipelineState(copyImagePipelineState_.Get());
         break;
     case ProcessingMode::Grayscale:
+        commandList->SetGraphicsRootSignature(copyImageRootSignature_.Get());
         commandList->SetPipelineState(grayscalePipelineState_.Get());
         break;
     case ProcessingMode::Vignetting:
+        commandList->SetGraphicsRootSignature(copyImageRootSignature_.Get());
         commandList->SetPipelineState(vignettePipelineState_.Get());
         break;
+    case ProcessingMode::Horror:
+        // Horror用のRootSignatureとConstant Bufferの更新
+        UpdateHorrorConstantBuffer();
+        commandList->SetGraphicsRootSignature(horrorRootSignature_.Get());
+        commandList->SetPipelineState(horrorPipelineState_.Get());
+        break;
     default:
+        commandList->SetGraphicsRootSignature(copyImageRootSignature_.Get());
         commandList->SetPipelineState(copyImagePipelineState_.Get());
         break;
     }
@@ -410,10 +480,131 @@ void OffscreenRenderingManager::CopyToSwapChain() {
 
     // テクスチャをシェーダーリソースとして設定
     renderTexture_->SetShaderResource(0);
+    
+    // Horrorモードの場合はConstant Bufferもセット
+    if (processingMode_ == ProcessingMode::Horror) {
+        commandList->SetGraphicsRootConstantBufferView(1, horrorConstantBuffer_->GetGPUVirtualAddress());
+    }
 
     // DrawCall発行（資料より：VertexShaderは3頂点を想定しているので、DrawInstancedで3頂点描画する指定をする）
     commandList->DrawInstanced(3, 1, 0, 0);
     
     // 【重要修正】ImGui描画のため、SwapChainのリソース状態をRENDER_TARGETのままにしておく
     // 【重要修正】CommandKick()をここで呼ばない - ImGui描画のためにコマンドリストを保持
+}
+
+void OffscreenRenderingManager::CreateHorrorConstantBuffer() {
+    // Constant Bufferのサイズは256バイトアラインメント
+    size_t bufferSize = (sizeof(HorrorParams) + 255) & ~255;
+    
+    // ヒープ設定
+    D3D12_HEAP_PROPERTIES heapProperties{};
+    heapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
+    heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+    heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+    
+    // リソース設定
+    D3D12_RESOURCE_DESC resourceDesc{};
+    resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+    resourceDesc.Alignment = 0;
+    resourceDesc.Width = bufferSize;
+    resourceDesc.Height = 1;
+    resourceDesc.DepthOrArraySize = 1;
+    resourceDesc.MipLevels = 1;
+    resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+    resourceDesc.SampleDesc.Count = 1;
+    resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+    resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+    
+    // Constant Buffer作成
+    HRESULT hr = dxCommon_->GetDevice()->CreateCommittedResource(
+        &heapProperties,
+        D3D12_HEAP_FLAG_NONE,
+        &resourceDesc,
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        nullptr,
+        IID_PPV_ARGS(&horrorConstantBuffer_));
+    assert(SUCCEEDED(hr));
+    
+    // 初期値をマップ
+    HorrorParams* mappedData = nullptr;
+    hr = horrorConstantBuffer_->Map(0, nullptr, reinterpret_cast<void**>(&mappedData));
+    assert(SUCCEEDED(hr));
+    
+    *mappedData = horrorParams_;
+    
+    horrorConstantBuffer_->Unmap(0, nullptr);
+}
+
+void OffscreenRenderingManager::UpdateHorrorConstantBuffer() {
+    if (!horrorConstantBuffer_) return;
+    
+    HorrorParams* mappedData = nullptr;
+    HRESULT hr = horrorConstantBuffer_->Map(0, nullptr, reinterpret_cast<void**>(&mappedData));
+    if (SUCCEEDED(hr)) {
+        *mappedData = horrorParams_;
+        horrorConstantBuffer_->Unmap(0, nullptr);
+    }
+}
+
+void OffscreenRenderingManager::CreateHorrorRootSignature() {
+    // Horror用RootSignature: Texture + Sampler + Constant Buffer
+    
+    // Descriptor Range (テクスチャ用)
+    D3D12_DESCRIPTOR_RANGE descriptorRange[1] = {};
+    descriptorRange[0].BaseShaderRegister = 0;
+    descriptorRange[0].NumDescriptors = 1;
+    descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+    descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+    // Root Parameter
+    D3D12_ROOT_PARAMETER rootParameters[2] = {};
+    
+    // テクスチャ用 (t0)
+    rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+    rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
+    rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
+    
+    // Constant Buffer用 (b0)
+    rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    rootParameters[1].Descriptor.ShaderRegister = 0;
+    rootParameters[1].Descriptor.RegisterSpace = 0;
+
+    // Sampler
+    D3D12_STATIC_SAMPLER_DESC staticSamplers[1] = {};
+    staticSamplers[0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+    staticSamplers[0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSamplers[0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSamplers[0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+    staticSamplers[0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+    staticSamplers[0].MaxLOD = D3D12_FLOAT32_MAX;
+    staticSamplers[0].ShaderRegister = 0;
+    staticSamplers[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+    // RootSignature作成
+    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc{};
+    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+    rootSignatureDesc.pParameters = rootParameters;
+    rootSignatureDesc.NumParameters = _countof(rootParameters);
+    rootSignatureDesc.pStaticSamplers = staticSamplers;
+    rootSignatureDesc.NumStaticSamplers = _countof(staticSamplers);
+
+    // シリアライズしてルートシグネチャ作成
+    Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob = nullptr;
+    Microsoft::WRL::ComPtr<ID3DBlob> errorBlob = nullptr;
+    HRESULT hr = D3D12SerializeRootSignature(&rootSignatureDesc,
+        D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+    
+    if (FAILED(hr)) {
+        if (errorBlob) {
+            OutputDebugStringA(static_cast<char*>(errorBlob->GetBufferPointer()));
+        }
+        assert(false);
+    }
+
+    hr = dxCommon_->GetDevice()->CreateRootSignature(0, signatureBlob->GetBufferPointer(),
+        signatureBlob->GetBufferSize(), IID_PPV_ARGS(&horrorRootSignature_));
+    assert(SUCCEEDED(hr));
 }

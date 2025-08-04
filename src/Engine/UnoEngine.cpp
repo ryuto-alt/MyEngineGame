@@ -791,6 +791,10 @@ void UnoEngine::SetPostProcessMode(int mode) {
 
 void UnoEngine::BeginOffscreenRendering() {
     if (!postProcessingEnabled_ || !offscreenManager_) return;
+    
+    // ホラーエフェクトの時間を更新
+    offscreenManager_->UpdateTime(GetDeltaTime());
+    
     offscreenManager_->BeginRenderToTexture();
 }
 

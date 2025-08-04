@@ -96,6 +96,10 @@ void GamePlayScene::Update() {
         currentPostProcessMode_ = 2;
         engine_->SetPostProcessMode(2); // Vignetting
     }
+    if (engine_->IsKeyTriggered(DIK_4)) {
+        currentPostProcessMode_ = 3;
+        engine_->SetPostProcessMode(3); // Horror
+    }
 
     // カメラ入力処理（マウス + 右スティックを統合）
     engine_->UpdateCameraInput();
@@ -247,11 +251,17 @@ void GamePlayScene::BuildImGuiWindows() {
             engine_->SetPostProcessMode(2);
         }
         
+        if (ImGui::RadioButton("Horror", currentPostProcessMode_ == 3)) {
+            currentPostProcessMode_ = 3;
+            engine_->SetPostProcessMode(3);
+        }
+        
         ImGui::Separator();
         ImGui::Text("Keyboard shortcuts:");
         ImGui::Text("1 - Normal mode");
         ImGui::Text("2 - Grayscale mode");
         ImGui::Text("3 - Vignetting mode");
+        ImGui::Text("4 - Horror mode");
     }
     ImGui::End();
 }
