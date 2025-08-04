@@ -1,11 +1,7 @@
 #include "GamePlayScene.h"
 #ifdef _DEBUG
 #include "imgui.h"
-#include "imgui_impl_dx12.h"
 #endif
-#include <string>
-#include <vector>
-#include <memory>
 
 
 GamePlayScene::GamePlayScene() {
@@ -49,75 +45,16 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
     
-    // スカイボックスの作成と初期化
-    skybox_ = engine_->CreateSkybox();
-    skybox_->SetScale(1000.0f);
-    try {
-        engine_->LoadSkybox(skybox_.get(), "Resources/Models/skybox/rostock_laage_airport_4k.dds");
-        skyboxEnabled_ = true;
-    } catch (const std::exception&) {
-        skyboxEnabled_ = false;
-    }
+    // スカイボックスのロード
+    skyboxEnabled_ = engine_->LoadSkybox("Resources/Models/skybox/rostock_laage_airport_4k.dds");
     
     // オフスクリーンレンダリング専用モードで動作
     
-    // GLBキューブモデルの初期化（マルチマテリアル対応）
-    try {
-        // マルチマテリアルGLBファイルを読み込み
-        Model tempModel;
-        tempModel.Initialize(dxCommon_);
-        std::vector<ModelData> multiMaterialData = tempModel.LoadMultiMaterialGLB("Resources/Models/cube/obje.glb");
-        
-        // 各マテリアルごとに別々のModelとObject3dを作成
-        for (size_t i = 0; i < multiMaterialData.size(); ++i) {
-            // Modelを作成
-            auto model = std::make_unique<Model>();
-            model->Initialize(dxCommon_);
-            
-            // ModelDataを手動で設定
-            ModelData& modelData = model->GetModelDataInternal();
-            modelData = multiMaterialData[i];
-            model->CreateVertexBuffer();
-            
-            // テクスチャを読み込み
-            if (!modelData.material.textureFilePath.empty()) {
-                TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
-            }
-            
-            // Object3dを作成
-            auto object3d = engine_->CreateObject3D();
-            object3d->SetModel(model.get());
-            object3d->SetPosition(Vector3{ 3.0f, 1.0f, 2.0f }); // カメラから見える位置に配置
-            object3d->SetScale(Vector3{ 1.0f, 1.0f, 1.0f }); // 大きくして見えやすく
-            object3d->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
-            object3d->SetEnableLighting(true);
-            object3d->SetCamera(camera_);
-            
-            // 環境マップは無効（skyboxが無効のため）
-            
-            // ベクターに追加
-            cubeGlbModels_.push_back(std::move(model));
-            cubeGlbObjects_.push_back(std::move(object3d));
-            
-            // マテリアル読み込み完了
-        }
-        
-        // GLBモデル読み込み完了
-    } catch (const std::exception&) {
-        // エラー処理
-    }
+    // GLBキューブモデルのロード
+    cubeGlbObjects_ = engine_->LoadGLBModel("Resources/Models/cube/obje.glb", Vector3{ 3.0f, 1.0f, 2.0f });
 
-    // Blender JSONシーンの読み込み
-    blenderJsonLoader_ = std::make_unique<BlenderJSONLoader>();
-    if (blenderJsonLoader_->LoadScene("Resources/blender/obje.json", dxCommon_, spriteCommon_)) {
-        // ロードされたメッシュにカメラとライティングを設定
-        for (auto& mesh : blenderJsonLoader_->GetLoadedMeshes()) {
-            mesh.object3d->SetCamera(camera_);
-            mesh.object3d->SetEnableLighting(true);
-        }
-    } else {
-        // エラー処理
-    }
+    // Blender JSONシーンのロード
+    engine_->LoadBlenderScene("Resources/blender/obje.json");
 
     initialized_ = true;
 }
@@ -148,12 +85,15 @@ void GamePlayScene::Update() {
 
     // フィルター効果切り替え
     if (engine_->IsKeyTriggered(DIK_1)) {
+        currentPostProcessMode_ = 0;
         engine_->SetPostProcessMode(0); // Normal
     }
     if (engine_->IsKeyTriggered(DIK_2)) {
+        currentPostProcessMode_ = 1;
         engine_->SetPostProcessMode(1); // Grayscale
     }
     if (engine_->IsKeyTriggered(DIK_3)) {
+        currentPostProcessMode_ = 2;
         engine_->SetPostProcessMode(2); // Vignetting
     }
 
@@ -208,9 +148,7 @@ void GamePlayScene::Update() {
     if (engine_->IsKeyTriggered(DIK_R)) {
         player_->ResetAnimation();
     }
-    if (engine_->IsKeyTriggered(DIK_1)) {
-        player_->ToggleSneakWalk();
-    }
+    // スニーク歩行の切り替え（数字キーと重複しないように変更）
     if (engine_->IsKeyTriggered(DIK_RSHIFT)) {
         player_->ToggleSneakWalk();
     }
@@ -238,15 +176,7 @@ void GamePlayScene::Update() {
     }
 
     // Blender JSONオブジェクトのUpdate
-    if (blenderJsonLoader_) {
-        for (const auto& mesh : blenderJsonLoader_->GetLoadedMeshes()) {
-            if (mesh.object3d) {
-                mesh.object3d->SetDirectionalLight(dirLight);
-                mesh.object3d->SetSpotLight(spotLight);
-                mesh.object3d->Update();
-            }
-        }
-    }
+    engine_->UpdateBlenderScene(dirLight, spotLight);
 
     // オブジェクトの更新
     player_->Update(engine_);
@@ -261,9 +191,9 @@ void GamePlayScene::Draw() {
     // オフスクリーンレンダリング開始
     engine_->BeginOffscreenRendering();
 
-    // スカイボックスの描画（有効な場合）
-    if (skyboxEnabled_ && skybox_) {
-        skybox_->Draw(camera_);
+    // スカイボックスの描画
+    if (skyboxEnabled_) {
+        engine_->DrawSkybox();
     }
  
     spriteCommon_->CommonDraw();
@@ -279,13 +209,7 @@ void GamePlayScene::Draw() {
     }
 
     // Blender JSONオブジェクトのDraw
-    if (blenderJsonLoader_) {
-        for (const auto& mesh : blenderJsonLoader_->GetLoadedMeshes()) {
-            if (mesh.object3d) {
-                mesh.object3d->Draw();
-            }
-        }
-    }
+    engine_->DrawBlenderScene();
 
     player_->Draw();
 
@@ -308,20 +232,18 @@ void GamePlayScene::BuildImGuiWindows() {
         ImGui::Text("Select Rendering Mode:");
         ImGui::Separator();
         
-        static int currentMode = 0;
-        
-        if (ImGui::RadioButton("Normal", currentMode == 0)) {
-            currentMode = 0;
+        if (ImGui::RadioButton("Normal", currentPostProcessMode_ == 0)) {
+            currentPostProcessMode_ = 0;
             engine_->SetPostProcessMode(0);
         }
         
-        if (ImGui::RadioButton("Grayscale", currentMode == 1)) {
-            currentMode = 1;
+        if (ImGui::RadioButton("Grayscale", currentPostProcessMode_ == 1)) {
+            currentPostProcessMode_ = 1;
             engine_->SetPostProcessMode(1);
         }
         
-        if (ImGui::RadioButton("Vignetting", currentMode == 2)) {
-            currentMode = 2;
+        if (ImGui::RadioButton("Vignetting", currentPostProcessMode_ == 2)) {
+            currentPostProcessMode_ = 2;
             engine_->SetPostProcessMode(2);
         }
         
@@ -357,13 +279,6 @@ void GamePlayScene::Finalize() {
     // ポストプロセスを無効化
     engine_->EnablePostProcessing(false);
 
-    // Skybox関連のクリーンアップ（有効だった場合のみ）
-    if (skyboxEnabled_ && skybox_) {
-        skybox_.reset();
-    }
-    skyboxEnabled_ = false;
-
-    // マルチマテリアルオブジェクトのクリーンアップ
+    // オブジェクトのクリーンアップ
     cubeGlbObjects_.clear();
-    cubeGlbModels_.clear();
 }

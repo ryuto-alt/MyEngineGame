@@ -3,9 +3,7 @@
 #include "Player.h"
 #include "Ground.h"
 #include "LightManager.h"
-#include "Skybox.h"
 #include "TextureManager.h"
-#include "BlenderJSONLoader.h"
 #include <vector>
 #include <memory>
 
@@ -29,15 +27,9 @@ protected:
     std::unique_ptr<Player> player_;
     std::unique_ptr<Ground> ground_;
     std::unique_ptr<LightManager> lightManager_;
-    std::unique_ptr<Skybox> skybox_;
     
-    
-    // GLBモデル用（テスト用キューブ）- マルチマテリアル対応
+    // GLBモデル用（テスト用キューブ）
     std::vector<std::unique_ptr<Object3d>> cubeGlbObjects_;
-    std::vector<std::unique_ptr<Model>> cubeGlbModels_;
-    
-    // Blender JSONローダー
-    std::unique_ptr<BlenderJSONLoader> blenderJsonLoader_;
     
     // Skybox制御フラグ
     bool skyboxEnabled_ = false;
@@ -48,4 +40,7 @@ protected:
 private:
     // ImGuiウィンドウ構築
     void BuildImGuiWindows();
+    
+    // ポストプロセスモード（ImGuiとキーボード入力の同期用）
+    int currentPostProcessMode_ = 0;
 };

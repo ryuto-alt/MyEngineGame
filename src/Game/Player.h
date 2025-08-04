@@ -68,6 +68,12 @@ private:
     void UpdateAnimation(float deltaTime);
     void UpdateRotation(UnoEngine* engine, float deltaTime);
     
+    // 初期化ヘルパー関数
+    void LoadPlayerModel();
+    void SetupObject3D();
+    void ApplyPBRMaterial();
+    void ChangeAnimation(const std::string& animationName);
+    
     // モデル関連
     std::unique_ptr<Object3d> object3d_;
     std::unique_ptr<AnimatedModel> animatedModel_;

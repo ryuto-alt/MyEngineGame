@@ -2,6 +2,7 @@
 #include "GameSceneFactory.h" // 具象クラスはcppファイルでインクルード
 #include "Collision.h" // Collision名前空間のため
 #include "OffscreenRenderingManager.h"
+#include "BlenderJSONLoader.h"
 #include <cassert>
 #include <algorithm>
 #include <cctype>
@@ -74,6 +75,11 @@ void UnoEngine::Initialize() {
         camera_->SetWindowHandle(winApp_->GetHwnd());
         // Object3dCommonは存在しないためコメントアウト
         // Object3dCommon::SetDefaultCamera(camera_.get());
+
+        // オフスクリーンレンダリングマネージャーの初期化
+        offscreenManager_ = new OffscreenRenderingManager();
+        offscreenManager_->Initialize(dxCommon_.get(), srvManager_.get(), 
+            WinApp::kClientWidth, WinApp::kClientHeight);
 
         // パーティクルマネージャの初期化
         ParticleManager::GetInstance()->Initialize(dxCommon_.get(), srvManager_.get());
@@ -257,6 +263,12 @@ void UnoEngine::Finalize() {
         ImGui_ImplDX12_Shutdown();
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
+
+        // オフスクリーンレンダリングマネージャーの解放
+        if (offscreenManager_) {
+            delete offscreenManager_;
+            offscreenManager_ = nullptr;
+        }
 
         // テクスチャマネージャの解放（シングルトンを強制破棄）
         TextureManager::GetInstance()->Finalize();
@@ -802,4 +814,118 @@ bool UnoEngine::IsMoving() const {
     Vector2 movement = GetMovementInput();
     float magnitude = std::sqrt(movement.x * movement.x + movement.y * movement.y);
     return magnitude > 0.01f;
+}
+
+bool UnoEngine::LoadSkybox(const std::string& path) {
+    try {
+        // スカイボックスがまだ作られていなければ作成
+        if (!currentSkybox_) {
+            currentSkybox_ = CreateSkybox();
+            currentSkybox_->SetScale(1000.0f);
+        }
+        
+        // スカイボックスをロード
+        LoadSkybox(currentSkybox_.get(), path);
+        return true;
+    } catch (const std::exception&) {
+        // エラーが発生した場合はfalseを返す
+        return false;
+    }
+}
+
+std::vector<std::unique_ptr<Object3d>> UnoEngine::LoadGLBModel(const std::string& path, const Vector3& position) {
+    std::vector<std::unique_ptr<Object3d>> objects;
+    
+    try {
+        // マルチマテリアルGLBファイルを読み込み
+        Model tempModel;
+        tempModel.Initialize(dxCommon_.get());
+        std::vector<ModelData> multiMaterialData = tempModel.LoadMultiMaterialGLB(path);
+        
+        // 各マテリアルごとに別々のModelとObject3dを作成
+        for (size_t i = 0; i < multiMaterialData.size(); ++i) {
+            // Modelを作成
+            auto model = std::make_unique<Model>();
+            model->Initialize(dxCommon_.get());
+            
+            // ModelDataを手動で設定
+            ModelData& modelData = model->GetModelDataInternal();
+            modelData = multiMaterialData[i];
+            model->CreateVertexBuffer();
+            
+            // テクスチャを読み込み
+            if (!modelData.material.textureFilePath.empty()) {
+                TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
+            }
+            
+            // Object3dを作成
+            auto object3d = CreateObject3D();
+            object3d->SetModel(model.get());
+            object3d->SetPosition(position);
+            object3d->SetScale(Vector3{ 1.0f, 1.0f, 1.0f });
+            object3d->SetRotation(Vector3{ 0.0f, 0.0f, 0.0f });
+            object3d->SetEnableLighting(true);
+            object3d->SetCamera(camera_.get());
+            
+            // モデルを保存
+            loadedModels_.push_back(std::move(model));
+            objects.push_back(std::move(object3d));
+        }
+    } catch (const std::exception&) {
+        // エラーが発生した場合は空のベクターを返す
+        objects.clear();
+    }
+    
+    return objects;
+}
+
+bool UnoEngine::LoadBlenderScene(const std::string& jsonPath) {
+    try {
+        // BlenderJSONローダーを初期化
+        if (!blenderLoader_) {
+            blenderLoader_ = std::make_unique<BlenderJSONLoader>();
+        }
+        
+        // シーンをロード
+        if (blenderLoader_->LoadScene(jsonPath, dxCommon_.get(), spriteCommon_.get())) {
+            // ロードされたメッシュにカメラとライティングを設定
+            for (auto& mesh : blenderLoader_->GetLoadedMeshes()) {
+                mesh.object3d->SetCamera(camera_.get());
+                mesh.object3d->SetEnableLighting(true);
+            }
+            return true;
+        }
+    } catch (const std::exception&) {
+        // エラーが発生した場合
+    }
+    
+    return false;
+}
+
+void UnoEngine::DrawSkybox() {
+    if (currentSkybox_) {
+        currentSkybox_->Draw(camera_.get());
+    }
+}
+
+void UnoEngine::DrawBlenderScene() {
+    if (blenderLoader_) {
+        for (const auto& mesh : blenderLoader_->GetLoadedMeshes()) {
+            if (mesh.object3d) {
+                mesh.object3d->Draw();
+            }
+        }
+    }
+}
+
+void UnoEngine::UpdateBlenderScene(const DirectionalLight& dirLight, const SpotLight& spotLight) {
+    if (blenderLoader_) {
+        for (const auto& mesh : blenderLoader_->GetLoadedMeshes()) {
+            if (mesh.object3d) {
+                mesh.object3d->SetDirectionalLight(dirLight);
+                mesh.object3d->SetSpotLight(spotLight);
+                mesh.object3d->Update();
+            }
+        }
+    }
 }

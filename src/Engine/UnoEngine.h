@@ -199,6 +199,16 @@ public:
     std::unique_ptr<Object3d> CreateObject3D();
     std::unique_ptr<Model> LoadModel(const std::string& modelPath);
     
+    // === 簡単ロードAPI ===
+    bool LoadSkybox(const std::string& path);  // スカイボックスをロード（成功/失敗を返す）
+    void DrawSkybox();  // スカイボックスを描画
+    bool IsSkyboxEnabled() const { return currentSkybox_ != nullptr; }
+    
+    std::vector<std::unique_ptr<Object3d>> LoadGLBModel(const std::string& path, const Vector3& position = {0, 0, 0});  // GLBモデルをロード
+    bool LoadBlenderScene(const std::string& jsonPath);  // Blender JSONシーンをロード
+    void DrawBlenderScene();  // Blenderシーンを描画
+    void UpdateBlenderScene(const DirectionalLight& dirLight, const SpotLight& spotLight);  // Blenderシーンのライト情報を更新
+    
     // === オフスクリーンレンダリング ===
     void EnablePostProcessing(bool enable = true);
     void SetPostProcessMode(int mode);  // 0:Normal, 1:Grayscale, 2:Vignetting
@@ -212,10 +222,10 @@ public:
     // === 2Dスプライト作成システム ===
     std::unique_ptr<Sprite> CreateSprite(const std::string& texturePath);
     
-    // === 簡榁化API ===
+    // === 低レベルAPI（互換性のため残す） ===
     void LoadTexture(const std::string& path);
     std::unique_ptr<Skybox> CreateSkybox();
-    void LoadSkybox(Skybox* skybox, const std::string& path);
+    void LoadSkybox(Skybox* skybox, const std::string& path);  // 旧API
     
     template<typename T>
     void SetEnvMap(T* obj) {
@@ -281,6 +291,11 @@ private:
     // オフスクリーンレンダリング
     class OffscreenRenderingManager* offscreenManager_ = nullptr;
     bool postProcessingEnabled_ = false;
+    
+    // ロードされたリソース
+    std::unique_ptr<Skybox> currentSkybox_;
+    std::vector<std::unique_ptr<Model>> loadedModels_;
+    std::unique_ptr<class BlenderJSONLoader> blenderLoader_;
 
     // コンストラクタ（シングルトン）
     UnoEngine() = default;

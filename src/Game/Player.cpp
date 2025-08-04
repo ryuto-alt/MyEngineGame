@@ -16,12 +16,22 @@ void Player::Initialize(Camera* camera) {
     currentRotationY_ = 0.0f;
     targetRotationY_ = 0.0f;
     
-    // プリロードされたモデルの取得を試行
+    // モデルのロード
+    LoadPlayerModel();
+    
+    // Object3Dのセットアップ
+    SetupObject3D();
+    
+    // PBRマテリアルの適用
+    ApplyPBRMaterial();
+}
+
+void Player::LoadPlayerModel() {
     UnoEngine* engine = UnoEngine::GetInstance();
     
+    // プリロードされたモデルの取得を試行
     auto preloadedWalk = ResourcePreloader::GetInstance()->GetPreloadedModel("human_walk");
     if (preloadedWalk) {
-        OutputDebugStringA("Player: Using preloaded walk model\n");
         animatedModel_ = std::move(preloadedWalk);
         
         // アニメーション登録
@@ -33,14 +43,12 @@ void Player::Initialize(Camera* camera) {
         if (preloadedSneak) {
             Animation sneakWalkAnim = preloadedSneak->GetAnimationPlayer().GetAnimation();
             animatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
-            OutputDebugStringA("Player: Using preloaded sneak animation\n");
         } else {
             // フォールバック: 通常読み込み
             Animation sneakWalkAnim = engine->LoadAnimation("Resources/Models/human", "sneakWalk.gltf");
             animatedModel_->AddAnimation("sneakWalk", sneakWalkAnim);
         }
     } else {
-        OutputDebugStringA("Player: Preloaded model not found, loading normally\n");
         // フォールバック: 通常読み込み
         animatedModel_ = engine->CreateAnimatedModel();
         animatedModel_->LoadFromFile("Resources/Models/human", "walk.gltf");
@@ -54,8 +62,11 @@ void Player::Initialize(Camera* camera) {
     
     animatedModel_->ChangeAnimation("walk");
     animatedModel_->PlayAnimation();
+}
+
+void Player::SetupObject3D() {
+    UnoEngine* engine = UnoEngine::GetInstance();
     
-    // Object3Dの作成と設定
     object3d_ = engine->CreateObject3D();
     object3d_->SetModel(static_cast<Model*>(animatedModel_.get()));
     object3d_->SetAnimatedModel(animatedModel_.get());
@@ -65,56 +76,37 @@ void Player::Initialize(Camera* camera) {
     object3d_->SetEnableLighting(true);
     object3d_->SetEnableAnimation(true);
     object3d_->SetCamera(camera_);
+}
+
+void Player::ApplyPBRMaterial() {
+    if (!animatedModel_) return;
     
-    // humanモデルのマテリアル情報を確認
-    if (animatedModel_) {
-        const MaterialData& material = animatedModel_->GetMaterial();
-        char debugMsg[512];
-        sprintf_s(debugMsg, "Player Human Model Material:\n"
-            "  isPBR: %s\n"
-            "  BaseColor: R=%.3f, G=%.3f, B=%.3f, A=%.3f\n"
-            "  Metallic=%.3f, Roughness=%.3f\n"
-            "  Texture: %s\n",
-            material.isPBR ? "true" : "false",
-            material.baseColorFactor.x, material.baseColorFactor.y,
-            material.baseColorFactor.z, material.baseColorFactor.w,
-            material.metallicFactor, material.roughnessFactor,
-            material.textureFilePath.empty() ? "None" : material.textureFilePath.c_str());
-        OutputDebugStringA(debugMsg);
+    const MaterialData& material = animatedModel_->GetMaterial();
+    
+    // PBRマテリアルでない場合、強制的にPBRを有効化
+    if (!material.isPBR) {
+        MaterialData& mutableMaterial = const_cast<MaterialData&>(animatedModel_->GetMaterial());
+        mutableMaterial.isPBR = true;
+        mutableMaterial.baseColorFactor = { 0.8f, 0.7f, 0.6f, 1.0f };  // 人間っぽい肌色
+        mutableMaterial.metallicFactor = 0.0f;   // 非金属
+        mutableMaterial.roughnessFactor = 0.8f;  // 少し粗い表面
+        mutableMaterial.emissiveFactor = { 0.0f, 0.0f, 0.0f };
+        mutableMaterial.alphaMode = "OPAQUE";
+        mutableMaterial.doubleSided = false;
         
-        // PBRマテリアルでない場合、強制的にPBRを有効化
-        if (!material.isPBR) {
-            OutputDebugStringA("Player: Human model is not PBR, forcing PBR settings...\n");
-            // モデルのマテリアルをPBRモードに強制変更
-            MaterialData& mutableMaterial = const_cast<MaterialData&>(animatedModel_->GetMaterial());
-            mutableMaterial.isPBR = true;
-            mutableMaterial.baseColorFactor = { 0.8f, 0.7f, 0.6f, 1.0f };  // 人間っぽい肌色
-            mutableMaterial.metallicFactor = 0.0f;   // 非金属
-            mutableMaterial.roughnessFactor = 0.8f;  // 少し粗い表面
-            mutableMaterial.emissiveFactor = { 0.0f, 0.0f, 0.0f };
-            mutableMaterial.alphaMode = "OPAQUE";
-            mutableMaterial.doubleSided = false;
-            
-            OutputDebugStringA("Player: Applied PBR material settings to human model\n");
-            // SetModelを再呼び出しして更新されたマテリアルを適用
-            object3d_->SetModel(static_cast<Model*>(animatedModel_.get()));
-        }
-        
-        // humanモデルに強制的に環境マップを適用
-        OutputDebugStringA("Player: Enabling environment map for human model\n");
-        object3d_->SetEnableEnvironmentMap(true);
-        
-        // デフォルトの環境マップテクスチャを設定
-        object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+        // 更新されたマテリアルを適用
+        object3d_->SetModel(static_cast<Model*>(animatedModel_.get()));
     }
+    
+    // 環境マップを適用
+    object3d_->SetEnableEnvironmentMap(true);
+    object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
 }
 
 void Player::Update(UnoEngine* engine) {
-    
     const float deltaTime = engine->GetDeltaTime();
     
-    // HandleMovement(engine, deltaTime);  // 新しい統合移動システムを使用するため一時的に無効化
-    HandleGamepadFeatures(engine, deltaTime);  // ゲームパッド固有機能（スニーク切り替えなど）
+    HandleGamepadFeatures(engine, deltaTime);
     UpdateAnimation(deltaTime);
     UpdateRotation(engine, deltaTime);
     
@@ -123,7 +115,6 @@ void Player::Update(UnoEngine* engine) {
     object3d_->Update();
 }
 
-// ゲームパッド固有機能処理（スニーク切り替えなど）
 void Player::HandleGamepadFeatures(UnoEngine* engine, float deltaTime) {
     bool bButtonPressed = engine->IsGamepadButtonPressed(XBOX_BUTTON_B);
     bool bButtonTriggered = bButtonPressed && !previousBButtonPressed_;
@@ -131,17 +122,18 @@ void Player::HandleGamepadFeatures(UnoEngine* engine, float deltaTime) {
     // スニーク状態の切り替え（移動中のみ）
     if (bButtonTriggered && isMoving_ && !isBlending_) {
         isSneaking_ = !isSneaking_;
-        isBlending_ = true;
-        blendTimer_ = 0.0f;
-        
-        if (isSneaking_) {
-            animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
-        } else {
-            animatedModel_->TransitionToAnimation("walk", 0.3f);
-        }
+        ChangeAnimation(isSneaking_ ? "sneakWalk" : "walk");
     }
     
     previousBButtonPressed_ = bButtonPressed;
+}
+
+void Player::ChangeAnimation(const std::string& animationName) {
+    if (!animatedModel_ || isBlending_) return;
+    
+    animatedModel_->TransitionToAnimation(animationName, BLEND_DURATION);
+    isBlending_ = true;
+    blendTimer_ = 0.0f;
 }
 
 void Player::Draw() {
@@ -219,14 +211,8 @@ void Player::ResetAnimation() {
 void Player::ToggleSneakWalk() {
     if (!animatedModel_ || isBlending_) return;
     
-    if (animatedModel_->GetCurrentAnimationName() == "walk") {
-        animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
-    } else {
-        animatedModel_->TransitionToAnimation("walk", 0.3f);
-    }
-    
-    isBlending_ = true;
-    blendTimer_ = 0.0f;
+    std::string newAnimation = (animatedModel_->GetCurrentAnimationName() == "walk") ? "sneakWalk" : "walk";
+    ChangeAnimation(newAnimation);
 }
 
 std::string Player::GetCurrentAnimationName() const {
@@ -239,84 +225,6 @@ float Player::GetBlendProgress() const {
     return blendTimer_ / BLEND_DURATION;
 }
 
-void Player::HandleMovement(UnoEngine* engine, float deltaTime) {
-    Vector2 leftStick = engine->GetLeftStick();
-    float stickX = leftStick.x;
-    float stickY = leftStick.y;
-    bool bButtonPressed = engine->IsGamepadButtonPressed(XBOX_BUTTON_B);
-    bool bButtonTriggered = bButtonPressed && !previousBButtonPressed_;
-    
-    // 矢印キー入力の処理
-    float keyboardInputX = 0.0f;
-    float keyboardInputY = 0.0f;
-    
-    if (engine->IsKeyPressed(DIK_LEFTARROW)) {
-        keyboardInputX = -1.0f;
-    }
-    if (engine->IsKeyPressed(DIK_RIGHTARROW)) {
-        keyboardInputX = 1.0f;
-    }
-    if (engine->IsKeyPressed(DIK_UPARROW)) {
-        keyboardInputY = 1.0f;
-    }
-    if (engine->IsKeyPressed(DIK_DOWNARROW)) {
-        keyboardInputY = -1.0f;
-    }
-    
-    // スティック入力と矢印キー入力を合成
-    float totalX = stickX + keyboardInputX;
-    float totalY = stickY + keyboardInputY;
-    
-    // 入力値を正規化（最大値1.0にクランプ）
-    float totalMagnitude = std::sqrt(totalX * totalX + totalY * totalY);
-    if (totalMagnitude > 1.0f) {
-        totalX /= totalMagnitude;
-        totalY /= totalMagnitude;
-        totalMagnitude = 1.0f;
-    }
-    
-    float stickMagnitude = std::sqrt(stickX * stickX + stickY * stickY);
-    bool previouslyMoving = isMoving_;
-    isMoving_ = totalMagnitude > 0.1f;
-    
-    // 移動開始時のアニメーション設定
-    if (isMoving_ && !previouslyMoving && !isBlending_) {
-        if (isSneaking_) {
-            animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
-        } else {
-            animatedModel_->TransitionToAnimation("walk", 0.3f);
-        }
-    }
-    
-    // スニーク状態の切り替え
-    if (bButtonTriggered && isMoving_ && !isBlending_) {
-        isSneaking_ = !isSneaking_;
-        isBlending_ = true;
-        blendTimer_ = 0.0f;
-        
-        if (isSneaking_) {
-            animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
-        } else {
-            animatedModel_->TransitionToAnimation("walk", 0.3f);
-        }
-    }
-    
-    previousBButtonPressed_ = bButtonPressed;
-    
-    // 移動処理（デルタタイム考慮）
-    if (isMoving_) {
-        float currentSpeed = isSneaking_ ? moveSpeed_ * sneakSpeedMultiplier_ : moveSpeed_;
-        Vector3 movement = Vector3{totalX * currentSpeed * deltaTime, 0.0f, totalY * currentSpeed * deltaTime};
-        
-        moveDirection_ = Vector3{totalX, 0.0f, totalY};
-        
-        if (totalMagnitude > 0.1f) {
-            targetRotationY_ = std::atan2(totalX, totalY);
-        }
-        
-        position_ = position_ + movement;
-    }
-}
 
 void Player::UpdateAnimation(float deltaTime) {
     // ブレンドタイマーの更新
@@ -372,13 +280,9 @@ void Player::MoveForward(float distance) {
         targetRotationY_ = std::atan2(forward.x, forward.z);
         
         // 移動状態とアニメーションの管理
-        if (!isMoving_ && !isBlending_) {
+        if (!isMoving_) {
             isMoving_ = true;
-            if (isSneaking_) {
-                animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
-            } else {
-                animatedModel_->TransitionToAnimation("walk", 0.3f);
-            }
+            ChangeAnimation(isSneaking_ ? "sneakWalk" : "walk");
         }
     }
 }
@@ -404,13 +308,9 @@ void Player::MoveRight(float distance) {
         targetRotationY_ = std::atan2(right.x, right.z);
         
         // 移動状態とアニメーションの管理
-        if (!isMoving_ && !isBlending_) {
+        if (!isMoving_) {
             isMoving_ = true;
-            if (isSneaking_) {
-                animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
-            } else {
-                animatedModel_->TransitionToAnimation("walk", 0.3f);
-            }
+            ChangeAnimation(isSneaking_ ? "sneakWalk" : "walk");
         }
     }
 }
@@ -473,17 +373,9 @@ void Player::MoveWithCameraDirection(float forward, float right, float deltaTime
         targetRotationY_ = std::atan2(moveDirection.x, moveDirection.z);
         
         // 移動状態とアニメーションの管理
-        if (!isMoving_ && !isBlending_) {
+        if (!isMoving_) {
             isMoving_ = true;
-            if (isSneaking_) {
-                animatedModel_->TransitionToAnimation("sneakWalk", 0.3f);
-                isBlending_ = true;
-                blendTimer_ = 0.0f;
-            } else {
-                animatedModel_->TransitionToAnimation("walk", 0.3f);
-                isBlending_ = true;
-                blendTimer_ = 0.0f;
-            }
+            ChangeAnimation(isSneaking_ ? "sneakWalk" : "walk");
         }
     }
 }

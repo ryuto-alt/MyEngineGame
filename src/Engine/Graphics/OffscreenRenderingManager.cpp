@@ -39,7 +39,6 @@ void OffscreenRenderingManager::Initialize(DirectXCommon* dxCommon, SrvManager* 
     renderTexture_ = std::make_unique<RenderTexture>();
     
     if (!renderTexture_) {
-        OutputDebugStringA("OffscreenRenderingManager::Initialize - ERROR: Failed to create RenderTexture!\n");
         return;
     }
     
@@ -385,21 +384,12 @@ void OffscreenRenderingManager::CopyToSwapChain() {
     // 処理モードに応じてPipelineState設定
     switch (processingMode_) {
     case ProcessingMode::Normal:
-        if (!copyImagePipelineState_) {
-            OutputDebugStringA("ERROR: copyImagePipelineState_ is null!\n");
-        }
         commandList->SetPipelineState(copyImagePipelineState_.Get());
         break;
     case ProcessingMode::Grayscale:
-        if (!grayscalePipelineState_) {
-            OutputDebugStringA("ERROR: grayscalePipelineState_ is null!\n");
-        }
         commandList->SetPipelineState(grayscalePipelineState_.Get());
         break;
     case ProcessingMode::Vignetting:
-        if (!vignettePipelineState_) {
-            OutputDebugStringA("ERROR: vignettePipelineState_ is null!\n");
-        }
         commandList->SetPipelineState(vignettePipelineState_.Get());
         break;
     default:
