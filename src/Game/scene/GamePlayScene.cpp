@@ -68,8 +68,6 @@ void GamePlayScene::Initialize() {
         tempModel.Initialize(dxCommon_);
         std::vector<ModelData> multiMaterialData = tempModel.LoadMultiMaterialGLB("Resources/Models/cube/obje.glb");
         
-        // GLBマルチマテリアル読み込み完了
-        
         // 各マテリアルごとに別々のModelとObject3dを作成
         for (size_t i = 0; i < multiMaterialData.size(); ++i) {
             // Modelを作成
