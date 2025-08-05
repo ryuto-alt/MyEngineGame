@@ -1,4 +1,5 @@
 #include "LightManager.h"
+#include "Camera.h"
 #include <cmath>
 
 LightManager::LightManager() {
@@ -8,10 +9,10 @@ LightManager::~LightManager() {
 }
 
 void LightManager::Initialize() {
-    // ディレクショナルライトの初期設定
+    // ディレクショナルライトの初期設定（非常に弱く設定）
     directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
     directionalLight_.direction = { 0.0f, -1.0f, 0.5f };
-    directionalLight_.intensity = 1.0f;
+    directionalLight_.intensity = 0.05f;  // 1.0fから0.05fに減らす（ほぼ効果なし）
     
     // スポットライトの初期設定
     spotLight_.color = { 1.0f, 0.9f, 0.8f, 1.0f };
@@ -25,6 +26,9 @@ void LightManager::Initialize() {
     // 初期値をバックアップ
     dirLightIntensityBackup_ = directionalLight_.intensity;
     spotLightIntensityBackup_ = spotLight_.intensity;
+    
+    // デフォルトでディレクショナルライトを無効化（スポットライトのみ使用）
+    enableDirectionalLight_ = false;
 }
 
 void LightManager::Update() {
@@ -125,4 +129,64 @@ void LightManager::UpdateLightIntensity() {
     } else if (spotLight_.intensity == 0.0f) {
         spotLight_.intensity = spotLightIntensityBackup_;
     }
+}
+
+void LightManager::UpdateSpotLightPosition(const Vector3& playerPos, float playerRotationY) {
+    if (!followPlayer_) return;
+    
+    // プレイヤーの位置から少し上にスポットライトを配置
+    spotLight_.position = playerPos;
+    spotLight_.position.y += 2.5f; // プレイヤーの頭上2.5ユニット
+    
+    // プレイヤーの前方にライトを向ける
+    float cosY = cosf(playerRotationY);
+    float sinY = sinf(playerRotationY);
+    
+    // 前方向を計算（プレイヤーの向いている方向）
+    spotLight_.direction.x = sinY;
+    spotLight_.direction.y = -0.8f; // 少し下向き
+    spotLight_.direction.z = cosY;
+    
+    // 方向ベクトルを正規化
+    float dirLength = sqrtf(
+        spotLight_.direction.x * spotLight_.direction.x +
+        spotLight_.direction.y * spotLight_.direction.y +
+        spotLight_.direction.z * spotLight_.direction.z
+    );
+    
+    if (dirLength > 0.001f) {
+        spotLight_.direction.x /= dirLength;
+        spotLight_.direction.y /= dirLength;
+        spotLight_.direction.z /= dirLength;
+    }
+}
+
+void LightManager::UpdateSpotLightForFirstPerson(Camera* camera) {
+    if (!camera || !followPlayer_) return;
+    
+    // カメラの位置をスポットライトの位置に設定
+    Vector3 cameraPos = camera->GetTranslate();
+    spotLight_.position = cameraPos;
+    
+    // カメラの前方ベクトルを取得してライトの方向に設定
+    Vector3 forward = camera->GetForwardVector();
+    spotLight_.direction = forward;
+    
+    // 方向ベクトルを正規化（GetForwardVectorは既に正規化されているはずだが念のため）
+    float dirLength = sqrtf(
+        spotLight_.direction.x * spotLight_.direction.x +
+        spotLight_.direction.y * spotLight_.direction.y +
+        spotLight_.direction.z * spotLight_.direction.z
+    );
+    
+    if (dirLength > 0.001f) {
+        spotLight_.direction.x /= dirLength;
+        spotLight_.direction.y /= dirLength;
+        spotLight_.direction.z /= dirLength;
+    }
+    
+    // 一人称視点用のスポットライト設定
+    spotLight_.innerCone = cosf(15.0f * 3.14159265f / 180.0f);  // 内側15度
+    spotLight_.outerCone = cosf(25.0f * 3.14159265f / 180.0f);  // 外側25度
+    spotLight_.intensity = 3.0f;  // 明るめに設定
 }

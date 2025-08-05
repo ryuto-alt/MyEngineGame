@@ -114,8 +114,8 @@ PixelShaderOutput main(VertexShaderOutput input)
             spotLighting = gSpotLight.color.rgb * spotDiffuse * gSpotLight.intensity * attenuation * spotFactor;
         }
         
-        // アンビエントライトを追加（暗すぎる問題を解決）
-        float3 ambient = float3(0.15f, 0.15f, 0.15f); // 環境光を追加
+        // アンビエントライトを追加（スポットライト以外は真っ暗にする）
+        float3 ambient = float3(0.002f, 0.002f, 0.002f); // 環境光を0.02から0.002に減らす（ほぼ真っ暗）
         
         // 環境マップの計算（有効な場合のみ）
         float3 environmentLighting = float3(0.0f, 0.0f, 0.0f);
@@ -124,7 +124,7 @@ PixelShaderOutput main(VertexShaderOutput input)
             float3 cameraToPosition = normalize(input.worldPos - gCamera.worldPosition);
             float3 reflectedVector = reflect(cameraToPosition, normalize(input.normal));
             float4 environmentColor = gEnvironmentTexture.Sample(gSample, reflectedVector);
-            environmentLighting = environmentColor.rgb * 0.3f; // 環境反射の強度を調整
+            environmentLighting = environmentColor.rgb * 0.01f; // 環境反射の強度を0.05から0.01に減らす（ほぼ見えない）
         }
         
         // すべてのライティングを合成

@@ -33,6 +33,9 @@ void GamePlayScene::Initialize() {
     engine_->SetCameraHeight(3.0f);
     engine_->SetCameraTarget(Vector3{0.0f, 0.0f, 0.0f});
     
+    // 一人称視点モードに設定
+    camera_->SetCameraMode(CAMERA_MODE_FIRST_PERSON);
+    
     // マネージャーの初期化
     lightManager_ = std::make_unique<LightManager>();
     lightManager_->Initialize();
@@ -83,6 +86,15 @@ void GamePlayScene::Update() {
     
 #endif
 
+    // F2キーで一人称視点とオービットカメラモードの切り替え
+    if (engine_->IsKeyTriggered(DIK_F2)) {
+        if (camera_->GetCameraMode() == CAMERA_MODE_FIRST_PERSON) {
+            camera_->SetCameraMode(CAMERA_MODE_ORBIT);
+        } else if (camera_->GetCameraMode() == CAMERA_MODE_ORBIT) {
+            camera_->SetCameraMode(CAMERA_MODE_FIRST_PERSON);
+        }
+    }
+
     // フィルター効果切り替え
     if (engine_->IsKeyTriggered(DIK_1)) {
         currentPostProcessMode_ = 0;
@@ -109,7 +121,7 @@ void GamePlayScene::Update() {
     if (!engine_->IsFreeCameraMode()) {
 #endif
         // カメラフォロー更新（プレイヤー移動処理の前に実行）
-        player_->UpdateCameraFollow();
+        player_->UpdateCameraFollow(deltaTime);
 #ifdef _DEBUG
     }
 #endif
@@ -124,6 +136,10 @@ void GamePlayScene::Update() {
     
     if (!engine_->IsFreeCameraMode()) {
 #endif
+        // スプリント処理（SHIFT キー）
+        bool isSprintPressed = engine_->IsKeyPressed(DIK_LSHIFT);
+        player_->SetSprinting(isSprintPressed);
+        
         // 統合移動入力を取得
         Vector2 movement = engine_->GetMovementInput();
         
@@ -159,6 +175,15 @@ void GamePlayScene::Update() {
 
     // ライトマネージャーの更新
     lightManager_->Update();
+    
+    // カメラモードに応じてスポットライトを更新
+    if (camera_->GetCameraMode() == CAMERA_MODE_FIRST_PERSON) {
+        // 一人称視点の場合はカメラ位置・向きに追従
+        lightManager_->UpdateSpotLightForFirstPerson(camera_);
+    } else {
+        // それ以外はプレイヤーに追従
+        lightManager_->UpdateSpotLightPosition(player_->GetPosition(), player_->GetRotationY());
+    }
 
     // ライトの設定をオブジェクトに適用
     const DirectionalLight& dirLight = lightManager_->GetDirectionalLight();

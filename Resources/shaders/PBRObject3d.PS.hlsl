@@ -274,14 +274,15 @@ PixelShaderOutput main(VertexShaderOutput input)
         
         // 環境反射の寄与（簡易実装）
         float32_t3 envContribution = envReflection * F;
-        color += envContribution * 0.1; // 環境反射の強度を調整
+        color += envContribution * 0.005; // 環境反射の強度を0.02から0.005に減らす（ほぼ見えない）
     }
     
     // ============== 環境光（IBL簡易実装） ==============
     {
         // 環境マップからの簡易環境光
         float32_t3 envAmbient = gEnvironmentMap.Sample(gSampler, normal).rgb;
-        float32_t3 ambient = envAmbient * albedo * occlusion * 0.03;
+        // 環境光をほぼゼロにして、スポットライト以外は真っ暗にする
+        float32_t3 ambient = envAmbient * albedo * occlusion * 0.0005; // 0.005から0.0005に変更（ほぼ真っ暗）
         color += ambient;
     }
     

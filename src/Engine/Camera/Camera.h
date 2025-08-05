@@ -8,7 +8,8 @@
 enum CameraMode {
     CAMERA_MODE_FREE = 0,     // フリーカメラ（自由移動）
     CAMERA_MODE_FIXED = 1,    // 固定カメラ
-    CAMERA_MODE_ORBIT = 2     // オービットカメラ（プレイヤー追従）
+    CAMERA_MODE_ORBIT = 2,    // オービットカメラ（プレイヤー追従）
+    CAMERA_MODE_FIRST_PERSON = 3  // 一人称視点
 };
 
 // カメラクラス - 3Dオブジェクトからカメラ機能を分離
@@ -56,6 +57,15 @@ public:
     Vector3 GetOrbitTarget() const { return orbitTarget_; }
     float GetOrbitDistance() const { return orbitDistance_; }
     float GetOrbitHeight() const { return orbitHeight_; }
+    
+    // 一人称視点機能
+    void SetFirstPersonTarget(const Vector3& target);
+    void SetFirstPersonHeadOffset(float offset);
+    void UpdateFirstPersonCamera(float deltaTime = 0.016f);
+    void SetHeadBobEnabled(bool enabled);
+    bool IsHeadBobEnabled() const { return headBobEnabled_; }
+    void SetHeadBobFrequency(float frequency) { headBobFrequency_ = frequency; }
+    void SetHeadBobAmplitude(float amplitude) { headBobAmplitude_ = amplitude; }
     
     // マウス視点制御機能
     void ToggleMouseLook();
@@ -119,6 +129,14 @@ private:
     HWND windowHandle_;         // ウィンドウハンドル
     POINT lastMousePos_;        // 前回のマウス位置
     RECT windowRect_;           // ウィンドウ矩形
+    
+    // 一人称視点関連
+    Vector3 firstPersonTarget_; // 一人称視点のターゲット位置（プレイヤーの位置）
+    float firstPersonHeadOffset_ = 1.5f; // 目の高さオフセット（頭より低い）
+    bool headBobEnabled_ = true; // 頭の揺れ効果の有効/無効
+    float headBobTimer_ = 0.0f; // 揺れ効果用タイマー
+    float headBobAmplitude_ = 0.05f; // 揺れの振幅（見やすい程度に増加）
+    float headBobFrequency_ = 2.5f; // 揺れの周波数（歩行リズムに合わせて）
 };
 
 // 静的なデフォルトカメラの定義

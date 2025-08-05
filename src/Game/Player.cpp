@@ -138,6 +138,12 @@ void Player::ChangeAnimation(const std::string& animationName) {
 
 void Player::Draw() {
     if (!object3d_) return;
+    
+    // 一人称視点の場合はプレイヤーモデルを描画しない
+    if (IsFirstPersonView()) {
+        return;
+    }
+    
     object3d_->Draw();
 }
 
@@ -186,6 +192,16 @@ void Player::SetPosition(const Vector3& position) {
     if (object3d_) {
         object3d_->SetPosition(position_);
     }
+}
+
+Vector3 Player::GetHeadPosition() const {
+    Vector3 headPos = position_;
+    headPos.y += GetHeadHeight();
+    return headPos;
+}
+
+bool Player::IsFirstPersonView() const {
+    return camera_ && camera_->GetCameraMode() == CAMERA_MODE_FIRST_PERSON;
 }
 
 void Player::PauseAnimation() {
@@ -259,7 +275,16 @@ void Player::UpdateAnimation(float deltaTime) {
 }
 
 void Player::UpdateRotation(UnoEngine* engine, float deltaTime) {
-    currentRotationY_ = engine->SmoothRotation(currentRotationY_, targetRotationY_, rotationSmoothingSpeed_, deltaTime);
+    // 一人称視点の場合、カメラの回転をプレイヤーに反映
+    if (IsFirstPersonView()) {
+        // カメラのY軸回転を直接プレイヤーの回転に設定
+        currentRotationY_ = camera_->GetRotate().y;
+        targetRotationY_ = currentRotationY_;
+    }
+    else {
+        // 三人称視点の場合、従来通りスムーズな回転
+        currentRotationY_ = engine->SmoothRotation(currentRotationY_, targetRotationY_, rotationSmoothingSpeed_, deltaTime);
+    }
 }
 
 // カメラ方向ベースの移動機能
@@ -362,7 +387,12 @@ void Player::MoveWithCameraDirection(float forward, float right, float deltaTime
         moveDirection.z /= moveLength;
         
         // 移動速度を適用
-        float currentSpeed = isSneaking_ ? moveSpeed_ * sneakSpeedMultiplier_ : moveSpeed_;
+        float currentSpeed = moveSpeed_;
+        if (isSprinting_) {
+            currentSpeed *= sprintSpeedMultiplier_;  // スプリント時は2倍速
+        } else if (isSneaking_) {
+            currentSpeed *= sneakSpeedMultiplier_;   // スニーク時は半分
+        }
         float distance = currentSpeed * deltaTime;
         
         // プレイヤーの位置を更新
@@ -381,18 +411,41 @@ void Player::MoveWithCameraDirection(float forward, float right, float deltaTime
 }
 
 // カメラフォロー機能（オービットカメラ）
-void Player::UpdateCameraFollow() {
+void Player::UpdateCameraFollow(float deltaTime) {
     if (!camera_) return;
     
-    // プレイヤーの位置をオービットカメラのターゲットに設定
-    camera_->SetOrbitTarget(position_);
-    
-    // オービットカメラの距離と高さを設定
-    camera_->SetOrbitDistance(3.0f);  // プレイヤーから3ユニットの距離
-    camera_->SetOrbitHeight(2.5f);    // プレイヤーから2.5ユニット上の高さ
-    
-    // オービットカメラの位置を更新
-    camera_->UpdateOrbitCamera();
+    // カメラモードに応じて処理を分岐
+    if (camera_->GetCameraMode() == CAMERA_MODE_FIRST_PERSON) {
+        // 一人称視点モードの場合
+        camera_->SetFirstPersonTarget(position_);
+        camera_->SetFirstPersonHeadOffset(GetHeadHeight());
+        
+        // 歩行中のみ頭の揺れを有効化
+        camera_->SetHeadBobEnabled(isMoving_);
+        
+        // スプリント時は頭の揺れを速くする
+        if (isSprinting_) {
+            camera_->SetHeadBobFrequency(4.0f);  // 通常の1.6倍の速さ
+            camera_->SetHeadBobAmplitude(0.06f); // 振幅も少し大きく
+        } else {
+            camera_->SetHeadBobFrequency(2.5f);  // 通常の歩行速度
+            camera_->SetHeadBobAmplitude(0.05f); // 通常の振幅
+        }
+        
+        // 一人称カメラの位置を更新
+        camera_->UpdateFirstPersonCamera(deltaTime);
+    }
+    else if (camera_->GetCameraMode() == CAMERA_MODE_ORBIT) {
+        // オービットカメラモードの場合
+        camera_->SetOrbitTarget(position_);
+        
+        // オービットカメラの距離と高さを設定
+        camera_->SetOrbitDistance(3.0f);  // プレイヤーから3ユニットの距離
+        camera_->SetOrbitHeight(2.5f);    // プレイヤーから2.5ユニット上の高さ
+        
+        // オービットカメラの位置を更新
+        camera_->UpdateOrbitCamera();
+    }
 }
 
 // 移動停止の管理
@@ -407,4 +460,15 @@ void Player::StopMoving() {
             }
         }
     }
+    isSprinting_ = false;  // 移動停止時はスプリントも解除
+}
+
+// スプリント機能
+void Player::SetSprinting(bool sprinting) {
+    // スニーク中はスプリントできない
+    if (isSneaking_) {
+        isSprinting_ = false;
+        return;
+    }
+    isSprinting_ = sprinting;
 }

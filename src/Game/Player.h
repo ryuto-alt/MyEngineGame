@@ -16,6 +16,11 @@ public:
     void SetPosition(const Vector3& position);
     float GetRotationY() const { return currentRotationY_; }
     
+    // 一人称視点用のメソッド
+    Vector3 GetHeadPosition() const; 
+    float GetHeadHeight() const { return 1.5f; } // プレイヤーの目の高さ（頭より少し低い）
+    bool IsFirstPersonView() const;
+    
     // ライトの設定
     void SetDirectionalLight(const DirectionalLight& light);
     void SetSpotLight(const SpotLight& light);
@@ -39,6 +44,7 @@ public:
     bool IsMoving() const { return isMoving_; }
     bool IsSneaking() const { return isSneaking_; }
     bool IsBlending() const { return isBlending_; }
+    bool IsSprinting() const { return isSprinting_; }
     float GetBlendProgress() const;
     
     // 回転スムーシング速度の設定
@@ -56,10 +62,13 @@ public:
     void MoveWithCameraDirection(float forward, float right, float deltaTime);
     
     // カメラフォロー機能
-    void UpdateCameraFollow();
+    void UpdateCameraFollow(float deltaTime);
     
     // 移動停止の管理
     void StopMoving();
+    
+    // スプリント機能
+    void SetSprinting(bool sprinting);
     
 
 private:
@@ -87,8 +96,10 @@ private:
     // 移動関連
     const float moveSpeed_ = 3.0f;  // 1秒あたり3ユニット（60FPSで0.05f = 1秒で3.0f）
     const float sneakSpeedMultiplier_ = 0.5f;
+    const float sprintSpeedMultiplier_ = 2.0f;  // スプリント時は2倍速
     bool isMoving_ = false;
     bool isSneaking_ = false;
+    bool isSprinting_ = false;
     bool previousBButtonPressed_ = false;
     Vector3 moveDirection_ = Vector3{0.0f, 0.0f, 0.0f};
     

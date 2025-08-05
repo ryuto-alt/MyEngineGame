@@ -155,25 +155,47 @@ void Camera::ProcessMouseInput(float deltaX, float deltaY) {
     }
 #endif
     
-    // オービット角度を変更
-    orbitAngleY_ += deltaX * mouseSensitivity_;  // 水平回転
-    orbitAngleX_ += deltaY * mouseSensitivity_;  // 垂直回転
-    
-    // X軸回転を適切な範囲に制限（上下の回転制限）
-    // 上限: +45度（0.785ラジアン）、下限: -30度（-0.52ラジアン）
-    if (orbitAngleX_ > 0.785f) {
-        orbitAngleX_ = 0.785f;
+    // 一人称視点モードの場合
+    if (cameraMode_ == CAMERA_MODE_FIRST_PERSON) {
+        // 低めの感度で回転（一人称用の感度設定）
+        float firstPersonSensitivity = mouseSensitivity_ * 0.5f; // 感度を半分に
+        transform_.rotate.y += deltaX * firstPersonSensitivity;  // 水平回転
+        transform_.rotate.x += deltaY * firstPersonSensitivity;  // 垂直回転
+        
+        // X軸回転を制限（上下視点の制限）
+        if (transform_.rotate.x > 1.2f) transform_.rotate.x = 1.2f;    // 約69度
+        if (transform_.rotate.x < -1.2f) transform_.rotate.x = -1.2f;  // 約-69度
+        
+        // Y軸回転を-π～πの範囲に正規化
+        while (transform_.rotate.y > 3.14159f) {
+            transform_.rotate.y -= 2.0f * 3.14159f;
+        }
+        while (transform_.rotate.y < -3.14159f) {
+            transform_.rotate.y += 2.0f * 3.14159f;
+        }
     }
-    if (orbitAngleX_ < -0.52f) {
-        orbitAngleX_ = -0.52f;
-    }
-    
-    // Y軸回転を-π～πの範囲に正規化
-    while (orbitAngleY_ > 3.14159f) {
-        orbitAngleY_ -= 2.0f * 3.14159f;
-    }
-    while (orbitAngleY_ < -3.14159f) {
-        orbitAngleY_ += 2.0f * 3.14159f;
+    // オービットモードの場合
+    else if (cameraMode_ == CAMERA_MODE_ORBIT) {
+        // オービット角度を変更
+        orbitAngleY_ += deltaX * mouseSensitivity_;  // 水平回転
+        orbitAngleX_ += deltaY * mouseSensitivity_;  // 垂直回転
+        
+        // X軸回転を適切な範囲に制限（上下の回転制限）
+        // 上限: +45度（0.785ラジアン）、下限: -30度（-0.52ラジアン）
+        if (orbitAngleX_ > 0.785f) {
+            orbitAngleX_ = 0.785f;
+        }
+        if (orbitAngleX_ < -0.52f) {
+            orbitAngleX_ = -0.52f;
+        }
+        
+        // Y軸回転を-π～πの範囲に正規化
+        while (orbitAngleY_ > 3.14159f) {
+            orbitAngleY_ -= 2.0f * 3.14159f;
+        }
+        while (orbitAngleY_ < -3.14159f) {
+            orbitAngleY_ += 2.0f * 3.14159f;
+        }
     }
 }
 
@@ -335,25 +357,47 @@ void Camera::ProcessRightStickInput(float deltaX, float deltaY) {
     }
 #endif
     
-    // オービット角度を変更
-    orbitAngleY_ += deltaX * stickSensitivity_ * 0.01f;  // 水平回転
-    orbitAngleX_ += deltaY * stickSensitivity_ * 0.01f;  // 垂直回転
-    
-    // X軸回転を適切な範囲に制限（上下の回転制限）
-    // 上限: +45度（0.785ラジアン）、下限: -30度（-0.52ラジアン）
-    if (orbitAngleX_ > 0.785f) {
-        orbitAngleX_ = 0.785f;
+    // 一人称視点モードの場合
+    if (cameraMode_ == CAMERA_MODE_FIRST_PERSON) {
+        // 低めの感度で回転（一人称用の感度設定）
+        float firstPersonSensitivity = stickSensitivity_ * 0.005f; // 感度を低めに
+        transform_.rotate.y += deltaX * firstPersonSensitivity;  // 水平回転
+        transform_.rotate.x += deltaY * firstPersonSensitivity;  // 垂直回転
+        
+        // X軸回転を制限（上下視点の制限）
+        if (transform_.rotate.x > 1.2f) transform_.rotate.x = 1.2f;    // 約69度
+        if (transform_.rotate.x < -1.2f) transform_.rotate.x = -1.2f;  // 約-69度
+        
+        // Y軸回転を-π～πの範囲に正規化
+        while (transform_.rotate.y > 3.14159f) {
+            transform_.rotate.y -= 2.0f * 3.14159f;
+        }
+        while (transform_.rotate.y < -3.14159f) {
+            transform_.rotate.y += 2.0f * 3.14159f;
+        }
     }
-    if (orbitAngleX_ < -0.52f) {
-        orbitAngleX_ = -0.52f;
-    }
-    
-    // Y軸回転を-π～πの範囲に正規化
-    while (orbitAngleY_ > 3.14159f) {
-        orbitAngleY_ -= 2.0f * 3.14159f;
-    }
-    while (orbitAngleY_ < -3.14159f) {
-        orbitAngleY_ += 2.0f * 3.14159f;
+    // オービットモードの場合
+    else if (cameraMode_ == CAMERA_MODE_ORBIT) {
+        // オービット角度を変更
+        orbitAngleY_ += deltaX * stickSensitivity_ * 0.01f;  // 水平回転
+        orbitAngleX_ += deltaY * stickSensitivity_ * 0.01f;  // 垂直回転
+        
+        // X軸回転を適切な範囲に制限（上下の回転制限）
+        // 上限: +45度（0.785ラジアン）、下限: -30度（-0.52ラジアン）
+        if (orbitAngleX_ > 0.785f) {
+            orbitAngleX_ = 0.785f;
+        }
+        if (orbitAngleX_ < -0.52f) {
+            orbitAngleX_ = -0.52f;
+        }
+        
+        // Y軸回転を-π～πの範囲に正規化
+        while (orbitAngleY_ > 3.14159f) {
+            orbitAngleY_ -= 2.0f * 3.14159f;
+        }
+        while (orbitAngleY_ < -3.14159f) {
+            orbitAngleY_ += 2.0f * 3.14159f;
+        }
     }
 }
 
@@ -429,4 +473,57 @@ void Camera::UpdateOrbitCamera() {
         transform_.rotate.x = asinf(-direction.y);
         transform_.rotate.z = 0.0f;
     }
+}
+
+void Camera::SetFirstPersonTarget(const Vector3& target) {
+    firstPersonTarget_ = target;
+}
+
+void Camera::SetFirstPersonHeadOffset(float offset) {
+    firstPersonHeadOffset_ = offset;
+}
+
+void Camera::SetHeadBobEnabled(bool enabled) {
+    headBobEnabled_ = enabled;
+}
+
+void Camera::UpdateFirstPersonCamera(float deltaTime) {
+    // プレイヤーの目の位置を計算
+    Vector3 eyePosition = firstPersonTarget_;
+    eyePosition.y += firstPersonHeadOffset_;
+    
+    // カメラを前方に少しオフセットして頭が見えないようにする
+    float forwardOffset = 0.15f; // 前方に15cm
+    float cosY = cosf(transform_.rotate.y);
+    float sinY = sinf(transform_.rotate.y);
+    
+    eyePosition.x += sinY * forwardOffset;
+    eyePosition.z += cosY * forwardOffset;
+    
+    // 頭の揺れ効果を追加（歩行時）
+    if (headBobEnabled_ && cameraMode_ == CAMERA_MODE_FIRST_PERSON) {
+        // タイマーを更新（デルタタイムを使用）
+        headBobTimer_ += deltaTime;
+        
+        // 縦方向の揺れ（サイン波）
+        float verticalBob = sinf(headBobTimer_ * headBobFrequency_ * 3.14159f) * headBobAmplitude_;
+        eyePosition.y += verticalBob;
+        
+        // 横方向の小さな揺れ（2倍周波数）
+        float horizontalBob = sinf(headBobTimer_ * headBobFrequency_ * 2.0f * 3.14159f) * headBobAmplitude_ * 0.5f;
+        
+        // カメラの回転に基づいて横揺れを適用
+        eyePosition.x += horizontalBob * cosY;
+        eyePosition.z -= horizontalBob * sinY;
+    }
+    else if (!headBobEnabled_) {
+        // 歩行停止時はタイマーをリセット
+        headBobTimer_ = 0.0f;
+    }
+    
+    // カメラの位置を目の位置に設定
+    transform_.translate = eyePosition;
+    
+    // 一人称視点では回転はプレイヤーの入力で制御される
+    // ProcessMouseInputやProcessRightStickInputで回転が更新される
 }
