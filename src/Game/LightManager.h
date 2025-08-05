@@ -49,4 +49,13 @@ private:
     
     // スポットライトのプレイヤー追従フラグ
     bool followPlayer_ = true;
+    
+    // ライトの滑らかな追従用
+    Vector3 currentLightPosition_ = Vector3{0.0f, 0.0f, 0.0f};
+    Vector3 currentLightDirection_ = Vector3{0.0f, -1.0f, 0.0f};
+    
+    // ホラー演出用
+    float flickerTimer_ = 0.0f;
+    float baseIntensity_ = 3.0f;
+    float lastFlickerTime_ = 0.0f;
 };

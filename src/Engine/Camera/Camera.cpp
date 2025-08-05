@@ -505,16 +505,9 @@ void Camera::UpdateFirstPersonCamera(float deltaTime) {
         // タイマーを更新（デルタタイムを使用）
         headBobTimer_ += deltaTime;
         
-        // 縦方向の揺れ（サイン波）
+        // 縦方向の揺れのみ（サイン波）
         float verticalBob = sinf(headBobTimer_ * headBobFrequency_ * 3.14159f) * headBobAmplitude_;
         eyePosition.y += verticalBob;
-        
-        // 横方向の小さな揺れ（2倍周波数）
-        float horizontalBob = sinf(headBobTimer_ * headBobFrequency_ * 2.0f * 3.14159f) * headBobAmplitude_ * 0.5f;
-        
-        // カメラの回転に基づいて横揺れを適用
-        eyePosition.x += horizontalBob * cosY;
-        eyePosition.z -= horizontalBob * sinY;
     }
     else if (!headBobEnabled_) {
         // 歩行停止時はタイマーをリセット

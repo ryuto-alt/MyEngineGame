@@ -1,6 +1,7 @@
 #include "LightManager.h"
 #include "Camera.h"
 #include <cmath>
+#include <random>
 
 LightManager::LightManager() {
 }
@@ -26,6 +27,10 @@ void LightManager::Initialize() {
     // 初期値をバックアップ
     dirLightIntensityBackup_ = directionalLight_.intensity;
     spotLightIntensityBackup_ = spotLight_.intensity;
+    
+    // ライトの初期位置を設定
+    currentLightPosition_ = spotLight_.position;
+    currentLightDirection_ = spotLight_.direction;
     
     // デフォルトでディレクショナルライトを無効化（スポットライトのみ使用）
     enableDirectionalLight_ = false;
@@ -164,29 +169,75 @@ void LightManager::UpdateSpotLightPosition(const Vector3& playerPos, float playe
 void LightManager::UpdateSpotLightForFirstPerson(Camera* camera) {
     if (!camera || !followPlayer_) return;
     
-    // カメラの位置をスポットライトの位置に設定
-    Vector3 cameraPos = camera->GetTranslate();
-    spotLight_.position = cameraPos;
+    // デルタタイム（仮に16ms = 60FPS）
+    const float deltaTime = 0.016f;
     
-    // カメラの前方ベクトルを取得してライトの方向に設定
-    Vector3 forward = camera->GetForwardVector();
-    spotLight_.direction = forward;
+    // カメラの位置と向きを取得
+    Vector3 targetPos = camera->GetTranslate();
+    Vector3 targetDirection = camera->GetForwardVector();
     
-    // 方向ベクトルを正規化（GetForwardVectorは既に正規化されているはずだが念のため）
+    // ライト位置の滑らかな追従（遅延を持たせる）
+    const float positionSmoothness = 5.0f;  // 値が小さいほど遅延が大きい
+    currentLightPosition_.x += (targetPos.x - currentLightPosition_.x) * positionSmoothness * deltaTime;
+    currentLightPosition_.y += (targetPos.y - currentLightPosition_.y) * positionSmoothness * deltaTime;
+    currentLightPosition_.z += (targetPos.z - currentLightPosition_.z) * positionSmoothness * deltaTime;
+    
+    // ライト方向の滑らかな追従（さらに遅延を持たせる）
+    const float directionSmoothness = 3.0f;  // 方向はより遅れて追従
+    currentLightDirection_.x += (targetDirection.x - currentLightDirection_.x) * directionSmoothness * deltaTime;
+    currentLightDirection_.y += (targetDirection.y - currentLightDirection_.y) * directionSmoothness * deltaTime;
+    currentLightDirection_.z += (targetDirection.z - currentLightDirection_.z) * directionSmoothness * deltaTime;
+    
+    // 方向ベクトルを正規化
     float dirLength = sqrtf(
-        spotLight_.direction.x * spotLight_.direction.x +
-        spotLight_.direction.y * spotLight_.direction.y +
-        spotLight_.direction.z * spotLight_.direction.z
+        currentLightDirection_.x * currentLightDirection_.x +
+        currentLightDirection_.y * currentLightDirection_.y +
+        currentLightDirection_.z * currentLightDirection_.z
     );
     
     if (dirLength > 0.001f) {
-        spotLight_.direction.x /= dirLength;
-        spotLight_.direction.y /= dirLength;
-        spotLight_.direction.z /= dirLength;
+        currentLightDirection_.x /= dirLength;
+        currentLightDirection_.y /= dirLength;
+        currentLightDirection_.z /= dirLength;
     }
+    
+    // スポットライトに適用
+    spotLight_.position = currentLightPosition_;
+    spotLight_.direction = currentLightDirection_;
+    
+    // ホラー演出：電池切れ風のフリッカー効果
+    flickerTimer_ += deltaTime;
+    
+    // ランダムジェネレータ
+    static std::random_device rd;
+    static std::mt19937 gen(rd());
+    static std::uniform_real_distribution<float> smallFlicker(0.7f, 1.0f);  // 小さな明度変化
+    static std::uniform_real_distribution<float> bigFlicker(0.2f, 0.4f);    // 大きな明度低下
+    static std::uniform_real_distribution<float> flickerChance(0.0f, 1.0f);
+    
+    // 基本的な明るさの揺らぎ（常時）
+    float intensity = baseIntensity_ * smallFlicker(gen);
+    
+    // たまに大きくフリッカー（電池切れ感）
+    if (flickerTimer_ - lastFlickerTime_ > 2.0f) {  // 2秒ごとにチェック
+        if (flickerChance(gen) < 0.3f) {  // 30%の確率で大きくフリッカー
+            intensity *= bigFlicker(gen);
+            lastFlickerTime_ = flickerTimer_;
+        }
+    }
+    
+    // 時々完全に消える（0.1秒間）
+    if (flickerChance(gen) < 0.005f) {  // 0.5%の確率
+        intensity = 0.0f;
+    }
+    
+    spotLight_.intensity = intensity;
+    
+    // 色温度も少し変化させる（黄色っぽくなったり白っぽくなったり）
+    float colorVariation = smallFlicker(gen);
+    spotLight_.color = { 1.0f, 0.85f * colorVariation, 0.7f * colorVariation, 1.0f };
     
     // 一人称視点用のスポットライト設定
     spotLight_.innerCone = cosf(15.0f * 3.14159265f / 180.0f);  // 内側15度
     spotLight_.outerCone = cosf(25.0f * 3.14159265f / 180.0f);  // 外側25度
-    spotLight_.intensity = 3.0f;  // 明るめに設定
 }
