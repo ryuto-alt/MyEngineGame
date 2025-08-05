@@ -89,6 +89,7 @@ public:
     const Matrix4x4& GetViewProjectionMatrix() const;
     const Vector3& GetRotate() const;
     const Vector3& GetTranslate() const;
+    Vector3 GetBasePosition() const; // 頭の揺れを除いた基準位置を取得
     float GetFovY() const;
     float GetAspectRatio() const;
     float GetNearClip() const;
@@ -137,6 +138,7 @@ private:
     float headBobTimer_ = 0.0f; // 揺れ効果用タイマー
     float headBobAmplitude_ = 0.05f; // 揺れの振幅（見やすい程度に増加）
     float headBobFrequency_ = 2.5f; // 揺れの周波数（歩行リズムに合わせて）
+    Vector3 basePosition_ = Vector3{0.0f, 0.0f, 0.0f}; // 頭の揺れを除いた基準位置
 };
 
 // 静的なデフォルトカメラの定義

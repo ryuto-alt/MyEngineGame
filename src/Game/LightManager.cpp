@@ -10,19 +10,19 @@ LightManager::~LightManager() {
 }
 
 void LightManager::Initialize() {
-    // ディレクショナルライトの初期設定（非常に弱く設定）
+    // ディレクショナルライトの初期設定（完全に無効）
     directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
     directionalLight_.direction = { 0.0f, -1.0f, 0.5f };
-    directionalLight_.intensity = 0.05f;  // 1.0fから0.05fに減らす（ほぼ効果なし）
+    directionalLight_.intensity = 0.0f;  // 完全に無効（懐中電灯のみの環境）
     
-    // スポットライトの初期設定
-    spotLight_.color = { 1.0f, 0.9f, 0.8f, 1.0f };
+    // スポットライトの初期設定（懐中電灯風）
+    spotLight_.color = { 1.0f, 0.92f, 0.75f, 1.0f };  // 暖色系の電球色
     spotLight_.position = { 0.0f, 5.0f, -2.0f };
-    spotLight_.intensity = 2.0f;
+    spotLight_.intensity = 4.5f;  // baseIntensity_と合わせる
     spotLight_.direction = { 0.0f, -1.0f, 0.3f };
-    spotLight_.innerCone = cosf(12.0f * 3.14159265f / 180.0f);
-    spotLight_.attenuation = { 1.0f, 0.09f, 0.032f };
-    spotLight_.outerCone = cosf(20.0f * 3.14159265f / 180.0f);
+    spotLight_.innerCone = cosf(5.0f * 3.14159265f / 180.0f);   // 内側5度（非常に明るい中心部）
+    spotLight_.attenuation = { 1.0f, 0.22f, 0.20f };  // より強い減衰（特に二次減衰）
+    spotLight_.outerCone = cosf(40.0f * 3.14159265f / 180.0f);  // 外側40度（広いぼやけた周辺部）
     
     // 初期値をバックアップ
     dirLightIntensityBackup_ = directionalLight_.intensity;
@@ -172,18 +172,18 @@ void LightManager::UpdateSpotLightForFirstPerson(Camera* camera) {
     // デルタタイム（仮に16ms = 60FPS）
     const float deltaTime = 0.016f;
     
-    // カメラの位置と向きを取得
-    Vector3 targetPos = camera->GetTranslate();
+    // カメラの基準位置（頭の揺れを除いた位置）と向きを取得
+    Vector3 targetPos = camera->GetBasePosition();
     Vector3 targetDirection = camera->GetForwardVector();
     
     // ライト位置の滑らかな追従（遅延を持たせる）
-    const float positionSmoothness = 5.0f;  // 値が小さいほど遅延が大きい
+    const float positionSmoothness = 8.0f;  // 値を上げてよりスムーズに
     currentLightPosition_.x += (targetPos.x - currentLightPosition_.x) * positionSmoothness * deltaTime;
     currentLightPosition_.y += (targetPos.y - currentLightPosition_.y) * positionSmoothness * deltaTime;
     currentLightPosition_.z += (targetPos.z - currentLightPosition_.z) * positionSmoothness * deltaTime;
     
-    // ライト方向の滑らかな追従（さらに遅延を持たせる）
-    const float directionSmoothness = 3.0f;  // 方向はより遅れて追従
+    // ライト方向の滑らかな追従（少し遅延を持たせる）
+    const float directionSmoothness = 6.0f;  // 方向も少しスムーズに
     currentLightDirection_.x += (targetDirection.x - currentLightDirection_.x) * directionSmoothness * deltaTime;
     currentLightDirection_.y += (targetDirection.y - currentLightDirection_.y) * directionSmoothness * deltaTime;
     currentLightDirection_.z += (targetDirection.z - currentLightDirection_.z) * directionSmoothness * deltaTime;
@@ -211,33 +211,36 @@ void LightManager::UpdateSpotLightForFirstPerson(Camera* camera) {
     // ランダムジェネレータ
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    static std::uniform_real_distribution<float> smallFlicker(0.7f, 1.0f);  // 小さな明度変化
-    static std::uniform_real_distribution<float> bigFlicker(0.2f, 0.4f);    // 大きな明度低下
+    static std::uniform_real_distribution<float> smallFlicker(0.85f, 1.0f);  // より安定した明度
+    static std::uniform_real_distribution<float> bigFlicker(0.3f, 0.5f);     // 電池切れ時の明度低下
     static std::uniform_real_distribution<float> flickerChance(0.0f, 1.0f);
     
-    // 基本的な明るさの揺らぎ（常時）
-    float intensity = baseIntensity_ * smallFlicker(gen);
+    // 基本的な明るさ（懐中電灯は比較的安定）
+    float intensity = baseIntensity_ * (0.95f + 0.05f * smallFlicker(gen));
     
     // たまに大きくフリッカー（電池切れ感）
-    if (flickerTimer_ - lastFlickerTime_ > 2.0f) {  // 2秒ごとにチェック
-        if (flickerChance(gen) < 0.3f) {  // 30%の確率で大きくフリッカー
+    if (flickerTimer_ - lastFlickerTime_ > 3.5f) {  // 3.5秒ごとにチェック
+        if (flickerChance(gen) < 0.2f) {  // 20%の確率で明度低下
             intensity *= bigFlicker(gen);
             lastFlickerTime_ = flickerTimer_;
         }
     }
     
-    // 時々完全に消える（0.1秒間）
-    if (flickerChance(gen) < 0.005f) {  // 0.5%の確率
-        intensity = 0.0f;
+    // 稀に瞬きする（懐中電灯特有の接触不良）
+    if (flickerChance(gen) < 0.002f) {  // 0.2%の確率
+        intensity *= 0.1f;  // 一瞬暗くなる
     }
     
     spotLight_.intensity = intensity;
     
-    // 色温度も少し変化させる（黄色っぽくなったり白っぽくなったり）
-    float colorVariation = smallFlicker(gen);
-    spotLight_.color = { 1.0f, 0.85f * colorVariation, 0.7f * colorVariation, 1.0f };
+    // 懐中電灯の色温度（暖色系の電球色）
+    float colorVariation = 0.9f + 0.1f * smallFlicker(gen);  // 色の変化を抑える
+    spotLight_.color = { 1.0f, 0.92f * colorVariation, 0.75f * colorVariation, 1.0f };  // 電球色
     
-    // 一人称視点用のスポットライト設定
-    spotLight_.innerCone = cosf(15.0f * 3.14159265f / 180.0f);  // 内側15度
-    spotLight_.outerCone = cosf(25.0f * 3.14159265f / 180.0f);  // 外側25度
+    // 懐中電灯のリアルな光の設定
+    spotLight_.innerCone = cosf(5.0f * 3.14159265f / 180.0f);   // 内側5度（非常に明るい中心部）
+    spotLight_.outerCone = cosf(40.0f * 3.14159265f / 180.0f);  // 外側40度（広いぼやけた周辺部）
+    
+    // 懐中電灯の減衰特性
+    spotLight_.attenuation = { 1.0f, 0.22f, 0.20f };  // 距離による強い減衰
 }

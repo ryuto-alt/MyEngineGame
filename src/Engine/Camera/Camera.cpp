@@ -134,6 +134,10 @@ float Camera::GetFarClip() const {
     return farClip_;
 }
 
+Vector3 Camera::GetBasePosition() const {
+    return basePosition_;
+}
+
 // マウス視点移動関連
 void Camera::ProcessMouseInput(float deltaX, float deltaY) {
     // マウス視点移動が無効な場合は処理しない
@@ -157,8 +161,8 @@ void Camera::ProcessMouseInput(float deltaX, float deltaY) {
     
     // 一人称視点モードの場合
     if (cameraMode_ == CAMERA_MODE_FIRST_PERSON) {
-        // 低めの感度で回転（一人称用の感度設定）
-        float firstPersonSensitivity = mouseSensitivity_ * 0.5f; // 感度を半分に
+        // 適度な感度で回転（一人称用の感度設定）
+        float firstPersonSensitivity = mouseSensitivity_ * 0.7f; // 感度を0.7倍に
         transform_.rotate.y += deltaX * firstPersonSensitivity;  // 水平回転
         transform_.rotate.x += deltaY * firstPersonSensitivity;  // 垂直回転
         
@@ -359,8 +363,8 @@ void Camera::ProcessRightStickInput(float deltaX, float deltaY) {
     
     // 一人称視点モードの場合
     if (cameraMode_ == CAMERA_MODE_FIRST_PERSON) {
-        // 低めの感度で回転（一人称用の感度設定）
-        float firstPersonSensitivity = stickSensitivity_ * 0.005f; // 感度を低めに
+        // 適度な感度で回転（一人称用の感度設定）
+        float firstPersonSensitivity = stickSensitivity_ * 0.007f; // 感度を上げる
         transform_.rotate.y += deltaX * firstPersonSensitivity;  // 水平回転
         transform_.rotate.x += deltaY * firstPersonSensitivity;  // 垂直回転
         
@@ -499,6 +503,9 @@ void Camera::UpdateFirstPersonCamera(float deltaTime) {
     
     eyePosition.x += sinY * forwardOffset;
     eyePosition.z += cosY * forwardOffset;
+    
+    // 頭の揺れを加える前の基準位置を記録
+    basePosition_ = eyePosition;
     
     // 頭の揺れ効果を追加（歩行時）
     if (headBobEnabled_ && cameraMode_ == CAMERA_MODE_FIRST_PERSON) {
