@@ -1,44 +1,30 @@
 #pragma once
-#include "UnoEngine.h"
+#include "IScene.h"
 #include "Player.h"
 #include "Ground.h"
-#include "LightManager.h"
 #include "Skybox.h"
-#include "TextureManager.h"
-#include <vector>
+#include "LightManager.h"
 #include <memory>
-
 
 class GamePlayScene : public IScene {
 public:
-    GamePlayScene();
-    ~GamePlayScene() override;
+    GamePlayScene() = default;
+    ~GamePlayScene() override = default;
 
     void Initialize() override;
     void Update() override;
     void Draw() override;
     void Finalize() override;
 
-protected:
-    bool initialized_ = false;
-    
-    UnoEngine* engine_ = nullptr;
+private:
+    void HandleInput();
+    void UpdateCamera();
+    void DrawUI();
 
-    // ゲームオブジェクト
     std::unique_ptr<Player> player_;
     std::unique_ptr<Ground> ground_;
-    std::unique_ptr<LightManager> lightManager_;
     std::unique_ptr<Skybox> skybox_;
-    
-    // GLBモデル用（テスト用キューブ）- マルチマテリアル対応
-    std::vector<std::unique_ptr<Object3d>> cubeGlbObjects_;
-    std::vector<std::unique_ptr<Model>> cubeGlbModels_;
-    
-    // Skybox制御フラグ
-    bool skyboxEnabled_ = false;
-    
-    // カメラ移動速度（1秒あたりのユニット数）
-    const float cameraSpeed_ = 0.6f;  // 60FPSで0.01f = 1秒で0.6f
+    std::unique_ptr<LightManager> lightManager_;
 
-private:
+    bool skyboxEnabled_ = false;
 };
