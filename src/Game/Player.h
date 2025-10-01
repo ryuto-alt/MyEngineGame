@@ -46,6 +46,10 @@ public:
     float GetRotationSmoothingSpeed() const { return rotationSmoothingSpeed_; }
     float GetTargetRotationY() const { return targetRotationY_; }
     
+    void HandleInput(UnoEngine* engine);
+    void UpdateCameraSystem(UnoEngine* engine);
+    void SetupCamera(UnoEngine* engine);
+
     // カメラ方向ベースの移動
     void MoveForward(float distance);
     void MoveRight(float distance);

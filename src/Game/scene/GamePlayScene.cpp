@@ -6,33 +6,26 @@
 void GamePlayScene::Initialize() {
     UnoEngine* engine = UnoEngine::GetInstance();
 
-    camera_->SetFov(1.37f);
-    engine->SetCameraStickSensitivity(2.5f);
-    engine->SetCameraOrbitDistance(3.0f);
-    engine->SetCameraOrbitHeight(2.5f);
-    engine->SetCameraOrbitTarget(Vector3{0.0f, 0.0f, 0.0f});
-
     lightManager_ = std::make_unique<LightManager>();
     lightManager_->Initialize();
 
     player_ = std::make_unique<Player>();
     player_->Initialize(camera_);
+    player_->SetupCamera(engine);
+    player_->SetEnableEnvironmentMap(false);
 
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
 
     skyboxEnabled_ = false;
-
-    if (player_) {
-        player_->SetEnableEnvironmentMap(false);
-    }
 }
 
 void GamePlayScene::Update() {
     UnoEngine* engine = UnoEngine::GetInstance();
 
     HandleInput();
-    UpdateCamera();
+    player_->HandleInput(engine);
+    player_->UpdateCameraSystem(engine);
 
     lightManager_->Update();
     const DirectionalLight& dirLight = lightManager_->GetDirectionalLight();
@@ -82,99 +75,13 @@ void GamePlayScene::Finalize() {
 
 void GamePlayScene::HandleInput() {
     UnoEngine* engine = UnoEngine::GetInstance();
-    float deltaTime = engine->GetDeltaTime();
-
-    if (engine->IsKeyTriggered(DIK_ESCAPE)) {
-        engine->RequestEnd();
-        return;
-    }
-
-#ifdef _DEBUG
-    if (engine->IsKeyTriggered(DIK_TAB)) {
-        camera_->ToggleMouseLook();
-    }
-    if (engine->IsKeyTriggered(DIK_F1)) {
-        camera_->ToggleFreeCameraMode();
-    }
-#endif
 
     if (engine->IsKeyTriggered(DIK_F)) {
         lightManager_->ToggleDebugDisplay();
     }
-
-    if (engine->IsKeyTriggered(DIK_P)) {
-        if (player_->IsAnimationPaused()) {
-            player_->PlayAnimation();
-        } else {
-            player_->PauseAnimation();
-        }
-    }
-    if (engine->IsKeyTriggered(DIK_R)) {
-        player_->ResetAnimation();
-    }
-    if (engine->IsKeyTriggered(DIK_1) || engine->IsKeyTriggered(DIK_RSHIFT)) {
-        player_->ToggleSneakWalk();
-    }
-
-#ifdef _DEBUG
-    if (camera_->IsFreeCameraMode()) {
-        float cameraSpeed = 5.0f * deltaTime;
-        if (engine->IsKeyPressed(DIK_W)) camera_->MoveForward(cameraSpeed);
-        if (engine->IsKeyPressed(DIK_S)) camera_->MoveForward(-cameraSpeed);
-        if (engine->IsKeyPressed(DIK_A)) camera_->MoveRight(-cameraSpeed);
-        if (engine->IsKeyPressed(DIK_D)) camera_->MoveRight(cameraSpeed);
-        if (engine->IsKeyPressed(DIK_SPACE)) camera_->MoveUp(cameraSpeed);
-        if (engine->IsKeyPressed(DIK_LSHIFT)) camera_->MoveUp(-cameraSpeed);
-    } else
-#endif
-    {
-        float forward = 0.0f;
-        float right = 0.0f;
-
-        if (engine->IsKeyPressed(DIK_W)) forward += 1.0f;
-        if (engine->IsKeyPressed(DIK_S)) forward -= 1.0f;
-        if (engine->IsKeyPressed(DIK_A)) right -= 1.0f;
-        if (engine->IsKeyPressed(DIK_D)) right += 1.0f;
-
-        float stickX = engine->GetXboxLeftStickX();
-        float stickY = engine->GetXboxLeftStickY();
-
-        const float deadZone = 0.1f;
-        if (abs(stickX) < deadZone) stickX = 0.0f;
-        if (abs(stickY) < deadZone) stickY = 0.0f;
-
-        forward += stickY;
-        right += stickX;
-
-        float totalMagnitude = std::sqrt(forward * forward + right * right);
-        if (totalMagnitude > 1.0f) {
-            forward /= totalMagnitude;
-            right /= totalMagnitude;
-        }
-
-        bool isPlayerMoving = (forward != 0.0f || right != 0.0f);
-
-        if (isPlayerMoving) {
-            player_->MoveWithCameraDirection(forward, right, deltaTime);
-        } else if (player_->IsMoving()) {
-            player_->StopMoving();
-        }
-    }
 }
 
 void GamePlayScene::UpdateCamera() {
-    UnoEngine* engine = UnoEngine::GetInstance();
-    engine->UpdateCameraMouse();
-    engine->UpdateCameraRightStick();
-
-#ifdef _DEBUG
-    if (!camera_->IsFreeCameraMode())
-#endif
-    {
-        player_->UpdateCameraFollow();
-    }
-
-    camera_->Update();
 }
 
 void GamePlayScene::DrawUI() {

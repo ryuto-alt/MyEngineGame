@@ -515,3 +515,105 @@ void Player::StopMoving() {
         }
     }
 }
+
+
+void Player::SetupCamera(UnoEngine* engine) {
+    if (!camera_) return;
+    
+    camera_->SetFov(1.37f);
+    engine->SetCameraStickSensitivity(2.5f);
+    engine->SetCameraOrbitDistance(3.0f);
+    engine->SetCameraOrbitHeight(2.5f);
+    engine->SetCameraOrbitTarget(Vector3{0.0f, 0.0f, 0.0f});
+}
+
+void Player::HandleInput(UnoEngine* engine) {
+    float deltaTime = engine->GetDeltaTime();
+
+    if (engine->IsKeyTriggered(DIK_ESCAPE)) {
+        engine->RequestEnd();
+        return;
+    }
+
+#ifdef _DEBUG
+    if (engine->IsKeyTriggered(DIK_TAB)) {
+        camera_->ToggleMouseLook();
+    }
+    if (engine->IsKeyTriggered(DIK_F1)) {
+        camera_->ToggleFreeCameraMode();
+    }
+#endif
+
+    if (engine->IsKeyTriggered(DIK_P)) {
+        if (IsAnimationPaused()) {
+            PlayAnimation();
+        } else {
+            PauseAnimation();
+        }
+    }
+    if (engine->IsKeyTriggered(DIK_R)) {
+        ResetAnimation();
+    }
+    if (engine->IsKeyTriggered(DIK_1) || engine->IsKeyTriggered(DIK_RSHIFT)) {
+        ToggleSneakWalk();
+    }
+
+#ifdef _DEBUG
+    if (camera_->IsFreeCameraMode()) {
+        float cameraSpeed = 5.0f * deltaTime;
+        if (engine->IsKeyPressed(DIK_W)) camera_->MoveForward(cameraSpeed);
+        if (engine->IsKeyPressed(DIK_S)) camera_->MoveForward(-cameraSpeed);
+        if (engine->IsKeyPressed(DIK_A)) camera_->MoveRight(-cameraSpeed);
+        if (engine->IsKeyPressed(DIK_D)) camera_->MoveRight(cameraSpeed);
+        if (engine->IsKeyPressed(DIK_SPACE)) camera_->MoveUp(cameraSpeed);
+        if (engine->IsKeyPressed(DIK_LSHIFT)) camera_->MoveUp(-cameraSpeed);
+    } else
+#endif
+    {
+        float forward = 0.0f;
+        float right = 0.0f;
+
+        if (engine->IsKeyPressed(DIK_W)) forward += 1.0f;
+        if (engine->IsKeyPressed(DIK_S)) forward -= 1.0f;
+        if (engine->IsKeyPressed(DIK_A)) right -= 1.0f;
+        if (engine->IsKeyPressed(DIK_D)) right += 1.0f;
+
+        float stickX = engine->GetXboxLeftStickX();
+        float stickY = engine->GetXboxLeftStickY();
+
+        const float deadZone = 0.1f;
+        if (abs(stickX) < deadZone) stickX = 0.0f;
+        if (abs(stickY) < deadZone) stickY = 0.0f;
+
+        forward += stickY;
+        right += stickX;
+
+        float totalMagnitude = std::sqrt(forward * forward + right * right);
+        if (totalMagnitude > 1.0f) {
+            forward /= totalMagnitude;
+            right /= totalMagnitude;
+        }
+
+        bool isPlayerMoving = (forward != 0.0f || right != 0.0f);
+
+        if (isPlayerMoving) {
+            MoveWithCameraDirection(forward, right, deltaTime);
+        } else if (IsMoving()) {
+            StopMoving();
+        }
+    }
+}
+
+void Player::UpdateCameraSystem(UnoEngine* engine) {
+    engine->UpdateCameraMouse();
+    engine->UpdateCameraRightStick();
+
+#ifdef _DEBUG
+    if (!camera_->IsFreeCameraMode())
+#endif
+    {
+        UpdateCameraFollow();
+    }
+
+    camera_->Update();
+}
