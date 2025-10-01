@@ -23,6 +23,7 @@ public:
 
     // モデルの読み込み
     void LoadFromObj(const std::string& directoryPath, const std::string& filename);
+    void LoadFromGltf(const std::string& directoryPath, const std::string& filename);
 
     // アクセサ
     const std::vector<VertexData>& GetVertices() const { return modelData_.vertices; }
@@ -47,6 +48,7 @@ private:
 
     // モデルデータの読み込み
     ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
+    ModelData LoadGltfFile(const std::string& directoryPath, const std::string& filename);
     // マテリアルデータの読み込み
     MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
@@ -58,4 +60,11 @@ private:
     D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
     // DirectXCommon
     DirectXCommon* dxCommon_;
+
+    // マルチマテリアル対応
+    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> vertexResources_;
+    std::vector<D3D12_VERTEX_BUFFER_VIEW> vertexBufferViews_;
+    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> indexResources_;
+    std::vector<D3D12_INDEX_BUFFER_VIEW> indexBufferViews_;
+    std::vector<Microsoft::WRL::ComPtr<ID3D12Resource>> materialTemplateResources_;
 };

@@ -156,7 +156,8 @@ PixelShaderOutput main(VertexShaderOutput input)
     if (gPBRMaterial.hasBaseColorTexture)
     {
         float32_t4 baseColorTexture = gBaseColorTexture.Sample(gSampler, uv);
-        baseColor *= float32_t4(GammaToLinear(baseColorTexture.rgb), baseColorTexture.a);
+        // テクスチャはsRGB形式で読み込まれているため、ガンマ補正は不要
+        baseColor *= baseColorTexture;
     }
     
     // Alpha Test
@@ -180,7 +181,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     // Emissive の取得（係数のみ使用）
     float32_t3 emissive = gPBRMaterial.emissiveFactor;
-    
+
     // ライティングが無効の場合はベースカラーをそのまま出力
     if (!gPBRMaterial.enableLighting)
     {

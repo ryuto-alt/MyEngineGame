@@ -4,6 +4,7 @@
 #include "AnimationPlayer.h"
 #include "AnimationBlender.h"
 #include "AnimationUtility.h"
+#include "TextureManager.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

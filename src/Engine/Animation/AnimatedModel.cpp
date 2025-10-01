@@ -495,6 +495,12 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiSc
     modelData.material.ambient = {0.2f, 0.2f, 0.2f, 1.0f};
     modelData.material.specular = {0.5f, 0.5f, 0.5f, 1.0f};
     modelData.material.alpha = 1.0f;
+
+    // GLTFモデルはPBRマテリアルとして扱う
+    modelData.material.isPBR = true;
+    modelData.material.baseColorFactor = {1.0f, 1.0f, 1.0f, 1.0f};
+    modelData.material.metallicFactor = 0.0f;
+    modelData.material.roughnessFactor = 1.0f;
     
     // ディフューズテクスチャを取得
     if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
@@ -544,9 +550,66 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiSc
                     modelData.material.textureFilePath = "";
                 }
             } else {
-                // 外部テクスチャファイル
-                modelData.material.textureFilePath = directoryPath + "/" + textureFileName;
-                // OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
+                // 外部テクスチャファイル - URLデコードを適用
+                // %20などのエンコードされた文字をデコード
+                std::string decodedFileName = textureFileName;
+                size_t pos = 0;
+                while ((pos = decodedFileName.find('%', pos)) != std::string::npos) {
+                    if (pos + 2 < decodedFileName.length()) {
+                        std::string hex = decodedFileName.substr(pos + 1, 2);
+                        try {
+                            char ch = static_cast<char>(std::stoi(hex, nullptr, 16));
+                            decodedFileName.replace(pos, 3, 1, ch);
+                        } catch (...) {
+                            pos++;
+                        }
+                    } else {
+                        break;
+                    }
+                }
+
+                modelData.material.textureFilePath = directoryPath + "/" + decodedFileName;
+
+                // ファイルが存在するか確認
+                DWORD fileAttributes = GetFileAttributesA(modelData.material.textureFilePath.c_str());
+                if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
+                    // ファイルが見つからない場合、ファイル名のみを抽出して探索
+                    std::string filenameOnly = decodedFileName;
+                    size_t lastSlash = filenameOnly.find_last_of("/\\");
+                    if (lastSlash != std::string::npos) {
+                        filenameOnly = filenameOnly.substr(lastSlash + 1);
+                    }
+
+                    // 代替パスを試す
+                    std::vector<std::string> possiblePaths = {
+                        directoryPath + "/" + filenameOnly,
+                        "Resources/textures/" + filenameOnly,
+                        "Resources/" + filenameOnly
+                    };
+
+                    bool found = false;
+                    for (const auto& path : possiblePaths) {
+                        if (GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+                            modelData.material.textureFilePath = path;
+                            found = true;
+                            OutputDebugStringA(("AnimatedModel: Found texture at: " + path + "\n").c_str());
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        OutputDebugStringA(("AnimatedModel: WARNING - Texture not found: " + modelData.material.textureFilePath + "\n").c_str());
+                        modelData.material.textureFilePath = "";
+                    }
+                } else {
+                    OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
+                }
+
+                // テクスチャを実際に読み込む
+                if (!modelData.material.textureFilePath.empty()) {
+                    TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
+                    OutputDebugStringA(("AnimatedModel: Loaded texture into TextureManager: " + modelData.material.textureFilePath + "\n").c_str());
+                }
             }
         }
     } else {

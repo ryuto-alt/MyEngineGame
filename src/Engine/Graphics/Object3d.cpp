@@ -196,6 +196,11 @@ void Object3d::SetModel(Model* model) {
 
 		Vector3 physicalScale = model_->GetModelData().rootTransform.scale;
 
+		// physicalScaleが0の場合は1.0を使用（初期化されていない場合の対策）
+		if (physicalScale.x == 0.0f) physicalScale.x = 1.0f;
+		if (physicalScale.y == 0.0f) physicalScale.y = 1.0f;
+		if (physicalScale.z == 0.0f) physicalScale.z = 1.0f;
+
 		// Blenderタイリング効果
 		Vector3 scale = {
 			modelMaterial.textureScale.x * physicalScale.x,
@@ -456,7 +461,13 @@ void Object3d::Draw() {
 
 	// テクスチャの場所を設定
 	std::string texturePath = model_->GetTextureFilePath();
-	//OutputDebugStringA(("Object3d::Draw - Using texture path: " + texturePath + "\n").c_str());
+
+	// デバッグ: 最初の数フレームだけログ出力
+	static int drawCallCount = 0;
+	if (drawCallCount < 10) {
+		OutputDebugStringA(("Object3d::Draw - Texture path from model: " + texturePath + "\n").c_str());
+		drawCallCount++;
+	}
 
 	// テクスチャが空または存在しない場合の詳細なチェック
 	if (texturePath.empty()) {
@@ -473,6 +484,9 @@ void Object3d::Draw() {
 	}
 
 	// テクスチャをセット
+	if (drawCallCount < 10) {
+		OutputDebugStringA(("Object3d::Draw - Binding texture: " + texturePath + "\n").c_str());
+	}
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2,
 		TextureManager::GetInstance()->GetSrvHandleGPU(texturePath));
 	

@@ -1,115 +1,35 @@
-'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\CG2_00-01.exe' が読み込まれました。シンボルが読み込まれました。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntdll.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\kernel32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\KernelBase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\user32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\win32u.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\gdi32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\gdi32full.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcp_win.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ucrtbase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ole32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\combase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\rpcrt4.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\imm32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfreadwrite.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dwmapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3DCompiler_47.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\mfplat.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\SHCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3D12.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxgi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dinput8.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\advapi32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\XInput1_4.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\vcomp140d.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcrt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcrt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msvcrt.dll' がアンロードされました
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\sechost.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptsp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cfgmgr32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\devobj.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\dxcompiler.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\oleaut32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\bcryptprimitives.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\RTWorkQ.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Users\ryuto\OneDrive\ドキュメント\GitHub\MyEngineGame\x64\Debug\dxil.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\directxdatabasehelper.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\kernel.appcore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' がアンロードされました
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\InputHost.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\CoreMessaging.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\uxtheme.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptbase.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msctf.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\TextInputFramework.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\CoreUIComponents.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\WinTypes.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3D12Core.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXGIDebug.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\d3d12SDKLayers.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DXCore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' がアンロードされました
+onecore\windows\directx\database\helperlibrary\lib\directxdatabasequeryimpl.cpp(291)\directxdatabasehelper.dll!00007FFDD296A12D: (caller: 00007FFDD2969F8F) ReturnHr(1) tid(5d48) 80070490 要素が見つかりません。
+onecore\windows\directx\database\helperlibrary\lib\directxdatabasequeryimpl.cpp(413)\directxdatabasehelper.dll!00007FFDD296A6B3: (caller: 00007FFDD2962BB8) ReturnHr(2) tid(5d48) 80070490 要素が見つかりません。
+onecore\windows\directx\database\helperlibrary\lib\directxdatabasehelper.cpp(1924)\directxdatabasehelper.dll!00007FFDD2962CC5: (caller: 00007FFDD295CDA6) ReturnHr(3) tid(5d48) 80070490 要素が見つかりません。
 Use Adapter:NVIDIA GeForce RTX 3060 Laptop GPU
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvldumdx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\version.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\msasn1.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\cryptnet.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\crypt32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\wldp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\drvstore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\wintrust.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\imagehlp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\rsaenh.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\bcrypt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvgpucomp64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\shell32.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\NvMemMapStoragex.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\winmm.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\powrprof.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\umpdc.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvwgf2umx.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\windows.storage.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\shlwapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\nvspcap64.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\profapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ntmarta.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-スレッド 0x1e2c はコード 0 (0x0) で終了しました。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvppex.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxilconv.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\D3DSCache.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\userenv.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\twinapi.appcore.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dxilconv.dll' がアンロードされました
+スレッド 0x8f10 はコード 0 (0x0) で終了しました。
 D3D12 MESSAGE: Device Debug Layer Startup Options: GPU-Based Validation is enabled (disabled by default). This results in new validation not possible during API calls on the CPU, by creating patched shaders that have validation added directly to the shader. However, it can slow things down a lot, especially for applications with numerous PSOs. Time to see the first render frame may take several minutes. [ INITIALIZATION MESSAGE #1016: CREATEDEVICE_DEBUG_LAYER_STARTUP_OPTIONS]
 FeatureLevel:12.2
 Complete create D3D12Device!!!
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\dcomp.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\Microsoft.Internal.WarpPal.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
 SrvManager initialized successfully
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\hid.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\setupapi.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\XAudio2_9.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\MMDevAPI.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\avrt.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\clbcatq.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\AudioSes.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\ResourcePolicyClient.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-Begin CompileShader,path:Resources/Shaders/Object3D.VS.hlsl,profile:vs_6_0
-Complete Succeeded,path:Resources/Shaders/Object3D.VS.hlsl,profile:vs_6_0
-Begin CompileShader,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
-Complete Succeeded,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
-Begin CompileShader,path:Resources/Shaders/SkinningObject3d.VS.hlsl,profile:vs_6_0
-Complete Succeeded,path:Resources/Shaders/SkinningObject3d.VS.hlsl,profile:vs_6_0
-Begin CompileShader,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
-Complete Succeeded,path:Resources/Shaders/Object3D.PS.hlsl,profile:ps_6_0
-Begin CompileShader,path:Resources/Shaders/Particle.VS.hlsl,profile:vs_6_0
-Complete Succeeded,path:Resources/Shaders/Particle.VS.hlsl,profile:vs_6_0
-Begin CompileShader,path:Resources/Shaders/Particle.PS.hlsl,profile:ps_6_0
-Complete Succeeded,path:Resources/Shaders/Particle.PS.hlsl,profile:ps_6_0
+DEBUG: Root signature created successfully
+Begin CompileShader,path:Resources/shaders/Object3D.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/shaders/Object3D.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/shaders/Object3D.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/shaders/Object3D.PS.hlsl,profile:ps_6_0
+Begin CompileShader,path:Resources/shaders/SkinningObject3d.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/shaders/SkinningObject3d.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/shaders/Object3D.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/shaders/Object3D.PS.hlsl,profile:ps_6_0
+Begin CompileShader,path:Resources/shaders/PBRObject3d.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/shaders/PBRObject3d.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/shaders/PBRObject3d.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/shaders/PBRObject3d.PS.hlsl,profile:ps_6_0
+SpriteCommon::PBRPipelineInitialize - PBR pipeline created successfully
+Begin CompileShader,path:Resources/shaders/PBRSkinningObject3d.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/shaders/PBRSkinningObject3d.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/shaders/PBRObject3d.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/shaders/PBRObject3d.PS.hlsl,profile:ps_6_0
+SpriteCommon::PBRSkinningPipelineInitialize - PBR skinning pipeline created successfully
+Begin CompileShader,path:Resources/shaders/Particle.VS.hlsl,profile:vs_6_0
+Complete Succeeded,path:Resources/shaders/Particle.VS.hlsl,profile:vs_6_0
+Begin CompileShader,path:Resources/shaders/Particle.PS.hlsl,profile:ps_6_0
+Complete Succeeded,path:Resources/shaders/Particle.PS.hlsl,profile:ps_6_0
 Particle3DManager: Initialized successfully
 Model: Loading OBJ file: Resources/particle/effect.obj
 Model: Found MTL reference: effect.mtl
@@ -137,337 +57,148 @@ Particle3DManager: Group already exists - HitEffect
 Particle3DManager: Group already exists - HitEffect
 SceneManager initialized successfully
 SceneManager: Scene change requested to Title
-スレッド 0x6070 はコード 0 (0x0) で終了しました。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\deviceaccess.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
+スレッド 0x8e04 はコード 0 (0x0) で終了しました。
 SceneManager: Changing scene to Title
+ResourcePreloader: Lightweight preloading model with key: human_walk
+AnimatedModel: Found texture: Resources/Models/human/white.png
+SrvManager: Allocated index 1
+TextureManager: File: Resources/Models/human/white.png, IsCubemap: false, ArraySize: 1, Dimension: 3
+SrvManager: Created SRV for Texture2D at index 1
+TextureManager: Created SRV as Texture2D
+AnimatedModel: Loaded texture into TextureManager: Resources/Models/human/white.png
+SrvManager: Allocated index 2
+SrvManager: Created SRV for StructuredBuffer at index 2
+Model::CreateVertexBuffer - Created buffer for 16503 vertices
+ResourcePreloader: Lightweight preload completed for human_walk
+ResourcePreloader: Lightweight preloading model with key: human_sneak
+AnimatedModel: Found texture: Resources/Models/human/white.png
+AnimatedModel: Loaded texture into TextureManager: Resources/Models/human/white.png
+SrvManager: Allocated index 3
+SrvManager: Created SRV for StructuredBuffer at index 3
+Model::CreateVertexBuffer - Created buffer for 12102 vertices
+ResourcePreloader: Lightweight preload completed for human_sneak
 SceneManager: Successfully initialized scene Title
 SceneManager: Scene change requested to GamePlay
 SceneManager: Changing scene to GamePlay
-SceneManager: Successfully initialized scene GamePlay
-AnimatedModel: Node mixamorig:Hips - Position keys: 62, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:HeadTop_End - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:Spine - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:Spine1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:Spine2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftShoulder - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:Neck - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:Head - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftForeArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHand - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandThumb1 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandThumb2 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandThumb3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandThumb4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandIndex1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandIndex2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandIndex3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandIndex4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandMiddle1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandMiddle2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandMiddle3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandMiddle4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandRing1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandRing2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandRing3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandRing4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandPinky1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandPinky2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandPinky3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftHandPinky4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightShoulder - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightForeArm - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHand - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandThumb1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandThumb2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandThumb3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandThumb4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandIndex1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandIndex2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandIndex3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandIndex4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandMiddle1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandMiddle2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandMiddle3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandMiddle4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandRing1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandRing2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandRing3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandRing4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandPinky1 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandPinky2 - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandPinky3 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightHandPinky4 - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftUpLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftFoot - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftToeBase - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:LeftToe_End - Position keys: 2, Rotation keys: 2, Scale keys: 2
-AnimatedModel: Node mixamorig:RightUpLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightLeg - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightFoot - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightToeBase - Position keys: 2, Rotation keys: 62, Scale keys: 2
-AnimatedModel: Node mixamorig:RightToe_End - Position keys: 2, Rotation keys: 2, Scale keys: 2
-SrvManager: Allocated index 1
-SrvManager: Created SRV for StructuredBuffer at index 1
-Model::CreateVertexBuffer - Created buffer for 80880 vertices
-LoadAnimationFile: Processing animation with 65 channels
+ResourcePreloader: Moving preloaded model with key: human_walk
+Player: Using preloaded walk model
+ResourcePreloader: Moving preloaded model with key: human_sneak
+Player: Using preloaded sneak animation
+SrvManager: Allocated index 4
+SrvManager: Created SRV for Texture2D at index 4
+SrvManager: Allocated index 5
+TextureManager: File: Resources/Models/skybox/rostock_laage_airport_4k.dds, IsCubemap: true, ArraySize: 6, Dimension: 3
+SrvManager: Created SRV for TextureCube at index 5
+TextureManager: Created SRV as TextureCube
+Object3d::Initialize - Loaded default environment map: Resources/Models/skybox/rostock_laage_airport_4k.dds
 Object3d::SetModel - Called
 Object3d::SetModel - model_ is not null
 Object3d::SetModel - materialData_ is not null
 Object3d::SetModel - Applying material data
+Object3d::SetModel - Applied PBR material data
+  BaseColor: R=1.00, G=1.00, B=1.00, A=1.00
+  Metallic=0.00, Roughness=1.00
+  HasTexture=1, EnableLighting=1
+Object3d::SetModel - Physical scale: X=0.000, Y=0.000, Z=0.000
+  Original texture scale: X=1.000, Y=1.000
+  Final texture scale: X=0.000, Y=0.000
+Object3d::SetModel - Applied texture scale: 1.000000, 1.000000
+Object3d::SetModel - Applied texture offset: 0.000000, 0.000000
 Object3d::SetModel - Model texture path: Resources/Models/human/white.png
-Object3d::SetModel - Loading texture: Resources/Models/human/white.png
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\WindowsCodecs.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-SrvManager: Allocated index 2
-SrvManager: Created SRV for Texture2D at index 2
+Object3d::SetModel - Texture already loaded: Resources/Models/human/white.png
 Object3d::SetModel - Material information:
-  - Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Model Material Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Applied to Shader (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
   - Texture: Resources/Models/human/white.png
-Model: Loading OBJ file: Resources/Models/ground//ground.obj
-Model: Found MTL reference: ground.mtl
-Model: Successfully opened MTL file - Resources/Models/ground//ground.mtl
-MTL Parser: Found texture reference: tex.jpg
-MTL Parser: Full texture path constructed: Resources/Models/ground//tex.jpg
-Model: Texture path from MTL: Resources/Models/ground//tex.jpg
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\PhotoMetadataHandler.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\propsys.dll' が読み込まれました。含める/除外するの設定でシンボルの読み込みが無効になっています。
-SrvManager: Allocated index 3
-SrvManager: Created SRV for Texture2D at index 3
-Model: Texture loaded - Resources/Models/ground//tex.jpg
-Model: Loaded 3 vertices from ground.obj
+Player Human Model Material:
+  isPBR: true
+  BaseColor: R=1.000, G=1.000, B=1.000, A=1.000
+  Metallic=0.000, Roughness=1.000
+  Texture: Resources/Models/human/white.png
+Player: Enabling environment map for human model
+Ground: Loading ground.gltf...
+AnimatedModel: Found texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+SrvManager: Allocated index 6
+TextureManager: File: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg, IsCubemap: false, ArraySize: 1, Dimension: 3
+SrvManager: Created SRV for Texture2D at index 6
+TextureManager: Created SRV as Texture2D
+AnimatedModel: Loaded texture into TextureManager: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+SrvManager: Allocated index 7
+SrvManager: Created SRV for StructuredBuffer at index 7
+Model::CreateVertexBuffer - Created buffer for 6 vertices
+Ground: Loaded ground.gltf - Vertices: 6
+Object3d::Initialize - Loaded default environment map: Resources/Models/skybox/rostock_laage_airport_4k.dds
 Object3d::SetModel - Called
 Object3d::SetModel - model_ is not null
 Object3d::SetModel - materialData_ is not null
 Object3d::SetModel - Applying material data
-Object3d::SetModel - Model texture path: Resources/Models/ground//tex.jpg
-Object3d::SetModel - Texture already loaded: Resources/Models/ground//tex.jpg
+Object3d::SetModel - Applied PBR material data
+  BaseColor: R=1.00, G=1.00, B=1.00, A=1.00
+  Metallic=0.00, Roughness=1.00
+  HasTexture=1, EnableLighting=1
+Object3d::SetModel - Physical scale: X=0.000, Y=0.000, Z=0.000
+  Original texture scale: X=1.000, Y=1.000
+  Final texture scale: X=0.000, Y=0.000
+Object3d::SetModel - Applied texture scale: 1.000000, 1.000000
+Object3d::SetModel - Applied texture offset: 0.000000, 0.000000
+Object3d::SetModel - Model texture path: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Object3d::SetModel - Texture already loaded: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 Object3d::SetModel - Material information:
-  - Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
-  - Texture: Resources/Models/ground//tex.jpg
-ApplyAnimation - Joint: mixamorig:Hips, translate: (-0.131175, -0.219476, -53.780209), rotate: (-0.700739, -0.009172, 0.023677, 0.712966)
-ApplyAnimation - Joint: mixamorig:Spine, translate: (0.000000, 6.376653, -0.981426), rotate: (-0.074592, -0.003452, 0.000375, 0.997208)
-ApplyAnimation - Joint: mixamorig:Spine1, translate: (0.000000, 7.527050, 0.000001), rotate: (0.003385, -0.005295, -0.005223, 0.999967)
-ApplyAnimation - Joint: mixamorig:Spine2, translate: (-0.000000, 8.602310, 0.000000), rotate: (0.003386, -0.005295, -0.005223, 0.999967)
-ApplyAnimation - Joint: mixamorig:Neck, translate: (-0.000000, 9.677631, 0.000003), rotate: (0.076281, 0.003164, 0.010815, 0.997023)
-ApplyAnimation - Joint: mixamorig:Head, translate: (-0.000000, 5.918946, -0.195514), rotate: (0.023501, 0.026805, -0.016007, 0.999236)
-ApplyAnimation - Joint: mixamorig:HeadTop_End, translate: (0.000000, 73.628029, -2.432068), rotate: (-0.000000, -0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:LeftShoulder, translate: (-4.420063, 7.988499, -0.137429), rotate: (0.687575, -0.297687, 0.562153, 0.350153)
-ApplyAnimation - Joint: mixamorig:LeftArm, translate: (0.000001, 9.518143, -0.000003), rotate: (0.204715, 0.068080, 0.067613, 0.974108)
-ApplyAnimation - Joint: mixamorig:LeftForeArm, translate: (-0.000002, 15.122644, 0.000002), rotate: (0.122335, -0.122893, -0.275867, 0.945425)
-ApplyAnimation - Joint: mixamorig:LeftHand, translate: (0.000000, 16.613375, 0.000001), rotate: (-0.106609, -0.188777, -0.059870, 0.974378)
-ApplyAnimation - Joint: mixamorig:LeftHandThumb1, translate: (1.353926, 2.071246, 2.139637), rotate: (0.297279, 0.008445, -0.204937, 0.932499)
-ApplyAnimation - Joint: mixamorig:LeftHandThumb2, translate: (0.115088, 2.614484, 0.000003), rotate: (-0.007293, -0.008209, 0.033001, 0.999395)
-ApplyAnimation - Joint: mixamorig:LeftHandThumb3, translate: (-0.045653, 3.026986, 0.000001), rotate: (-0.000049, 0.002445, -0.005108, 0.999984)
-ApplyAnimation - Joint: mixamorig:LeftHandThumb4, translate: (-0.069439, 2.741194, 0.000008), rotate: (0.000000, -0.000000, 0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:LeftHandIndex1, translate: (3.167303, 7.749428, 0.057058), rotate: (0.362304, -0.015861, -0.090268, 0.927543)
-ApplyAnimation - Joint: mixamorig:LeftHandIndex2, translate: (-0.002096, 1.903541, -0.000001), rotate: (0.656764, 0.015838, -0.043117, 0.752696)
-ApplyAnimation - Joint: mixamorig:LeftHandIndex3, translate: (-0.001980, 1.795928, -0.000003), rotate: (-0.000001, 0.000015, 0.001819, 0.999998)
-ApplyAnimation - Joint: mixamorig:LeftHandIndex4, translate: (0.004075, 1.624152, 0.000002), rotate: (-0.000000, 0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:LeftHandMiddle1, translate: (1.045273, 8.114171, -0.081653), rotate: (0.520811, 0.013650, -0.122946, 0.844662)
-ApplyAnimation - Joint: mixamorig:LeftHandMiddle2, translate: (-0.022167, 1.970649, 0.000002), rotate: (0.778134, 0.013905, -0.060006, 0.625071)
-ApplyAnimation - Joint: mixamorig:LeftHandMiddle3, translate: (-0.004846, 1.944357, 0.000003), rotate: (0.000007, 0.000906, 0.009651, 0.999953)
-ApplyAnimation - Joint: mixamorig:LeftHandMiddle4, translate: (0.027017, 1.603820, 0.000007), rotate: (0.000000, -0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:LeftHandRing1, translate: (-1.237437, 8.285806, -0.071497), rotate: (0.534639, 0.077060, -0.055871, 0.839703)
-ApplyAnimation - Joint: mixamorig:LeftHandRing2, translate: (-0.012142, 1.816062, -0.000006), rotate: (0.794884, -0.006173, -0.023150, 0.606288)
-ApplyAnimation - Joint: mixamorig:LeftHandRing3, translate: (0.000653, 1.668784, -0.000005), rotate: (-0.000000, 0.000302, 0.003780, 0.999993)
-ApplyAnimation - Joint: mixamorig:LeftHandRing4, translate: (0.011487, 1.451986, 0.000005), rotate: (0.000000, 0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:LeftHandPinky1, translate: (-2.975133, 7.284569, -0.110156), rotate: (0.607016, 0.119103, -0.036854, 0.784849)
-ApplyAnimation - Joint: mixamorig:LeftHandPinky2, translate: (-0.015521, 1.970689, -0.000002), rotate: (0.743756, -0.032442, -0.016093, 0.667469)
-ApplyAnimation - Joint: mixamorig:LeftHandPinky3, translate: (0.003125, 1.502931, -0.000006), rotate: (-0.000000, 0.000284, 0.003410, 0.999994)
-ApplyAnimation - Joint: mixamorig:LeftHandPinky4, translate: (0.012404, 1.395606, -0.000001), rotate: (-0.000000, -0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:RightShoulder, translate: (4.420065, 8.025360, -0.376840), rotate: (0.637180, 0.342298, -0.614351, 0.315290)
-ApplyAnimation - Joint: mixamorig:RightArm, translate: (-0.000000, 9.518151, 0.000017), rotate: (0.218280, -0.076776, -0.174352, 0.957111)
-ApplyAnimation - Joint: mixamorig:RightForeArm, translate: (-0.000001, 15.047956, -0.000002), rotate: (0.147485, 0.089643, 0.200236, 0.964426)
-ApplyAnimation - Joint: mixamorig:RightHand, translate: (0.000002, 16.610668, 0.000004), rotate: (-0.056017, 0.251273, 0.008186, 0.966259)
-ApplyAnimation - Joint: mixamorig:RightHandThumb1, translate: (-1.360987, 2.096295, 2.329483), rotate: (0.196684, -0.042310, 0.205971, 0.957654)
-ApplyAnimation - Joint: mixamorig:RightHandThumb2, translate: (-0.180423, 2.727332, -0.000002), rotate: (0.085496, 0.215583, -0.079983, 0.969442)
-ApplyAnimation - Joint: mixamorig:RightHandThumb3, translate: (-0.059285, 2.969759, -0.000001), rotate: (-0.000107, -0.002950, 0.056012, 0.998426)
-ApplyAnimation - Joint: mixamorig:RightHandThumb4, translate: (0.239712, 2.594729, 0.000005), rotate: (0.000000, -0.000000, 0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:RightHandIndex1, translate: (-3.196697, 7.980120, 0.070043), rotate: (0.328954, -0.002678, 0.047219, 0.943161)
-ApplyAnimation - Joint: mixamorig:RightHandIndex2, translate: (-0.001033, 1.844182, -0.000003), rotate: (0.552328, -0.026255, 0.018209, 0.833014)
-ApplyAnimation - Joint: mixamorig:RightHandIndex3, translate: (0.004432, 1.725138, -0.000005), rotate: (0.000001, 0.000005, -0.002382, 0.999997)
-ApplyAnimation - Joint: mixamorig:RightHandIndex4, translate: (-0.003403, 1.535929, 0.000001), rotate: (-0.000000, -0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:RightHandMiddle1, translate: (-1.030617, 8.156146, -0.187783), rotate: (0.407284, -0.018408, 0.058192, 0.911260)
-ApplyAnimation - Joint: mixamorig:RightHandMiddle2, translate: (0.008484, 1.998573, -0.000000), rotate: (0.596257, -0.034908, 0.023479, 0.801691)
-ApplyAnimation - Joint: mixamorig:RightHandMiddle3, translate: (-0.000668, 1.927965, -0.000006), rotate: (-0.000000, -0.000053, -0.002003, 0.999998)
-ApplyAnimation - Joint: mixamorig:RightHandMiddle4, translate: (-0.007818, 1.785412, -0.000000), rotate: (0.000000, 0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:RightHandRing1, translate: (1.282855, 8.167819, -0.103169), rotate: (0.398815, -0.005302, 0.082514, 0.913296)
-ApplyAnimation - Joint: mixamorig:RightHandRing2, translate: (0.007550, 1.843655, 0.000004), rotate: (0.646889, 0.015545, 0.033006, 0.761711)
-ApplyAnimation - Joint: mixamorig:RightHandRing3, translate: (-0.001695, 1.760844, 0.000006), rotate: (0.000002, -0.000025, -0.001312, 0.999999)
-ApplyAnimation - Joint: mixamorig:RightHandRing4, translate: (-0.005853, 1.616527, -0.000003), rotate: (0.000000, 0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:RightHandPinky1, translate: (2.944463, 7.196914, -0.119119), rotate: (0.370183, -0.010992, 0.106893, 0.922723)
-ApplyAnimation - Joint: mixamorig:RightHandPinky2, translate: (0.003984, 1.859766, -0.000002), rotate: (0.689677, 0.039691, 0.051122, 0.721219)
-ApplyAnimation - Joint: mixamorig:RightHandPinky3, translate: (-0.001550, 1.556448, 0.000006), rotate: (-0.000000, -0.000019, -0.000344, 1.000000)
-ApplyAnimation - Joint: mixamorig:RightHandPinky4, translate: (-0.002436, 1.398262, -0.000002), rotate: (-0.000000, -0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:LeftUpLeg, translate: (-9.211946, -3.529934, -0.230464), rotate: (-0.061913, 0.202515, 0.976518, 0.039585)
-ApplyAnimation - Joint: mixamorig:LeftLeg, translate: (0.000001, 23.753275, -0.000002), rotate: (-0.573431, -0.010510, -0.002683, 0.819182)
-ApplyAnimation - Joint: mixamorig:LeftFoot, translate: (-0.000000, 20.183098, 0.000002), rotate: (0.488021, -0.037902, -0.037915, 0.871184)
-ApplyAnimation - Joint: mixamorig:LeftToeBase, translate: (-0.000002, 8.507135, -0.000001), rotate: (0.356165, 0.033421, -0.007077, 0.933798)
-ApplyAnimation - Joint: mixamorig:LeftToe_End, translate: (-0.000000, 3.260741, 0.000001), rotate: (0.000000, -0.000000, -0.000000, 1.000000)
-ApplyAnimation - Joint: mixamorig:RightUpLeg, translate: (9.211947, -3.529937, -0.172989), rotate: (0.070169, 0.084245, 0.993382, 0.034222)
-ApplyAnimation - Joint: mixamorig:RightLeg, translate: (0.000001, 23.754730, 0.000000), rotate: (-0.171521, 0.069388, -0.003196, 0.982729)
-ApplyAnimation - Joint: mixamorig:RightFoot, translate: (-0.000001, 20.170218, 0.000001), rotate: (0.496649, 0.061480, 0.084094, 0.861678)
-ApplyAnimation - Joint: mixamorig:RightToeBase, translate: (0.000000, 8.547309, 0.000001), rotate: (0.364352, -0.053947, 0.023078, 0.929411)
-ApplyAnimation - Joint: mixamorig:RightToe_End, translate: (-0.000000, 3.137280, 0.000000), rotate: (0.000000, 0.000000, -0.000000, 1.000000)
-Object3d::Update - Animation time: 0.000000, Current animation: walk, Blending: No
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (-0.000000, 0.000000, 0.000000)
-Object3d::Update - First joint transform: Armature pos:(-0.000000,0.000000,0.000000)
-Object3d::Update - Animation time: 0.166667, Current animation: walk, Blending: No
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (-0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-Object3d::Update - Animation time: 0.133333, Current animation: walk, Blending: Yes, Progress: 5.555556%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandMiddle3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandMiddle2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Animation time: 0.033333, Current animation: sneakWalk, Blending: No
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Animation time: 0.133333, Current animation: sneakWalk, Blending: No
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightUpLeg has scale keys: YES, using scale: (0.999997, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandThumb1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHand has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandRing4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandRing3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - Animation time: 0.233333, Current animation: sneakWalk, Blending: Yes, Progress: 5.555556%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandMiddle3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandMiddle2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightUpLeg has scale keys: YES, using scale: (0.999997, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandThumb1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHand has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandRing4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-Object3d::Update - Animation time: 0.366667, Current animation: walk, Blending: Yes, Progress: 22.222223%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandRing3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandMiddle3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandMiddle2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightUpLeg has scale keys: YES, using scale: (0.999997, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-Object3d::Update - Animation time: 0.166666, Current animation: sneakWalk, Blending: Yes, Progress: 5.555556%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandThumb1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHand has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandRing4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandRing3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandMiddle3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandMiddle2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Animation time: 0.300000, Current animation: sneakWalk, Blending: No
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightUpLeg has scale keys: YES, using scale: (0.999997, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandThumb1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHand has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandRing4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandRing3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandMiddle3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-Object3d::Update - Animation time: 0.533333, Current animation: walk, Blending: Yes, Progress: 77.777771%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandMiddle2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightUpLeg has scale keys: YES, using scale: (0.999997, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandThumb1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHand has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandRing4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandRing3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandMiddle3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - Animation time: 0.516667, Current animation: walk, Blending: Yes, Progress: 72.222221%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandMiddle2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightUpLeg has scale keys: YES, using scale: (0.999997, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandThumb1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHand has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandRing4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandRing3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-Object3d::Update - Animation time: 0.083333, Current animation: sneakWalk, Blending: Yes, Progress: 5.555556%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandMiddle3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandMiddle2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightUpLeg has scale keys: YES, using scale: (0.999997, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandThumb1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHand has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandRing4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandRing3 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Hips has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:RightHandIndex2 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandIndex1 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftUpLeg has scale keys: YES, using scale: (1.000011, 1.000000, 1.000002)
-AnimatedModel::GetBlendedTransform - mixamorig:LeftHandPinky4 has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-AnimatedModel::GetBlendedTransform - mixamorig:Head has scale keys: YES, using scale: (1.000000, 1.000000, 1.000000)
-Object3d::Update - First joint transform: Armature pos:(0.000000,0.000000,0.000000)
-Object3d::Update - Joint Armature original scale: (0.010000, 0.010000, 0.010000) blended scale: (0.010000, 0.010000, 0.010000)
-Object3d::Update - Animation time: 0.083333, Current animation: sneakWalk, Blending: Yes, Progress: 5.555556%
-SkinClusterUpdate - Updated 67 joint matrices
-  First joint: Armature, translate: (0.000000, 0.000000, 0.000000)
-SceneManager finalized successfully
+  - Model Material Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Applied to Shader (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Ground: Using default scale (40, 40, 40)
+Ground: Applied scale - X=40.000, Y=40.000, Z=40.000
+Ground: Position - X=0.000, Y=-0.100, Z=0.000
+AnimatedModel: Found texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+SrvManager: Allocated index 8
+TextureManager: File: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg, IsCubemap: false, ArraySize: 1, Dimension: 3
+SrvManager: Created SRV for Texture2D at index 8
+TextureManager: Created SRV as Texture2D
+AnimatedModel: Loaded texture into TextureManager: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+SrvManager: Allocated index 9
+SrvManager: Created SRV for StructuredBuffer at index 9
+Model::CreateVertexBuffer - Created buffer for 324 vertices
+Object3d::Initialize - Loaded default environment map: Resources/Models/skybox/rostock_laage_airport_4k.dds
+Object3d::SetModel - Called
+Object3d::SetModel - model_ is not null
+Object3d::SetModel - materialData_ is not null
+Object3d::SetModel - Applying material data
+Object3d::SetModel - Applied PBR material data
+  BaseColor: R=1.00, G=1.00, B=1.00, A=1.00
+  Metallic=0.00, Roughness=1.00
+  HasTexture=1, EnableLighting=1
+Object3d::SetModel - Physical scale: X=0.000, Y=0.000, Z=0.000
+  Original texture scale: X=1.000, Y=1.000
+  Final texture scale: X=0.000, Y=0.000
+Object3d::SetModel - Applied texture scale: 1.000000, 1.000000
+Object3d::SetModel - Applied texture offset: 0.000000, 0.000000
+Object3d::SetModel - Model texture path: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::SetModel - Texture already loaded: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::SetModel - Material information:
+  - Model Material Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Applied to Shader (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
+  - Texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+SceneManager: Successfully initialized scene GamePlay
+Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Object3d::Draw - Binding texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Object3d::Draw - Texture path from model: Resources/Models/human/white.png
+Object3d::Draw - Binding texture: Resources/Models/human/white.png
+Object3d::Draw - Texture path from model: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Binding texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Object3d::Draw - Binding texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Object3d::Draw - Texture path from model: Resources/Models/human/white.png
+Object3d::Draw - Binding texture: Resources/Models/human/white.png
+Object3d::Draw - Texture path from model: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Binding texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Object3d::Draw - Binding texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
+Object3d::Draw - Texture path from model: Resources/Models/human/white.png
+Object3d::Draw - Binding texture: Resources/Models/human/white.png
+Object3d::Draw - Texture path from model: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Binding texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 ParticleManager::ForceReleaseResources - Starting resource cleanup
 ParticleManager: All particle groups cleared
 ParticleManager: Material resource unmapped
@@ -478,31 +209,33 @@ ParticleManager: Vertex resource reset
 ParticleManager: Pipeline state reset
 ParticleManager: Root signature reset
 ParticleManager::ForceReleaseResources - Resource cleanup completed
-スレッド 0x19d0 はコード 0 (0x0) で終了しました。
-スレッド 0x6b14 はコード 0 (0x0) で終了しました。
-スレッド 0x6cfc はコード 0 (0x0) で終了しました。
-スレッド 0xf98 はコード 0 (0x0) で終了しました。
-スレッド 0x1558 はコード 0 (0x0) で終了しました。
-スレッド 0x7460 はコード 0 (0x0) で終了しました。
-スレッド 0x24b4 はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 0' (0x636c) はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 2' (0x6404) はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 3' (0x6600) はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 1' (0x1dec) はコード 0 (0x0) で終了しました。
-スレッド 'NVFBCAsyncThread' (0x3d70) はコード 0 (0x0) で終了しました。
-スレッド 0x2c6c はコード 0 (0x0) で終了しました。
-スレッド 0x1970 はコード 0 (0x0) で終了しました。
-スレッド 0x74b8 はコード 0 (0x0) で終了しました。
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvwgf2umx.dll' がアンロードされました
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvgpucomp64.dll' がアンロードされました
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\NvMemMapStoragex.dll' がアンロードされました
-'CG2_00-01.exe' (Win32): 'C:\Windows\System32\DriverStore\FileRepository\nvtfi.inf_amd64_a145cc43a0937fa7\nvldumdx.dll' がアンロードされました
-スレッド 0xacc はコード 0 (0x0) で終了しました。
-スレッド 0x5c40 はコード 0 (0x0) で終了しました。
-スレッド 0x1b18 はコード 0 (0x0) で終了しました。
-スレッド 0x5b28 はコード 0 (0x0) で終了しました。
-スレッド 0x1310 はコード 0 (0x0) で終了しました。
-スレッド 0x1d74 はコード 0 (0x0) で終了しました。
-スレッド 0x1984 はコード 0 (0x0) で終了しました。
-スレッド 0xa4 はコード 0 (0x0) で終了しました。
-プログラム '[0x4E3C] CG2_00-01.exe' はコード 0 (0x0) で終了しました。
+スレッド 0x79c4 はコード 0 (0x0) で終了しました。
+スレッド 0x6650 はコード 0 (0x0) で終了しました。
+スレッド 0x7e30 はコード 0 (0x0) で終了しました。
+スレッド 0x8ba4 はコード 0 (0x0) で終了しました。
+0x00007FFDD8CF66CA で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::DdiThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x00000012179FFBA0)。
+スレッド 0x2cfc はコード 0 (0x0) で終了しました。
+0x00007FFDD8CF66CA で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::IgcThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x00000012178FFAD0)。
+スレッド 0x833c はコード 0 (0x0) で終了しました。
+スレッド 0x2da8 はコード 0 (0x0) で終了しました。
+スレッド 0x52a0 はコード 0 (0x0) で終了しました。
+スレッド 0x8d48 はコード 0 (0x0) で終了しました。
+スレッド 0x1590 はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 0' (0x6258) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 1' (0x7224) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 2' (0x1a34) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 3' (0x41d4) はコード 0 (0x0) で終了しました。
+スレッド 'NVFBCAsyncThread' (0x148c) はコード 0 (0x0) で終了しました。
+スレッド 0x7f28 はコード 0 (0x0) で終了しました。
+スレッド 0x7f08 はコード 0 (0x0) で終了しました。
+スレッド 0x46c0 はコード 0 (0x0) で終了しました。
+スレッド 0x6c28 はコード 0 (0x0) で終了しました。
+スレッド 0x75f8 はコード 0 (0x0) で終了しました。
+スレッド 0x6ac8 はコード 0 (0x0) で終了しました。
+スレッド 0x89c はコード 0 (0x0) で終了しました。
+スレッド 0x2a8c はコード 0 (0x0) で終了しました。
+スレッド 0x6514 はコード 0 (0x0) で終了しました。
+スレッド 0x2c2c はコード 0 (0x0) で終了しました。
+スレッド 0x40dc はコード 0 (0x0) で終了しました。
+スレッド 0x7d00 はコード 0 (0x0) で終了しました。
+プログラム '[0x71BC] CG2_00-01.exe' はコード 0 (0x0) で終了しました。

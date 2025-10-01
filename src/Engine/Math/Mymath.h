@@ -123,6 +123,12 @@ struct MaterialData {
     bool doubleSided = false;                    // 両面レンダリング
 };
 
+// マテリアルテンプレート構造体（GLTF用）
+struct MaterialTemplate {
+    float metallic;
+    float padding[3];
+};
+
 // ボーンウェイト構造体
 struct VertexWeightData {
     float weight;
@@ -134,9 +140,26 @@ struct JointWeightData {
     std::vector<VertexWeightData> vertexWeights;
 };
 
+// マテリアルごとの頂点データ（マルチマテリアル対応）
+struct MaterialVertexData {
+    std::vector<VertexData> vertices;
+    std::vector<uint32_t> indices;
+    std::map<std::string, JointWeightData> skinClusterData;
+    size_t materialIndex;
+};
+
 struct ModelData {
-    std::vector<VertexData>vertices;
+    std::vector<VertexData> vertices;
+    std::vector<uint32_t> indices;
     MaterialData material;
     std::map<std::string, JointWeightData> skinClusterData;  // ボーンウェイト情報
     Transform rootTransform;  // ルートノードの変換情報（Blenderで設定されたスケール等）
+
+    // マルチマテリアル対応
+    std::map<std::wstring, MaterialVertexData> matVertexData;
+    std::vector<MaterialData> materials;
+    std::vector<MaterialTemplate> materialTemplates;
+
+    // ノード階層構造（GLTF/アニメーション用）
+    // Note: Node構造体はAnimation.hで定義されているため、使用時にインクルード必要
 };

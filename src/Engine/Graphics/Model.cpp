@@ -10,7 +10,7 @@
 
 // tinygltf implementation
 #define TINYGLTF_IMPLEMENTATION
-#define STB_IMAGE_IMPLEMENTATION  
+#define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 // Disable warnings for external library
 #ifdef _MSC_VER
@@ -25,6 +25,11 @@
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
+
+// Assimp implementation
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 Model::Model() : dxCommon_(nullptr) {}
 
@@ -119,6 +124,64 @@ void Model::LoadFromObj(const std::string& directoryPath, const std::string& fil
 
 	// デバッグ情報
 	OutputDebugStringA(("Model: Loaded " + std::to_string(modelData_.vertices.size()) + " vertices from " + filename + "\n").c_str());
+}
+
+void Model::LoadFromGltf(const std::string& directoryPath, const std::string& filename) {
+	// モデルデータの読み込み
+	modelData_ = LoadGltfFile(directoryPath, filename);
+
+	// マルチマテリアル対応の頂点バッファとインデックスバッファを作成
+	if (!modelData_.matVertexData.empty()) {
+		// マルチマテリアルモード
+		size_t meshCount = modelData_.matVertexData.size();
+		vertexResources_.resize(meshCount);
+		vertexBufferViews_.resize(meshCount);
+		indexResources_.resize(meshCount);
+		indexBufferViews_.resize(meshCount);
+
+		size_t meshIndex = 0;
+		for (const auto& matData : modelData_.matVertexData) {
+			// 頂点バッファ作成
+			vertexResources_[meshIndex] = dxCommon_->CreateBufferResource(
+				sizeof(VertexData) * matData.second.vertices.size());
+
+			vertexBufferViews_[meshIndex].BufferLocation = vertexResources_[meshIndex]->GetGPUVirtualAddress();
+			vertexBufferViews_[meshIndex].SizeInBytes = static_cast<UINT>(sizeof(VertexData) * matData.second.vertices.size());
+			vertexBufferViews_[meshIndex].StrideInBytes = sizeof(VertexData);
+
+			VertexData* vertexData = nullptr;
+			vertexResources_[meshIndex]->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+			std::memcpy(vertexData, matData.second.vertices.data(), sizeof(VertexData) * matData.second.vertices.size());
+			vertexResources_[meshIndex]->Unmap(0, nullptr);
+
+			// インデックスバッファ作成
+			indexResources_[meshIndex] = dxCommon_->CreateBufferResource(
+				sizeof(uint32_t) * matData.second.indices.size());
+
+			indexBufferViews_[meshIndex].BufferLocation = indexResources_[meshIndex]->GetGPUVirtualAddress();
+			indexBufferViews_[meshIndex].SizeInBytes = static_cast<UINT>(sizeof(uint32_t) * matData.second.indices.size());
+			indexBufferViews_[meshIndex].Format = DXGI_FORMAT_R32_UINT;
+
+			uint32_t* indexData = nullptr;
+			indexResources_[meshIndex]->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
+			std::memcpy(indexData, matData.second.indices.data(), sizeof(uint32_t) * matData.second.indices.size());
+			indexResources_[meshIndex]->Unmap(0, nullptr);
+
+			meshIndex++;
+		}
+
+		// マテリアルテンプレートリソースの作成
+		materialTemplateResources_.resize(modelData_.materialTemplates.size());
+		for (size_t i = 0; i < modelData_.materialTemplates.size(); i++) {
+			materialTemplateResources_[i] = dxCommon_->CreateBufferResource(sizeof(MaterialTemplate));
+			MaterialTemplate* data = nullptr;
+			materialTemplateResources_[i]->Map(0, nullptr, reinterpret_cast<void**>(&data));
+			*data = modelData_.materialTemplates[i];
+			materialTemplateResources_[i]->Unmap(0, nullptr);
+		}
+
+		OutputDebugStringA(("Model: Loaded GLTF with " + std::to_string(meshCount) + " meshes from " + filename + "\n").c_str());
+	}
 }
 
 // 頂点バッファの作成（継承クラス用）
@@ -534,5 +597,195 @@ MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, c
 	}
 
 	return materialData;
+}
+
+// URLデコード関数（%エンコードされた文字列をデコード）
+static std::string UrlDecode(const std::string& str) {
+	std::string result;
+	for (size_t i = 0; i < str.length(); i++) {
+		if (str[i] == '%' && i + 2 < str.length()) {
+			// %XX形式の16進数をデコード
+			std::string hex = str.substr(i + 1, 2);
+			char ch = static_cast<char>(std::stoi(hex, nullptr, 16));
+			result += ch;
+			i += 2;
+		}
+		else {
+			result += str[i];
+		}
+	}
+	return result;
+}
+
+ModelData Model::LoadGltfFile(const std::string& directoryPath, const std::string& filename) {
+	ModelData modelData;
+
+	Assimp::Importer importer;
+	std::string filePath = directoryPath + "/" + filename;
+	const aiScene* scene = importer.ReadFile(filePath.c_str(),
+		aiProcess_FlipWindingOrder | aiProcess_FlipUVs | aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+
+	if (!scene || !scene->HasMeshes()) {
+		OutputDebugStringA(("ERROR: Failed to load GLTF file: " + filePath + "\n").c_str());
+		OutputDebugStringA("Loading fallback model instead\n");
+		return LoadObjFile("Resources/Debug/obj", "box.obj");
+	}
+
+	OutputDebugStringA(("Model: Loading GLTF file: " + filePath + "\n").c_str());
+	OutputDebugStringA(("Model: Found " + std::to_string(scene->mNumMeshes) + " meshes\n").c_str());
+
+	// マルチマテリアル対応: 各メッシュを処理
+	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
+		aiMesh* mesh = scene->mMeshes[meshIndex];
+
+		// メッシュ名を取得（UTF-8からワイド文字列に変換）
+		std::string utf8 = mesh->mName.C_Str();
+		int len = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, nullptr, 0);
+		std::wstring meshName(len, L'\0');
+		MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, &meshName[0], len);
+
+		if (!mesh->HasNormals() || !mesh->HasTextureCoords(0)) {
+			OutputDebugStringA(("WARNING: Mesh missing normals or texture coordinates: " + utf8 + "\n").c_str());
+			continue;
+		}
+
+		MaterialVertexData matVertexData;
+		matVertexData.vertices.resize(mesh->mNumVertices);
+		matVertexData.materialIndex = mesh->mMaterialIndex;
+
+		// 頂点データの読み込み
+		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
+			aiVector3D& position = mesh->mVertices[vertexIndex];
+			aiVector3D& normal = mesh->mNormals[vertexIndex];
+			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+
+			// 右手系→左手系への変換
+			matVertexData.vertices[vertexIndex].position = { -position.x, position.y, position.z, 1.0f };
+			matVertexData.vertices[vertexIndex].normal = { -normal.x, normal.y, normal.z };
+			matVertexData.vertices[vertexIndex].texcoord = { texcoord.x, texcoord.y };
+
+			// 全体の頂点リストにも追加
+			modelData.vertices.push_back(matVertexData.vertices[vertexIndex]);
+		}
+
+		// インデックスの解析
+		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+			aiFace& face = mesh->mFaces[faceIndex];
+			if (face.mNumIndices != 3) {
+				OutputDebugStringA("WARNING: Non-triangulated face found\n");
+				continue;
+			}
+
+			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+				uint32_t vertexIndex = face.mIndices[element];
+				matVertexData.indices.push_back(vertexIndex);
+				modelData.indices.push_back(vertexIndex);
+			}
+		}
+
+		modelData.matVertexData[meshName] = matVertexData;
+	}
+
+	// マテリアルの読み込み
+	if (scene->mNumMaterials == 0) {
+		// デフォルトマテリアルを作成
+		MaterialData matData;
+		matData.textureFilePath = "Resources/Debug/white1x1.png";
+		TextureManager::GetInstance()->LoadTexture(matData.textureFilePath);
+
+		MaterialTemplate matTemplate;
+		matTemplate.metallic = 0.0f;
+
+		modelData.materials.push_back(matData);
+		modelData.materialTemplates.push_back(matTemplate);
+
+		// 単一マテリアルフィールドにも設定
+		modelData.material = matData;
+	}
+	else {
+		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+			// GLTFの最後のマテリアルは空の場合があるのでスキップ
+			if (materialIndex == scene->mNumMaterials - 1 && scene->mNumMaterials > 1) {
+				continue;
+			}
+
+			aiMaterial* material = scene->mMaterials[materialIndex];
+			MaterialData matData;
+			MaterialTemplate matTemplate;
+
+			// ベースカラーテクスチャの読み込み
+			if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+				aiString textureFilePath;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+
+				// URLデコードを適用（%エンコードされたパスを修正）
+				std::string decodedPath = UrlDecode(textureFilePath.C_Str());
+				matData.textureFilePath = directoryPath + "/" + decodedPath;
+
+				// テクスチャファイルが存在するか確認
+				DWORD fileAttributes = GetFileAttributesA(matData.textureFilePath.c_str());
+				if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
+					// ファイルが見つからない場合、ファイル名のみを抽出して別の場所を探す
+					std::string filenameOnly = decodedPath;
+					size_t lastSlash = filenameOnly.find_last_of("/\\");
+					if (lastSlash != std::string::npos) {
+						filenameOnly = filenameOnly.substr(lastSlash + 1);
+					}
+
+					// 代替パスを試す
+					std::vector<std::string> possiblePaths = {
+						directoryPath + "/" + filenameOnly,
+						"Resources/textures/" + filenameOnly,
+						"Resources/" + filenameOnly
+					};
+
+					bool found = false;
+					for (const auto& path : possiblePaths) {
+						if (GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
+							matData.textureFilePath = path;
+							found = true;
+							OutputDebugStringA(("Model: Found texture at alternative path: " + path + "\n").c_str());
+							break;
+						}
+					}
+
+					if (!found) {
+						OutputDebugStringA(("WARNING: Texture not found: " + matData.textureFilePath + ", using white1x1\n").c_str());
+						matData.textureFilePath = "Resources/Debug/white1x1.png";
+					}
+				}
+
+				// テクスチャ読み込み
+				TextureManager::GetInstance()->LoadTexture(matData.textureFilePath);
+				OutputDebugStringA(("Model: Loaded texture: " + matData.textureFilePath + "\n").c_str());
+			}
+			else {
+				// テクスチャがない場合はwhite1x1を使用
+				matData.textureFilePath = "Resources/Debug/white1x1.png";
+				TextureManager::GetInstance()->LoadTexture(matData.textureFilePath);
+			}
+
+			// メタリックファクターの取得
+			float metallic = 0.0f;
+			if (material->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS) {
+				matTemplate.metallic = metallic;
+				OutputDebugStringA(("Model: Material metallic factor: " + std::to_string(metallic) + "\n").c_str());
+			}
+			else {
+				matTemplate.metallic = 0.0f;
+			}
+
+			modelData.materials.push_back(matData);
+			modelData.materialTemplates.push_back(matTemplate);
+
+			// 最初のマテリアルを単一マテリアルフィールドにも設定
+			if (materialIndex == 0) {
+				modelData.material = matData;
+			}
+		}
+	}
+
+	OutputDebugStringA(("Model: Loaded " + std::to_string(modelData.materials.size()) + " materials\n").c_str());
+	return modelData;
 }
 
