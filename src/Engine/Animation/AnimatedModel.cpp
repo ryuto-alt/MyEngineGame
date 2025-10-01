@@ -423,8 +423,15 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
             vertex.normal = {0.0f, 1.0f, 0.0f};
         }
         
-        // テクスチャ座標（最初のセットのみ）
-        if (mesh->mTextureCoords[0]) {
+        // テクスチャ座標（UV1を優先、なければUV0を使用）
+        if (mesh->GetNumUVChannels() > 1 && mesh->mTextureCoords[1]) {
+            // TEXCOORD_1（第2UVセット）を使用
+            vertex.texcoord = {
+                mesh->mTextureCoords[1][i].x,
+                mesh->mTextureCoords[1][i].y
+            };
+        } else if (mesh->mTextureCoords[0]) {
+            // TEXCOORD_0（第1UVセット）を使用
             vertex.texcoord = {
                 mesh->mTextureCoords[0][i].x,
                 mesh->mTextureCoords[0][i].y
