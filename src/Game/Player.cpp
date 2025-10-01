@@ -149,6 +149,49 @@ void Player::Draw() {
     object3d_->Draw();
 }
 
+
+void Player::DrawUI() {
+    ImGui::Begin("Player");
+
+    ImGui::Text("Controls:");
+    ImGui::Separator();
+    ImGui::Text("WASD - Move Player");
+    ImGui::Text("P - Pause/Resume Animation");
+    ImGui::Text("R - Reset Animation");
+    ImGui::Text("1/RShift - Toggle SneakWalk");
+    ImGui::Text("ESC - Exit Game");
+#ifdef _DEBUG
+    ImGui::Text("F1 - Toggle Free Camera");
+    ImGui::Text("TAB - Toggle Mouse Look");
+#endif
+
+    ImGui::Separator();
+    
+    if (camera_) {
+        Vector3 cameraPos = camera_->GetTranslate();
+        ImGui::Text("Camera: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
+
+#ifdef _DEBUG
+        ImGui::Text("Camera Mode: %s", camera_->IsFreeCameraMode() ? "Free" : "Follow Player");
+#endif
+    }
+
+    ImGui::Separator();
+    ImGui::Text("Animation: %s", GetCurrentAnimationName().c_str());
+    ImGui::Text("State: %s", IsMoving() ? "Moving" : "Idle");
+
+    if (IsBlending()) {
+        ImGui::Text("Blending: %.1f%%", GetBlendProgress() * 100.0f);
+    }
+
+    float smoothingSpeed = GetRotationSmoothingSpeed();
+    if (ImGui::SliderFloat("Smoothing Speed", &smoothingSpeed, 0.1f, 20.0f)) {
+        SetRotationSmoothingSpeed(smoothingSpeed);
+    }
+
+    ImGui::End();
+}
+
 void Player::Finalize() {
     if (object3d_) {
         object3d_.reset();

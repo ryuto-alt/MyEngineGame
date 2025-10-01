@@ -9,6 +9,7 @@ public:
     void Initialize(Camera* camera);
     void Update(UnoEngine* engine);
     void Draw();
+    void DrawUI();
     void Finalize();
     
     // 位置・回転の取得・設定
