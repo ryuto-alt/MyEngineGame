@@ -3,6 +3,7 @@
 #include "UnoEngine.h"
 #include <algorithm>
 #include <cctype>
+#include <fstream>
 
 AnimatedModel::AnimatedModel() : rootNodeName_("root") {
 }
@@ -21,8 +22,8 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
     
     std::string extension = filename.substr(filename.find_last_of(".") + 1);
     std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
-    
-    if (extension == "gltf") {
+
+    if (extension == "gltf" || extension == "glb") {
         LoadFromGLTFWithAssimp(directoryPath, filename);
     } else {
         LoadFromObj(directoryPath, filename);
@@ -42,8 +43,8 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
     }
     
     // OutputDebugStringA(("AnimatedModel: Root node name set to: " + rootNodeName_ + "\n").c_str());
-    
-    if (extension != "gltf") {
+
+    if (extension != "gltf" && extension != "glb") {
         LoadAnimation(directoryPath, filename);
     }
 }
@@ -344,15 +345,18 @@ SkinCluster AnimatedModel::CreateSkinCluster()
 // assimpシーンからモデルデータを作成
 void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& directoryPath) {
     ModelData& modelData = GetModelDataInternal();
-    
-    // メッシュの処理（最初のメッシュのみ処理）
-    if (scene->mNumMeshes > 0) {
-        ProcessAssimpMesh(scene->mMeshes[0], scene);
+
+    // 頂点データをクリア（複数メッシュを結合するため）
+    modelData.vertices.clear();
+
+    // すべてのメッシュを処理
+    for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
+        ProcessAssimpMesh(scene->mMeshes[i], scene);
     }
     
     // マテリアルの処理
     if (scene->mNumMaterials > 0) {
-        ProcessAssimpMaterial(scene->mMaterials[0], directoryPath);
+        ProcessAssimpMaterial(scene->mMaterials[0], scene, directoryPath);
     }
     
     // ルートノードの設定
@@ -368,7 +372,7 @@ void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& 
 // assimpメッシュからジオメトリデータを作成
 void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) {
     ModelData& modelData = GetModelDataInternal();
-    modelData.vertices.clear();
+    // 複数メッシュを結合するため、clearは削除
     
     // OutputDebugStringA(("AnimatedModel: Processing mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces\n").c_str());
     
@@ -483,7 +487,7 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
 }
 
 // assimpマテリアルからマテリアルデータを作成
-void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath) {
+void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiScene* scene, const std::string& directoryPath) {
     ModelData& modelData = GetModelDataInternal();
     
     // デフォルト値を設定
@@ -497,13 +501,58 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const std:
         aiString texturePath;
         if (material->GetTexture(aiTextureType_DIFFUSE, 0, &texturePath) == AI_SUCCESS) {
             std::string textureFileName = texturePath.C_Str();
-            modelData.material.textureFilePath = directoryPath + "/" + textureFileName;
-            // OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
+
+            // 埋め込みテクスチャのチェック (*0, *1 などで始まる)
+            if (textureFileName[0] == '*') {
+                // 埋め込みテクスチャのインデックスを取得
+                int textureIndex = std::atoi(textureFileName.c_str() + 1);
+
+                if (textureIndex >= 0 && textureIndex < static_cast<int>(scene->mNumTextures)) {
+                    const aiTexture* embeddedTexture = scene->mTextures[textureIndex];
+
+                    // 埋め込みテクスチャを保存
+                    std::string savedTexturePath = directoryPath + "/embedded_texture_" + std::to_string(textureIndex);
+
+                    if (embeddedTexture->mHeight == 0) {
+                        // 圧縮形式（PNG, JPEGなど）
+                        savedTexturePath += "." + std::string(embeddedTexture->achFormatHint);
+                    } else {
+                        // 非圧縮形式
+                        savedTexturePath += ".png";
+                    }
+
+                    // ファイルに保存
+                    std::ofstream outFile(savedTexturePath, std::ios::binary);
+                    if (outFile.is_open()) {
+                        if (embeddedTexture->mHeight == 0) {
+                            // 圧縮データをそのまま書き込み
+                            outFile.write(reinterpret_cast<const char*>(embeddedTexture->pcData), embeddedTexture->mWidth);
+                        } else {
+                            // 非圧縮データをPNGとして保存（STBを使用）
+                            // 簡易実装: ここでは省略し、デフォルトテクスチャを使用
+                            savedTexturePath = "";
+                        }
+                        outFile.close();
+                        modelData.material.textureFilePath = savedTexturePath;
+                        OutputDebugStringA(("AnimatedModel: Saved embedded texture: " + savedTexturePath + "\n").c_str());
+                    } else {
+                        OutputDebugStringA("AnimatedModel: Failed to save embedded texture\n");
+                        modelData.material.textureFilePath = "";
+                    }
+                } else {
+                    OutputDebugStringA("AnimatedModel: Invalid embedded texture index\n");
+                    modelData.material.textureFilePath = "";
+                }
+            } else {
+                // 外部テクスチャファイル
+                modelData.material.textureFilePath = directoryPath + "/" + textureFileName;
+                // OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
+            }
         }
     } else {
-        // デフォルトテクスチャを設定
-        modelData.material.textureFilePath = directoryPath + "/" + "AnimatedCube_BaseColor.png";
-        // OutputDebugStringA(("AnimatedModel: Using default texture: " + modelData.material.textureFilePath + "\n").c_str());
+        // テクスチャなし
+        modelData.material.textureFilePath = "";
+        // OutputDebugStringA("AnimatedModel: No texture found\n");
     }
     
     // マテリアルプロパティの取得

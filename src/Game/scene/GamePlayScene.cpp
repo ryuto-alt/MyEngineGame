@@ -17,6 +17,17 @@ void GamePlayScene::Initialize() {
     ground_ = std::make_unique<Ground>();
     ground_->Initialize(camera_, dxCommon_);
 
+    objeModel_ = engine->CreateAnimatedModel();
+    objeModel_->LoadFromFile("Resources/Models/obje", "object.glb");
+
+    objeObject_ = engine->CreateObject3D();
+    objeObject_->SetModel(static_cast<Model*>(objeModel_.get()));
+    objeObject_->SetCamera(camera_);
+    objeObject_->SetPosition({0.0f, 0.0f, 5.0f});
+    objeObject_->SetScale({1.0f, 1.0f, 1.0f});
+    objeObject_->SetEnableLighting(true);
+    objeObject_->SetEnableAnimation(false);
+
     skyboxEnabled_ = false;
 }
 
@@ -36,6 +47,12 @@ void GamePlayScene::Update() {
     ground_->SetDirectionalLight(dirLight);
     ground_->SetSpotLight(spotLight);
 
+    if (objeObject_) {
+        objeObject_->SetDirectionalLight(dirLight);
+        objeObject_->SetSpotLight(spotLight);
+        objeObject_->Update();
+    }
+
     if (skyboxEnabled_ && skybox_) {
         skybox_->Update();
     }
@@ -53,6 +70,10 @@ void GamePlayScene::Draw() {
     ground_->Draw();
     player_->Draw();
 
+    if (objeObject_) {
+        objeObject_->Draw();
+    }
+
     player_->DrawUI();
 
     if (lightManager_) {
@@ -69,6 +90,8 @@ void GamePlayScene::Finalize() {
         ground_->Finalize();
         ground_.reset();
     }
+    objeObject_.reset();
+    objeModel_.reset();
     skybox_.reset();
     lightManager_.reset();
 }

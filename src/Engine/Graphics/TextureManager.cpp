@@ -64,6 +64,13 @@ const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& fileP
 
 bool TextureManager::LoadTexture(const std::string& filePath)
 {
+    // 空文字列のチェック
+    if (filePath.empty()) {
+        OutputDebugStringA("WARNING: TextureManager::LoadTexture - Empty file path provided\n");
+        LoadDefaultTexture();
+        return false;
+    }
+
     // 読み込み済みテクスチャを検索
     if (textureDatas.count(filePath) > 0) {
         // OutputDebugStringA(("TextureManager::LoadTexture - Already loaded: " + filePath + "\n").c_str());

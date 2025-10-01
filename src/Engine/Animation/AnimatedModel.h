@@ -100,7 +100,7 @@ private:
     void ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene);
     
     // assimpマテリアルからマテリアルデータを作成
-    void ProcessAssimpMaterial(const aiMaterial* material, const std::string& directoryPath);
+    void ProcessAssimpMaterial(const aiMaterial* material, const aiScene* scene, const std::string& directoryPath);
     
     // assimpノードからアニメーションデータを作成
     void ProcessAssimpAnimation(const aiScene* scene);
