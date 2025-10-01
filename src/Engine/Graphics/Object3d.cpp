@@ -439,7 +439,7 @@ void Object3d::Draw() {
 	// アニメーションモデルの場合、頂点バッファとインフルエンスバッファを設定
 	// マルチマテリアルの場合は後でループ内で設定するため、ここではスキップ
 	const ModelData& modelData = model_->GetModelData();
-	bool isMultiMaterial = !modelData.materials.empty() && !modelData.matVertexData.empty();
+	bool isMultiMaterial = !modelData.matVertexData.empty();
 
 	if (!isMultiMaterial) {
 		if (useAnimation) {
@@ -553,8 +553,22 @@ void Object3d::Draw() {
 				continue;
 			}
 
-			// このメッシュ用の頂点バッファを設定
-			dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vbViews[meshIndex]);
+			// このメッシュ用の頂点バッファを設定（アニメーション対応）
+			if (useAnimation) {
+				AnimatedModel* animModel = static_cast<AnimatedModel*>(animatedModel_);
+				const SkinCluster& skinCluster = animModel->GetSkinCluster();
+
+				// 頂点バッファとインフルエンスバッファを設定
+				D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+					vbViews[meshIndex],
+					skinCluster.influenceBufferView
+				};
+				dxCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
+			}
+			else {
+				// 通常の頂点バッファのみ
+				dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vbViews[meshIndex]);
+			}
 
 			// このメッシュのマテリアルに対応するテクスチャをバインド
 			const MaterialData& currentMaterial = modelData.materials[materialIndex];
