@@ -1,8 +1,8 @@
-onecore\windows\directx\database\helperlibrary\lib\directxdatabasequeryimpl.cpp(291)\directxdatabasehelper.dll!00007FFDD296A12D: (caller: 00007FFDD2969F8F) ReturnHr(1) tid(5d48) 80070490 要素が見つかりません。
-onecore\windows\directx\database\helperlibrary\lib\directxdatabasequeryimpl.cpp(413)\directxdatabasehelper.dll!00007FFDD296A6B3: (caller: 00007FFDD2962BB8) ReturnHr(2) tid(5d48) 80070490 要素が見つかりません。
-onecore\windows\directx\database\helperlibrary\lib\directxdatabasehelper.cpp(1924)\directxdatabasehelper.dll!00007FFDD2962CC5: (caller: 00007FFDD295CDA6) ReturnHr(3) tid(5d48) 80070490 要素が見つかりません。
+onecore\windows\directx\database\helperlibrary\lib\directxdatabasequeryimpl.cpp(291)\directxdatabasehelper.dll!00007FFDD296A12D: (caller: 00007FFDD2969F8F) ReturnHr(1) tid(2644) 80070490 要素が見つかりません。
+onecore\windows\directx\database\helperlibrary\lib\directxdatabasequeryimpl.cpp(413)\directxdatabasehelper.dll!00007FFDD296A6B3: (caller: 00007FFDD2962BB8) ReturnHr(2) tid(2644) 80070490 要素が見つかりません。
+onecore\windows\directx\database\helperlibrary\lib\directxdatabasehelper.cpp(1924)\directxdatabasehelper.dll!00007FFDD2962CC5: (caller: 00007FFDD295CDA6) ReturnHr(3) tid(2644) 80070490 要素が見つかりません。
 Use Adapter:NVIDIA GeForce RTX 3060 Laptop GPU
-スレッド 0x8f10 はコード 0 (0x0) で終了しました。
+スレッド 0x3a94 はコード 0 (0x0) で終了しました。
 D3D12 MESSAGE: Device Debug Layer Startup Options: GPU-Based Validation is enabled (disabled by default). This results in new validation not possible during API calls on the CPU, by creating patched shaders that have validation added directly to the shader. However, it can slow things down a lot, especially for applications with numerous PSOs. Time to see the first render frame may take several minutes. [ INITIALIZATION MESSAGE #1016: CREATEDEVICE_DEBUG_LAYER_STARTUP_OPTIONS]
 FeatureLevel:12.2
 Complete create D3D12Device!!!
@@ -57,7 +57,7 @@ Particle3DManager: Group already exists - HitEffect
 Particle3DManager: Group already exists - HitEffect
 SceneManager initialized successfully
 SceneManager: Scene change requested to Title
-スレッド 0x8e04 はコード 0 (0x0) で終了しました。
+スレッド 0x5fa4 はコード 0 (0x0) で終了しました。
 SceneManager: Changing scene to Title
 ResourcePreloader: Lightweight preloading model with key: human_walk
 AnimatedModel: Found texture: Resources/Models/human/white.png
@@ -68,14 +68,14 @@ TextureManager: Created SRV as Texture2D
 AnimatedModel: Loaded texture into TextureManager: Resources/Models/human/white.png
 SrvManager: Allocated index 2
 SrvManager: Created SRV for StructuredBuffer at index 2
-Model::CreateVertexBuffer - Created buffer for 16503 vertices
+Model::CreateVertexBuffer - Created single buffer for 16503 vertices
 ResourcePreloader: Lightweight preload completed for human_walk
 ResourcePreloader: Lightweight preloading model with key: human_sneak
 AnimatedModel: Found texture: Resources/Models/human/white.png
 AnimatedModel: Loaded texture into TextureManager: Resources/Models/human/white.png
 SrvManager: Allocated index 3
 SrvManager: Created SRV for StructuredBuffer at index 3
-Model::CreateVertexBuffer - Created buffer for 12102 vertices
+Model::CreateVertexBuffer - Created single buffer for 12102 vertices
 ResourcePreloader: Lightweight preload completed for human_sneak
 SceneManager: Successfully initialized scene Title
 SceneManager: Scene change requested to GamePlay
@@ -99,9 +99,9 @@ Object3d::SetModel - Applied PBR material data
   BaseColor: R=1.00, G=1.00, B=1.00, A=1.00
   Metallic=0.00, Roughness=1.00
   HasTexture=1, EnableLighting=1
-Object3d::SetModel - Physical scale: X=0.000, Y=0.000, Z=0.000
+Object3d::SetModel - Physical scale: X=1.000, Y=1.000, Z=1.000
   Original texture scale: X=1.000, Y=1.000
-  Final texture scale: X=0.000, Y=0.000
+  Final texture scale: X=1.000, Y=1.000
 Object3d::SetModel - Applied texture scale: 1.000000, 1.000000
 Object3d::SetModel - Applied texture offset: 0.000000, 0.000000
 Object3d::SetModel - Model texture path: Resources/Models/human/white.png
@@ -125,7 +125,7 @@ TextureManager: Created SRV as Texture2D
 AnimatedModel: Loaded texture into TextureManager: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 SrvManager: Allocated index 7
 SrvManager: Created SRV for StructuredBuffer at index 7
-Model::CreateVertexBuffer - Created buffer for 6 vertices
+Model::CreateVertexBuffer - Created single buffer for 6 vertices
 Ground: Loaded ground.gltf - Vertices: 6
 Object3d::Initialize - Loaded default environment map: Resources/Models/skybox/rostock_laage_airport_4k.dds
 Object3d::SetModel - Called
@@ -136,9 +136,9 @@ Object3d::SetModel - Applied PBR material data
   BaseColor: R=1.00, G=1.00, B=1.00, A=1.00
   Metallic=0.00, Roughness=1.00
   HasTexture=1, EnableLighting=1
-Object3d::SetModel - Physical scale: X=0.000, Y=0.000, Z=0.000
+Object3d::SetModel - Physical scale: X=1.000, Y=1.000, Z=1.000
   Original texture scale: X=1.000, Y=1.000
-  Final texture scale: X=0.000, Y=0.000
+  Final texture scale: X=1.000, Y=1.000
 Object3d::SetModel - Applied texture scale: 1.000000, 1.000000
 Object3d::SetModel - Applied texture offset: 0.000000, 0.000000
 Object3d::SetModel - Model texture path: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
@@ -150,15 +150,15 @@ Object3d::SetModel - Material information:
 Ground: Using default scale (40, 40, 40)
 Ground: Applied scale - X=40.000, Y=40.000, Z=40.000
 Ground: Position - X=0.000, Y=-0.100, Z=0.000
-AnimatedModel: Found texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+AnimatedModel: Found texture: Resources/Models/obje/tex1.png
 SrvManager: Allocated index 8
-TextureManager: File: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg, IsCubemap: false, ArraySize: 1, Dimension: 3
+TextureManager: File: Resources/Models/obje/tex1.png, IsCubemap: false, ArraySize: 1, Dimension: 3
 SrvManager: Created SRV for Texture2D at index 8
 TextureManager: Created SRV as Texture2D
-AnimatedModel: Loaded texture into TextureManager: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+AnimatedModel: Loaded texture into TextureManager: Resources/Models/obje/tex1.png
 SrvManager: Allocated index 9
 SrvManager: Created SRV for StructuredBuffer at index 9
-Model::CreateVertexBuffer - Created buffer for 324 vertices
+Model::CreateVertexBuffer - Created single buffer for 72 vertices
 Object3d::Initialize - Loaded default environment map: Resources/Models/skybox/rostock_laage_airport_4k.dds
 Object3d::SetModel - Called
 Object3d::SetModel - model_ is not null
@@ -168,36 +168,36 @@ Object3d::SetModel - Applied PBR material data
   BaseColor: R=1.00, G=1.00, B=1.00, A=1.00
   Metallic=0.00, Roughness=1.00
   HasTexture=1, EnableLighting=1
-Object3d::SetModel - Physical scale: X=0.000, Y=0.000, Z=0.000
+Object3d::SetModel - Physical scale: X=1.000, Y=1.000, Z=1.000
   Original texture scale: X=1.000, Y=1.000
-  Final texture scale: X=0.000, Y=0.000
+  Final texture scale: X=1.000, Y=1.000
 Object3d::SetModel - Applied texture scale: 1.000000, 1.000000
 Object3d::SetModel - Applied texture offset: 0.000000, 0.000000
-Object3d::SetModel - Model texture path: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
-Object3d::SetModel - Texture already loaded: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::SetModel - Model texture path: Resources/Models/obje/tex1.png
+Object3d::SetModel - Texture already loaded: Resources/Models/obje/tex1.png
 Object3d::SetModel - Material information:
   - Model Material Diffuse (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
   - Applied to Shader (RGBA): 1.000000, 1.000000, 1.000000, 1.000000
-  - Texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+  - Texture: Resources/Models/obje/tex1.png
 SceneManager: Successfully initialized scene GamePlay
 Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 Object3d::Draw - Binding texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 Object3d::Draw - Texture path from model: Resources/Models/human/white.png
 Object3d::Draw - Binding texture: Resources/Models/human/white.png
-Object3d::Draw - Texture path from model: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
-Object3d::Draw - Binding texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Texture path from model: Resources/Models/obje/tex1.png
+Object3d::Draw - Binding texture: Resources/Models/obje/tex1.png
 Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 Object3d::Draw - Binding texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 Object3d::Draw - Texture path from model: Resources/Models/human/white.png
 Object3d::Draw - Binding texture: Resources/Models/human/white.png
-Object3d::Draw - Texture path from model: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
-Object3d::Draw - Binding texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Texture path from model: Resources/Models/obje/tex1.png
+Object3d::Draw - Binding texture: Resources/Models/obje/tex1.png
 Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 Object3d::Draw - Binding texture: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 Object3d::Draw - Texture path from model: Resources/Models/human/white.png
 Object3d::Draw - Binding texture: Resources/Models/human/white.png
-Object3d::Draw - Texture path from model: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
-Object3d::Draw - Binding texture: Resources/Models/obje/Porcelain Paraller Tiles 03_Albedo.jpg
+Object3d::Draw - Texture path from model: Resources/Models/obje/tex1.png
+Object3d::Draw - Binding texture: Resources/Models/obje/tex1.png
 Object3d::Draw - Texture path from model: Resources/Models/ground/mosaic_tile_oceanic_diff.jpg
 ParticleManager::ForceReleaseResources - Starting resource cleanup
 ParticleManager: All particle groups cleared
@@ -209,33 +209,33 @@ ParticleManager: Vertex resource reset
 ParticleManager: Pipeline state reset
 ParticleManager: Root signature reset
 ParticleManager::ForceReleaseResources - Resource cleanup completed
-スレッド 0x79c4 はコード 0 (0x0) で終了しました。
-スレッド 0x6650 はコード 0 (0x0) で終了しました。
-スレッド 0x7e30 はコード 0 (0x0) で終了しました。
-スレッド 0x8ba4 はコード 0 (0x0) で終了しました。
-0x00007FFDD8CF66CA で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::DdiThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x00000012179FFBA0)。
-スレッド 0x2cfc はコード 0 (0x0) で終了しました。
-0x00007FFDD8CF66CA で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::IgcThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x00000012178FFAD0)。
-スレッド 0x833c はコード 0 (0x0) で終了しました。
-スレッド 0x2da8 はコード 0 (0x0) で終了しました。
-スレッド 0x52a0 はコード 0 (0x0) で終了しました。
-スレッド 0x8d48 はコード 0 (0x0) で終了しました。
-スレッド 0x1590 はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 0' (0x6258) はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 1' (0x7224) はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 2' (0x1a34) はコード 0 (0x0) で終了しました。
-スレッド 'D3D Background Thread 3' (0x41d4) はコード 0 (0x0) で終了しました。
-スレッド 'NVFBCAsyncThread' (0x148c) はコード 0 (0x0) で終了しました。
-スレッド 0x7f28 はコード 0 (0x0) で終了しました。
-スレッド 0x7f08 はコード 0 (0x0) で終了しました。
-スレッド 0x46c0 はコード 0 (0x0) で終了しました。
-スレッド 0x6c28 はコード 0 (0x0) で終了しました。
-スレッド 0x75f8 はコード 0 (0x0) で終了しました。
-スレッド 0x6ac8 はコード 0 (0x0) で終了しました。
-スレッド 0x89c はコード 0 (0x0) で終了しました。
-スレッド 0x2a8c はコード 0 (0x0) で終了しました。
-スレッド 0x6514 はコード 0 (0x0) で終了しました。
-スレッド 0x2c2c はコード 0 (0x0) で終了しました。
-スレッド 0x40dc はコード 0 (0x0) で終了しました。
-スレッド 0x7d00 はコード 0 (0x0) で終了しました。
-プログラム '[0x71BC] CG2_00-01.exe' はコード 0 (0x0) で終了しました。
+スレッド 0x705c はコード 0 (0x0) で終了しました。
+スレッド 0x2834 はコード 0 (0x0) で終了しました。
+スレッド 0x790c はコード 0 (0x0) で終了しました。
+スレッド 0x9248 はコード 0 (0x0) で終了しました。
+0x00007FFDD8CF66CA で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::DdiThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x00000058401FF7B0)。
+スレッド 0x940c はコード 0 (0x0) で終了しました。
+0x00007FFDD8CF66CA で例外がスローされました (CG2_00-01.exe 内): Microsoft C++ の例外: MONZA::IgcThreadingContext<MONZA::AdapterTraits_Gen12LP>::msg_end (メモリの場所 0x00000058400FFD60)。
+スレッド 0x18c4 はコード 0 (0x0) で終了しました。
+スレッド 0x96a0 はコード 0 (0x0) で終了しました。
+スレッド 0x19a8 はコード 0 (0x0) で終了しました。
+スレッド 0x95dc はコード 0 (0x0) で終了しました。
+スレッド 0x1cf8 はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 3' (0x7514) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 1' (0x9494) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 0' (0x7084) はコード 0 (0x0) で終了しました。
+スレッド 'D3D Background Thread 2' (0x7b34) はコード 0 (0x0) で終了しました。
+スレッド 'NVFBCAsyncThread' (0x6f70) はコード 0 (0x0) で終了しました。
+スレッド 0x4200 はコード 0 (0x0) で終了しました。
+スレッド 0x86d0 はコード 0 (0x0) で終了しました。
+スレッド 0x4d90 はコード 0 (0x0) で終了しました。
+スレッド 0x8914 はコード 0 (0x0) で終了しました。
+スレッド 0x9b1c はコード 0 (0x0) で終了しました。
+スレッド 0x71c0 はコード 0 (0x0) で終了しました。
+スレッド 0x7088 はコード 0 (0x0) で終了しました。
+スレッド 0x784c はコード 0 (0x0) で終了しました。
+スレッド 0x39a0 はコード 0 (0x0) で終了しました。
+スレッド 0x1578 はコード 0 (0x0) で終了しました。
+スレッド 0x9170 はコード 0 (0x0) で終了しました。
+スレッド 0x2610 はコード 0 (0x0) で終了しました。
+プログラム '[0x946C] CG2_00-01.exe' はコード 0 (0x0) で終了しました。

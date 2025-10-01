@@ -36,7 +36,8 @@ public:
     
     // マルチマテリアル対応のためのパブリックアクセサ
     ModelData& GetModelDataInternal() { return modelData_; }
-    
+    const std::vector<D3D12_VERTEX_BUFFER_VIEW>& GetVertexBufferViews() const { return vertexBufferViews_; }
+
     // 頂点バッファの作成（マルチマテリアル対応）
     void CreateVertexBuffer();
 

@@ -437,20 +437,26 @@ void Object3d::Draw() {
 	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// アニメーションモデルの場合、頂点バッファとインフルエンスバッファを設定
-	if (useAnimation) {
-		AnimatedModel* animModel = static_cast<AnimatedModel*>(animatedModel_);
-		const SkinCluster& skinCluster = animModel->GetSkinCluster();
+	// マルチマテリアルの場合は後でループ内で設定するため、ここではスキップ
+	const ModelData& modelData = model_->GetModelData();
+	bool isMultiMaterial = !modelData.materials.empty() && !modelData.matVertexData.empty();
 
-		// 頂点バッファとインフルエンスバッファを設定
-		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
-			model_->GetVBView(),
-			skinCluster.influenceBufferView
-		};
-		dxCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
-	}
-	else {
-		// 通常の頂点バッファのみセット
-		dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &model_->GetVBView());
+	if (!isMultiMaterial) {
+		if (useAnimation) {
+			AnimatedModel* animModel = static_cast<AnimatedModel*>(animatedModel_);
+			const SkinCluster& skinCluster = animModel->GetSkinCluster();
+
+			// 頂点バッファとインフルエンスバッファを設定
+			D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+				model_->GetVBView(),
+				skinCluster.influenceBufferView
+			};
+			dxCommon_->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
+		}
+		else {
+			// 通常の頂点バッファのみセット
+			dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &model_->GetVBView());
+		}
 	}
 
 	// マテリアルCBufferの場所を設定
@@ -530,8 +536,63 @@ void Object3d::Draw() {
 		// （アニメーションなしのオブジェクトではパレットSRVは不要）
 	}
 
-	// 描画
-	dxCommon_->GetCommandList()->DrawInstanced(model_->GetVertexCount(), 1, 0, 0);
+	// マルチマテリアル対応: マテリアルごとに描画
+	if (isMultiMaterial) {
+		// マルチマテリアルモード
+		const std::vector<D3D12_VERTEX_BUFFER_VIEW>& vbViews = model_->GetVertexBufferViews();
+		size_t meshIndex = 0;
+
+		for (const auto& matDataPair : modelData.matVertexData) {
+			const MaterialVertexData& matVertexData = matDataPair.second;
+			size_t materialIndex = matVertexData.materialIndex;
+
+			if (materialIndex >= modelData.materials.size() || meshIndex >= vbViews.size()) {
+				OutputDebugStringA(("Object3d::Draw - WARNING: Invalid material index " +
+					std::to_string(materialIndex) + " or mesh index " + std::to_string(meshIndex) + "\n").c_str());
+				meshIndex++;
+				continue;
+			}
+
+			// このメッシュ用の頂点バッファを設定
+			dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vbViews[meshIndex]);
+
+			// このメッシュのマテリアルに対応するテクスチャをバインド
+			const MaterialData& currentMaterial = modelData.materials[materialIndex];
+			std::string currentTexturePath = currentMaterial.textureFilePath;
+
+			if (currentTexturePath.empty()) {
+				currentTexturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
+			}
+			else if (!TextureManager::GetInstance()->IsTextureExists(currentTexturePath)) {
+				OutputDebugStringA(("Object3d::Draw - WARNING: Texture not found: " + currentTexturePath + "\n").c_str());
+				currentTexturePath = TextureManager::GetInstance()->GetDefaultTexturePath();
+			}
+
+			// テクスチャをセット
+			dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2,
+				TextureManager::GetInstance()->GetSrvHandleGPU(currentTexturePath));
+
+			// デバッグログ: どのメッシュとマテリアルを描画しているか
+			static int drawCount = 0;
+			if (drawCount < 5) {
+				OutputDebugStringA(("Object3d::Draw - Drawing mesh " + std::to_string(meshIndex) +
+					" with material " + std::to_string(materialIndex) +
+					" (texture: " + currentTexturePath + "), " +
+					std::to_string(matVertexData.vertices.size()) + " vertices\n").c_str());
+			}
+			drawCount++;
+
+			// このメッシュの頂点を描画
+			uint32_t vertexCount = static_cast<uint32_t>(matVertexData.vertices.size());
+			dxCommon_->GetCommandList()->DrawInstanced(vertexCount, 1, 0, 0);
+
+			meshIndex++;
+		}
+	}
+	else {
+		// シングルマテリアルモード（従来通り）
+		dxCommon_->GetCommandList()->DrawInstanced(model_->GetVertexCount(), 1, 0, 0);
+	}
 }
 
 void Object3d::SkeletonUpdate(Skeleton& skeleton)

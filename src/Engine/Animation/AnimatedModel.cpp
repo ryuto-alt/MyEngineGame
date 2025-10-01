@@ -348,23 +348,31 @@ void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& 
 
     // 頂点データをクリア（複数メッシュを結合するため）
     modelData.vertices.clear();
+    modelData.matVertexData.clear();
+    modelData.materials.clear();
 
-    // すべてのメッシュを処理
+    OutputDebugStringA(("AnimatedModel: Loading " + std::to_string(scene->mNumMeshes) + " meshes\n").c_str());
+    OutputDebugStringA(("AnimatedModel: Loading " + std::to_string(scene->mNumMaterials) + " materials\n").c_str());
+
+    // すべてのマテリアルを先に読み込む
+    for (unsigned int i = 0; i < scene->mNumMaterials; ++i) {
+        ProcessAssimpMaterial(scene->mMaterials[i], scene, directoryPath);
+        OutputDebugStringA(("AnimatedModel: Material[" + std::to_string(i) + "] loaded\n").c_str());
+    }
+
+    // すべてのメッシュを処理（マルチマテリアル対応）
     for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
         ProcessAssimpMesh(scene->mMeshes[i], scene);
     }
-    
-    // マテリアルの処理
-    if (scene->mNumMaterials > 0) {
-        ProcessAssimpMaterial(scene->mMaterials[0], scene, directoryPath);
-    }
-    
+
+    OutputDebugStringA(("AnimatedModel: Total " + std::to_string(modelData.matVertexData.size()) + " mesh groups created\n").c_str());
+
     // ルートノードの設定
     if (scene->mRootNode) {
         rootNodeName_ = scene->mRootNode->mName.C_Str();
         // OutputDebugStringA(("AnimatedModel: Root node name: " + rootNodeName_ + "\n").c_str());
     }
-    
+
     // アニメーションの処理
     ProcessAssimpAnimation(scene);
 }
@@ -372,10 +380,25 @@ void AnimatedModel::ProcessAssimpScene(const aiScene* scene, const std::string& 
 // assimpメッシュからジオメトリデータを作成
 void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) {
     ModelData& modelData = GetModelDataInternal();
-    // 複数メッシュを結合するため、clearは削除
-    
-    // OutputDebugStringA(("AnimatedModel: Processing mesh with " + std::to_string(mesh->mNumVertices) + " vertices and " + std::to_string(mesh->mNumFaces) + " faces\n").c_str());
-    
+
+    // メッシュ名を取得（UTF-8からワイド文字列に変換）
+    std::string utf8 = mesh->mName.C_Str();
+    int len = MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, nullptr, 0);
+    std::wstring meshName(len, L'\0');
+    MultiByteToWideChar(CP_UTF8, 0, utf8.c_str(), -1, &meshName[0], len);
+
+    // マテリアルインデックスを取得
+    size_t materialIndex = mesh->mMaterialIndex;
+
+    OutputDebugStringA(("AnimatedModel: Processing mesh \"" + utf8 +
+        "\" with material index " + std::to_string(materialIndex) +
+        ", " + std::to_string(mesh->mNumVertices) + " vertices, " +
+        std::to_string(mesh->mNumFaces) + " faces\n").c_str());
+
+    // このメッシュ用のMaterialVertexDataを作成
+    MaterialVertexData matVertexData;
+    matVertexData.materialIndex = materialIndex;
+
     // まず頂点データを頂点インデックス順に格納（ボーンウェイトの参照用）
     std::vector<VertexData> indexedVertices(mesh->mNumVertices);
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -425,6 +448,7 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
         
         for (int i = 0; i < 3; i++) {
             unsigned int vertexIndex = indices[i];
+            matVertexData.vertices.push_back(indexedVertices[vertexIndex]);
             modelData.vertices.push_back(indexedVertices[vertexIndex]);
         }
     }
@@ -482,25 +506,32 @@ void AnimatedModel::ProcessAssimpMesh(const aiMesh* mesh, const aiScene* scene) 
             }
         }
     }
-    
-    // OutputDebugStringA(("AnimatedModel: Created " + std::to_string(modelData.vertices.size()) + " vertices from faces\n").c_str());
+
+    // このメッシュのデータをmatVertexDataに格納
+    modelData.matVertexData[meshName] = matVertexData;
+
+    OutputDebugStringA(("AnimatedModel: Mesh \"" + utf8 + "\" created with " +
+        std::to_string(matVertexData.vertices.size()) + " vertices\n").c_str());
 }
 
 // assimpマテリアルからマテリアルデータを作成
 void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiScene* scene, const std::string& directoryPath) {
     ModelData& modelData = GetModelDataInternal();
-    
+
+    // 新しいマテリアルデータを作成
+    MaterialData matData;
+
     // デフォルト値を設定
-    modelData.material.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
-    modelData.material.ambient = {0.2f, 0.2f, 0.2f, 1.0f};
-    modelData.material.specular = {0.5f, 0.5f, 0.5f, 1.0f};
-    modelData.material.alpha = 1.0f;
+    matData.diffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+    matData.ambient = {0.2f, 0.2f, 0.2f, 1.0f};
+    matData.specular = {0.5f, 0.5f, 0.5f, 1.0f};
+    matData.alpha = 1.0f;
 
     // GLTFモデルはPBRマテリアルとして扱う
-    modelData.material.isPBR = true;
-    modelData.material.baseColorFactor = {1.0f, 1.0f, 1.0f, 1.0f};
-    modelData.material.metallicFactor = 0.0f;
-    modelData.material.roughnessFactor = 1.0f;
+    matData.isPBR = true;
+    matData.baseColorFactor = {1.0f, 1.0f, 1.0f, 1.0f};
+    matData.metallicFactor = 0.0f;
+    matData.roughnessFactor = 1.0f;
     
     // ディフューズテクスチャを取得
     if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
@@ -539,15 +570,15 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiSc
                             savedTexturePath = "";
                         }
                         outFile.close();
-                        modelData.material.textureFilePath = savedTexturePath;
+                        matData.textureFilePath = savedTexturePath;
                         OutputDebugStringA(("AnimatedModel: Saved embedded texture: " + savedTexturePath + "\n").c_str());
                     } else {
                         OutputDebugStringA("AnimatedModel: Failed to save embedded texture\n");
-                        modelData.material.textureFilePath = "";
+                        matData.textureFilePath = "";
                     }
                 } else {
                     OutputDebugStringA("AnimatedModel: Invalid embedded texture index\n");
-                    modelData.material.textureFilePath = "";
+                    matData.textureFilePath = "";
                 }
             } else {
                 // 外部テクスチャファイル - URLデコードを適用
@@ -568,10 +599,10 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiSc
                     }
                 }
 
-                modelData.material.textureFilePath = directoryPath + "/" + decodedFileName;
+                matData.textureFilePath = directoryPath + "/" + decodedFileName;
 
                 // ファイルが存在するか確認
-                DWORD fileAttributes = GetFileAttributesA(modelData.material.textureFilePath.c_str());
+                DWORD fileAttributes = GetFileAttributesA(matData.textureFilePath.c_str());
                 if (fileAttributes == INVALID_FILE_ATTRIBUTES) {
                     // ファイルが見つからない場合、ファイル名のみを抽出して探索
                     std::string filenameOnly = decodedFileName;
@@ -590,7 +621,7 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiSc
                     bool found = false;
                     for (const auto& path : possiblePaths) {
                         if (GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES) {
-                            modelData.material.textureFilePath = path;
+                            matData.textureFilePath = path;
                             found = true;
                             OutputDebugStringA(("AnimatedModel: Found texture at: " + path + "\n").c_str());
                             break;
@@ -598,44 +629,54 @@ void AnimatedModel::ProcessAssimpMaterial(const aiMaterial* material, const aiSc
                     }
 
                     if (!found) {
-                        OutputDebugStringA(("AnimatedModel: WARNING - Texture not found: " + modelData.material.textureFilePath + "\n").c_str());
-                        modelData.material.textureFilePath = "";
+                        OutputDebugStringA(("AnimatedModel: WARNING - Texture not found: " + matData.textureFilePath + "\n").c_str());
+                        matData.textureFilePath = "";
                     }
                 } else {
-                    OutputDebugStringA(("AnimatedModel: Found texture: " + modelData.material.textureFilePath + "\n").c_str());
+                    OutputDebugStringA(("AnimatedModel: Found texture: " + matData.textureFilePath + "\n").c_str());
                 }
 
                 // テクスチャを実際に読み込む
-                if (!modelData.material.textureFilePath.empty()) {
-                    TextureManager::GetInstance()->LoadTexture(modelData.material.textureFilePath);
-                    OutputDebugStringA(("AnimatedModel: Loaded texture into TextureManager: " + modelData.material.textureFilePath + "\n").c_str());
+                if (!matData.textureFilePath.empty()) {
+                    TextureManager::GetInstance()->LoadTexture(matData.textureFilePath);
+                    OutputDebugStringA(("AnimatedModel: Loaded texture into TextureManager: " + matData.textureFilePath + "\n").c_str());
                 }
             }
         }
     } else {
         // テクスチャなし
-        modelData.material.textureFilePath = "";
+        matData.textureFilePath = "";
         // OutputDebugStringA("AnimatedModel: No texture found\n");
     }
-    
+
     // マテリアルプロパティの取得
     aiColor3D color;
     if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) {
-        modelData.material.diffuse = {color.r, color.g, color.b, 1.0f};
+        matData.diffuse = {color.r, color.g, color.b, 1.0f};
     }
-    
+
     if (material->Get(AI_MATKEY_COLOR_AMBIENT, color) == AI_SUCCESS) {
-        modelData.material.ambient = {color.r, color.g, color.b, 1.0f};
+        matData.ambient = {color.r, color.g, color.b, 1.0f};
     }
-    
+
     if (material->Get(AI_MATKEY_COLOR_SPECULAR, color) == AI_SUCCESS) {
-        modelData.material.specular = {color.r, color.g, color.b, 1.0f};
+        matData.specular = {color.r, color.g, color.b, 1.0f};
     }
-    
+
     float opacity;
     if (material->Get(AI_MATKEY_OPACITY, opacity) == AI_SUCCESS) {
-        modelData.material.alpha = opacity;
+        matData.alpha = opacity;
     }
+
+    // materials配列に追加
+    modelData.materials.push_back(matData);
+
+    // 最初のマテリアルを単一マテリアルフィールドにも設定（下位互換性）
+    if (modelData.materials.size() == 1) {
+        modelData.material = matData;
+    }
+
+    OutputDebugStringA(("AnimatedModel: Material added - Texture: " + matData.textureFilePath + "\n").c_str());
 }
 
 // assimpノードからアニメーションデータを作成

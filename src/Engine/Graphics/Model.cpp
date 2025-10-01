@@ -193,22 +193,67 @@ void Model::CreateVertexBuffer() {
 		return;
 	}
 
-	// 頂点バッファの作成
-	vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
+	// マルチマテリアル対応: マテリアルごとの頂点バッファを作成
+	if (!modelData_.matVertexData.empty() && !modelData_.materials.empty()) {
+		// マルチマテリアルモード
+		OutputDebugStringA(("Model::CreateVertexBuffer - Creating " +
+			std::to_string(modelData_.matVertexData.size()) + " vertex buffers for multi-material\n").c_str());
 
-	// 頂点バッファビューの設定
-	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
-	vertexBufferView_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * modelData_.vertices.size());
-	vertexBufferView_.StrideInBytes = sizeof(VertexData);
+		vertexResources_.clear();
+		vertexBufferViews_.clear();
 
-	// 頂点データの書き込み
-	VertexData* vertexData = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-	vertexResource_->Unmap(0, nullptr);
+		for (const auto& matData : modelData_.matVertexData) {
+			const MaterialVertexData& matVertexData = matData.second;
 
-	OutputDebugStringA(("Model::CreateVertexBuffer - Created buffer for " +
-		std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+			if (matVertexData.vertices.empty()) {
+				OutputDebugStringA("Model::CreateVertexBuffer - Warning: Empty vertices for material, skipping\n");
+				continue;
+			}
+
+			// このマテリアル用の頂点バッファを作成
+			Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource =
+				dxCommon_->CreateBufferResource(sizeof(VertexData) * matVertexData.vertices.size());
+
+			// 頂点バッファビューの設定
+			D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+			vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+			vertexBufferView.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * matVertexData.vertices.size());
+			vertexBufferView.StrideInBytes = sizeof(VertexData);
+
+			// 頂点データの書き込み
+			VertexData* vertexDataPtr = nullptr;
+			vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDataPtr));
+			std::memcpy(vertexDataPtr, matVertexData.vertices.data(), sizeof(VertexData) * matVertexData.vertices.size());
+			vertexResource->Unmap(0, nullptr);
+
+			vertexResources_.push_back(vertexResource);
+			vertexBufferViews_.push_back(vertexBufferView);
+
+			OutputDebugStringA(("Model::CreateVertexBuffer - Created buffer with " +
+				std::to_string(matVertexData.vertices.size()) + " vertices\n").c_str());
+		}
+
+		OutputDebugStringA(("Model::CreateVertexBuffer - Total " +
+			std::to_string(vertexResources_.size()) + " buffers created\n").c_str());
+	}
+	else {
+		// シングルマテリアルモード（従来通り）
+		vertexResource_ = dxCommon_->CreateBufferResource(sizeof(VertexData) * modelData_.vertices.size());
+
+		// 頂点バッファビューの設定
+		vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
+		vertexBufferView_.SizeInBytes = static_cast<UINT>(sizeof(VertexData) * modelData_.vertices.size());
+		vertexBufferView_.StrideInBytes = sizeof(VertexData);
+
+		// 頂点データの書き込み
+		VertexData* vertexData = nullptr;
+		vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+		std::memcpy(vertexData, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
+		vertexResource_->Unmap(0, nullptr);
+
+		OutputDebugStringA(("Model::CreateVertexBuffer - Created single buffer for " +
+			std::to_string(modelData_.vertices.size()) + " vertices\n").c_str());
+	}
 }
 
 // UV球などの表示品質を向上させるためのモデルデータ最適化関数
@@ -653,6 +698,10 @@ ModelData Model::LoadGltfFile(const std::string& directoryPath, const std::strin
 		matVertexData.vertices.resize(mesh->mNumVertices);
 		matVertexData.materialIndex = mesh->mMaterialIndex;
 
+		OutputDebugStringA(("Model: Mesh[" + std::to_string(meshIndex) + "] \"" + utf8 +
+			"\" uses material index " + std::to_string(mesh->mMaterialIndex) +
+			", " + std::to_string(mesh->mNumVertices) + " vertices\n").c_str());
+
 		// 頂点データの読み込み
 		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
 			aiVector3D& position = mesh->mVertices[vertexIndex];
@@ -703,12 +752,9 @@ ModelData Model::LoadGltfFile(const std::string& directoryPath, const std::strin
 		modelData.material = matData;
 	}
 	else {
-		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
-			// GLTFの最後のマテリアルは空の場合があるのでスキップ
-			if (materialIndex == scene->mNumMaterials - 1 && scene->mNumMaterials > 1) {
-				continue;
-			}
+		OutputDebugStringA(("Model: Loading " + std::to_string(scene->mNumMaterials) + " materials\n").c_str());
 
+		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
 			aiMaterial* material = scene->mMaterials[materialIndex];
 			MaterialData matData;
 			MaterialTemplate matTemplate;
@@ -778,6 +824,9 @@ ModelData Model::LoadGltfFile(const std::string& directoryPath, const std::strin
 			modelData.materials.push_back(matData);
 			modelData.materialTemplates.push_back(matTemplate);
 
+			OutputDebugStringA(("Model: Material[" + std::to_string(materialIndex) + "] texture: " +
+				matData.textureFilePath + "\n").c_str());
+
 			// 最初のマテリアルを単一マテリアルフィールドにも設定
 			if (materialIndex == 0) {
 				modelData.material = matData;
@@ -785,7 +834,8 @@ ModelData Model::LoadGltfFile(const std::string& directoryPath, const std::strin
 		}
 	}
 
-	OutputDebugStringA(("Model: Loaded " + std::to_string(modelData.materials.size()) + " materials\n").c_str());
+	OutputDebugStringA(("Model: Loaded " + std::to_string(modelData.materials.size()) + " materials total\n").c_str());
+	OutputDebugStringA(("Model: Loaded " + std::to_string(modelData.matVertexData.size()) + " meshes total\n").c_str());
 	return modelData;
 }
 
