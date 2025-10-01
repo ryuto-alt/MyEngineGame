@@ -85,7 +85,7 @@ void GamePlayScene::HandleInput() {
     float deltaTime = engine->GetDeltaTime();
 
     if (engine->IsKeyTriggered(DIK_ESCAPE)) {
-        sceneManager_->ChangeScene("Title");
+        engine->RequestEnd();
         return;
     }
 

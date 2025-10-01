@@ -126,6 +126,11 @@ void UnoEngine::Update() {
             return;
         }
 
+        // 終了リクエストがある場合は更新処理をスキップ
+        if (endRequest_) {
+            return;
+        }
+
         // 入力更新
         input_->Update();
 
@@ -137,7 +142,7 @@ void UnoEngine::Update() {
         // カメラの更新
         camera_->Update();
 
-        // パーティクルマネージャの更新
+        // パーティクルマネージャーの更新
         ParticleManager::GetInstance()->Update(camera_.get());
 
         // 3Dパーティクルマネージャの更新
