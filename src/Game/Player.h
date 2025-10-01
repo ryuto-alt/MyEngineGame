@@ -84,10 +84,12 @@ private:
     float rotationSmoothingSpeed_ = 17.0f;
     
     // 移動関連
-    const float moveSpeed_ = 3.0f;  // 1秒あたり3ユニット（60FPSで0.05f = 1秒で3.0f）
+    const float moveSpeed_ = 3.0f;
     const float sneakSpeedMultiplier_ = 0.5f;
+    const float runSpeedMultiplier_ = 2.0f;
     bool isMoving_ = false;
     bool isSneaking_ = false;
+    bool isRunning_ = false;
     bool previousBButtonPressed_ = false;
     Vector3 moveDirection_ = Vector3{0.0f, 0.0f, 0.0f};
     

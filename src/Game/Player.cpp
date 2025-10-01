@@ -504,7 +504,12 @@ void Player::MoveWithCameraDirection(float forward, float right, float deltaTime
         moveDirection.z /= moveLength;
         
         // 移動速度を適用
-        float currentSpeed = isSneaking_ ? moveSpeed_ * sneakSpeedMultiplier_ : moveSpeed_;
+        float currentSpeed = moveSpeed_;
+        if (isSneaking_) {
+            currentSpeed *= sneakSpeedMultiplier_;
+        } else if (isRunning_) {
+            currentSpeed *= runSpeedMultiplier_;
+        }
         float distance = currentSpeed * deltaTime;
         
         // プレイヤーの位置を更新
@@ -613,6 +618,8 @@ void Player::HandleInput(UnoEngine* engine) {
     } else
 #endif
     {
+        isRunning_ = engine->IsKeyPressed(DIK_LSHIFT);
+
         float forward = 0.0f;
         float right = 0.0f;
 
