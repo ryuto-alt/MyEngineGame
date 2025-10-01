@@ -364,6 +364,8 @@ DirectXGame/imgui.ini
 .claude/
 brave-mcp/
 .mcp.json
+.serena/
+serena/
 
 # Screenshots
 *.png
