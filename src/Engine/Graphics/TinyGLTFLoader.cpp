@@ -12,16 +12,14 @@ bool TinyGLTFLoader::LoadFromFile(const std::string& filePath, std::vector<Model
         baseDirectory_ = "";
     }
 
-    // tinygltfでGLB/glTFを読み込み
+    // tinygltfでglTFを読み込み
     tinygltf::TinyGLTF loader;
     bool ret = false;
-    
-    if (filePath.size() >= 4 && filePath.substr(filePath.size() - 4) == ".glb") {
-        ret = loader.LoadBinaryFromFile(&gltfModel_, &errorMessage_, &warningMessage_, filePath);
-    } else if (filePath.size() >= 5 && filePath.substr(filePath.size() - 5) == ".gltf") {
+
+    if (filePath.size() >= 5 && filePath.substr(filePath.size() - 5) == ".gltf") {
         ret = loader.LoadASCIIFromFile(&gltfModel_, &errorMessage_, &warningMessage_, filePath);
     } else {
-        LogError("Unsupported file format. Only .glb and .gltf are supported.");
+        LogError("Unsupported file format. Only .gltf is supported.");
         return false;
     }
 

@@ -23,7 +23,7 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
     std::string extension = filename.substr(filename.find_last_of(".") + 1);
     std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
 
-    if (extension == "gltf" || extension == "glb") {
+    if (extension == "gltf") {
         LoadFromGLTFWithAssimp(directoryPath, filename);
     } else {
         LoadFromObj(directoryPath, filename);
@@ -44,7 +44,7 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
     
     // OutputDebugStringA(("AnimatedModel: Root node name set to: " + rootNodeName_ + "\n").c_str());
 
-    if (extension != "gltf" && extension != "glb") {
+    if (extension != "gltf") {
         LoadAnimation(directoryPath, filename);
     }
 }

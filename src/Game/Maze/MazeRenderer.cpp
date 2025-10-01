@@ -39,27 +39,21 @@ void MazeRenderer::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommo
 }
 
 void MazeRenderer::LoadMazePieces() {
+    // glbサポート削除のためコメント化
     // 各種迷路パーツのモデルを読み込み
-    std::unordered_map<MazePieceType, std::string> pieceFiles = {
-        {MazePieceType::Floor, "Resources/Models/maze/floor_basic.glb"},
-        {MazePieceType::WallStraight, "Resources/Models/maze/wall_straight.glb"},
-        {MazePieceType::WallCornerInner, "Resources/Models/maze/wall_corner_inner.glb"},
-        {MazePieceType::WallTJunction, "Resources/Models/maze/wall_t_junction.glb"},
-        {MazePieceType::WallCross, "Resources/Models/maze/wall_cross.glb"},
-        {MazePieceType::Light, "Resources/Models/maze/light_flickering.glb"}
-    };
-    
-    for (const auto& [type, filepath] : pieceFiles) {
-        auto model = std::make_unique<Model>();
-        
-        // ファイルが存在しない場合は仮のキューブモデルを使用
-        if (!model->LoadFromGLB(filepath)) {
-            // フォールバック: デフォルトのキューブモデルを使用
-            model->LoadFromGLB("Resources/Models/cube/obje.glb");
-        }
-        
-        pieceModels_[type] = std::move(model);
-    }
+    // std::unordered_map<MazePieceType, std::string> pieceFiles = {
+    //     {MazePieceType::Floor, "Resources/Models/maze/floor_basic.gltf"},
+    //     {MazePieceType::WallStraight, "Resources/Models/maze/wall_straight.gltf"},
+    //     {MazePieceType::WallCornerInner, "Resources/Models/maze/wall_corner_inner.gltf"},
+    //     {MazePieceType::WallTJunction, "Resources/Models/maze/wall_t_junction.gltf"},
+    //     {MazePieceType::WallCross, "Resources/Models/maze/wall_cross.gltf"},
+    //     {MazePieceType::Light, "Resources/Models/maze/light_flickering.gltf"}
+    // };
+
+    // for (const auto& [type, filepath] : pieceFiles) {
+    //     auto model = std::make_unique<Model>();
+    //     pieceModels_[type] = std::move(model);
+    // }
 }
 
 void MazeRenderer::BuildMaze(MazeGrid* grid) {

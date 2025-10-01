@@ -29,7 +29,7 @@ public:
 
 private:
     std::unique_ptr<Object3d> object3d_;
-    std::unique_ptr<Model> model_;
+    std::unique_ptr<AnimatedModel> model_;
     
     Camera* camera_ = nullptr;
     DirectXCommon* dxCommon_ = nullptr;

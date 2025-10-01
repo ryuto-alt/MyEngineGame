@@ -14,29 +14,41 @@ void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon) {
     UnoEngine* engine = UnoEngine::GetInstance();
     
     try {
-        model_ = std::make_unique<Model>();
+        model_ = engine->CreateAnimatedModel();
         model_->Initialize(dxCommon_);
-        
-        // パフォーマンス重視：軽量なグラウンドモデルを使用
-        // 高詳細版は必要時のみ読み込み
-        model_->LoadFromGLB("Resources/Models/ground/ground.glb");
-        
-        // デバッグ出力で読み込み時間を監視
-        OutputDebugStringA("Ground: Fast loading mode - using optimized model\n");
-        
+
+        // gltfファイルを読み込み
+        OutputDebugStringA("Ground: Loading ground.gltf...\n");
+        model_->LoadFromFile("Resources/Models/ground", "ground.gltf");
+
+        // モデルデータの確認
+        const ModelData& modelData = model_->GetModelData();
+        char debugMsg[512];
+        sprintf_s(debugMsg, "Ground: Loaded ground.gltf - Vertices: %zu\n", modelData.vertices.size());
+        OutputDebugStringA(debugMsg);
+
         object3d_ = engine->CreateObject3D();
         object3d_->SetModel(model_.get());
         object3d_->SetPosition(position_);
-        
+
         // Blenderで設定されたスケール情報を使用
-        const ModelData& modelData = model_->GetModelData();
         Vector3 blenderScale = modelData.rootTransform.scale;
+
+        // スケールが0の場合はデフォルト値を使用
+        if (blenderScale.x == 0.0f && blenderScale.y == 0.0f && blenderScale.z == 0.0f) {
+            blenderScale = {40.0f, 40.0f, 40.0f};
+            OutputDebugStringA("Ground: Using default scale (40, 40, 40)\n");
+        }
+
         object3d_->SetScale(blenderScale);
-        
+
         // デバッグ: 適用されたスケール値を出力
-        char debugMsg[256];
-        sprintf_s(debugMsg, "Ground: Applied Blender scale - X=%.3f, Y=%.3f, Z=%.3f\n",
+        sprintf_s(debugMsg, "Ground: Applied scale - X=%.3f, Y=%.3f, Z=%.3f\n",
                  blenderScale.x, blenderScale.y, blenderScale.z);
+        OutputDebugStringA(debugMsg);
+
+        sprintf_s(debugMsg, "Ground: Position - X=%.3f, Y=%.3f, Z=%.3f\n",
+                 position_.x, position_.y, position_.z);
         OutputDebugStringA(debugMsg);
         
         object3d_->SetRotation(Vector3{0.0f, 0.0f, 0.0f});

@@ -18,7 +18,7 @@ void GamePlayScene::Initialize() {
     ground_->Initialize(camera_, dxCommon_);
 
     objeModel_ = engine->CreateAnimatedModel();
-    objeModel_->LoadFromFile("Resources/Models/obje", "object.glb");
+    objeModel_->LoadFromFile("Resources/Models/obje", "object.gltf");
 
     objeObject_ = engine->CreateObject3D();
     objeObject_->SetModel(static_cast<Model*>(objeModel_.get()));
