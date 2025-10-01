@@ -109,9 +109,6 @@ void SceneManager::Finalize() {
     // シングルトンインスタンスの解放
     delete instance_;
     instance_ = nullptr;
-
-    // デバッグ出力
-    OutputDebugStringA("SceneManager finalized successfully\n");
 }
 
 void SceneManager::ChangeScene(const std::string& sceneName) {

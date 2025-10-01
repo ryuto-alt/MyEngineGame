@@ -353,29 +353,8 @@ void Object3d::Update() {
 			ApplyAnimation(skeleton, currentAnimation, animationTime);
 		}
 
-		// デバッグ出力
-		if (frameCount % 60 == 0) {
-			float animationTime = animatedModel_->GetAnimationPlayer().GetTime();
-			OutputDebugStringA(("Object3d::Update - Animation time: " + std::to_string(animationTime) +
-				", Current animation: " + animatedModel_->GetCurrentAnimationName() +
-				", Blending: " + (animatedModel_->IsBlending() ? "Yes" : "No") +
-				(animatedModel_->IsBlending() ? ", Progress: " + std::to_string(animatedModel_->GetBlendProgress() * 100.0f) + "%" : "") +
-				"\n").c_str());
-		}
-		frameCount++;
-
-		// スケルトンの更新
 		SkeletonUpdate(skeleton);
-		SkinClusterUpdate(skinCluster, skeleton);  // スキニング処理を有効化
-
-		// デバッグ：最初のジョイントの変換を確認
-		if (skeleton.joints.size() > 0 && frameCount % 60 == 0) {
-			const Joint& firstJoint = skeleton.joints[0];
-			OutputDebugStringA(("Object3d::Update - First joint transform: " + firstJoint.name +
-				" pos:(" + std::to_string(firstJoint.transform.translate.x) + "," +
-				std::to_string(firstJoint.transform.translate.y) + "," +
-				std::to_string(firstJoint.transform.translate.z) + ")\n").c_str());
-		}
+		SkinClusterUpdate(skinCluster, skeleton);
 
 		// アニメーション行列は単位行列のままにする（スキニングで頂点変換するため）
 		animationMatrix_ = MakeIdentity4x4();
@@ -437,24 +416,16 @@ void Object3d::Draw() {
 	bool useAnimation = enableAnimation_ && animatedModel_;
 	
 	if (usePBR && useAnimation) {
-		// PBR + アニメーションの場合はPBRスキニングパイプラインを使用
 		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetPBRSkinningPipelineState().Get());
-		OutputDebugStringA("Object3d::Draw - Using PBR skinning pipeline\n");
 	}
 	else if (usePBR) {
-		// PBRマテリアルのみの場合はPBRパイプラインを使用
 		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetPBRPipelineState().Get());
-		OutputDebugStringA("Object3d::Draw - Using PBR pipeline\n");
 	}
 	else if (useAnimation) {
-		// アニメーションのみの場合はスキニングパイプラインを使用
 		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetSkinningPipelineState().Get());
-		OutputDebugStringA("Object3d::Draw - Using skinning pipeline\n");
 	}
 	else {
-		// 通常の描画設定（静的モデル用）
 		dxCommon_->GetCommandList()->SetPipelineState(spriteCommon_->GetGraphicsPipelineState().Get());
-		OutputDebugStringA("Object3d::Draw - Using legacy pipeline\n");
 	}
 	
 	// プリミティブトポロジーの設定
@@ -505,23 +476,13 @@ void Object3d::Draw() {
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2,
 		TextureManager::GetInstance()->GetSrvHandleGPU(texturePath));
 	
-	// 環境マップテクスチャの設定（事前にロードされているテクスチャを使用）
 	std::string envTexturePath = environmentTexturePath_;
 	if (envTexturePath.empty() || !TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {
-		// デフォルト環境マップテクスチャを使用（キューブマップテクスチャが必要）
 		envTexturePath = "Resources/Models/skybox/rostock_laage_airport_4k.dds";
-		
-		// デフォルト環境マップテクスチャが存在しない場合はロード
+
 		if (!TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {
-			OutputDebugStringA(("Object3d::Draw - Loading default environment map: " + envTexturePath + "\n").c_str());
 			TextureManager::GetInstance()->LoadTexture(envTexturePath);
 		}
-		else {
-			OutputDebugStringA(("Object3d::Draw - Using existing environment map: " + envTexturePath + "\n").c_str());
-		}
-	}
-	else {
-		OutputDebugStringA(("Object3d::Draw - Using custom environment map: " + envTexturePath + "\n").c_str());
 	}
 	
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(6,
@@ -596,17 +557,6 @@ void Object3d::ApplyAnimation(Skeleton& skeleton, const Animation& animation, fl
 			joint.transform.translate = ::CalculateValue(nodeAnimation.translate, animationTime);
 			joint.transform.rotate = ::CalculateValue(nodeAnimation.rotate, animationTime);
 			joint.transform.scale = ::CalculateValue(nodeAnimation.scale, animationTime);
-
-			if (shouldDebug) {
-				OutputDebugStringA(("ApplyAnimation - Joint: " + joint.name +
-					", translate: (" + std::to_string(joint.transform.translate.x) +
-					", " + std::to_string(joint.transform.translate.y) +
-					", " + std::to_string(joint.transform.translate.z) + ")" +
-					", rotate: (" + std::to_string(joint.transform.rotate.x) +
-					", " + std::to_string(joint.transform.rotate.y) +
-					", " + std::to_string(joint.transform.rotate.z) +
-					", " + std::to_string(joint.transform.rotate.w) + ")\n").c_str());
-			}
 		}
 	}
 }
@@ -621,19 +571,6 @@ void Object3d::SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skele
 		skinCluster.mappedPalette[jointIndex].skeletonSpaceInverseTransposeMatrix =
 			Transpose(Inverse(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
 	}
-
-	// デバッグ出力
-	static int debugCount = 0;
-	if (debugCount % 60 == 0) {
-		OutputDebugStringA(("SkinClusterUpdate - Updated " + std::to_string(skeleton.joints.size()) + " joint matrices\n").c_str());
-		if (skeleton.joints.size() > 0) {
-			OutputDebugStringA(("  First joint: " + skeleton.joints[0].name +
-				", translate: (" + std::to_string(skeleton.joints[0].transform.translate.x) +
-				", " + std::to_string(skeleton.joints[0].transform.translate.y) +
-				", " + std::to_string(skeleton.joints[0].transform.translate.z) + ")\n").c_str());
-		}
-	}
-	debugCount++;
 }
 
 // CalculateValue関数はAnimationUtilityから使用するため、Object3dクラスからは削除
