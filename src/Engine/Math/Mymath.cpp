@@ -1,4 +1,4 @@
-#include "MyMath.h"
+#include "Mymath.h"
 #include "algorithm"
 #include <cassert>
 //float Cot(float theta)
@@ -405,6 +405,20 @@ Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t)
     assert(!std::isnan(result.y));
     assert(!std::isnan(result.z));
     return result;
+}
+
+float Dot(const Vector4& v1, const Vector4& v2)
+{
+	return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
+}
+
+Vector4 Normalize(const Vector4& v)
+{
+	float length = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+	if (length == 0.0f) {
+		return v;
+	}
+	return { v.x / length, v.y / length, v.z / length, v.w / length };
 }
 
 Vector4 Slerp(const Vector4& befor, const Vector4& after, float t)

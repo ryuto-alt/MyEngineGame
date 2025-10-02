@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vector3.h"
+#include "Mymath.h"
 
 // 3D空間オーディオリスナークラス
 class SpatialAudioListener {

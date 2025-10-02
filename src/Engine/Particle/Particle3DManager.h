@@ -7,7 +7,7 @@
 #include <memory>
 #include "DirectXCommon.h"
 #include "SRVManager.h"
-#include "Vector3.h"
+#include "Mymath.h"
 #include "Mymath.h"
 #include "Camera.h"
 #include "Model.h"

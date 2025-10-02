@@ -1,6 +1,5 @@
 #pragma once
-#include "Matrix4x4.h"
-#include "Vector3.h"
+#include "Mymath.h"
 #include "Camera.h"
 #include "Mymath.h"
 #include <d3d12.h>

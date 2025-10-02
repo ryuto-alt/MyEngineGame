@@ -1,6 +1,5 @@
 // MyGame.cpp
 #include "MyGame.h"
-#include "GameSceneFactory.h" // 実装ファイルで具象クラスをインクルード
 #include <cassert>
 
 MyGame::MyGame() : engine_(nullptr) {
@@ -9,7 +8,6 @@ MyGame::MyGame() : engine_(nullptr) {
 
 MyGame::~MyGame() {
     // デストラクタでは特に何もしない
-    // unique_ptrが自動的にリソースを解放
 }
 
 void MyGame::Initialize() {
@@ -20,14 +18,8 @@ void MyGame::Initialize() {
         // エンジンの初期化
         engine_->Initialize();
 
-        // GameSceneFactoryの作成 - SceneFactoryへのポインタとして扱う
-        SceneFactory* factory = new GameSceneFactory();
-
-        // unique_ptrに所有権を移す（SceneFactory型として）
-        sceneFactory_.reset(factory);
-
-        // エンジンにSceneFactoryを設定
-        engine_->SetSceneFactory(sceneFactory_.get());
+        // シーンマネージャーの初期化
+        engine_->GetSceneManager()->Initialize();
 
         // 初期シーンへの遷移 - 直接GamePlaySceneに
         engine_->GetSceneManager()->ChangeScene("GamePlay");
@@ -57,8 +49,6 @@ void MyGame::Draw() {
 }
 
 void MyGame::Finalize() {
-    // sceneFactory_はunique_ptrで自動的に解放される
-
     // UnoEngineのFinalizeを呼び出す
     // 注意: シングルトンなのでリソース解放は別途行われる
 }

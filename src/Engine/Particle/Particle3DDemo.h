@@ -3,7 +3,7 @@
 #include "EffectManager3D.h"
 #include "Input.h"
 #include "Camera.h"
-#include "Vector3.h"
+#include "Mymath.h"
 
 // 3Dパーティクルエフェクトのデモクラス
 class Particle3DDemo {

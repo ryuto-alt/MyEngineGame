@@ -1,7 +1,6 @@
 #pragma once
 #include "Animation.h"
-#include "Vector3.h"
-#include "Vector4.h"
+#include "Mymath.h"
 #include <string>
 #include <vector>
 
@@ -19,9 +18,3 @@ Vector3 Lerp(const Vector3& start, const Vector3& end, float t);
 
 // 球面線形補間関数
 Quaternion Slerp(const Quaternion& start, const Quaternion& end, float t);
-
-// クォータニオンの正規化
-Quaternion Normalize(const Quaternion& q);
-
-// クォータニオンの内積
-float Dot(const Quaternion& q1, const Quaternion& q2);

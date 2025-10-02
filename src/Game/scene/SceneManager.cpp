@@ -1,5 +1,6 @@
 #include "SceneManager.h"
-#include "SceneFactory.h"
+#include "TitleScene.h"
+#include "GamePlayScene.h"
 #include <cassert>
 
 // 静的メンバ変数の実体化
@@ -12,10 +13,7 @@ SceneManager* SceneManager::GetInstance() {
     return instance_;
 }
 
-void SceneManager::Initialize(SceneFactory* sceneFactory) {
-    assert(sceneFactory);
-    sceneFactory_ = sceneFactory;
-
+void SceneManager::Initialize() {
     // 最初のシーンをTitleに設定
     nextScene_ = "Title";
 
@@ -41,7 +39,11 @@ void SceneManager::Update() {
         }
 
         // 次のシーンを生成
-        currentScene_ = sceneFactory_->CreateScene(nextScene_);
+        if (nextScene_ == "Title") {
+            currentScene_ = std::make_unique<TitleScene>();
+        } else if (nextScene_ == "GamePlay") {
+            currentScene_ = std::make_unique<GamePlayScene>();
+        }
 
         // シーンマネージャーのポインタをセット
         currentScene_->SetSceneManager(this);

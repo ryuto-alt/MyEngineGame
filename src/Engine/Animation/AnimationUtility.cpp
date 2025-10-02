@@ -9,36 +9,6 @@
 #include <string>
 #include "Mymath.h"
 
-
-
-float Dot(const Quaternion& q1, const Quaternion& q2) {
-    return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
-}
-
-Quaternion Normalize(const Quaternion& q) {
-    assert(!std::isnan(q.x) && !std::isnan(q.y) && !std::isnan(q.z) && !std::isnan(q.w));
-    
-    float length = std::sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
-    assert(!std::isnan(length));
-    
-    if (length < 1e-6f) {
-        return { 0.0f, 0.0f, 0.0f, 1.0f };
-    }
-    
-    Quaternion result = {
-        q.x / length,
-        q.y / length,
-        q.z / length,
-        q.w / length
-    };
-    
-    assert(!std::isnan(result.x) && !std::isnan(result.y) && !std::isnan(result.z) && !std::isnan(result.w));
-    
-    return result;
-}
-
-
-
 Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time) {
     assert(!keyframes.empty());
     assert(!std::isnan(time));

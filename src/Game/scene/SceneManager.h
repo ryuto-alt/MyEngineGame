@@ -10,9 +10,6 @@
 #include "SrvManager.h"
 #include "Camera.h"
 
-// 前方宣言
-class SceneFactory;
-
 // シーン管理クラス
 class SceneManager final {
 private:
@@ -32,7 +29,7 @@ public:
     static SceneManager* GetInstance();
 
     // 初期化
-    void Initialize(SceneFactory* sceneFactory);
+    void Initialize();
 
     // 更新
     void Update();
@@ -58,9 +55,6 @@ public:
     WinApp* GetWinApp() const { return winApp_; }
 
 private:
-    // シーンファクトリー
-    SceneFactory* sceneFactory_ = nullptr;
-
     // 現在のシーン
     std::unique_ptr<IScene> currentScene_;
 

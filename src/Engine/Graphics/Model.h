@@ -1,10 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
-#include "Matrix4x4.h"
+#include "Mymath.h"
 #include <d3d12.h>
 #include <wrl.h>
 #include "DirectXCommon.h"

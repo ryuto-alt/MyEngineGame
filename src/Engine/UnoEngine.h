@@ -39,14 +39,9 @@
 
 // シーン管理
 #include "SceneManager.h"
-#include "SceneFactory.h" // 抽象クラスのみをインクルード
 #include "IScene.h"
 
 // 数学・ユーティリティ関連
-#include "Vector2.h"
-#include "Vector3.h"
-#include "Vector4.h"
-#include "Matrix4x4.h"
 #include "Mymath.h"
 #include "Logger.h"
 #include "StringUtility.h"
@@ -236,9 +231,6 @@ public:
     AudioManager* GetAudioManager() const { return AudioManager::GetInstance(); }
     Collision::AABBCollisionManager* GetAABBCollisionManager() const { return Collision::AABBCollisionManager::GetInstance(); }
 
-    // シーンファクトリーのセッター
-    void SetSceneFactory(SceneFactory* sceneFactory);
-
 private:
     // シングルトンインスタンス
     static UnoEngine* instance_;
@@ -261,9 +253,6 @@ private:
     std::unique_ptr<SpriteCommon> spriteCommon_;
     std::unique_ptr<SrvManager> srvManager_;
 
-    // シーンファクトリー 
-    std::unique_ptr<SceneFactory> sceneFactory_;
-    
     // 3D空間オーディオ関連
     std::unique_ptr<SpatialAudioListener> audioListener_;
     std::vector<std::unique_ptr<SpatialAudioSource>> spatialAudioSources_;

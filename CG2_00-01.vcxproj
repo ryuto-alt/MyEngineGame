@@ -146,8 +146,6 @@
     <ClCompile Include="src\Game\main.cpp" />
     <ClCompile Include="src\Game\MyGame.cpp" />
     <ClCompile Include="src\Game\scene\GamePlayScene.cpp" />
-    <ClCompile Include="src\Game\scene\GameSceneFactory.cpp" />
-    <ClCompile Include="src\Game\scene\SceneFactory.cpp" />
     <ClCompile Include="src\Game\scene\SceneManager.cpp" />
     <ClCompile Include="src\Game\scene\TitleScene.cpp" />
     <ClCompile Include="src\Game\Player.cpp" />
@@ -190,12 +188,7 @@
     <ClInclude Include="src\Engine\Graphics\SRVManager.h" />
     <ClInclude Include="src\Engine\Graphics\TextureManager.h" />
     <ClInclude Include="src\Engine\Input\Input.h" />
-    <ClInclude Include="src\Engine\Math\Matrix3x3.h" />
-    <ClInclude Include="src\Engine\Math\Matrix4x4.h" />
     <ClInclude Include="src\Engine\Math\Mymath.h" />
-    <ClInclude Include="src\Engine\Math\Vector2.h" />
-    <ClInclude Include="src\Engine\Math\Vector3.h" />
-    <ClInclude Include="src\Engine\Math\Vector4.h" />
     <ClInclude Include="src\Engine\Particle\EffectManager3D.h" />
     <ClInclude Include="src\Engine\Particle\HitEffect3D.h" />
     <ClInclude Include="src\Engine\Particle\Particle3DDemo.h" />
@@ -209,9 +202,7 @@
     <ClInclude Include="src\Engine\Utility\WinApp.h" />
     <ClInclude Include="src\Game\MyGame.h" />
     <ClInclude Include="src\Game\scene\GamePlayScene.h" />
-    <ClInclude Include="src\Game\scene\GameSceneFactory.h" />
     <ClInclude Include="src\Game\scene\IScene.h" />
-    <ClInclude Include="src\Game\scene\SceneFactory.h" />
     <ClInclude Include="src\Game\scene\SceneManager.h" />
     <ClInclude Include="src\Game\scene\TitleScene.h" />
     <ClInclude Include="src\Game\Player.h" />

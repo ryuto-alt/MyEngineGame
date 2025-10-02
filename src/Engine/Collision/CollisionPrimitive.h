@@ -1,6 +1,5 @@
 #pragma once
-#include "Vector3.h"
-#include "Matrix4x4.h"
+#include "Mymath.h"
 
 namespace Collision {
     // 球

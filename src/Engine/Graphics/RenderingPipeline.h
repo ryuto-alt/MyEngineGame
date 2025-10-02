@@ -1,7 +1,6 @@
 #pragma once
-#include "Matrix4x4.h"
 #include <cmath>
-#include "Math.h"
+#include "Mymath.h"
 
 float Cot(float theta);
 

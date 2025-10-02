@@ -3,10 +3,6 @@
 
 #include "Framework.h"
 #include "UnoEngine.h"
-#include "SceneFactory.h" // 抽象基底クラスをインクルード
-
-// GameSceneFactoryは前方宣言
-class GameSceneFactory;
 
 class MyGame : public Framework {
 public:
@@ -23,7 +19,4 @@ public:
 private:
     // UnoEngineのインスタンス
     UnoEngine* engine_ = nullptr;
-
-    // SceneFactoryを基底クラス型として保持
-    std::unique_ptr<SceneFactory> sceneFactory_;
 };

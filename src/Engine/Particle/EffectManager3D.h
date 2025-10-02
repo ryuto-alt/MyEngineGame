@@ -1,7 +1,7 @@
 #pragma once
 
 #include "HitEffect3D.h"
-#include "Vector3.h"
+#include "Mymath.h"
 #include <memory>
 #include <vector>
 #include <string>

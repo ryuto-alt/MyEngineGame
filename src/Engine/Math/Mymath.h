@@ -1,16 +1,116 @@
 #pragma once
-#include "Matrix4x4.h"
-#include "Matrix3x3.h"
-#include "Vector4.h"
-#include "Vector3.h"
-#include "Vector2.h"
 #include <assert.h>
 #include <cmath>
 #include <stdio.h>
 #include <vector>
 #include <string>
 #include <map>
-#include <AnimationUtility.h>
+
+// ===== Vector2 =====
+struct Vector2
+{
+    float x;
+    float y;
+};
+
+// ===== Vector3 =====
+struct Vector3
+{
+    float x;
+    float y;
+    float z;
+
+    Vector3 operator+(const Vector3& other) const {
+        return Vector3{ x + other.x, y + other.y, z + other.z };
+    }
+
+    Vector3 operator-(const Vector3& other) const {
+        return Vector3{ x - other.x, y - other.y, z - other.z };
+    }
+
+    Vector3 operator*(float scalar) const {
+        return Vector3{ x * scalar, y * scalar, z * scalar };
+    }
+
+    Vector3 operator/(float scalar) const {
+        return Vector3{ x / scalar, y / scalar, z / scalar };
+    }
+
+    Vector3& operator+=(const Vector3& other) {
+        x += other.x;
+        y += other.y;
+        z += other.z;
+        return *this;
+    }
+
+    Vector3& operator-=(const Vector3& other) {
+        x -= other.x;
+        y -= other.y;
+        z -= other.z;
+        return *this;
+    }
+
+    Vector3& operator*=(float scalar) {
+        x *= scalar;
+        y *= scalar;
+        z *= scalar;
+        return *this;
+    }
+
+    Vector3& operator/=(float scalar) {
+        x /= scalar;
+        y /= scalar;
+        z /= scalar;
+        return *this;
+    }
+};
+
+// ===== Vector4 =====
+struct Vector4
+{
+	float x;
+	float y;
+	float z;
+	float w;
+};
+
+// Vector4のドット積
+float Dot(const Vector4& v1, const Vector4& v2);
+
+// Vector4の正規化
+Vector4 Normalize(const Vector4& v);
+
+inline Vector4 operator-(const Vector4& q1) {
+	Vector4 result;
+
+	result.w = -q1.w;
+	result.x = -q1.x;
+	result.y = -q1.y;
+	result.z = -q1.z;
+	return result;
+}
+inline Vector4 operator+(Vector4 q1, Vector4 q2) {
+	q1.w += q2.w;
+	q1.x += q2.x;
+	q1.y += q2.y;
+	q1.z += q2.z;
+	return q1;
+}
+
+inline Vector4 operator*(float n, Vector4 q1) {
+	Vector4 result;
+
+	result.w = q1.w * n;
+	result.x = q1.x * n;
+	result.y = q1.y * n;
+	result.z = q1.z * n;
+	return result;
+}
+
+// ===== Matrix4x4 =====
+struct Matrix4x4 {
+	float m[4][4];
+};
 
 //float Cot(float theta);
 

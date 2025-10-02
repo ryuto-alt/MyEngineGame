@@ -1,5 +1,4 @@
 #include "UnoEngine.h"
-#include "GameSceneFactory.h" // 具象クラスはcppファイルでインクルード
 #include "AABBCollision.h" // AABBコリジョンシステム
 #include <cassert>
 #include <algorithm>
@@ -102,11 +101,6 @@ void UnoEngine::Initialize() {
         sceneManager->SetCamera(camera_.get());
         sceneManager->SetWinApp(winApp_.get());
 
-        // シーンファクトリーが設定されていれば初期化
-        if (sceneFactory_) {
-            sceneManager->Initialize(sceneFactory_.get());
-        }
-        
         // 初期化時のGPU同期を実行（削除）
         // dxCommon_->CommandKick();
 
@@ -257,9 +251,6 @@ void UnoEngine::Finalize() {
         // ウィンドウアプリの解放
         winApp_.reset();
 
-        // シーンファクトリーの解放
-        sceneFactory_.reset();
-
     }
     catch (const std::exception& e) {
         OutputDebugStringA(("ERROR: Exception in UnoEngine::Finalize: " + std::string(e.what()) + "\n").c_str());
@@ -282,19 +273,7 @@ void UnoEngine::Run() {
     }
 }
 
-void UnoEngine::SetSceneFactory(SceneFactory* sceneFactory) {
-    // nullptrチェック
-    if (sceneFactory == nullptr) {
-        sceneFactory_.reset();
-        return;
-    }
 
-    // unique_ptrにセット（所有権を移譲）
-    sceneFactory_ = std::unique_ptr<SceneFactory>(sceneFactory);
-
-    // シーンマネージャーの初期化
-    SceneManager::GetInstance()->Initialize(sceneFactory_.get());
-}
 
 // === 統合API実装 ===
 

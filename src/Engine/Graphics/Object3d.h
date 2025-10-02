@@ -1,7 +1,6 @@
 #pragma once
 #include "Model.h"
-#include "Matrix4x4.h"
-#include "Vector3.h"
+#include "Mymath.h"
 #include "math.h"
 #include "Camera.h"
 #include "Animation.h"

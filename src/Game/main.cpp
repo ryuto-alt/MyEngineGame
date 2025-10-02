@@ -1,6 +1,5 @@
 // main.cpp - UnoEngineを使用したサンプル
 #include "UnoEngine.h"
-#include "GameSceneFactory.h"
 #include "D3DResourceCheck.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -17,9 +16,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // エンジンの初期化
         engine->Initialize();
 
-        // シーンファクトリーの作成と設定
-        SceneFactory* sceneFactory = new GameSceneFactory();
-        engine->SetSceneFactory(sceneFactory);
+        // シーンマネージャーの初期化
+        engine->GetSceneManager()->Initialize();
 
         // 初期シーンへの遷移（SceneManager経由）
         engine->GetSceneManager()->ChangeScene("Title");
