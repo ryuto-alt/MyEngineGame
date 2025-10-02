@@ -201,6 +201,7 @@ namespace Collision {
             for (const auto& [materialName, matData] : modelData.matVertexData) {
                 if (matData.vertices.empty()) continue;
 
+                // 各メッシュの最小・最大を正しく初期化
                 Vector3 minPoint = {
                     matData.vertices[0].position.x,
                     matData.vertices[0].position.y,
@@ -208,6 +209,7 @@ namespace Collision {
                 };
                 Vector3 maxPoint = minPoint;
 
+                // このメッシュの全頂点をチェック
                 for (const auto& vertex : matData.vertices) {
                     Vector3 pos = { vertex.position.x, vertex.position.y, vertex.position.z };
 
@@ -218,6 +220,19 @@ namespace Collision {
                     maxPoint.x = std::max(maxPoint.x, pos.x);
                     maxPoint.y = std::max(maxPoint.y, pos.y);
                     maxPoint.z = std::max(maxPoint.z, pos.z);
+                }
+
+                // 空間メッシュ（非常に小さいか存在しないメッシュ）をスキップ
+                Vector3 size = {
+                    maxPoint.x - minPoint.x,
+                    maxPoint.y - minPoint.y,
+                    maxPoint.z - minPoint.z
+                };
+
+                // サイズが極端に小さい場合はスキップ（閾値: 0.01）
+                const float minSize = 0.01f;
+                if (size.x < minSize && size.y < minSize && size.z < minSize) {
+                    continue;
                 }
 
                 aabbs.push_back(AABB(minPoint, maxPoint));

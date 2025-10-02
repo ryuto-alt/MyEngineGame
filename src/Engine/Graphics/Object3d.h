@@ -80,6 +80,9 @@ public:
     void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);
     void SkinClusterUpdate(SkinCluster& skinCluster, const Skeleton& skeleton);
     
+    // コリジョン設定
+    void EnableCollision(bool enabled = true, const std::string& name = "");
+
     void SetAnimatedModel(class AnimatedModel* animatedModel);
     void SetEnableAnimation(bool enable);
     bool GetEnableAnimation() const;

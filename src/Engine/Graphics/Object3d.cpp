@@ -8,6 +8,7 @@
 #include "AnimatedModel.h"
 #include "AnimationUtility.h"
 #include "UnoEngine.h"
+#include "AABBCollision.h"
 #include <unordered_set>
 
 
@@ -695,4 +696,23 @@ void Object3d::SetAnimationTime(float time)
 		animatedModel_->GetAnimationPlayer().SetTime(time);
 	}
 	animationTime_ = time; // 互換性のため残す
+}
+
+void Object3d::EnableCollision(bool enabled, const std::string& name) {
+    auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+    if (!collisionManager || !model_) return;
+
+    // モデルデータからマルチマテリアルかどうか判定
+    const auto& modelData = model_->GetModelData();
+
+    if (!modelData.matVertexData.empty()) {
+        // マルチマテリアルの場合はマルチメッシュAABBを登録
+        std::vector<Collision::AABB> aabbs = Collision::AABBExtractor::ExtractMultipleAABBsFromAnimatedModel(
+            static_cast<AnimatedModel*>(model_));
+        collisionManager->RegisterObjectWithMultipleAABBs(this, aabbs, enabled, name);
+    } else {
+        // シングルマテリアルの場合はシングルAABBを登録
+        Collision::AABB aabb = Collision::AABBExtractor::ExtractFromModel(model_);
+        collisionManager->RegisterObject(this, aabb, enabled, name);
+    }
 }

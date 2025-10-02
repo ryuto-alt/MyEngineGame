@@ -2,7 +2,6 @@
 #include "imgui.h"
 #include "UnoEngine.h"
 #include "SceneManager.h"
-#include "AABBCollision.h"
 
 void GamePlayScene::Initialize() {
     UnoEngine* engine = UnoEngine::GetInstance();
@@ -11,7 +10,7 @@ void GamePlayScene::Initialize() {
     lightManager_->Initialize();
 
     player_ = std::make_unique<Player>();
-    player_->Initialize(camera_, true);  // コリジョン有効
+    player_->Initialize(camera_, true);  
     player_->SetupCamera(engine);
     player_->SetEnableEnvironmentMap(false);
 
@@ -28,15 +27,9 @@ void GamePlayScene::Initialize() {
     objeObject_->SetScale({1.0f, 1.0f, 1.0f});
     objeObject_->SetEnableLighting(true);
     objeObject_->SetEnableAnimation(false);
+    objeObject_->EnableCollision(true, "Object");
 
     skyboxEnabled_ = false;
-
-    // objeObjectのマルチメッシュコリジョン設定
-    auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
-    if (collisionManager && objeObject_ && objeModel_) {
-        std::vector<Collision::AABB> objeAABBs = Collision::AABBExtractor::ExtractMultipleAABBsFromAnimatedModel(objeModel_.get());
-        collisionManager->RegisterObjectWithMultipleAABBs(objeObject_.get(), objeAABBs, true, "Object");
-    }
 }
 
 
