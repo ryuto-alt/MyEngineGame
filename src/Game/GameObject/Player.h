@@ -73,11 +73,17 @@ public:
     // 衝突応答処理
     void HandleCollisionResponse();
 
+    // 重力・ジャンプ関連
+    void Jump();
+    bool IsGrounded() const { return isGrounded_; }
+
 private:
     void HandleMovement(UnoEngine* engine, float deltaTime);
     void HandleGamepadFeatures(UnoEngine* engine, float deltaTime);  // ゲームパッド固有機能
     void UpdateAnimation(float deltaTime);
     void UpdateRotation(UnoEngine* engine, float deltaTime);
+    void UpdateGravity(float deltaTime);
+    void CheckGroundCollision();
     
     // モデル関連
     std::unique_ptr<Object3d> object3d_;
@@ -106,7 +112,13 @@ private:
     bool isBlending_ = false;
     float blendTimer_ = 0.0f;
     const float BLEND_DURATION = 0.3f;
-    
+
+    // 重力・ジャンプ関連
+    Vector3 velocity_ = Vector3{0.0f, 0.0f, 0.0f};
+    const float gravity_ = -9.8f;
+    const float jumpPower_ = 5.0f;
+    bool isGrounded_ = false;
+
     // カメラ参照
     Camera* camera_ = nullptr;
 };

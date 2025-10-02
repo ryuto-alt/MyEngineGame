@@ -14,8 +14,32 @@ void GamePlayScene::Initialize() {
     player_->SetupCamera(engine);
     player_->SetEnableEnvironmentMap(false);
 
-    ground_ = std::make_unique<Ground>();
-    ground_->Initialize(camera_, dxCommon_, false);  // コリジョン無効（AABBが壊れているため）
+    groundModel_ = engine->CreateAnimatedModel();
+    groundModel_->LoadFromFile("Resources/Models/ground", "ground.gltf");
+
+    ground_ = engine->CreateObject3D();
+    ground_->SetModel(static_cast<Model*>(groundModel_.get()));
+    ground_->SetCamera(camera_);
+    ground_->SetPosition({0.0f, -0.1f, 0.0f});
+
+    // Blenderで設定されたスケール情報を使用
+    const ModelData& modelData = groundModel_->GetModelData();
+    Vector3 blenderScale = modelData.rootTransform.scale;
+
+    // スケールが0の場合はデフォルト値を使用
+    if (blenderScale.x == 0.0f && blenderScale.y == 0.0f && blenderScale.z == 0.0f) {
+        blenderScale = {40.0f, 40.0f, 40.0f};
+    }
+
+    ground_->SetScale(blenderScale);
+    ground_->SetEnableLighting(true);
+
+    // 地面の当たり判定を登録
+    auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+    if (collisionManager && groundModel_) {
+        Collision::AABB groundAABB = Collision::AABBExtractor::ExtractFromAnimatedModel(groundModel_.get());
+        collisionManager->RegisterObject(ground_.get(), groundAABB, true, "Ground");
+    }
 
     objeModel_ = engine->CreateAnimatedModel();
     objeModel_->LoadFromFile("Resources/Models/obje", "object.gltf");
@@ -46,8 +70,12 @@ void GamePlayScene::Update() {
 
     player_->SetDirectionalLight(dirLight);
     player_->SetSpotLight(spotLight);
-    ground_->SetDirectionalLight(dirLight);
-    ground_->SetSpotLight(spotLight);
+
+    if (ground_) {
+        ground_->SetDirectionalLight(dirLight);
+        ground_->SetSpotLight(spotLight);
+        ground_->Update();
+    }
 
     if (objeObject_) {
         objeObject_->SetDirectionalLight(dirLight);
@@ -59,7 +87,6 @@ void GamePlayScene::Update() {
         skybox_->Update();
     }
     player_->Update(engine);
-    ground_->Update();
 }
 
 void GamePlayScene::Draw() {
@@ -69,7 +96,9 @@ void GamePlayScene::Draw() {
 
     spriteCommon_->CommonDraw();
 
-    ground_->Draw();
+    if (ground_) {
+        ground_->Draw();
+    }
     player_->Draw();
 
     if (objeObject_) {
@@ -94,10 +123,8 @@ void GamePlayScene::Finalize() {
         player_->Finalize();
         player_.reset();
     }
-    if (ground_) {
-        ground_->Finalize();
-        ground_.reset();
-    }
+    ground_.reset();
+    groundModel_.reset();
     objeObject_.reset();
     objeModel_.reset();
     skybox_.reset();

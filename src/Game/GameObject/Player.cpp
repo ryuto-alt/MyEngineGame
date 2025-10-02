@@ -132,6 +132,17 @@ void Player::Update(UnoEngine* engine) {
     UpdateAnimation(deltaTime);
     UpdateRotation(engine, deltaTime);
 
+    // 地面との衝突判定
+    CheckGroundCollision();
+
+    // 重力の適用
+    UpdateGravity(deltaTime);
+
+    // 速度を位置に適用
+    position_.x += velocity_.x * deltaTime;
+    position_.y += velocity_.y * deltaTime;
+    position_.z += velocity_.z * deltaTime;
+
     object3d_->SetPosition(position_);
     object3d_->SetRotation(Vector3{0.0f, currentRotationY_, 0.0f});
     object3d_->Update();
@@ -629,6 +640,11 @@ void Player::HandleInput(UnoEngine* engine) {
         ToggleSneakWalk();
     }
 
+    // ジャンプ処理
+    if (engine->IsKeyTriggered(DIK_SPACE) && isGrounded_) {
+        Jump();
+    }
+
 #ifdef _DEBUG
     if (camera_->IsFreeCameraMode()) {
         float cameraSpeed = 5.0f * deltaTime;
@@ -689,6 +705,68 @@ void Player::UpdateCameraSystem(UnoEngine* engine) {
     }
 
     camera_->Update();
+}
+
+// 重力の更新
+void Player::UpdateGravity(float deltaTime) {
+    if (!isGrounded_) {
+        velocity_.y += gravity_ * deltaTime;
+    } else {
+        velocity_.y = 0.0f;
+    }
+}
+
+// 地面との衝突判定
+void Player::CheckGroundCollision() {
+    auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+    if (!collisionManager || !object3d_) {
+        isGrounded_ = false;
+        return;
+    }
+
+    auto playerColObj = collisionManager->FindCollisionObject(object3d_.get());
+    if (!playerColObj || !playerColObj->IsEnabled()) {
+        isGrounded_ = false;
+        return;
+    }
+
+    // すべてのコリジョンオブジェクトをチェック
+    const auto& allObjects = collisionManager->GetCollisionObjects();
+    isGrounded_ = false;
+
+    for (const auto& otherObj : allObjects) {
+        if (otherObj.get() == playerColObj.get() || !otherObj->IsEnabled()) {
+            continue;
+        }
+
+        // Groundタグをチェック
+        if (otherObj->GetName() == "Ground") {
+            const Collision::AABB& playerAABB = playerColObj->GetWorldAABB();
+            const Collision::AABB& groundAABB = otherObj->GetWorldAABB();
+
+            // プレイヤーが地面の上にいるかチェック
+            if (playerAABB.min.x < groundAABB.max.x && playerAABB.max.x > groundAABB.min.x &&
+                playerAABB.min.z < groundAABB.max.z && playerAABB.max.z > groundAABB.min.z) {
+
+                // プレイヤーの下端が地面の上端付近にあるかチェック
+                float distanceToGround = playerAABB.min.y - groundAABB.max.y;
+                if (distanceToGround <= 0.1f && distanceToGround >= -0.1f) {
+                    isGrounded_ = true;
+                    position_.y = groundAABB.max.y;
+                    velocity_.y = 0.0f;
+                    break;
+                }
+            }
+        }
+    }
+}
+
+// ジャンプ
+void Player::Jump() {
+    if (isGrounded_) {
+        velocity_.y = jumpPower_;
+        isGrounded_ = false;
+    }
 }
 
 // 衝突応答処理
