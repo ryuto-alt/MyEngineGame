@@ -27,6 +27,10 @@ public:
     void SetPosition(const Vector3& position);
     Vector3 GetPosition() const;
 
+    // コリジョン用
+    Object3d* GetObject() const { return object3d_.get(); }
+    AnimatedModel* GetModel() const { return model_.get(); }
+
 private:
     std::unique_ptr<Object3d> object3d_;
     std::unique_ptr<AnimatedModel> model_;

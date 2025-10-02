@@ -2,6 +2,7 @@
 #include "imgui.h"
 #include "UnoEngine.h"
 #include "SceneManager.h"
+#include "AABBCollision.h"
 
 void GamePlayScene::Initialize() {
     UnoEngine* engine = UnoEngine::GetInstance();
@@ -29,6 +30,34 @@ void GamePlayScene::Initialize() {
     objeObject_->SetEnableAnimation(false);
 
     skyboxEnabled_ = false;
+
+    // コリジョン設定
+    SetupCollision();
+}
+
+void GamePlayScene::SetupCollision() {
+    auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+    if (!collisionManager) {
+        return;
+    }
+
+    // Playerのコリジョン設定
+    if (player_ && player_->GetObject() && player_->GetModel()) {
+        Collision::AABB playerAABB = Collision::AABBExtractor::ExtractFromAnimatedModel(player_->GetModel());
+        collisionManager->RegisterObject(player_->GetObject(), playerAABB, true, "Player");
+    }
+
+    // objeObjectのコリジョン設定（マルチメッシュ対応）
+    if (objeObject_ && objeModel_) {
+        std::vector<Collision::AABB> objeAABBs = Collision::AABBExtractor::ExtractMultipleAABBsFromAnimatedModel(objeModel_.get());
+        collisionManager->RegisterObjectWithMultipleAABBs(objeObject_.get(), objeAABBs, true, "Object");
+    }
+
+    // Groundのコリジョン設定（一旦無効化）
+    // if (ground_ && ground_->GetObject() && ground_->GetModel()) {
+    //     Collision::AABB groundAABB = Collision::AABBExtractor::ExtractFromAnimatedModel(ground_->GetModel());
+    //     collisionManager->RegisterObject(ground_->GetObject(), groundAABB, true, "Ground");
+    // }
 }
 
 void GamePlayScene::Update() {
@@ -78,6 +107,12 @@ void GamePlayScene::Draw() {
 
     if (lightManager_) {
         lightManager_->DrawImGui();
+    }
+
+    // コリジョンデバッグUI
+    auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+    if (collisionManager) {
+        collisionManager->DrawImGui();
     }
 }
 

@@ -1,6 +1,6 @@
 #include "UnoEngine.h"
 #include "GameSceneFactory.h" // 具象クラスはcppファイルでインクルード
-#include "Collision.h" // Collision名前空間のため
+#include "AABBCollision.h" // AABBコリジョンシステム
 #include <cassert>
 #include <algorithm>
 #include <cctype>
@@ -86,8 +86,9 @@ void UnoEngine::Initialize() {
         // 3Dエフェクトマネージャの初期化
         EffectManager3D::GetInstance()->Initialize();
 
-      
-        
+        // AABBコリジョンマネージャの初期化
+        Collision::AABBCollisionManager::Create();
+
         // 3D空間オーディオリスナーの初期化
         audioListener_ = std::make_unique<SpatialAudioListener>();
         audioListener_->SetPosition(Vector3{0.0f, 0.0f, 0.0f});
@@ -151,9 +152,11 @@ void UnoEngine::Update() {
         // 3Dエフェクトマネージャの更新
         EffectManager3D::GetInstance()->Update();
 
-        // 衝突判定マネージャの更新
-        Collision::CollisionManager::GetInstance()->Update(1.0f / 60.0f); // 60FPS想定
-        
+        // AABBコリジョンマネージャの更新
+        if (Collision::AABBCollisionManager::GetInstance()) {
+            Collision::AABBCollisionManager::GetInstance()->Update();
+        }
+
         // 3D空間オーディオの更新
         UpdateSpatialAudio();
 
@@ -214,6 +217,9 @@ void UnoEngine::Finalize() {
         // エフェクトマネージャの終了処理
         EffectManager3D::GetInstance()->Finalize();
 
+        // AABBコリジョンマネージャの終了処理
+        Collision::AABBCollisionManager::Destroy();
+
         // パーティクルマネージャーの終了処理（シーンの直後に強制解放）
         ParticleManager::Finalize();
 
@@ -234,8 +240,7 @@ void UnoEngine::Finalize() {
         // オーディオマネージャの解放（シングルトンを強制破棄）
         AudioManager::DestroyInstance();
 
-        // 衝突判定マネージャの終了処理
-        Collision::CollisionManager::DestroyInstance();
+        // 古い衝突判定マネージャの終了処理は削除
 
         // スプライト共通部分の解放
         spriteCommon_.reset();
@@ -406,17 +411,13 @@ std::unique_ptr<Sprite> UnoEngine::CreateSprite(const std::string& texturePath) 
 
 // === 衝突判定システム ===
 bool UnoEngine::CheckCollision(const Vector3& pos1, float radius1, const Vector3& pos2, float radius2) {
-    // 2つの球の衝突判定
-    Collision::Sphere sphere1;
-    sphere1.center = pos1;
-    sphere1.radius = radius1;
-    
-    Collision::Sphere sphere2;
-    sphere2.center = pos2;
-    sphere2.radius = radius2;
-    
-    auto result = Collision::CollisionDetector::CheckSphereToSphere(sphere1, sphere2);
-    return result.isColliding;
+    // 簡易的な球同士の衝突判定(距離ベース)
+    float dx = pos2.x - pos1.x;
+    float dy = pos2.y - pos1.y;
+    float dz = pos2.z - pos1.z;
+    float distanceSq = dx * dx + dy * dy + dz * dz;
+    float radiusSum = radius1 + radius2;
+    return distanceSq <= (radiusSum * radiusSum);
 }
 
 // === シーン管理 ===

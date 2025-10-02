@@ -20,6 +20,7 @@ private:
     void HandleInput();
     void UpdateCamera();
     void DrawUI();
+    void SetupCollision();  // コリジョン設定
 
     std::unique_ptr<Player> player_;
     std::unique_ptr<Ground> ground_;

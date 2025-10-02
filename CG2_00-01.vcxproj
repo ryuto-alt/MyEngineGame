@@ -118,8 +118,7 @@
     <ClCompile Include="src\Engine\Audio\SpatialAudioSource.cpp" />
     <ClCompile Include="src\Engine\Audio\WaveFile.cpp" />
     <ClCompile Include="src\Engine\Camera\Camera.cpp" />
-    <ClCompile Include="src\Engine\Collision\Collision.cpp" />
-    <ClCompile Include="src\Engine\Collision\CollisionManager.cpp" />
+    <ClCompile Include="src\Engine\Collision\AABBCollision.cpp" />
     <ClCompile Include="src\Engine\Core\Framework.cpp" />
     <ClCompile Include="src\Engine\Graphics\D3DResourceCheck.cpp" />
     <ClCompile Include="src\Engine\Graphics\DirectXCommon.cpp" />
@@ -176,10 +175,8 @@
     <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h" />
     <ClInclude Include="src\Engine\Audio\WaveFile.h" />
     <ClInclude Include="src\Engine\Camera\Camera.h" />
-    <ClInclude Include="src\Engine\Collision\Collision.h" />
-    <ClInclude Include="src\Engine\Collision\CollisionManager.h" />
+    <ClInclude Include="src\Engine\Collision\AABBCollision.h" />
     <ClInclude Include="src\Engine\Collision\CollisionPrimitive.h" />
-    <ClInclude Include="src\Engine\Collision\CollisionUtility.h" />
     <ClInclude Include="src\Engine\Core\Framework.h" />
     <ClInclude Include="src\Engine\Graphics\D3DResourceCheck.h" />
     <ClInclude Include="src\Engine\Graphics\DirectXCommon.h" />

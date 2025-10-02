@@ -62,10 +62,13 @@ public:
     
     // カメラフォロー機能
     void UpdateCameraFollow();
-    
+
     // 移動停止の管理
     void StopMoving();
-    
+
+    // コリジョン用にObject3dを取得
+    Object3d* GetObject() const { return object3d_.get(); }
+    AnimatedModel* GetModel() const { return animatedModel_.get(); }
 
 private:
     void HandleMovement(UnoEngine* engine, float deltaTime);

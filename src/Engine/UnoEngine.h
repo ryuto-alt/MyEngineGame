@@ -29,10 +29,8 @@
 #include "AnimationUtility.h"
 
 // 衝突判定関連
-#include "Collision.h"
 #include "CollisionPrimitive.h"
-#include "CollisionUtility.h"
-#include "CollisionManager.h"
+#include "AABBCollision.h"
 
 // オーディオ関連
 #include "AudioManager.h"
@@ -236,7 +234,7 @@ public:
     Particle3DManager* GetParticle3DManager() const { return Particle3DManager::GetInstance(); }
     EffectManager3D* GetEffectManager3D() const { return EffectManager3D::GetInstance(); }
     AudioManager* GetAudioManager() const { return AudioManager::GetInstance(); }
-    Collision::CollisionManager* GetCollisionManager() const { return Collision::CollisionManager::GetInstance(); }
+    Collision::AABBCollisionManager* GetAABBCollisionManager() const { return Collision::AABBCollisionManager::GetInstance(); }
 
     // シーンファクトリーのセッター
     void SetSceneFactory(SceneFactory* sceneFactory);

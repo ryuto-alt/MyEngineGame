@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <string>
 
 // 前方宣言
 class Object3d;
@@ -46,12 +47,15 @@ namespace Collision {
 
         // AnimatedModelクラスからAABBを抽出
         static AABB ExtractFromAnimatedModel(const AnimatedModel* model);
+
+        // AnimatedModelから複数メッシュのAABBを抽出
+        static std::vector<AABB> ExtractMultipleAABBsFromAnimatedModel(const AnimatedModel* model);
     };
 
     // コリジョン対象オブジェクト
     class CollisionObject3D {
     public:
-        CollisionObject3D(Object3d* object, const AABB& localAABB);
+        CollisionObject3D(Object3d* object, const AABB& localAABB, const std::string& name = "");
         ~CollisionObject3D() = default;
 
         // 更新(ワールドAABBを再計算)
@@ -62,16 +66,19 @@ namespace Collision {
         const AABB& GetLocalAABB() const { return localAABB_; }
         const AABB& GetWorldAABB() const { return worldAABB_; }
         bool IsEnabled() const { return enabled_; }
+        const std::string& GetName() const { return name_; }
 
         // セッター
         void SetEnabled(bool enabled) { enabled_ = enabled; }
         void SetLocalAABB(const AABB& aabb) { localAABB_ = aabb; }
+        void SetName(const std::string& name) { name_ = name; }
 
     private:
         Object3d* object_;      // 参照するObject3d
         AABB localAABB_;        // ローカル座標系でのAABB
         AABB worldAABB_;        // ワールド座標系でのAABB
         bool enabled_;          // 有効フラグ
+        std::string name_;      // デバッグ用名前
     };
 
     // AABBコリジョンマネージャー
@@ -82,7 +89,10 @@ namespace Collision {
         static void Destroy();
 
         // コリジョンオブジェクトの登録
-        void RegisterObject(Object3d* object, const AABB& localAABB, bool enabled = true);
+        void RegisterObject(Object3d* object, const AABB& localAABB, bool enabled = true, const std::string& name = "");
+
+        // 複数AABBの登録（マルチメッシュ対応）
+        void RegisterObjectWithMultipleAABBs(Object3d* object, const std::vector<AABB>& localAABBs, bool enabled = true, const std::string& name = "");
 
         // コリジョンオブジェクトの削除
         void UnregisterObject(Object3d* object);
@@ -102,6 +112,9 @@ namespace Collision {
             return collisionObjects_;
         }
 
+        // ImGui デバッグUI表示
+        void DrawImGui();
+
     private:
         AABBCollisionManager() = default;
         ~AABBCollisionManager() = default;
@@ -111,6 +124,13 @@ namespace Collision {
         static AABBCollisionManager* instance_;
         std::vector<std::shared_ptr<CollisionObject3D>> collisionObjects_;
         CollisionCallback collisionCallback_;
+
+        // 衝突検出用
+        struct CollisionPair {
+            Object3d* objA;
+            Object3d* objB;
+        };
+        std::vector<CollisionPair> currentCollisions_;
 
         // ヘルパー関数
         std::shared_ptr<CollisionObject3D> FindCollisionObject(Object3d* object);

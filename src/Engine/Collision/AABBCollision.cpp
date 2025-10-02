@@ -3,8 +3,20 @@
 #include "Model.h"
 #include "AnimatedModel.h"
 #include "../externals/tinygltf/tiny_gltf.h"
+#include "imgui.h"
 #include <algorithm>
 #include <cassert>
+
+// Windowsのmin/maxマクロを無効化
+#ifdef max
+#undef max
+#endif
+#ifdef min
+#undef min
+#endif
+#ifdef GetObject
+#undef GetObject
+#endif
 
 namespace Collision {
 
@@ -174,9 +186,53 @@ namespace Collision {
         return ExtractFromModel(static_cast<const Model*>(model));
     }
 
+    // AnimatedModelから複数メッシュのAABBを抽出
+    std::vector<AABB> AABBExtractor::ExtractMultipleAABBsFromAnimatedModel(const AnimatedModel* model) {
+        std::vector<AABB> aabbs;
+
+        if (!model) {
+            return aabbs;
+        }
+
+        const auto& modelData = model->GetModelData();
+
+        // マルチマテリアルデータがあれば、各マテリアルごとにAABBを計算
+        if (!modelData.matVertexData.empty()) {
+            for (const auto& [materialName, matData] : modelData.matVertexData) {
+                if (matData.vertices.empty()) continue;
+
+                Vector3 minPoint = {
+                    matData.vertices[0].position.x,
+                    matData.vertices[0].position.y,
+                    matData.vertices[0].position.z
+                };
+                Vector3 maxPoint = minPoint;
+
+                for (const auto& vertex : matData.vertices) {
+                    Vector3 pos = { vertex.position.x, vertex.position.y, vertex.position.z };
+
+                    minPoint.x = std::min(minPoint.x, pos.x);
+                    minPoint.y = std::min(minPoint.y, pos.y);
+                    minPoint.z = std::min(minPoint.z, pos.z);
+
+                    maxPoint.x = std::max(maxPoint.x, pos.x);
+                    maxPoint.y = std::max(maxPoint.y, pos.y);
+                    maxPoint.z = std::max(maxPoint.z, pos.z);
+                }
+
+                aabbs.push_back(AABB(minPoint, maxPoint));
+            }
+        } else {
+            // マルチマテリアルデータがない場合は単一AABBを返す
+            aabbs.push_back(ExtractFromModel(static_cast<const Model*>(model)));
+        }
+
+        return aabbs;
+    }
+
     // CollisionObject3Dの実装
-    CollisionObject3D::CollisionObject3D(Object3d* object, const AABB& localAABB)
-        : object_(object), localAABB_(localAABB), worldAABB_(), enabled_(true) {
+    CollisionObject3D::CollisionObject3D(Object3d* object, const AABB& localAABB, const std::string& name)
+        : object_(object), localAABB_(localAABB), worldAABB_(), enabled_(true), name_(name) {
         Update();
     }
 
@@ -210,7 +266,7 @@ namespace Collision {
         }
     }
 
-    void AABBCollisionManager::RegisterObject(Object3d* object, const AABB& localAABB, bool enabled) {
+    void AABBCollisionManager::RegisterObject(Object3d* object, const AABB& localAABB, bool enabled, const std::string& name) {
         if (!object) return;
 
         // 既に登録されているか確認
@@ -218,13 +274,26 @@ namespace Collision {
         if (existing) {
             existing->SetLocalAABB(localAABB);
             existing->SetEnabled(enabled);
+            existing->SetName(name);
             return;
         }
 
         // 新規登録
-        auto collisionObj = std::make_shared<CollisionObject3D>(object, localAABB);
+        auto collisionObj = std::make_shared<CollisionObject3D>(object, localAABB, name);
         collisionObj->SetEnabled(enabled);
         collisionObjects_.push_back(collisionObj);
+    }
+
+    void AABBCollisionManager::RegisterObjectWithMultipleAABBs(Object3d* object, const std::vector<AABB>& localAABBs, bool enabled, const std::string& name) {
+        if (!object || localAABBs.empty()) return;
+
+        // 各AABBごとに個別のCollisionObjectを作成
+        for (size_t i = 0; i < localAABBs.size(); ++i) {
+            std::string meshName = name + "_Mesh" + std::to_string(i);
+            auto collisionObj = std::make_shared<CollisionObject3D>(object, localAABBs[i], meshName);
+            collisionObj->SetEnabled(enabled);
+            collisionObjects_.push_back(collisionObj);
+        }
     }
 
     void AABBCollisionManager::UnregisterObject(Object3d* object) {
@@ -249,18 +318,28 @@ namespace Collision {
             }
         }
 
+        // 衝突リストをクリア
+        currentCollisions_.clear();
+
         // 衝突判定
-        if (collisionCallback_) {
-            for (size_t i = 0; i < collisionObjects_.size(); ++i) {
-                if (!collisionObjects_[i]->IsEnabled()) continue;
+        for (size_t i = 0; i < collisionObjects_.size(); ++i) {
+            if (!collisionObjects_[i]->IsEnabled()) continue;
 
-                for (size_t j = i + 1; j < collisionObjects_.size(); ++j) {
-                    if (!collisionObjects_[j]->IsEnabled()) continue;
+            for (size_t j = i + 1; j < collisionObjects_.size(); ++j) {
+                if (!collisionObjects_[j]->IsEnabled()) continue;
 
-                    if (CheckAABBCollision(
-                        collisionObjects_[i]->GetWorldAABB(),
-                        collisionObjects_[j]->GetWorldAABB())) {
+                if (CheckAABBCollision(
+                    collisionObjects_[i]->GetWorldAABB(),
+                    collisionObjects_[j]->GetWorldAABB())) {
 
+                    // 衝突ペアを記録
+                    currentCollisions_.push_back({
+                        collisionObjects_[i]->GetObject(),
+                        collisionObjects_[j]->GetObject()
+                    });
+
+                    // コールバック実行
+                    if (collisionCallback_) {
                         collisionCallback_(
                             collisionObjects_[i]->GetObject(),
                             collisionObjects_[j]->GetObject()
@@ -278,6 +357,74 @@ namespace Collision {
             });
 
         return (it != collisionObjects_.end()) ? *it : nullptr;
+    }
+
+    void AABBCollisionManager::DrawImGui() {
+        ImGui::Begin("AABB Collision Debug");
+
+        ImGui::Text("Registered Objects: %zu", collisionObjects_.size());
+        ImGui::Text("Active Collisions: %zu", currentCollisions_.size());
+        ImGui::Separator();
+
+        // 登録されているオブジェクト一覧
+        if (ImGui::CollapsingHeader("Registered Objects", ImGuiTreeNodeFlags_DefaultOpen)) {
+            for (size_t i = 0; i < collisionObjects_.size(); ++i) {
+                const auto& colObj = collisionObjects_[i];
+                const auto& worldAABB = colObj->GetWorldAABB();
+
+                ImGui::PushID(static_cast<int>(i));
+
+                bool enabled = colObj->IsEnabled();
+                ImGui::Checkbox("Enabled", &enabled);
+                ImGui::SameLine();
+
+                // 名前がある場合は名前を表示、ない場合はインデックス
+                if (!colObj->GetName().empty()) {
+                    ImGui::Text("%s", colObj->GetName().c_str());
+                } else {
+                    ImGui::Text("Object %zu", i);
+                }
+
+                ImGui::Indent();
+                ImGui::Text("Min: (%.2f, %.2f, %.2f)", worldAABB.min.x, worldAABB.min.y, worldAABB.min.z);
+                ImGui::Text("Max: (%.2f, %.2f, %.2f)", worldAABB.max.x, worldAABB.max.y, worldAABB.max.z);
+                ImGui::Unindent();
+
+                ImGui::PopID();
+            }
+        }
+
+        ImGui::Separator();
+
+        // 衝突ペア一覧
+        if (ImGui::CollapsingHeader("Active Collisions", ImGuiTreeNodeFlags_DefaultOpen)) {
+            if (currentCollisions_.empty()) {
+                ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "No collisions detected");
+            } else {
+                for (size_t i = 0; i < currentCollisions_.size(); ++i) {
+                    const auto& pair = currentCollisions_[i];
+
+                    // 衝突中のペアを見つける
+                    std::string nameA = "Unknown";
+                    std::string nameB = "Unknown";
+                    for (size_t j = 0; j < collisionObjects_.size(); ++j) {
+                        if (collisionObjects_[j]->GetObject() == pair.objA) {
+                            nameA = collisionObjects_[j]->GetName().empty() ?
+                                    ("Object " + std::to_string(j)) : collisionObjects_[j]->GetName();
+                        }
+                        if (collisionObjects_[j]->GetObject() == pair.objB) {
+                            nameB = collisionObjects_[j]->GetName().empty() ?
+                                    ("Object " + std::to_string(j)) : collisionObjects_[j]->GetName();
+                        }
+                    }
+
+                    ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f),
+                        "%s <-> %s", nameA.c_str(), nameB.c_str());
+                }
+            }
+        }
+
+        ImGui::End();
     }
 
 } // namespace Collision
