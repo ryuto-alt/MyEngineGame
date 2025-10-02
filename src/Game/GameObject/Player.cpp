@@ -770,8 +770,17 @@ void Player::CheckGroundCollision() {
 
                 if (distanceToGround <= 0.5f && distanceToGround >= -0.5f) {
                     isGrounded_ = true;
-                    position_.y = groundAABB.max.y;
-                    velocity_.y = 0.0f;
+
+                    // 着地時の位置を滑らかに補間
+                    float targetY = groundAABB.max.y;
+                    float smoothFactor = 0.1f;  // 0.0〜1.0 (大きいほど速く補間)
+                    position_.y = position_.y + (targetY - position_.y) * smoothFactor;
+
+                    // 地面に十分近づいたら速度を0に
+                    if (std::abs(position_.y - targetY) < 0.01f) {
+                        position_.y = targetY;
+                        velocity_.y = 0.0f;
+                    }
                     break;
                 }
             }
