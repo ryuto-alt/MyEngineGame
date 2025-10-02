@@ -20,6 +20,7 @@ void GamePlayScene::Initialize() {
     ground_ = engine->CreateObject3D();
     ground_->SetModel(static_cast<Model*>(groundModel_.get()));
     ground_->SetCamera(camera_);
+    ground_->SetEnableLighting(false);
     ground_->SetPosition({0.0f, -0.1f, 0.0f});
 
     // Blenderで設定されたスケール情報を使用
