@@ -212,6 +212,11 @@ void Player::DrawUI() {
         ImGui::Text("Blending: %.1f%%", GetBlendProgress() * 100.0f);
     }
 
+    ImGui::Separator();
+    ImGui::Text("Position: (%.2f, %.2f, %.2f)", position_.x, position_.y, position_.z);
+    ImGui::Text("Velocity: (%.2f, %.2f, %.2f)", velocity_.x, velocity_.y, velocity_.z);
+    ImGui::Text("Grounded: %s", isGrounded_ ? "YES" : "NO");
+
     float smoothingSpeed = GetRotationSmoothingSpeed();
     if (ImGui::SliderFloat("Smoothing Speed", &smoothingSpeed, 0.1f, 20.0f)) {
         SetRotationSmoothingSpeed(smoothingSpeed);
@@ -641,8 +646,14 @@ void Player::HandleInput(UnoEngine* engine) {
     }
 
     // ジャンプ処理
-    if (engine->IsKeyTriggered(DIK_SPACE) && isGrounded_) {
-        Jump();
+    if (engine->IsKeyTriggered(DIK_SPACE)) {
+        char debugMsg[128];
+        sprintf_s(debugMsg, "SPACE pressed! isGrounded: %s\n", isGrounded_ ? "true" : "false");
+        OutputDebugStringA(debugMsg);
+
+        if (isGrounded_) {
+            Jump();
+        }
     }
 
 #ifdef _DEBUG
@@ -730,6 +741,12 @@ void Player::CheckGroundCollision() {
         return;
     }
 
+    // ジャンプ中（上昇中）は接地判定をスキップ
+    if (velocity_.y > 0.1f) {
+        isGrounded_ = false;
+        return;
+    }
+
     // すべてのコリジョンオブジェクトをチェック
     const auto& allObjects = collisionManager->GetCollisionObjects();
     isGrounded_ = false;
@@ -750,7 +767,8 @@ void Player::CheckGroundCollision() {
 
                 // プレイヤーの下端が地面の上端付近にあるかチェック
                 float distanceToGround = playerAABB.min.y - groundAABB.max.y;
-                if (distanceToGround <= 0.1f && distanceToGround >= -0.1f) {
+
+                if (distanceToGround <= 0.5f && distanceToGround >= -0.5f) {
                     isGrounded_ = true;
                     position_.y = groundAABB.max.y;
                     velocity_.y = 0.0f;
@@ -766,6 +784,12 @@ void Player::Jump() {
     if (isGrounded_) {
         velocity_.y = jumpPower_;
         isGrounded_ = false;
+
+        char debugMsg[128];
+        sprintf_s(debugMsg, "Jump executed! velocity_.y = %.2f\n", velocity_.y);
+        OutputDebugStringA(debugMsg);
+    } else {
+        OutputDebugStringA("Jump failed: not grounded\n");
     }
 }
 
