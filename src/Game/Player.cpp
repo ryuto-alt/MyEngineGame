@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "../Engine/Resource/ResourcePreloader.h"
+#include "../Engine/Collision/AABBCollision.h"
 #include <cmath>
 
 Player::Player() {
@@ -8,7 +9,7 @@ Player::Player() {
 Player::~Player() {
 }
 
-void Player::Initialize(Camera* camera) {
+void Player::Initialize(Camera* camera, bool enableCollision) {
     camera_ = camera;
     
     // 初期位置と回転の設定
@@ -106,6 +107,15 @@ void Player::Initialize(Camera* camera) {
         
         // デフォルトの環境マップテクスチャを設定
         object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    }
+
+    // コリジョン設定
+    if (enableCollision && object3d_ && animatedModel_) {
+        auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+        if (collisionManager) {
+            Collision::AABB playerAABB = Collision::AABBExtractor::ExtractFromAnimatedModel(animatedModel_.get());
+            collisionManager->RegisterObject(object3d_.get(), playerAABB, true, "Player");
+        }
     }
 }
 

@@ -6,7 +6,7 @@ public:
     Ground();
     ~Ground();
 
-    void Initialize(Camera* camera, DirectXCommon* dxCommon);
+    void Initialize(Camera* camera, DirectXCommon* dxCommon, bool enableCollision = false);
     void Update();
     void Draw();
     void Finalize();

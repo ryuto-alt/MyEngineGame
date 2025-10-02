@@ -1,4 +1,5 @@
 #include "Ground.h"
+#include "../Engine/Collision/AABBCollision.h"
 #include <stdexcept>
 
 Ground::Ground() {
@@ -7,12 +8,12 @@ Ground::Ground() {
 Ground::~Ground() {
 }
 
-void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon) {
+void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon, bool enableCollision) {
     camera_ = camera;
     dxCommon_ = dxCommon;
-    
+
     UnoEngine* engine = UnoEngine::GetInstance();
-    
+
     try {
         model_ = engine->CreateAnimatedModel();
         model_->Initialize(dxCommon_);
@@ -50,10 +51,19 @@ void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon) {
         sprintf_s(debugMsg, "Ground: Position - X=%.3f, Y=%.3f, Z=%.3f\n",
                  position_.x, position_.y, position_.z);
         OutputDebugStringA(debugMsg);
-        
+
         object3d_->SetRotation(Vector3{0.0f, 0.0f, 0.0f});
         object3d_->SetEnableLighting(true);
         object3d_->SetCamera(camera_);
+
+        // コリジョン設定
+        if (enableCollision && object3d_ && model_) {
+            auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+            if (collisionManager) {
+                Collision::AABB groundAABB = Collision::AABBExtractor::ExtractFromAnimatedModel(model_.get());
+                collisionManager->RegisterObject(object3d_.get(), groundAABB, true, "Ground");
+            }
+        }
     } catch (const std::exception& e) {
         OutputDebugStringA(("Failed to load ground model: " + std::string(e.what()) + "\n").c_str());
     }

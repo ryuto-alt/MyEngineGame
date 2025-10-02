@@ -6,7 +6,7 @@ public:
     Player();
     ~Player();
 
-    void Initialize(Camera* camera);
+    void Initialize(Camera* camera, bool enableCollision = true);
     void Update(UnoEngine* engine);
     void Draw();
     void DrawUI();

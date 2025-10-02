@@ -11,12 +11,12 @@ void GamePlayScene::Initialize() {
     lightManager_->Initialize();
 
     player_ = std::make_unique<Player>();
-    player_->Initialize(camera_);
+    player_->Initialize(camera_, true);  // コリジョン有効
     player_->SetupCamera(engine);
     player_->SetEnableEnvironmentMap(false);
 
     ground_ = std::make_unique<Ground>();
-    ground_->Initialize(camera_, dxCommon_);
+    ground_->Initialize(camera_, dxCommon_, false);  // コリジョン無効（AABBが壊れているため）
 
     objeModel_ = engine->CreateAnimatedModel();
     objeModel_->LoadFromFile("Resources/Models/obje", "object.gltf");
@@ -31,34 +31,14 @@ void GamePlayScene::Initialize() {
 
     skyboxEnabled_ = false;
 
-    // コリジョン設定
-    SetupCollision();
-}
-
-void GamePlayScene::SetupCollision() {
+    // objeObjectのマルチメッシュコリジョン設定
     auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
-    if (!collisionManager) {
-        return;
-    }
-
-    // Playerのコリジョン設定
-    if (player_ && player_->GetObject() && player_->GetModel()) {
-        Collision::AABB playerAABB = Collision::AABBExtractor::ExtractFromAnimatedModel(player_->GetModel());
-        collisionManager->RegisterObject(player_->GetObject(), playerAABB, true, "Player");
-    }
-
-    // objeObjectのコリジョン設定（マルチメッシュ対応）
-    if (objeObject_ && objeModel_) {
+    if (collisionManager && objeObject_ && objeModel_) {
         std::vector<Collision::AABB> objeAABBs = Collision::AABBExtractor::ExtractMultipleAABBsFromAnimatedModel(objeModel_.get());
         collisionManager->RegisterObjectWithMultipleAABBs(objeObject_.get(), objeAABBs, true, "Object");
     }
-
-    // Groundのコリジョン設定（一旦無効化）
-    // if (ground_ && ground_->GetObject() && ground_->GetModel()) {
-    //     Collision::AABB groundAABB = Collision::AABBExtractor::ExtractFromAnimatedModel(ground_->GetModel());
-    //     collisionManager->RegisterObject(ground_->GetObject(), groundAABB, true, "Ground");
-    // }
 }
+
 
 void GamePlayScene::Update() {
     UnoEngine* engine = UnoEngine::GetInstance();
