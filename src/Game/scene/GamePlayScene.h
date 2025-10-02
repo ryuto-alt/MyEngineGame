@@ -1,9 +1,9 @@
 #pragma once
 #include "IScene.h"
-#include "Player.h"
-#include "Ground.h"
+#include "GameObject/Player.h"
+#include "GameObject/Ground.h"
 #include "Skybox.h"
-#include "LightManager.h"
+#include "Manager/LightManager.h"
 #include <memory>
 
 class GamePlayScene : public IScene {

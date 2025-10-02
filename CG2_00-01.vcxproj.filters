@@ -57,6 +57,18 @@
     <Filter Include="src\engine\Animation">
       <UniqueIdentifier>{a1b2c3d4-5e6f-7890-abcd-ef1234567890}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Game\Player">
+      <UniqueIdentifier>{c7d1c0b8-5331-4b77-8564-6968ba414bf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Game\Object">
+      <UniqueIdentifier>{fc5e1a67-a2ed-49c6-963e-98ec93a2f004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Game\Light">
+      <UniqueIdentifier>{aebc30fc-f6a2-41f9-b277-3cc61bdf7280}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Game\SkyBox">
+      <UniqueIdentifier>{5ed5bd49-1719-413f-81e2-b66afd61948c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -146,18 +158,6 @@
     <ClCompile Include="src\Engine\Audio\WaveFile.cpp">
       <Filter>src\engine\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\MyGame.cpp">
-      <Filter>src\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Player.cpp">
-      <Filter>src\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\Ground.cpp">
-      <Filter>src\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\LightManager.cpp">
-      <Filter>src\Game</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Core\Framework.cpp">
       <Filter>src\engine\Core</Filter>
     </ClCompile>
@@ -167,17 +167,11 @@
     <ClCompile Include="src\Game\scene\TitleScene.cpp">
       <Filter>src\Game\scene</Filter>
     </ClCompile>
-    <ClCompile Include="src\Game\scene\SceneFactory.cpp">
-      <Filter>src\Game\SceneConfig</Filter>
-    </ClCompile>
     <ClCompile Include="src\Game\scene\SceneManager.cpp">
       <Filter>src\Game\SceneConfig</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\UnoEngine.cpp">
       <Filter>src\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Game\scene\GameSceneFactory.cpp">
-      <Filter>src\Game\SceneConfig</Filter>
     </ClCompile>
     <ClCompile Include="src\Engine\Particle\EffectManager3D.cpp">
       <Filter>src\engine\Particle</Filter>
@@ -215,11 +209,23 @@
     <ClCompile Include="src\Engine\Audio\SpatialAudioSource.cpp">
       <Filter>src\engine\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="src\Engine\Graphics\Skybox.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\Engine\Collision\AABBCollision.cpp">
       <Filter>src\engine\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GameObject\Player.cpp">
+      <Filter>src\Game\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\GameObject\Ground.cpp">
+      <Filter>src\Game\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Core\MyGame.cpp">
+      <Filter>src\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Manager\LightManager.cpp">
+      <Filter>src\Game\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Engine\Graphics\Skybox.cpp">
+      <Filter>src\Game\SkyBox</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -277,22 +283,7 @@
     <ClInclude Include="src\Engine\Input\Input.h">
       <Filter>src\engine\Input</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Math\Matrix3x3.h">
-      <Filter>src\engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Math\Matrix4x4.h">
-      <Filter>src\engine\Math</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Math\Mymath.h">
-      <Filter>src\engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Math\Vector2.h">
-      <Filter>src\engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Math\Vector3.h">
-      <Filter>src\engine\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Engine\Math\Vector4.h">
       <Filter>src\engine\Math</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Utility\Logger.h">
@@ -328,18 +319,6 @@
     <ClInclude Include="src\Engine\Audio\WaveFile.h">
       <Filter>src\engine\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\MyGame.h">
-      <Filter>src\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Player.h">
-      <Filter>src\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\Ground.h">
-      <Filter>src\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\LightManager.h">
-      <Filter>src\Game</Filter>
-    </ClInclude>
     <ClInclude Include="src\Engine\Core\Framework.h">
       <Filter>src\engine\Core</Filter>
     </ClInclude>
@@ -352,17 +331,11 @@
     <ClInclude Include="src\Game\scene\IScene.h">
       <Filter>src\Game\SceneConfig</Filter>
     </ClInclude>
-    <ClInclude Include="src\Game\scene\SceneFactory.h">
-      <Filter>src\Game\SceneConfig</Filter>
-    </ClInclude>
     <ClInclude Include="src\Game\scene\SceneManager.h">
       <Filter>src\Game\SceneConfig</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\UnoEngine.h">
       <Filter>src\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Game\scene\GameSceneFactory.h">
-      <Filter>src\Game\SceneConfig</Filter>
     </ClInclude>
     <ClInclude Include="src\Engine\Collision\CollisionPrimitive.h">
       <Filter>src\engine\Collision</Filter>
@@ -406,9 +379,23 @@
     <ClInclude Include="src\Engine\Audio\SpatialAudioSource.h">
       <Filter>src\engine\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="src\Engine\Graphics\Skybox.h" />
     <ClInclude Include="src\Engine\Collision\AABBCollision.h">
       <Filter>src\engine\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\GameObject\Player.h">
+      <Filter>src\Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\GameObject\Ground.h">
+      <Filter>src\Game\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Core\MyGame.h">
+      <Filter>src\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Game\Manager\LightManager.h">
+      <Filter>src\Game\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Engine\Graphics\Skybox.h">
+      <Filter>src\Game\SkyBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
