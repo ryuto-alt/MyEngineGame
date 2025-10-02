@@ -11,9 +11,10 @@ Player::~Player() {
 
 void Player::Initialize(Camera* camera, bool enableCollision) {
     camera_ = camera;
-    
+
     // 初期位置と回転の設定
     position_ = Vector3{0.0f, 0.0f, 0.0f};
+    smoothedPosition_ = position_;  // 初期化時は同じ位置
     currentRotationY_ = 0.0f;
     targetRotationY_ = 0.0f;
     
@@ -554,14 +555,20 @@ void Player::MoveWithCameraDirection(float forward, float right, float deltaTime
 // カメラフォロー機能（オービットカメラ）
 void Player::UpdateCameraFollow() {
     if (!camera_) return;
-    
-    // プレイヤーの位置をオービットカメラのターゲットに設定
-    camera_->SetOrbitTarget(position_);
-    
+
+    // プレイヤーの位置を滑らかに補間してカメラ用の位置を作成
+    const float smoothingFactor = 0.15f;  // 小さいほど滑らか（0.1〜0.3推奨）
+    smoothedPosition_.x = smoothedPosition_.x + (position_.x - smoothedPosition_.x) * smoothingFactor;
+    smoothedPosition_.y = smoothedPosition_.y + (position_.y - smoothedPosition_.y) * smoothingFactor;
+    smoothedPosition_.z = smoothedPosition_.z + (position_.z - smoothedPosition_.z) * smoothingFactor;
+
+    // 滑らかな位置をオービットカメラのターゲットに設定
+    camera_->SetOrbitTarget(smoothedPosition_);
+
     // オービットカメラの距離と高さを設定
     camera_->SetOrbitDistance(3.0f);  // プレイヤーから3ユニットの距離
     camera_->SetOrbitHeight(2.5f);    // プレイヤーから2.5ユニット上の高さ
-    
+
     // オービットカメラの位置を更新
     camera_->UpdateOrbitCamera();
 }
@@ -693,65 +700,85 @@ void Player::HandleCollisionResponse() {
     auto playerColObj = collisionManager->FindCollisionObject(object3d_.get());
     if (!playerColObj || !playerColObj->IsEnabled()) return;
 
-    const Collision::AABB& playerAABB = playerColObj->GetWorldAABB();
+    // 衝突解決の最大試行回数
+    const int maxIterations = 3;
 
-    // 全てのコリジョンオブジェクトをチェック
-    const auto& allObjects = collisionManager->GetCollisionObjects();
-    for (const auto& colObj : allObjects) {
-        // 自分自身はスキップ
-        if (colObj->GetObject() == object3d_.get()) continue;
-        if (!colObj->IsEnabled()) continue;
+    for (int iteration = 0; iteration < maxIterations; ++iteration) {
+        // 現在の位置でAABBを更新
+        object3d_->SetPosition(position_);
+        object3d_->Update();
+        playerColObj->Update();
 
-        const Collision::AABB& otherAABB = colObj->GetWorldAABB();
+        const Collision::AABB& playerAABB = playerColObj->GetWorldAABB();
 
-        // 衝突チェック
-        if (Collision::CheckAABBCollision(playerAABB, otherAABB)) {
-            // 衝突している場合、押し戻しベクトルを計算
-            Vector3 pushBack = {0.0f, 0.0f, 0.0f};
+        bool hasCollision = false;
+        Vector3 pushBack = {0.0f, 0.0f, 0.0f};
 
-            // 各軸での重なりを計算
-            float overlapX = std::min(playerAABB.max.x - otherAABB.min.x,
-                                      otherAABB.max.x - playerAABB.min.x);
-            float overlapY = std::min(playerAABB.max.y - otherAABB.min.y,
-                                      otherAABB.max.y - playerAABB.min.y);
-            float overlapZ = std::min(playerAABB.max.z - otherAABB.min.z,
-                                      otherAABB.max.z - playerAABB.min.z);
+        // 全てのコリジョンオブジェクトをチェック
+        const auto& allObjects = collisionManager->GetCollisionObjects();
+        for (const auto& colObj : allObjects) {
+            // 自分自身はスキップ
+            if (colObj->GetObject() == object3d_.get()) continue;
+            if (!colObj->IsEnabled()) continue;
 
-            // 最小の重なりを持つ軸で押し戻す
-            if (overlapX <= overlapY && overlapX <= overlapZ) {
-                // X軸方向の押し戻し
-                if (playerAABB.GetCenter().x < otherAABB.GetCenter().x) {
-                    pushBack.x = -overlapX;
+            const Collision::AABB& otherAABB = colObj->GetWorldAABB();
+
+            // 衝突チェック
+            if (Collision::CheckAABBCollision(playerAABB, otherAABB)) {
+                hasCollision = true;
+
+                // 各軸での重なりを計算
+                float overlapX = std::min(playerAABB.max.x - otherAABB.min.x,
+                                          otherAABB.max.x - playerAABB.min.x);
+                float overlapY = std::min(playerAABB.max.y - otherAABB.min.y,
+                                          otherAABB.max.y - playerAABB.min.y);
+                float overlapZ = std::min(playerAABB.max.z - otherAABB.min.z,
+                                          otherAABB.max.z - playerAABB.min.z);
+
+                // 小さなマージンを追加して完全に離す
+                const float margin = 0.005f;
+
+                // 最小の重なりを持つ軸で押し戻す（Y軸も含める）
+                if (overlapX <= overlapY && overlapX <= overlapZ) {
+                    // X軸方向の押し戻し
+                    if (playerAABB.GetCenter().x < otherAABB.GetCenter().x) {
+                        pushBack.x = -(overlapX + margin);
+                    } else {
+                        pushBack.x = (overlapX + margin);
+                    }
+                } else if (overlapY <= overlapX && overlapY <= overlapZ) {
+                    // Y軸方向の押し戻し
+                    if (playerAABB.GetCenter().y < otherAABB.GetCenter().y) {
+                        pushBack.y = -(overlapY + margin);
+                    } else {
+                        pushBack.y = (overlapY + margin);
+                    }
                 } else {
-                    pushBack.x = overlapX;
+                    // Z軸方向の押し戻し
+                    if (playerAABB.GetCenter().z < otherAABB.GetCenter().z) {
+                        pushBack.z = -(overlapZ + margin);
+                    } else {
+                        pushBack.z = (overlapZ + margin);
+                    }
                 }
-            } else if (overlapY <= overlapX && overlapY <= overlapZ) {
-                // Y軸方向の押し戻し
-                if (playerAABB.GetCenter().y < otherAABB.GetCenter().y) {
-                    pushBack.y = -overlapY;
-                } else {
-                    pushBack.y = overlapY;
-                }
-            } else {
-                // Z軸方向の押し戻し
-                if (playerAABB.GetCenter().z < otherAABB.GetCenter().z) {
-                    pushBack.z = -overlapZ;
-                } else {
-                    pushBack.z = overlapZ;
-                }
+
+                // 最初の衝突で押し戻しを適用して次のイテレーションへ
+                break;
             }
-
-            // プレイヤーの位置を押し戻す
-            position_.x += pushBack.x;
-            position_.y += pushBack.y;
-            position_.z += pushBack.z;
-
-            // Object3Dの位置も更新
-            object3d_->SetPosition(position_);
-            object3d_->Update();
-
-            // AABBを再更新
-            playerColObj->Update();
         }
+
+        // 衝突がなければ終了
+        if (!hasCollision) {
+            break;
+        }
+
+        // プレイヤーの位置を押し戻す
+        position_.x += pushBack.x;
+        position_.y += pushBack.y;
+        position_.z += pushBack.z;
     }
+
+    // 最終的な位置を更新
+    object3d_->SetPosition(position_);
+    object3d_->Update();
 }

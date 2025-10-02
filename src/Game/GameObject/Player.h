@@ -86,6 +86,7 @@ private:
     // 位置・回転
     Vector3 position_ = Vector3{0.0f, 0.0f, 0.0f};
     Vector3 previousPosition_ = Vector3{0.0f, 0.0f, 0.0f};  // 前フレームの位置
+    Vector3 smoothedPosition_ = Vector3{0.0f, 0.0f, 0.0f};  // カメラ用の滑らかな位置
     float currentRotationY_ = 0.0f;
     float targetRotationY_ = 0.0f;
     float rotationSmoothingSpeed_ = 17.0f;
