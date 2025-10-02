@@ -70,6 +70,9 @@ public:
     Object3d* GetObject() const { return object3d_.get(); }
     AnimatedModel* GetModel() const { return animatedModel_.get(); }
 
+    // 衝突応答処理
+    void HandleCollisionResponse();
+
 private:
     void HandleMovement(UnoEngine* engine, float deltaTime);
     void HandleGamepadFeatures(UnoEngine* engine, float deltaTime);  // ゲームパッド固有機能
@@ -82,6 +85,7 @@ private:
     
     // 位置・回転
     Vector3 position_ = Vector3{0.0f, 0.0f, 0.0f};
+    Vector3 previousPosition_ = Vector3{0.0f, 0.0f, 0.0f};  // 前フレームの位置
     float currentRotationY_ = 0.0f;
     float targetRotationY_ = 0.0f;
     float rotationSmoothingSpeed_ = 17.0f;

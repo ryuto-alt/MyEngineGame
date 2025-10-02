@@ -115,6 +115,9 @@ namespace Collision {
         // ImGui デバッグUI表示
         void DrawImGui();
 
+        // CollisionObjectの検索（衝突応答用）
+        std::shared_ptr<CollisionObject3D> FindCollisionObject(Object3d* object);
+
     private:
         AABBCollisionManager() = default;
         ~AABBCollisionManager() = default;
@@ -131,9 +134,6 @@ namespace Collision {
             std::shared_ptr<CollisionObject3D> objB;
         };;
         std::vector<CollisionPair> currentCollisions_;
-
-        // ヘルパー関数
-        std::shared_ptr<CollisionObject3D> FindCollisionObject(Object3d* object);
     };
 
 } // namespace Collision

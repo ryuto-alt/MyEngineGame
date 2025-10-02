@@ -120,17 +120,23 @@ void Player::Initialize(Camera* camera, bool enableCollision) {
 }
 
 void Player::Update(UnoEngine* engine) {
-    
+
     const float deltaTime = engine->GetDeltaTime();
-    
+
+    // 移動前の位置を保存
+    previousPosition_ = position_;
+
     // HandleMovement(engine, deltaTime);  // 新しい統合移動システムを使用するため一時的に無効化
     HandleGamepadFeatures(engine, deltaTime);  // ゲームパッド固有機能（スニーク切り替えなど）
     UpdateAnimation(deltaTime);
     UpdateRotation(engine, deltaTime);
-    
+
     object3d_->SetPosition(position_);
     object3d_->SetRotation(Vector3{0.0f, currentRotationY_, 0.0f});
     object3d_->Update();
+
+    // 衝突応答処理
+    HandleCollisionResponse();
 }
 
 // ゲームパッド固有機能処理（スニーク切り替えなど）
@@ -676,4 +682,76 @@ void Player::UpdateCameraSystem(UnoEngine* engine) {
     }
 
     camera_->Update();
+}
+
+// 衝突応答処理
+void Player::HandleCollisionResponse() {
+    auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
+    if (!collisionManager || !object3d_) return;
+
+    // プレイヤーのAABBを取得
+    auto playerColObj = collisionManager->FindCollisionObject(object3d_.get());
+    if (!playerColObj || !playerColObj->IsEnabled()) return;
+
+    const Collision::AABB& playerAABB = playerColObj->GetWorldAABB();
+
+    // 全てのコリジョンオブジェクトをチェック
+    const auto& allObjects = collisionManager->GetCollisionObjects();
+    for (const auto& colObj : allObjects) {
+        // 自分自身はスキップ
+        if (colObj->GetObject() == object3d_.get()) continue;
+        if (!colObj->IsEnabled()) continue;
+
+        const Collision::AABB& otherAABB = colObj->GetWorldAABB();
+
+        // 衝突チェック
+        if (Collision::CheckAABBCollision(playerAABB, otherAABB)) {
+            // 衝突している場合、押し戻しベクトルを計算
+            Vector3 pushBack = {0.0f, 0.0f, 0.0f};
+
+            // 各軸での重なりを計算
+            float overlapX = std::min(playerAABB.max.x - otherAABB.min.x,
+                                      otherAABB.max.x - playerAABB.min.x);
+            float overlapY = std::min(playerAABB.max.y - otherAABB.min.y,
+                                      otherAABB.max.y - playerAABB.min.y);
+            float overlapZ = std::min(playerAABB.max.z - otherAABB.min.z,
+                                      otherAABB.max.z - playerAABB.min.z);
+
+            // 最小の重なりを持つ軸で押し戻す
+            if (overlapX <= overlapY && overlapX <= overlapZ) {
+                // X軸方向の押し戻し
+                if (playerAABB.GetCenter().x < otherAABB.GetCenter().x) {
+                    pushBack.x = -overlapX;
+                } else {
+                    pushBack.x = overlapX;
+                }
+            } else if (overlapY <= overlapX && overlapY <= overlapZ) {
+                // Y軸方向の押し戻し
+                if (playerAABB.GetCenter().y < otherAABB.GetCenter().y) {
+                    pushBack.y = -overlapY;
+                } else {
+                    pushBack.y = overlapY;
+                }
+            } else {
+                // Z軸方向の押し戻し
+                if (playerAABB.GetCenter().z < otherAABB.GetCenter().z) {
+                    pushBack.z = -overlapZ;
+                } else {
+                    pushBack.z = overlapZ;
+                }
+            }
+
+            // プレイヤーの位置を押し戻す
+            position_.x += pushBack.x;
+            position_.y += pushBack.y;
+            position_.z += pushBack.z;
+
+            // Object3Dの位置も更新
+            object3d_->SetPosition(position_);
+            object3d_->Update();
+
+            // AABBを再更新
+            playerColObj->Update();
+        }
+    }
 }
