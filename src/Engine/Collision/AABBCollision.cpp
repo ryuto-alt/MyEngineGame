@@ -349,8 +349,8 @@ namespace Collision {
 
                     // 衝突ペアを記録
                     currentCollisions_.push_back({
-                        collisionObjects_[i]->GetObject(),
-                        collisionObjects_[j]->GetObject()
+                        collisionObjects_[i],
+                        collisionObjects_[j]
                     });
 
                     // コールバック実行
@@ -419,19 +419,9 @@ namespace Collision {
                 for (size_t i = 0; i < currentCollisions_.size(); ++i) {
                     const auto& pair = currentCollisions_[i];
 
-                    // 衝突中のペアを見つける
-                    std::string nameA = "Unknown";
-                    std::string nameB = "Unknown";
-                    for (size_t j = 0; j < collisionObjects_.size(); ++j) {
-                        if (collisionObjects_[j]->GetObject() == pair.objA) {
-                            nameA = collisionObjects_[j]->GetName().empty() ?
-                                    ("Object " + std::to_string(j)) : collisionObjects_[j]->GetName();
-                        }
-                        if (collisionObjects_[j]->GetObject() == pair.objB) {
-                            nameB = collisionObjects_[j]->GetName().empty() ?
-                                    ("Object " + std::to_string(j)) : collisionObjects_[j]->GetName();
-                        }
-                    }
+                    // CollisionObject3Dから直接名前を取得
+                    std::string nameA = pair.objA->GetName().empty() ? "Unknown" : pair.objA->GetName();
+                    std::string nameB = pair.objB->GetName().empty() ? "Unknown" : pair.objB->GetName();
 
                     ImGui::TextColored(ImVec4(1.0f, 0.3f, 0.3f, 1.0f),
                         "%s <-> %s", nameA.c_str(), nameB.c_str());

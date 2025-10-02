@@ -127,9 +127,9 @@ namespace Collision {
 
         // 衝突検出用
         struct CollisionPair {
-            Object3d* objA;
-            Object3d* objB;
-        };
+            std::shared_ptr<CollisionObject3D> objA;
+            std::shared_ptr<CollisionObject3D> objB;
+        };;
         std::vector<CollisionPair> currentCollisions_;
 
         // ヘルパー関数
