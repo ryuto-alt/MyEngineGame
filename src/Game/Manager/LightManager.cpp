@@ -1,5 +1,7 @@
 #include "LightManager.h"
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
 
 LightManager::LightManager() {
 }
@@ -9,30 +11,36 @@ LightManager::~LightManager() {
 
 void LightManager::Initialize() {
     // ディレクショナルライトの初期設定（真上から照らす）
-    directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    directionalLight_.color = { 0.0f, 0.0f, 0.0f, 1.0f };
     directionalLight_.direction = { 0.0f, -1.0f, 0.0f };  // 真下方向（真上から照らす）
-    directionalLight_.intensity = 1.0f;
+    directionalLight_.intensity = 0.010f;
 
     // アンビエントライトの初期設定（暗い面を防ぐための環境光）
-    directionalLight_.ambientColor = { 0.3f, 0.3f, 0.35f };  // わずかに青みがかった環境光
-    directionalLight_.ambientIntensity = 0.013f;             // 固定値で最低限の視認性を確保
+    directionalLight_.ambientColor = { 0.08f, 0.08f, 0.12f };  // 青みがかった暗い環境光
+    directionalLight_.ambientIntensity = 0.003f;  // 最低限の視認性
 
     // スポットライトの初期設定
-    spotLight_.color = { 1.0f, 0.9f, 0.8f, 1.0f };
+    spotLight_.color = { 16.0f / 255.0f, 16.0f / 255.0f, 16.0f / 255.0f, 1.0f };
     spotLight_.position = { 0.0f, 5.0f, -2.0f };
-    spotLight_.intensity = 2.0f;
+    spotLight_.intensity = 3.5f;  // やや強めに
     spotLight_.direction = { 0.0f, -1.0f, 0.3f };
     spotLight_.innerCone = cosf(12.0f * 3.14159265f / 180.0f);
-    spotLight_.attenuation = { 1.0f, 0.09f, 0.032f };
+    // 距離減衰を強めに設定（近いところは明るく、遠いところは暗く）
+    // attenuation = {定数減衰, 線形減衰, 二次減衰}
+    spotLight_.attenuation = { 0.5f, 0.35f, 0.44f };  // より強い距離減衰
     spotLight_.outerCone = cosf(20.0f * 3.14159265f / 180.0f);
 
     // 初期値をバックアップ
     dirLightIntensityBackup_ = directionalLight_.intensity;
     spotLightIntensityBackup_ = spotLight_.intensity;
+
+    // ランダムシードを初期化
+    srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 void LightManager::Update() {
     UpdateLightIntensity();
+    UpdateFlickerEffect();
 }
 
 void LightManager::DrawImGui() {
@@ -138,6 +146,74 @@ void LightManager::UpdateLightIntensity() {
         spotLight_.intensity = 0.0f;
     } else if (spotLight_.intensity == 0.0f) {
         spotLight_.intensity = spotLightIntensityBackup_;
+    }
+}
+
+void LightManager::UpdateFlickerEffect() {
+    const float deltaTime = 0.016f;  // 約60FPSと仮定
+
+    // 点滅タイマーを進める
+    blinkTimer_ += deltaTime;
+
+    // 点滅の管理
+    if (!isBlinking_ && blinkTimer_ >= nextBlinkTime_) {
+        // 点滅開始
+        isBlinking_ = true;
+        blinkProgress_ = 0.0f;
+        blinkDuration_ = 0.3f + (static_cast<float>(rand()) / RAND_MAX) * 0.4f;  // 0.3〜0.7秒
+        blinkTimer_ = 0.0f;
+        // 次の点滅は3〜8秒後
+        nextBlinkTime_ = 3.0f + (static_cast<float>(rand()) / RAND_MAX) * 5.0f;
+    }
+
+    float blinkMultiplier = 1.0f;
+    if (isBlinking_) {
+        blinkProgress_ += deltaTime;
+
+        if (blinkProgress_ >= blinkDuration_) {
+            // 点滅終了
+            isBlinking_ = false;
+            blinkMultiplier = 1.0f;
+        } else {
+            // 点滅中: ライトが消えかかる効果
+            float blinkPhase = blinkProgress_ / blinkDuration_;
+
+            // 消える → 復帰 のパターン
+            if (blinkPhase < 0.3f) {
+                // 急激に暗くなる
+                blinkMultiplier = 1.0f - (blinkPhase / 0.3f) * 0.9f;
+            } else if (blinkPhase < 0.5f) {
+                // ほぼ消えた状態
+                blinkMultiplier = 0.1f + sinf((blinkPhase - 0.3f) / 0.2f * 3.14159f * 4.0f) * 0.05f;
+            } else {
+                // 徐々に復帰
+                blinkMultiplier = 0.1f + ((blinkPhase - 0.5f) / 0.5f) * 0.9f;
+            }
+
+            blinkMultiplier = blinkMultiplier < 0.05f ? 0.05f : blinkMultiplier;
+        }
+    }
+
+    // 通常のちらつきタイマーを進める
+    flickerTimer_ += deltaTime * flickerSpeed_;
+
+    // パーリンノイズ風の複雑なちらつきパターン
+    float flicker1 = sinf(flickerTimer_) * 0.5f + 0.5f;
+    float flicker2 = sinf(flickerTimer_ * 1.7f) * 0.5f + 0.5f;
+    float flicker3 = sinf(flickerTimer_ * 2.3f) * 0.5f + 0.5f;
+
+    // 複数の波を組み合わせて不規則なちらつきを作る
+    float flickerValue = (flicker1 * 0.5f + flicker2 * 0.3f + flicker3 * 0.2f);
+
+    // ちらつきの範囲を調整（基本強度 ± ちらつき量）
+    float minIntensity = flickerBaseIntensity_ * (1.0f - flickerAmount_);
+    float maxIntensity = flickerBaseIntensity_ * (1.0f + flickerAmount_ * 0.3f);
+
+    float baseIntensity = minIntensity + (maxIntensity - minIntensity) * flickerValue;
+
+    // スポットライトの強度を更新（点滅効果を適用）
+    if (enableSpotLight_) {
+        spotLight_.intensity = baseIntensity * blinkMultiplier;
     }
 }
 

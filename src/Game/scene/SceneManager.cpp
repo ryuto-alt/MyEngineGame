@@ -58,10 +58,9 @@ void SceneManager::Update() {
         try {
             // シーンの初期化（例外をキャッチ）
             currentScene_->Initialize();
-            OutputDebugStringA(("SceneManager: Successfully initialized scene " + nextScene_ + "\n").c_str());
         }
-        catch (const std::exception& e) {
-            OutputDebugStringA(("ERROR: Failed to initialize scene " + nextScene_ + ": " + e.what() + "\n").c_str());
+        catch (const std::exception&) {
+            // エラーは無視
         }
 
         // 次のシーン名をクリア
@@ -73,8 +72,8 @@ void SceneManager::Update() {
         try {
             currentScene_->Update();
         }
-        catch (const std::exception& e) {
-            OutputDebugStringA(("ERROR: Exception in scene update: " + std::string(e.what()) + "\n").c_str());
+        catch (const std::exception&) {
+            // エラーは無視
         }
     }
 }
@@ -90,8 +89,8 @@ void SceneManager::Draw() {
         try {
             currentScene_->Draw();
         }
-        catch (const std::exception& e) {
-            OutputDebugStringA(("ERROR: Exception in scene draw: " + std::string(e.what()) + "\n").c_str());
+        catch (const std::exception&) {
+            // エラーは無視
         }
     }
 }
@@ -102,8 +101,8 @@ void SceneManager::Finalize() {
         try {
             currentScene_->Finalize();
         }
-        catch (const std::exception& e) {
-            OutputDebugStringA(("ERROR: Exception in scene finalize: " + std::string(e.what()) + "\n").c_str());
+        catch (const std::exception&) {
+            // エラーは無視
         }
         currentScene_.reset(); // 明示的にunique_ptrをクリア
     }

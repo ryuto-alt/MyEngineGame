@@ -105,8 +105,8 @@ void UnoEngine::Initialize() {
         // dxCommon_->CommandKick();
 
     }
-    catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Initialize: " + std::string(e.what()) + "\n").c_str());
+    catch (const std::exception&) {
+        // エラーは無視
     }
 }
 
@@ -114,7 +114,7 @@ void UnoEngine::Update() {
     try {
         // デルタタイムを更新
         UpdateDeltaTime();
-        
+
         // Windowsのメッセージ処理
         if (winApp_->ProcessMessage()) {
             endRequest_ = true;
@@ -157,8 +157,8 @@ void UnoEngine::Update() {
         // シーンマネージャーの更新
         SceneManager::GetInstance()->Update();
     }
-    catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Update: " + std::string(e.what()) + "\n").c_str());
+    catch (const std::exception&) {
+        // エラーは無視
     }
 }
 
@@ -188,8 +188,8 @@ void UnoEngine::Draw() {
         // 描画終了
         dxCommon_->End();
     }
-    catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Draw: " + std::string(e.what()) + "\n").c_str());
+    catch (const std::exception&) {
+        // エラーは無視
     }
 }
 
@@ -252,8 +252,8 @@ void UnoEngine::Finalize() {
         winApp_.reset();
 
     }
-    catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in UnoEngine::Finalize: " + std::string(e.what()) + "\n").c_str());
+    catch (const std::exception&) {
+        // エラーは無視
     }
 }
 
@@ -543,8 +543,8 @@ void UnoEngine::InitializeImGui() {
         );
 
     }
-    catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Failed to initialize ImGui: " + std::string(e.what()) + "\n").c_str());
+    catch (const std::exception&) {
+        // エラーは無視
     }
 }
 

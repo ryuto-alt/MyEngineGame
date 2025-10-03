@@ -6,8 +6,8 @@
 void GamePlayScene::Initialize() {
     UnoEngine* engine = UnoEngine::GetInstance();
 
-    // 背景色を黒に設定（ホラーチックな雰囲気）
-    // デフォルトの青い色に戻すには: dxCommon_->SetClearColor(0.1f, 0.25f, 0.5f, 1.0f);
+    // 背景色を黒に設定
+    //dxCommon_->SetClearColor(0.1f, 0.25f, 0.5f, 1.0f);
     dxCommon_->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     lightManager_ = std::make_unique<LightManager>();

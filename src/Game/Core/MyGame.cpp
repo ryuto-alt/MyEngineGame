@@ -24,8 +24,8 @@ void MyGame::Initialize() {
         // 初期シーンへの遷移 - 直接GamePlaySceneに
         engine_->GetSceneManager()->ChangeScene("GamePlay");
     }
-    catch (const std::exception& e) {
-        OutputDebugStringA(("ERROR: Exception in MyGame::Initialize: " + std::string(e.what()) + "\n").c_str());
+    catch (const std::exception&) {
+        // エラーは無視
     }
 }
 

@@ -74,8 +74,8 @@ void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon, bool enableColl
                 collisionManager->RegisterObject(object3d_.get(), groundAABB, true, "Ground");
             }
         }
-    } catch (const std::exception& e) {
-        OutputDebugStringA(("Failed to load ground model: " + std::string(e.what()) + "\n").c_str());
+    } catch (const std::exception&) {
+        // エラーは無視
     }
 }
 
