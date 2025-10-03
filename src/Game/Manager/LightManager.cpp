@@ -141,7 +141,7 @@ void LightManager::UpdateLightIntensity() {
     }
 }
 
-void LightManager::UpdateSpotLightFollowPlayer(const Vector3& playerPosition, const Vector3& cameraRotation) {
+void LightManager::UpdateFlashlight(const Vector3& playerPosition, const Vector3& cameraRotation) {
     // カメラの回転から方向ベクトルを計算
     float cosY = cosf(cameraRotation.y);
     float sinY = sinf(cameraRotation.y);

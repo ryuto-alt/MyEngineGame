@@ -89,6 +89,14 @@ public:
 		return depthStencilDesc;
 	}
 
+	// クリアカラーの設定
+	void SetClearColor(float r, float g, float b, float a) {
+		clearColor_[0] = r;
+		clearColor_[1] = g;
+		clearColor_[2] = b;
+		clearColor_[3] = a;
+	}
+
 private:
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;
@@ -132,6 +140,9 @@ private:
 	std::chrono::steady_clock::time_point reference_;
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+
+	// クリアカラー（デフォルトは青っぽい色）
+	float clearColor_[4] = { 0.1f, 0.25f, 0.5f, 1.0f };
 
 #ifdef _DEBUG
 	Microsoft::WRL::ComPtr<ID3D12Debug1> debugController = nullptr;

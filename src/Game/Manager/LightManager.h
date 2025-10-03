@@ -11,7 +11,7 @@ public:
     void DrawImGui();
 
     // スポットライトをプレイヤー視点に追従させる
-    void UpdateSpotLightFollowPlayer(const Vector3& playerPosition, const Vector3& cameraRotation);
+    void UpdateFlashlight(const Vector3& playerPosition, const Vector3& cameraRotation);
     
     // ライトデータの取得
     const DirectionalLight& GetDirectionalLight() const { return directionalLight_; }
