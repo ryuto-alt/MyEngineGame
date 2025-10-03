@@ -27,10 +27,10 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
         LoadFromGLTFWithAssimp(directoryPath, filename);
     } else {
         LoadFromObj(directoryPath, filename);
-        
+
         const ModelData& modelData = GetModelData();
         OutputDebugStringA(("AnimatedModel: Texture path: " + modelData.material.textureFilePath + "\n").c_str());
-        
+
         ModelData& modelDataInternal2 = GetModelDataInternal();
         if (modelDataInternal2.material.textureFilePath.empty()) {
             OutputDebugStringA("AnimatedModel: No texture path found, setting default values\n");
@@ -38,10 +38,20 @@ void AnimatedModel::LoadFromFile(const std::string& directoryPath, const std::st
             modelDataInternal2.material.diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
             OutputDebugStringA(("AnimatedModel: Set default texture: " + modelDataInternal2.material.textureFilePath + "\n").c_str());
         }
-        
+
         rootNodeName_ = "root";
     }
-    
+
+    // GLTFでもテクスチャが見つからない場合のデフォルト設定
+    ModelData& modelDataInternal = GetModelDataInternal();
+    if (modelDataInternal.material.textureFilePath.empty()) {
+        OutputDebugStringA("AnimatedModel: No texture found after loading, setting default texture\n");
+        modelDataInternal.material.textureFilePath = "Resources/uvChecker.png";
+        modelDataInternal.material.diffuse = { 1.0f, 1.0f, 1.0f, 1.0f };
+        TextureManager::GetInstance()->LoadTexture(modelDataInternal.material.textureFilePath);
+        OutputDebugStringA(("AnimatedModel: Set default texture: " + modelDataInternal.material.textureFilePath + "\n").c_str());
+    }
+
     // OutputDebugStringA(("AnimatedModel: Root node name set to: " + rootNodeName_ + "\n").c_str());
 
     if (extension != "gltf") {

@@ -39,4 +39,8 @@ private:
     // カメラ回転
     Vector3 cameraRotation_ = {0.0f, 0.0f, 0.0f};
     float mouseSensitivity_ = 0.003f;
+
+    // カメラ位置のスムーシング用
+    Vector3 previousCameraPosition_ = {0.0f, 0.0f, 0.0f};
+    float smoothFactor_ = 0.15f; // スムーシングの強さ (0.0-1.0, 小さいほど滑らか)
 };

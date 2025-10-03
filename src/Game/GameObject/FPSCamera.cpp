@@ -15,6 +15,8 @@ void FPSCamera::UpdateCamera(Camera* camera, const Vector3& playerPosition, Anim
 
     if (isFPSMode_) {
         // 一人称視点モード
+        Vector3 targetPosition;
+
         if (model) {
             const Skeleton& skeleton = model->GetSkeleton();
 
@@ -25,20 +27,30 @@ void FPSCamera::UpdateCamera(Camera* camera, const Vector3& playerPosition, Anim
                 const Joint& eyeJoint = skeleton.joints[jointIndex];
 
                 // ワールド空間での目の位置を計算
-                Vector3 eyePosition;
-                eyePosition.x = eyeJoint.skeletonSpaceMatrix.m[3][0] + playerPosition.x + eyeOffset_.x;
-                eyePosition.y = eyeJoint.skeletonSpaceMatrix.m[3][1] + playerPosition.y + eyeOffset_.y;
-                eyePosition.z = eyeJoint.skeletonSpaceMatrix.m[3][2] + playerPosition.z + eyeOffset_.z;
-
-                // カメラ位置を目の位置に設定
-                camera->SetTranslate(eyePosition);
+                targetPosition.x = eyeJoint.skeletonSpaceMatrix.m[3][0] + playerPosition.x + eyeOffset_.x;
+                targetPosition.y = eyeJoint.skeletonSpaceMatrix.m[3][1] + playerPosition.y + eyeOffset_.y;
+                targetPosition.z = eyeJoint.skeletonSpaceMatrix.m[3][2] + playerPosition.z + eyeOffset_.z;
             } else {
                 // ジョイントが見つからない場合はプレイヤー位置+オフセットを使用
-                Vector3 eyePosition = playerPosition;
-                eyePosition.y += 1.6f; // デフォルトの目の高さ
-                camera->SetTranslate(eyePosition);
+                targetPosition = playerPosition;
+                targetPosition.y += 1.6f; // デフォルトの目の高さ
             }
+        } else {
+            targetPosition = playerPosition;
+            targetPosition.y += 1.6f;
         }
+
+        // スムーシング処理（線形補間）
+        Vector3 smoothedPosition;
+        smoothedPosition.x = previousCameraPosition_.x + (targetPosition.x - previousCameraPosition_.x) * smoothFactor_;
+        smoothedPosition.y = previousCameraPosition_.y + (targetPosition.y - previousCameraPosition_.y) * smoothFactor_;
+        smoothedPosition.z = previousCameraPosition_.z + (targetPosition.z - previousCameraPosition_.z) * smoothFactor_;
+
+        // カメラ位置を設定
+        camera->SetTranslate(smoothedPosition);
+
+        // 前回の位置を更新
+        previousCameraPosition_ = smoothedPosition;
 
         // カメラの回転を適用
         camera->SetRotate(cameraRotation_);

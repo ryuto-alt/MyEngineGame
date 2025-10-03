@@ -240,15 +240,20 @@ PixelShaderOutput main(VertexShaderOutput input)
     {
         float32_t3 L = normalize(gSpotLight.position - input.worldPosition);
         float32_t3 H = normalize(V + L);
-        
+
         // スポットライトの減衰計算
         float32_t distance = length(gSpotLight.position - input.worldPosition);
         float32_t attenuation = 1.0 / (gSpotLight.attenuation.x + gSpotLight.attenuation.y * distance + gSpotLight.attenuation.z * distance * distance);
-        
+
         // スポットライトのコーン計算
         float32_t theta = dot(L, normalize(-gSpotLight.direction));
-        float32_t epsilon = gSpotLight.innerCone - gSpotLight.outerCone;
-        float32_t intensity = clamp((theta - gSpotLight.outerCone) / epsilon, 0.0, 1.0);
+
+        // 距離に応じた角度の広がり効果
+        // 遠くなるほどエッジのぼかしが大きくなり、光が広がって見える
+        float32_t distanceSpreadFactor = distance * 0.008; // 距離に応じた広がり係数
+        float32_t dynamicEpsilon = (gSpotLight.innerCone - gSpotLight.outerCone) * (1.0 + distanceSpreadFactor);
+
+        float32_t intensity = clamp((theta - gSpotLight.outerCone) / dynamicEpsilon, 0.0, 1.0);
         
         // Cook-Torrance BRDF計算
         float32_t NDF = DistributionGGX(normal, H, roughness);
