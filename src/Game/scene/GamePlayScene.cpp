@@ -15,7 +15,7 @@ void GamePlayScene::Initialize() {
 
     // FPSカメラの初期化（true: 一人称, false: 三人称）
     fpsCamera_ = std::make_unique<FPSCamera>();
-    fpsCamera_->Initialize(true); // デフォルトは三人称視点
+    fpsCamera_->Initialize(true); 
 
     player_ = std::make_unique<Player>();
     player_->Initialize(camera_, true, true); // コリジョン有効、環境マップ有効
@@ -179,6 +179,23 @@ void GamePlayScene::HandleInput() {
         if (fpsCamera_) {
             bool currentMode = fpsCamera_->IsFPSMode();
             fpsCamera_->SetFPSMode(!currentMode);
+        }
+    }
+
+    // TABキーでマウス視点のON/OFF切り替え（一人称視点時のみ）
+    if (engine->IsKeyTriggered(DIK_TAB)) {
+        if (fpsCamera_ && fpsCamera_->IsFPSMode()) {
+            bool currentMouseLook = fpsCamera_->IsMouseLookEnabled();
+            fpsCamera_->SetMouseLookEnabled(!currentMouseLook);
+
+            // マウスカーソルの表示/非表示を切り替え
+            if (!currentMouseLook) {
+                // マウス視点を有効にする → カーソル非表示
+                engine->SetMouseCursor(false);
+            } else {
+                // マウス視点を無効にする → カーソル表示
+                engine->SetMouseCursor(true);
+            }
         }
     }
 }

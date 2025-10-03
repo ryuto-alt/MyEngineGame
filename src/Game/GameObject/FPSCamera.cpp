@@ -49,21 +49,26 @@ void FPSCamera::UpdateCamera(Camera* camera, const Vector3& playerPosition, Anim
 void FPSCamera::UpdateCameraRotation(Camera* camera, UnoEngine* engine) {
     if (!camera || !engine || !isFPSMode_) return;
 
-    // マウスの移動量を取得
-    float deltaX = 0.0f;
-    float deltaY = 0.0f;
-    engine->GetMouseMovement(deltaX, deltaY);
+    // マウス視点が有効な場合はマウスを画面中央に固定
+    if (mouseLookEnabled_) {
+        engine->ResetMouseCenter();
 
-    // マウス移動量に基づいてカメラを回転
-    cameraRotation_.y += deltaX * mouseSensitivity_; // ヨー（左右）
-    cameraRotation_.x += deltaY * mouseSensitivity_; // ピッチ（上下）
+        // マウスの移動量を取得
+        float deltaX = 0.0f;
+        float deltaY = 0.0f;
+        engine->GetMouseMovement(deltaX, deltaY);
 
-    // ピッチの制限（真上・真下を向きすぎないように）
-    const float maxPitch = 1.5f; // 約85度
-    if (cameraRotation_.x > maxPitch) {
-        cameraRotation_.x = maxPitch;
-    }
-    if (cameraRotation_.x < -maxPitch) {
-        cameraRotation_.x = -maxPitch;
+        // マウス移動量に基づいてカメラを回転
+        cameraRotation_.y += deltaX * mouseSensitivity_; // ヨー（左右）
+        cameraRotation_.x += deltaY * mouseSensitivity_; // ピッチ（上下）
+
+        // ピッチの制限（真上・真下を向きすぎないように）
+        const float maxPitch = 1.5f; // 約85度
+        if (cameraRotation_.x > maxPitch) {
+            cameraRotation_.x = maxPitch;
+        }
+        if (cameraRotation_.x < -maxPitch) {
+            cameraRotation_.x = -maxPitch;
+        }
     }
 }
