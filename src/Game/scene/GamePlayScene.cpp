@@ -10,14 +10,14 @@ void GamePlayScene::Initialize() {
     lightManager_->Initialize();
 
     player_ = std::make_unique<Player>();
-    player_->Initialize(camera_, true);  
+    player_->Initialize(camera_, true, true); // コリジョン有効、環境マップ無効
     player_->SetupCamera(engine);
-    player_->SetEnableEnvironmentMap(false);
 
     groundModel_ = engine->CreateAnimatedModel();
     groundModel_->LoadFromFile("Resources/Models/ground", "ground.gltf");
 
     ground_ = engine->CreateObject3D();
+ 
     ground_->SetModel(static_cast<Model*>(groundModel_.get()));
     ground_->SetCamera(camera_);
     ground_->SetEnableLighting(false);

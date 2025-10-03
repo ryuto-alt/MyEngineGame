@@ -164,12 +164,13 @@ struct Material {
     int32_t enableLighting;
     int32_t alphaMode; // 0=OPAQUE, 1=MASK, 2=BLEND
     int32_t doubleSided;
-    
+
     // UV変換
     Matrix4x4 uvTransform;
-    
-    // パディング
-    float padding[2];
+
+    // パディングとして追加のフラグを配置
+    int32_t enableEnvironmentMap; // 環境マップの有効/無効
+    float padding;
 };
 
 struct TransformationMatrix {

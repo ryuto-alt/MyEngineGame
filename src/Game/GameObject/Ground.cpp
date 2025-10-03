@@ -8,7 +8,7 @@ Ground::Ground() {
 Ground::~Ground() {
 }
 
-void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon, bool enableCollision) {
+void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon, bool enableCollision, bool enableEnvironmentMap) {
     camera_ = camera;
     dxCommon_ = dxCommon;
 
@@ -55,6 +55,15 @@ void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon, bool enableColl
         object3d_->SetRotation(Vector3{0.0f, 0.0f, 0.0f});
         object3d_->SetEnableLighting(true);
         object3d_->SetCamera(camera_);
+
+        // 環境マップの設定
+        object3d_->SetEnableEnvironmentMap(enableEnvironmentMap);
+        if (enableEnvironmentMap) {
+            OutputDebugStringA("Ground: Environment map is enabled\n");
+            object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+        } else {
+            OutputDebugStringA("Ground: Environment map is disabled\n");
+        }
 
         // コリジョン設定
         if (enableCollision && object3d_ && model_) {

@@ -9,7 +9,7 @@ Player::Player() {
 Player::~Player() {
 }
 
-void Player::Initialize(Camera* camera, bool enableCollision) {
+void Player::Initialize(Camera* camera, bool enableCollision, bool enableEnvironmentMap) {
     camera_ = camera;
 
     // 初期位置と回転の設定
@@ -102,12 +102,14 @@ void Player::Initialize(Camera* camera, bool enableCollision) {
             object3d_->SetModel(static_cast<Model*>(animatedModel_.get()));
         }
         
-        // humanモデルに強制的に環境マップを適用
-        OutputDebugStringA("Player: Enabling environment map for human model\n");
-        object3d_->SetEnableEnvironmentMap(true);
-        
-        // デフォルトの環境マップテクスチャを設定
-        object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+        // 環境マップの設定
+        object3d_->SetEnableEnvironmentMap(enableEnvironmentMap);
+        if (enableEnvironmentMap) {
+            OutputDebugStringA("Player: Environment map is enabled\n");
+            object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+        } else {
+            OutputDebugStringA("Player: Environment map is disabled\n");
+        }
     }
 
     // コリジョン設定

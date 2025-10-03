@@ -77,6 +77,7 @@ void Object3d::Initialize(DirectXCommon* dxCommon, SpriteCommon* spriteCommon) {
 	materialData_->enableLighting = 1;
 	materialData_->alphaMode = 0; // OPAQUE
 	materialData_->doubleSided = 0;
+	materialData_->enableEnvironmentMap = 0; // デフォルトでオフ
 	materialData_->uvTransform = MakeIdentity4x4();
 
 	// 変換行列リソースの作成
@@ -157,7 +158,7 @@ void Object3d::SetModel(Model* model) {
 			materialData_->hasOcclusionTexture = 0;
 			materialData_->hasEmissiveTexture = 0;
 			materialData_->enableLighting = 1;
-			
+
 			// アルファモード変換
 			if (modelMaterial.alphaMode == "MASK") {
 				materialData_->alphaMode = 1;
@@ -166,8 +167,9 @@ void Object3d::SetModel(Model* model) {
 			} else {
 				materialData_->alphaMode = 0; // OPAQUE
 			}
-			
+
 			materialData_->doubleSided = modelMaterial.doubleSided ? 1 : 0;
+			materialData_->enableEnvironmentMap = enableEnvironmentMap_ ? 1 : 0;
 			
 			OutputDebugStringA("Object3d::SetModel - Applied PBR material data\n");
 			char pbrDebugMsg[512];
@@ -191,6 +193,7 @@ void Object3d::SetModel(Model* model) {
 			materialData_->enableLighting = 1;
 			materialData_->alphaMode = 0; // OPAQUE
 			materialData_->doubleSided = 0;
+			materialData_->enableEnvironmentMap = enableEnvironmentMap_ ? 1 : 0;
 			OutputDebugStringA("Object3d::SetModel - Applied legacy material data\n");
 		}
 

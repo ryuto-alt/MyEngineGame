@@ -36,12 +36,13 @@ struct PBRMaterial
     int32_t enableLighting;
     int32_t alphaMode; // 0=OPAQUE, 1=MASK, 2=BLEND
     int32_t doubleSided;
-    
+
     // UV変換
     float32_t4x4 uvTransform;
-    
-    // パディング
-    float32_t padding[2];
+
+    // パディングとして追加のフラグを配置
+    int32_t enableEnvironmentMap; // 環境マップの有効/無効
+    float32_t padding;
 };
 
 // 光源定義
@@ -266,19 +267,21 @@ PixelShaderOutput main(VertexShaderOutput input)
     }
     
     // ============== 環境マップ反射 ==============
+    if (gPBRMaterial.enableEnvironmentMap != 0)
     {
         // 環境マップからの反射
         float32_t3 envReflection = gEnvironmentMap.Sample(gSampler, R).rgb;
-        
+
         // フレネル係数を使用して環境反射を計算
         float32_t3 F = FresnelSchlick(max(dot(normal, V), 0.0), F0);
-        
+
         // 環境反射の寄与（簡易実装）
         float32_t3 envContribution = envReflection * F;
         color += envContribution * 0.1; // 環境反射の強度を調整
     }
-    
+
     // ============== 環境光（IBL簡易実装） ==============
+    if (gPBRMaterial.enableEnvironmentMap != 0)
     {
         // 環境マップからの簡易環境光
         float32_t3 envAmbient = gEnvironmentMap.Sample(gSampler, normal).rgb;

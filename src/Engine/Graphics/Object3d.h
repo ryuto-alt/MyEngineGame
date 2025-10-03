@@ -147,5 +147,5 @@ private:
     std::string environmentTexturePath_ = "";
     
     // 環境マップの有効/無効フラグ
-    bool enableEnvironmentMap_ = true;
+    bool enableEnvironmentMap_ = false;
 };
