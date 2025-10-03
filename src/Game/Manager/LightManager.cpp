@@ -24,11 +24,11 @@ void LightManager::Initialize() {
     spotLight_.position = { 0.0f, 5.0f, -2.0f };
     spotLight_.intensity = 3.5f;  // やや強めに
     spotLight_.direction = { 0.0f, -1.0f, 0.3f };
-    spotLight_.innerCone = cosf(12.0f * 3.14159265f / 180.0f);
+    spotLight_.innerCone = cosf(20.0f * 3.14159265f / 180.0f);
     // 距離減衰を強めに設定（近いところは明るく、遠いところは暗く）
     // attenuation = {定数減衰, 線形減衰, 二次減衰}
     spotLight_.attenuation = { 0.5f, 0.35f, 0.44f };  // より強い距離減衰
-    spotLight_.outerCone = cosf(20.0f * 3.14159265f / 180.0f);
+    spotLight_.outerCone = cosf(35.0f * 3.14159265f / 180.0f);
 
     // 初期値をバックアップ
     dirLightIntensityBackup_ = directionalLight_.intensity;

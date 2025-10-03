@@ -250,7 +250,7 @@ PixelShaderOutput main(VertexShaderOutput input)
 
         // 距離に応じた角度の広がり効果
         // 遠くなるほどエッジのぼかしが大きくなり、光が広がって見える
-        float32_t distanceSpreadFactor = distance * 0.008; // 距離に応じた広がり係数
+        float32_t distanceSpreadFactor = distance * 0.02; // 距離に応じた広がり係数
         float32_t dynamicEpsilon = (gSpotLight.innerCone - gSpotLight.outerCone) * (1.0 + distanceSpreadFactor);
 
         float32_t intensity = clamp((theta - gSpotLight.outerCone) / dynamicEpsilon, 0.0, 1.0);
