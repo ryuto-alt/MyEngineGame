@@ -20,7 +20,7 @@ void GamePlayScene::Initialize() {
 
     // 環境マップを先に設定（SetModelの前に）
     Object3d::SetEnvTex("Resources/Models/skybox/rostock_laage_airport_4k.dds");
-    ground_->EnableEnv(true);
+    ground_->EnableEnv(false);
     ground_->SetModel(static_cast<Model*>(groundModel_.get()));
     ground_->SetCamera(camera_);
     ground_->SetEnableLighting(true);
@@ -51,10 +51,10 @@ void GamePlayScene::Initialize() {
     objeObject_ = engine->CreateObject3D();
 
     // 環境マップを先に設定（SetModelの前に）
-    objeObject_->EnableEnv(false);
+    objeObject_->EnableEnv(false);  // 全オブジェクトで統一
     objeObject_->SetModel(static_cast<Model*>(objeModel_.get()));
     objeObject_->SetCamera(camera_);
-    objeObject_->SetPosition({0.0f, 0.0f, 5.0f});
+    objeObject_->SetPosition({0.0f, 5.0f, 5.0f});
     objeObject_->SetScale({1.0f, 1.0f, 1.0f});
     objeObject_->SetEnableLighting(true);
     objeObject_->SetEnableAnimation(false);

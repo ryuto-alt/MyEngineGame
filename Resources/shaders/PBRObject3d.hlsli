@@ -48,6 +48,8 @@ struct DirectionalLight
     float32_t4 color;
     float32_t3 direction;
     float32_t intensity;
+    float32_t3 ambientColor;    // アンビエントライトの色
+    float32_t ambientIntensity; // アンビエントライトの強度
 };
 
 // PBR計算のヘルパー関数

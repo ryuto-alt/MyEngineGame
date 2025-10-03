@@ -51,6 +51,8 @@ struct DirectionalLight
     float32_t4 color;
     float32_t3 direction;
     float32_t intensity;
+    float32_t3 ambientColor;    // アンビエントライトの色
+    float32_t ambientIntensity; // アンビエントライトの強度
 };
 
 struct SpotLight
@@ -200,7 +202,12 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     // 最終的な色の初期化
     float32_t3 color = float32_t3(0.0, 0.0, 0.0);
-    
+
+    // ============== アンビエントライト（常に適用） ==============
+    // ディレクショナルライトのアンビエント成分を使用
+    float32_t3 ambient = gDirectionalLight.ambientColor * gDirectionalLight.ambientIntensity * albedo;
+    color += ambient;
+
     // ============== ディレクショナルライト計算 ==============
     {
         float32_t3 L = normalize(-gDirectionalLight.direction);

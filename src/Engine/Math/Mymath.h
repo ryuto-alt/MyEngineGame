@@ -182,6 +182,8 @@ struct DirectionalLight {
     Vector4 color;
     Vector3 direction;
     float intensity;
+    Vector3 ambientColor;       // アンビエントライトの色
+    float ambientIntensity;     // アンビエントライトの強度
 };
 
 struct SpotLight {

@@ -8,11 +8,15 @@ LightManager::~LightManager() {
 }
 
 void LightManager::Initialize() {
-    // ディレクショナルライトの初期設定
+    // ディレクショナルライトの初期設定（真上から照らす）
     directionalLight_.color = { 1.0f, 1.0f, 1.0f, 1.0f };
-    directionalLight_.direction = { 0.0f, -1.0f, 0.5f };
+    directionalLight_.direction = { 0.0f, -1.0f, 0.0f };  // 真下方向（真上から照らす）
     directionalLight_.intensity = 1.0f;
-    
+
+    // アンビエントライトの初期設定（暗い面を防ぐための環境光）
+    directionalLight_.ambientColor = { 0.3f, 0.3f, 0.35f };  // わずかに青みがかった環境光
+    directionalLight_.ambientIntensity = 0.013f;             // 固定値で最低限の視認性を確保
+
     // スポットライトの初期設定
     spotLight_.color = { 1.0f, 0.9f, 0.8f, 1.0f };
     spotLight_.position = { 0.0f, 5.0f, -2.0f };
@@ -21,7 +25,7 @@ void LightManager::Initialize() {
     spotLight_.innerCone = cosf(12.0f * 3.14159265f / 180.0f);
     spotLight_.attenuation = { 1.0f, 0.09f, 0.032f };
     spotLight_.outerCone = cosf(20.0f * 3.14159265f / 180.0f);
-    
+
     // 初期値をバックアップ
     dirLightIntensityBackup_ = directionalLight_.intensity;
     spotLightIntensityBackup_ = spotLight_.intensity;
@@ -44,7 +48,13 @@ void LightManager::DrawImGui() {
         ImGui::ColorEdit3("Dir Light Color", &directionalLight_.color.x);
         ImGui::SliderFloat3("Dir Light Direction", &directionalLight_.direction.x, -1.0f, 1.0f);
         ImGui::SliderFloat("Dir Light Intensity", &directionalLight_.intensity, 0.0f, 3.0f);
-        
+
+        // アンビエントライト設定（動的に計算される値を表示）
+        ImGui::Separator();
+        ImGui::Text("Ambient Light (prevents black faces)");
+        ImGui::ColorEdit3("Ambient Color", &directionalLight_.ambientColor.x);
+        ImGui::Text("Ambient Intensity: %.4f (0.013 x Dir Intensity)", directionalLight_.ambientIntensity);
+
         NormalizeDirectionalLightDirection();
     }
     
@@ -115,7 +125,11 @@ void LightManager::UpdateLightIntensity() {
     } else if (directionalLight_.intensity == 0.0f) {
         directionalLight_.intensity = dirLightIntensityBackup_;
     }
-    
+
+    // アンビエントライトの強度をディレクショナルライトの強度に比例させる
+    // 基本値0.013に、ディレクショナルライトの強度を掛ける
+    directionalLight_.ambientIntensity = 0.013f * directionalLight_.intensity;
+
     // スポットライトの強度管理
     if (!enableSpotLight_) {
         if (spotLight_.intensity > 0.0f) {
