@@ -1,6 +1,7 @@
 #pragma once
 #include "IScene.h"
 #include "GameObject/Player.h"
+#include "GameObject/FPSCamera.h"
 #include "Skybox.h"
 #include "Manager/LightManager.h"
 #include <memory>
@@ -30,4 +31,6 @@ private:
     std::unique_ptr<AnimatedModel> objeModel_;
 
     bool skyboxEnabled_ = false;
+
+    std::unique_ptr<FPSCamera> fpsCamera_;
 };

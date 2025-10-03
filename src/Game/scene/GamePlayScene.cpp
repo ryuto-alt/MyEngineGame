@@ -9,6 +9,10 @@ void GamePlayScene::Initialize() {
     lightManager_ = std::make_unique<LightManager>();
     lightManager_->Initialize();
 
+    // FPSカメラの初期化（true: 一人称, false: 三人称）
+    fpsCamera_ = std::make_unique<FPSCamera>();
+    fpsCamera_->Initialize(true); // デフォルトは三人称視点
+
     player_ = std::make_unique<Player>();
     player_->Initialize(camera_, true, true); // コリジョン有効、環境マップ有効
     player_->SetupCamera(engine);
@@ -69,7 +73,17 @@ void GamePlayScene::Update() {
 
     HandleInput();
     player_->HandleInput(engine);
-    player_->UpdateCameraSystem(engine);
+
+    // FPSカメラモードかどうかでカメラ更新を切り替え
+    if (fpsCamera_ && fpsCamera_->IsFPSMode()) {
+        // FPSモード: FPSカメラ専用の更新
+        fpsCamera_->UpdateCameraRotation(camera_, engine);
+        player_->UpdateFPSCamera(fpsCamera_.get());
+        camera_->Update();
+    } else {
+        // 三人称モード: 通常のカメラシステム
+        player_->UpdateCameraSystem(engine);
+    }
 
     lightManager_->Update();
     const DirectionalLight& dirLight = lightManager_->GetDirectionalLight();
@@ -106,7 +120,11 @@ void GamePlayScene::Draw() {
     if (ground_) {
         ground_->Draw();
     }
-    player_->Draw();
+
+    // FPSモード以外でプレイヤーを描画
+    if (!fpsCamera_ || !fpsCamera_->IsFPSMode()) {
+        player_->Draw();
+    }
 
     if (objeObject_) {
         objeObject_->Draw();
@@ -136,6 +154,7 @@ void GamePlayScene::Finalize() {
     objeModel_.reset();
     skybox_.reset();
     lightManager_.reset();
+    fpsCamera_.reset();
 }
 
 void GamePlayScene::HandleInput() {
@@ -143,6 +162,14 @@ void GamePlayScene::HandleInput() {
 
     if (engine->IsKeyTriggered(DIK_F)) {
         lightManager_->ToggleDebugDisplay();
+    }
+
+    // Vキーで一人称/三人称切り替え
+    if (engine->IsKeyTriggered(DIK_V)) {
+        if (fpsCamera_) {
+            bool currentMode = fpsCamera_->IsFPSMode();
+            fpsCamera_->SetFPSMode(!currentMode);
+        }
     }
 }
 

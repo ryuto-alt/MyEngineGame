@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "FPSCamera.h"
 #include "../Engine/Resource/ResourcePreloader.h"
 #include "../Engine/Collision/AABBCollision.h"
 #include <cmath>
@@ -718,6 +719,18 @@ void Player::UpdateCameraSystem(UnoEngine* engine) {
     }
 
     camera_->Update();
+}
+
+void Player::UpdateFPSCamera(FPSCamera* fpsCamera) {
+    if (fpsCamera) {
+        fpsCamera->UpdateCamera(camera_, position_, animatedModel_.get());
+    }
+}
+
+void Player::SetModelVisible(bool visible) {
+    // Object3dの描画フラグを管理する（仮実装）
+    // この機能はObject3dクラスに描画フラグがあれば使用
+    // ここでは何もしない（後でDrawメソッドで制御）
 }
 
 // 重力の更新

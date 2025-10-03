@@ -49,6 +49,10 @@ public:
     void UpdateCameraSystem(UnoEngine* engine);
     void SetupCamera(UnoEngine* engine);
 
+    // FPSカメラ用
+    void UpdateFPSCamera(class FPSCamera* fpsCamera);
+    void SetModelVisible(bool visible);
+
     // カメラ方向ベースの移動
     void MoveForward(float distance);
     void MoveRight(float distance);
