@@ -64,7 +64,7 @@ void GamePlayScene::Initialize() {
     objeObject_->SetEnableAnimation(false);
     objeObject_->EnableCollision(true, "Object");
 
-    skyboxEnabled_ = false;
+    skyboxEnabled_ = true;
 }
 
 
@@ -86,6 +86,12 @@ void GamePlayScene::Update() {
     }
 
     lightManager_->Update();
+
+    // スポットライトをプレイヤー視点に追従させる
+    if (fpsCamera_) {
+        lightManager_->UpdateSpotLightFollowPlayer(player_->GetPosition(), fpsCamera_->GetCameraRotation());
+    }
+
     const DirectionalLight& dirLight = lightManager_->GetDirectionalLight();
     const SpotLight& spotLight = lightManager_->GetSpotLight();
 

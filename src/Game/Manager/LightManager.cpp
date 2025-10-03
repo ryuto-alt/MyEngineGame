@@ -140,3 +140,46 @@ void LightManager::UpdateLightIntensity() {
         spotLight_.intensity = spotLightIntensityBackup_;
     }
 }
+
+void LightManager::UpdateSpotLightFollowPlayer(const Vector3& playerPosition, const Vector3& cameraRotation) {
+    // カメラの回転から方向ベクトルを計算
+    float cosY = cosf(cameraRotation.y);
+    float sinY = sinf(cameraRotation.y);
+    float cosX = cosf(cameraRotation.x);
+    float sinX = sinf(cameraRotation.x);
+
+    // ライトの目標位置（プレイヤーの目の位置）
+    Vector3 targetPosition = playerPosition;
+    targetPosition.y += 1.6f;  // 目の高さ
+
+    // ライトの目標方向（カメラの向き）
+    Vector3 targetDirection;
+    targetDirection.x = sinY * cosX;
+    targetDirection.y = -sinX;
+    targetDirection.z = cosY * cosX;
+
+    // 遅延付き追従（線形補間）
+    smoothedLightPosition_.x += (targetPosition.x - smoothedLightPosition_.x) * followSmoothness_;
+    smoothedLightPosition_.y += (targetPosition.y - smoothedLightPosition_.y) * followSmoothness_;
+    smoothedLightPosition_.z += (targetPosition.z - smoothedLightPosition_.z) * followSmoothness_;
+
+    smoothedLightDirection_.x += (targetDirection.x - smoothedLightDirection_.x) * followSmoothness_;
+    smoothedLightDirection_.y += (targetDirection.y - smoothedLightDirection_.y) * followSmoothness_;
+    smoothedLightDirection_.z += (targetDirection.z - smoothedLightDirection_.z) * followSmoothness_;
+
+    // スポットライトに適用
+    spotLight_.position = smoothedLightPosition_;
+    spotLight_.direction = smoothedLightDirection_;
+
+    // 方向ベクトルを正規化
+    float length = sqrtf(
+        spotLight_.direction.x * spotLight_.direction.x +
+        spotLight_.direction.y * spotLight_.direction.y +
+        spotLight_.direction.z * spotLight_.direction.z
+    );
+    if (length > 0.001f) {
+        spotLight_.direction.x /= length;
+        spotLight_.direction.y /= length;
+        spotLight_.direction.z /= length;
+    }
+}

@@ -23,6 +23,9 @@ public:
     // 目の位置のジョイント名を設定
     void SetEyeJointName(const std::string& jointName) { eyeJointName_ = jointName; }
 
+    // カメラの回転を取得
+    Vector3 GetCameraRotation() const { return cameraRotation_; }
+
 private:
     bool isFPSMode_ = false;           // true: 一人称, false: 三人称
     std::string eyeJointName_ = "Head"; // デフォルトは"Head"
