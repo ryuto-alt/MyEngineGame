@@ -771,33 +771,32 @@ void Player::CheckGroundCollision() {
             continue;
         }
 
-        // Groundタグをチェック
-        if (otherObj->GetName() == "Ground") {
-            const Collision::AABB& playerAABB = playerColObj->GetWorldAABB();
-            const Collision::AABB& groundAABB = otherObj->GetWorldAABB();
+        // すべてのオブジェクトで接地判定（Groundタグに限定しない）
+        const Collision::AABB& playerAABB = playerColObj->GetWorldAABB();
+        const Collision::AABB& objectAABB = otherObj->GetWorldAABB();
 
-            // プレイヤーが地面の上にいるかチェック
-            if (playerAABB.min.x < groundAABB.max.x && playerAABB.max.x > groundAABB.min.x &&
-                playerAABB.min.z < groundAABB.max.z && playerAABB.max.z > groundAABB.min.z) {
+        // プレイヤーがオブジェクトの上にいるかチェック（XZ平面で重なっている）
+        if (playerAABB.min.x < objectAABB.max.x && playerAABB.max.x > objectAABB.min.x &&
+            playerAABB.min.z < objectAABB.max.z && playerAABB.max.z > objectAABB.min.z) {
 
-                // プレイヤーの下端が地面の上端付近にあるかチェック
-                float distanceToGround = playerAABB.min.y - groundAABB.max.y;
+            // プレイヤーの足元がオブジェクトの上端付近にあるかチェック
+            float distanceToSurface = playerAABB.min.y - objectAABB.max.y;
 
-                if (distanceToGround <= 0.5f && distanceToGround >= -0.5f) {
-                    isGrounded_ = true;
+            // 足元が表面付近にあり、かつ落下中または静止中の場合のみ接地
+            if (distanceToSurface <= 0.5f && distanceToSurface >= -0.5f && velocity_.y <= 0.0f) {
+                isGrounded_ = true;
 
-                    // 着地時の位置を滑らかに補間
-                    float targetY = groundAABB.max.y;
-                    float smoothFactor = 0.1f;  // 0.0〜1.0 (大きいほど速く補間)
-                    position_.y = position_.y + (targetY - position_.y) * smoothFactor;
+                // 着地時の位置を滑らかに補間
+                float targetY = objectAABB.max.y;
+                float smoothFactor = 0.1f;  // 0.0〜1.0 (大きいほど速く補間)
+                position_.y = position_.y + (targetY - position_.y) * smoothFactor;
 
-                    // 地面に十分近づいたら速度を0に
-                    if (std::abs(position_.y - targetY) < 0.01f) {
-                        position_.y = targetY;
-                        velocity_.y = 0.0f;
-                    }
-                    break;
+                // 表面に十分近づいたら速度を0に
+                if (std::abs(position_.y - targetY) < 0.01f) {
+                    position_.y = targetY;
+                    velocity_.y = 0.0f;
                 }
+                break;
             }
         }
     }

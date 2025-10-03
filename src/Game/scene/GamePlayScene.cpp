@@ -58,7 +58,7 @@ void GamePlayScene::Initialize() {
     objeObject_->EnableEnv(false);  // 全オブジェクトで統一
     objeObject_->SetModel(static_cast<Model*>(objeModel_.get()));
     objeObject_->SetCamera(camera_);
-    objeObject_->SetPosition({0.0f, 5.0f, 5.0f});
+    objeObject_->SetPosition({0.0f, 0.0f, 5.0f});
     objeObject_->SetScale({1.0f, 1.0f, 1.0f});
     objeObject_->SetEnableLighting(true);
     objeObject_->SetEnableAnimation(false);

@@ -117,8 +117,8 @@ private:
 
     // 重力・ジャンプ関連
     Vector3 velocity_ = Vector3{0.0f, 0.0f, 0.0f};
-    const float gravity_ = -9.8f;
-    const float jumpPower_ = 5.0f;
+    const float gravity_ = -25.0f;  // 重力を強化（より素早く落下）
+    const float jumpPower_ = 10.0f;
     bool isGrounded_ = false;
 
     // カメラ参照
