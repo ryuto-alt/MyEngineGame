@@ -103,11 +103,11 @@ void Player::Initialize(Camera* camera, bool enableCollision, bool enableEnviron
         }
         
         // 環境マップの設定
-        object3d_->SetEnableEnvironmentMap(enableEnvironmentMap);
         if (enableEnvironmentMap) {
-            OutputDebugStringA("Player: Environment map is enabled\n");
-            object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+            Object3d::SetEnvTex("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+            object3d_->EnableEnv(true);
         } else {
+            object3d_->EnableEnv(false);
             OutputDebugStringA("Player: Environment map is disabled\n");
         }
     }
@@ -248,21 +248,21 @@ void Player::SetSpotLight(const SpotLight& light) {
     }
 }
 
-void Player::SetEnvironmentTexture(const std::string& texturePath) {
+void Player::SetEnvTex(const std::string& texturePath) {
     if (object3d_) {
-        object3d_->SetEnvironmentTexture(texturePath);
+        Object3d::SetEnvTex(texturePath);
     }
 }
 
-void Player::SetEnableEnvironmentMap(bool enable) {
+void Player::EnableEnv(bool enable) {
     if (object3d_) {
-        object3d_->SetEnableEnvironmentMap(enable);
+        object3d_->EnableEnv(enable);
     }
 }
 
-bool Player::GetEnableEnvironmentMap() const {
+bool Player::IsEnvEnabled() const {
     if (object3d_) {
-        return object3d_->GetEnableEnvironmentMap();
+        return object3d_->IsEnvEnabled();
     }
     return false;
 }

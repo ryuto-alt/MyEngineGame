@@ -57,11 +57,12 @@ void Ground::Initialize(Camera* camera, DirectXCommon* dxCommon, bool enableColl
         object3d_->SetCamera(camera_);
 
         // 環境マップの設定
-        object3d_->SetEnableEnvironmentMap(enableEnvironmentMap);
         if (enableEnvironmentMap) {
             OutputDebugStringA("Ground: Environment map is enabled\n");
-            object3d_->SetEnvironmentTexture("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+            Object3d::SetEnvTex("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+            object3d_->EnableEnv(true);
         } else {
+            object3d_->EnableEnv(false);
             OutputDebugStringA("Ground: Environment map is disabled\n");
         }
 
@@ -109,21 +110,19 @@ void Ground::SetSpotLight(const SpotLight& light) {
     }
 }
 
-void Ground::SetEnvironmentTexture(const std::string& texturePath) {
+void Ground::SetEnvTex(const std::string& texturePath) {
+    Object3d::SetEnvTex(texturePath);
+}
+
+void Ground::EnableEnv(bool enable) {
     if (object3d_) {
-        object3d_->SetEnvironmentTexture(texturePath);
+        object3d_->EnableEnv(enable);
     }
 }
 
-void Ground::SetEnableEnvironmentMap(bool enable) {
+bool Ground::IsEnvEnabled() const {
     if (object3d_) {
-        object3d_->SetEnableEnvironmentMap(enable);
-    }
-}
-
-bool Ground::GetEnableEnvironmentMap() const {
-    if (object3d_) {
-        return object3d_->GetEnableEnvironmentMap();
+        return object3d_->IsEnvEnabled();
     }
     return false;
 }

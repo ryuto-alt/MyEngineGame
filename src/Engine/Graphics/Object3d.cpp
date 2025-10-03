@@ -499,8 +499,9 @@ void Object3d::Draw() {
 	}
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(2,
 		TextureManager::GetInstance()->GetSrvHandleGPU(texturePath));
-	
-	std::string envTexturePath = environmentTexturePath_;
+
+	// グローバル環境マップテクスチャを使用
+	std::string envTexturePath = globalEnvironmentTexturePath_;
 	if (envTexturePath.empty() || !TextureManager::GetInstance()->IsTextureExists(envTexturePath)) {
 		envTexturePath = "Resources/Models/skybox/rostock_laage_airport_4k.dds";
 
@@ -508,7 +509,7 @@ void Object3d::Draw() {
 			TextureManager::GetInstance()->LoadTexture(envTexturePath);
 		}
 	}
-	
+
 	dxCommon_->GetCommandList()->SetGraphicsRootDescriptorTable(6,
 		TextureManager::GetInstance()->GetSrvHandleGPU(envTexturePath));
 
@@ -718,4 +719,28 @@ void Object3d::EnableCollision(bool enabled, const std::string& name) {
         Collision::AABB aabb = Collision::AABBExtractor::ExtractFromModel(model_);
         collisionManager->RegisterObject(this, aabb, enabled, name);
     }
+}
+
+// 静的メンバ変数の定義
+std::string Object3d::globalEnvironmentTexturePath_ = "Resources/Models/skybox/rostock_laage_airport_4k.dds";
+
+void Object3d::SetEnvTex(const std::string& texturePath) {
+	globalEnvironmentTexturePath_ = texturePath;
+
+	// テクスチャが存在するか確認し、存在しない場合はロード
+	if (!texturePath.empty() && !TextureManager::GetInstance()->IsTextureExists(texturePath)) {
+		TextureManager::GetInstance()->LoadTexture(texturePath);
+	}
+
+	OutputDebugStringA(("Object3d::SetEnvTex - Global environment texture set to: " + texturePath + "\n").c_str());
+}
+
+void Object3d::EnableEnv(bool enable) {
+	enableEnvironmentMap_ = enable;
+	if (materialData_) {
+		materialData_->enableEnvironmentMap = enable ? 1 : 0;
+		OutputDebugStringA(("Object3d::EnableEnv - " + std::string(enable ? "Enabled" : "Disabled") + "\n").c_str());
+	} else {
+		OutputDebugStringA("Object3d::EnableEnv - WARNING: materialData_ is null\n");
+	}
 }

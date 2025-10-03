@@ -16,11 +16,11 @@ public:
     void SetSpotLight(const SpotLight& light);
     
     // 環境マップテクスチャの設定
-    void SetEnvironmentTexture(const std::string& texturePath);
-    
+    void SetEnvTex(const std::string& texturePath);
+
     // 環境マップの有効/無効
-    void SetEnableEnvironmentMap(bool enable);
-    bool GetEnableEnvironmentMap() const;
+    void EnableEnv(bool enable);
+    bool IsEnvEnabled() const;
     
     
     // 位置の設定

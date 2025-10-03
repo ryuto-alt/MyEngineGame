@@ -20,13 +20,11 @@ public:
     // ライトの設定
     void SetDirectionalLight(const DirectionalLight& light);
     void SetSpotLight(const SpotLight& light);
-    
-    // 環境マップテクスチャの設定
-    void SetEnvironmentTexture(const std::string& texturePath);
-    
+
     // 環境マップの有効/無効
-    void SetEnableEnvironmentMap(bool enable);
-    bool GetEnableEnvironmentMap() const;
+    void EnableEnv(bool enable);
+    bool IsEnvEnabled() const;
+    void SetEnvTex(const std::string& texturePath);
     
     // アニメーション制御
     void PauseAnimation();

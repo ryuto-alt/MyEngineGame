@@ -36,14 +36,14 @@ public:
     template<typename T>
     static void SetEnvMap(T* object) {
         if (object && IsEnvironmentTextureLoaded()) {
-            object->SetEnvironmentTexture(GetCurrentEnvironmentTexturePath());
+            object->SetEnvTex(GetCurrentEnvironmentTexturePath());
         }
     }
-    
+
     template<typename T>
     static void SetEnvMap(std::unique_ptr<T>& object) {
         if (object && IsEnvironmentTextureLoaded()) {
-            object->SetEnvironmentTexture(GetCurrentEnvironmentTexturePath());
+            object->SetEnvTex(GetCurrentEnvironmentTexturePath());
         }
     }
     

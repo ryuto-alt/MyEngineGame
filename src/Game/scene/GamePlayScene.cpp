@@ -10,17 +10,20 @@ void GamePlayScene::Initialize() {
     lightManager_->Initialize();
 
     player_ = std::make_unique<Player>();
-    player_->Initialize(camera_, true, true); // コリジョン有効、環境マップ無効
+    player_->Initialize(camera_, true, true); // コリジョン有効、環境マップ有効
     player_->SetupCamera(engine);
 
     groundModel_ = engine->CreateAnimatedModel();
     groundModel_->LoadFromFile("Resources/Models/ground", "ground.gltf");
 
     ground_ = engine->CreateObject3D();
- 
+
+    // 環境マップを先に設定（SetModelの前に）
+    Object3d::SetEnvTex("Resources/Models/skybox/rostock_laage_airport_4k.dds");
+    ground_->EnableEnv(true);
     ground_->SetModel(static_cast<Model*>(groundModel_.get()));
     ground_->SetCamera(camera_);
-    ground_->SetEnableLighting(false);
+    ground_->SetEnableLighting(true);
     ground_->SetPosition({0.0f, -0.1f, 0.0f});
 
     // Blenderで設定されたスケール情報を使用
@@ -33,7 +36,7 @@ void GamePlayScene::Initialize() {
     }
 
     ground_->SetScale(blenderScale);
-    ground_->SetEnableLighting(true);
+    
 
     // 地面の当たり判定を登録
     auto* collisionManager = Collision::AABBCollisionManager::GetInstance();
@@ -46,6 +49,9 @@ void GamePlayScene::Initialize() {
     objeModel_->LoadFromFile("Resources/Models/obje", "object.gltf");
 
     objeObject_ = engine->CreateObject3D();
+
+    // 環境マップを先に設定（SetModelの前に）
+    objeObject_->EnableEnv(false);
     objeObject_->SetModel(static_cast<Model*>(objeModel_.get()));
     objeObject_->SetCamera(camera_);
     objeObject_->SetPosition({0.0f, 0.0f, 5.0f});

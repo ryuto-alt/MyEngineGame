@@ -63,13 +63,13 @@ public:
     void SetSpotLight(const SpotLight& light) { *spotLightData_ = light; }
     const SpotLight& GetSpotLight() const { return *spotLightData_; }
     
-    // 環境マップテクスチャの設定
-    void SetEnvironmentTexture(const std::string& texturePath) { environmentTexturePath_ = texturePath; }
-    const std::string& GetEnvironmentTexture() const { return environmentTexturePath_; }
-    
-    // 環境マップの有効/無効
-    void SetEnableEnvironmentMap(bool enable) { enableEnvironmentMap_ = enable; }
-    bool GetEnableEnvironmentMap() const { return enableEnvironmentMap_; }
+    // 環境マップテクスチャの設定（全モデル共通・静的）
+    static void SetEnvTex(const std::string& texturePath);
+    static const std::string& GetEnvTex() { return globalEnvironmentTexturePath_; }
+
+    // 環境マップの有効/無効（個別モデルごと）
+    void EnableEnv(bool enable);
+    bool IsEnvEnabled() const { return enableEnvironmentMap_; }
     
     // アニメーション行列の設定
     void SetAnimationMatrix(const Matrix4x4& animationMatrix) { animationMatrix_ = animationMatrix; }
@@ -142,10 +142,10 @@ private:
 
     // カメラへの参照
     Camera* camera_ = nullptr;
-    
-    // 環境マップテクスチャのパス
-    std::string environmentTexturePath_ = "";
-    
-    // 環境マップの有効/無効フラグ
+
+    // 環境マップの有効/無効フラグ（個別）
     bool enableEnvironmentMap_ = false;
+
+    // グローバル環境マップテクスチャパス（静的・全モデル共通）
+    static std::string globalEnvironmentTexturePath_;
 };
