@@ -19,6 +19,11 @@ void TitleScene::Initialize() {
 
     ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_walk", "Resources/Models/human", "walk.gltf", dxCommon_);
     ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_sneak", "Resources/Models/human", "sneakWalk.gltf", dxCommon_);
+
+    // タイトルBGMの読み込みと再生
+    AudioManager::GetInstance()->LoadMP3("titleBGM", "Resources/Audio/title.mp3");
+    AudioManager::GetInstance()->SetVolume("titleBGM", 0.2f);
+    AudioManager::GetInstance()->Play("titleBGM", true);
 }
 
 void TitleScene::Update() {
@@ -66,6 +71,9 @@ void TitleScene::Draw() {
 
 void TitleScene::Finalize() {
     OutputDebugStringA("TitleScene::Finalize() called\n");
+
+    // タイトルBGMの停止
+    AudioManager::GetInstance()->Stop("titleBGM");
 
     // スプライトの解放
     if (titleBgSprite_) {
