@@ -46,6 +46,7 @@ void PostProcess::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager) {
     currentParams_.noiseIntensity = 0.3f;
     currentParams_.distortionAmount = 0.5f;
     currentParams_.bloodAmount = 0.4f;
+    currentParams_.vignetteIntensity = 0.0f;
 
     *horrorParamsData_ = currentParams_;
 }
@@ -243,11 +244,12 @@ void PostProcess::PostDraw() {
     commandList->ResourceBarrier(1, &barrier2);
 }
 
-void PostProcess::SetHorrorParams(float time, float noise, float distortion, float blood) {
+void PostProcess::SetHorrorParams(float time, float noise, float distortion, float blood, float vignette) {
     currentParams_.time = time;
     currentParams_.noiseIntensity = noise;
     currentParams_.distortionAmount = distortion;
     currentParams_.bloodAmount = blood;
+    currentParams_.vignetteIntensity = vignette;
 
     if (horrorParamsData_) {
         *horrorParamsData_ = currentParams_;

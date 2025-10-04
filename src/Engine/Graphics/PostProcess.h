@@ -14,6 +14,8 @@ public:
         float noiseIntensity;
         float distortionAmount;
         float bloodAmount;
+        float vignetteIntensity;
+        float padding[3];  // 16バイト境界に合わせる
     };
 
     PostProcess() = default;
@@ -25,7 +27,7 @@ public:
     void PreDraw();
     void PostDraw();
 
-    void SetHorrorParams(float time, float noise, float distortion, float blood);
+    void SetHorrorParams(float time, float noise, float distortion, float blood, float vignette = 0.0f);
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetRTVHandle() const { return rtvHandle_; }
     ID3D12Resource* GetRenderTarget() const { return renderTargetResource_.Get(); }

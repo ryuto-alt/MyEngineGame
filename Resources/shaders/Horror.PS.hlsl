@@ -14,6 +14,8 @@ cbuffer HorrorParams : register(b0)
     float32_t noiseIntensity;  // ノイズの強度 (0.0 - 1.0)
     float32_t distortionAmount;// 歪みの強度 (0.0 - 1.0)
     float32_t bloodAmount;     // 血のエフェクトの強度 (0.0 - 1.0)
+    float32_t vignetteIntensity; // ビネットの強度 (0.0 - 1.0)
+    float32_t3 padding;        // パディング
 };
 
 // RenderTextureをサンプリングするためのテクスチャとサンプラー
@@ -56,27 +58,44 @@ float32_t3 chromaticAberration(float32_t2 uv, float amount)
     return float32_t3(r, g, b);
 }
 
+// ビネット効果（画面の四隅を暗くする）
+float32_t3 vignetteEffect(float32_t2 uv, float32_t3 color, float intensity)
+{
+    // 画面の中心からの距離を計算
+    float32_t2 center = float32_t2(0.5, 0.5);
+    float dist = distance(uv, center);
+
+    // ビネット効果（中心から離れるほど暗くなる）
+    float vignette = 1.0 - smoothstep(0.3, 1.2, dist);
+    vignette = pow(vignette, 1.5);
+
+    // ビネットを適用（暗くする）
+    float32_t3 result = color * (1.0 - (1.0 - vignette) * intensity);
+
+    return result;
+}
+
 // 血のエフェクト（画面の端に赤い染み）
 float32_t3 bloodEffect(float32_t2 uv, float32_t3 color, float amount)
 {
     // 画面の端からの距離を計算
     float32_t2 center = float32_t2(0.5, 0.5);
     float dist = distance(uv, center);
-    
+
     // ビネット効果を強化して血のような赤い染みを作る
     float vignette = 1.0 - smoothstep(0.2, 0.8, dist);
     vignette = pow(vignette, 2.0);
-    
+
     // 血の色（暗い赤）
     float32_t3 bloodColor = float32_t3(0.3, 0.0, 0.0);
-    
+
     // 血のテクスチャ風のノイズを追加
     float bloodNoise = rand(uv * 10.0 + time * 0.1);
     bloodNoise = smoothstep(0.7, 0.9, bloodNoise);
-    
+
     // 最終的な血のエフェクトを適用
     float32_t3 result = lerp(color, bloodColor, vignette * amount * (0.7 + bloodNoise * 0.3));
-    
+
     return result;
 }
 
@@ -115,7 +134,10 @@ PixelShaderOutput main(VertexShaderOutput input)
     
     // 血のエフェクトを適用
     color = bloodEffect(input.texcoord, color, bloodAmount);
-    
+
+    // ビネット効果を適用（緊張感を高める）
+    color = vignetteEffect(input.texcoord, color, vignetteIntensity);
+
     // 全体的に暗くして恐怖感を演出
     color = color * (0.8 - bloodAmount * 0.3);
     
