@@ -1,4 +1,5 @@
 #include "SceneManager.h"
+#include "LogoScene.h"
 #include "TitleScene.h"
 #include "GamePlayScene.h"
 #include <cassert>
@@ -14,8 +15,8 @@ SceneManager* SceneManager::GetInstance() {
 }
 
 void SceneManager::Initialize() {
-    // 最初のシーンをTitleに設定
-    nextScene_ = "Title";
+    // 最初のシーンをLogoに設定
+    nextScene_ = "Logo";
 
     // デバッグ出力
     OutputDebugStringA("SceneManager initialized successfully\n");
@@ -39,7 +40,9 @@ void SceneManager::Update() {
         }
 
         // 次のシーンを生成
-        if (nextScene_ == "Title") {
+        if (nextScene_ == "Logo") {
+            currentScene_ = std::make_unique<LogoScene>();
+        } else if (nextScene_ == "Title") {
             currentScene_ = std::make_unique<TitleScene>();
         } else if (nextScene_ == "GamePlay") {
             currentScene_ = std::make_unique<GamePlayScene>();
@@ -59,8 +62,10 @@ void SceneManager::Update() {
             // シーンの初期化（例外をキャッチ）
             currentScene_->Initialize();
         }
-        catch (const std::exception&) {
-            // エラーは無視
+        catch (const std::exception& e) {
+            // エラーを出力
+            std::string errorMsg = "Scene initialization error: " + std::string(e.what()) + "\n";
+            OutputDebugStringA(errorMsg.c_str());
         }
 
         // 次のシーン名をクリア

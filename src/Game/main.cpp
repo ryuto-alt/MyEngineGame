@@ -16,11 +16,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // エンジンの初期化
         engine->Initialize();
 
-        // シーンマネージャーの初期化
+        // シーンマネージャーの初期化（内部でLogoシーンに設定される）
         engine->GetSceneManager()->Initialize();
-
-        // 初期シーンへの遷移（SceneManager経由）
-        engine->GetSceneManager()->ChangeScene("Title");
 
         // ゲームループの実行
         engine->Run();
