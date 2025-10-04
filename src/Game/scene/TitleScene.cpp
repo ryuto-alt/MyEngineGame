@@ -6,12 +6,36 @@
 void TitleScene::Initialize() {
     camera_->SetTranslate({0.0f, 0.0f, -10.0f});
 
+    // ホラーエフェクトの初期化
+    horrorEffect_ = std::make_unique<PostProcess>();
+    horrorEffect_->Initialize(dxCommon_, srvManager_);
+
+    // タイトルスプライトの初期化（通常の色で）
+    titleBgSprite_ = std::make_unique<Sprite>();
+    titleBgSprite_->Initialize(spriteCommon_, "Resources/textures/Title/Title_bg.png");
+
+    titleTextSprite_ = std::make_unique<Sprite>();
+    titleTextSprite_->Initialize(spriteCommon_, "Resources/textures/Title/Title_moji.png");
+
     ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_walk", "Resources/Models/human", "walk.gltf", dxCommon_);
     ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_sneak", "Resources/Models/human", "sneakWalk.gltf", dxCommon_);
 }
 
 void TitleScene::Update() {
     camera_->Update();
+
+    // スプライトの更新
+    titleBgSprite_->Update();
+    titleTextSprite_->Update();
+
+    // ホラーエフェクトのパラメータ更新
+    time_ += 1.0f / 60.0f;
+    horrorEffect_->SetHorrorParams(
+        time_,
+        0.4f,  // ノイズ強度
+        0.6f,  // 歪み強度
+        0.3f   // 血エフェクト強度
+    );
 
     if (input_->TriggerKey(DIK_SPACE)) {
         sceneManager_->ChangeScene("GamePlay");
@@ -23,24 +47,16 @@ void TitleScene::Update() {
 }
 
 void TitleScene::Draw() {
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x * 0.5f - 200, ImGui::GetIO().DisplaySize.y * 0.3f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Always);
-    ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
+    // ホラーエフェクトのレンダーターゲットに描画開始
+    horrorEffect_->PreDraw();
 
-    ImGui::SetWindowFontScale(2.0f);
-    ImGui::Text("MY ENGINE GAME");
-    ImGui::SetWindowFontScale(1.0f);
+    // スプライト共通描画設定
+    spriteCommon_->CommonDraw();
 
-    ImGui::Separator();
-    ImGui::Spacing();
+    // スプライトの描画
+    titleBgSprite_->Draw();
+    titleTextSprite_->Draw();
 
-    if (ImGui::Button("Start Game (SPACE)", ImVec2(350, 40))) {
-        sceneManager_->ChangeScene("GamePlay");
-    }
-
-    if (ImGui::Button("Exit (ESC)", ImVec2(350, 40))) {
-        exit(0);
-    }
-
-    ImGui::End();
+    // ホラーエフェクトを適用してバックバッファに描画
+    horrorEffect_->PostDraw();
 }
