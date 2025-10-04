@@ -40,6 +40,7 @@ class Sprite
 
 
 public:
+	~Sprite();
 
 	// 初期化
 	void Initialize(SpriteCommon* spriteCommon, std::string textureFilePath);

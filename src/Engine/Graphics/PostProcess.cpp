@@ -3,6 +3,33 @@
 #include "SrvManager.h"
 #include <cassert>
 
+PostProcess::~PostProcess() {
+    OutputDebugStringA("PostProcess::~PostProcess() called\n");
+    Finalize();
+    OutputDebugStringA("PostProcess::~PostProcess() completed\n");
+}
+
+void PostProcess::Finalize() {
+    OutputDebugStringA("PostProcess::Finalize() called\n");
+    // Unmapリソース
+    if (horrorParamsResource_ && horrorParamsData_) {
+        horrorParamsResource_->Unmap(0, nullptr);
+        horrorParamsData_ = nullptr;
+    }
+
+    // ComPtrは自動的に解放されるが、明示的にリセット
+    horrorParamsResource_.Reset();
+    renderTargetResource_.Reset();
+    rtvDescriptorHeap_.Reset();
+    rootSignature_.Reset();
+    pipelineState_.Reset();
+
+    // SRV割り当てフラグをリセット
+    srvAllocated_ = false;
+    srvIndex_ = 0;
+    OutputDebugStringA("PostProcess::Finalize() completed\n");
+}
+
 void PostProcess::Initialize(DirectXCommon* dxCommon, SrvManager* srvManager) {
     dxCommon_ = dxCommon;
     srvManager_ = srvManager;
@@ -69,7 +96,10 @@ void PostProcess::CreateRenderTarget() {
     dxCommon_->GetDevice()->CreateRenderTargetView(renderTargetResource_.Get(), nullptr, rtvHandle_);
 
     // SRVを作成（SrvManagerを使用）
-    srvIndex_ = srvManager_->Allocate();
+    if (!srvAllocated_) {
+        srvIndex_ = srvManager_->Allocate();
+        srvAllocated_ = true;
+    }
     srvManager_->CreateSRVForTexture2D(srvIndex_, renderTargetResource_.Get(), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, 1);
     srvGPUHandle_ = srvManager_->GetGPUDescriptorHandle(srvIndex_);
 }

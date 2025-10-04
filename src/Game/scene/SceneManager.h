@@ -54,6 +54,10 @@ public:
     // リソース取得メソッド
     WinApp* GetWinApp() const { return winApp_; }
 
+    // 終了リクエスト
+    void RequestExit() { shouldExit_ = true; }
+    bool ShouldExit() const { return shouldExit_; }
+
 private:
     // 現在のシーン
     std::unique_ptr<IScene> currentScene_;
@@ -68,4 +72,7 @@ private:
     SrvManager* srvManager_ = nullptr;
     Camera* camera_ = nullptr;
     WinApp* winApp_ = nullptr;
+
+    // 終了フラグ
+    bool shouldExit_ = false;
 };

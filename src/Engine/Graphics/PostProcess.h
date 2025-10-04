@@ -17,7 +17,9 @@ public:
     };
 
     PostProcess() = default;
-    ~PostProcess() = default;
+    ~PostProcess();
+
+    void Finalize();
 
     void Initialize(DirectXCommon* dxCommon, SrvManager* srvManager);
     void PreDraw();
@@ -40,6 +42,7 @@ private:
     D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_{};
     D3D12_GPU_DESCRIPTOR_HANDLE srvGPUHandle_{};
     uint32_t srvIndex_ = 0;
+    bool srvAllocated_ = false;
 
     // RTV用のDescriptorHeap
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap_;

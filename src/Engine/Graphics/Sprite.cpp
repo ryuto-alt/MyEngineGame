@@ -4,6 +4,29 @@
 #include "RenderingPipeline.h"
 #include "TextureManager.h"
 
+
+Sprite::~Sprite() {
+	OutputDebugStringA("Sprite::~Sprite() called\n");
+	// Unmapリソース
+	if (vertexResource && vertexData) {
+		vertexResource->Unmap(0, nullptr);
+		vertexData = nullptr;
+	}
+	if (indexResource && indexData) {
+		indexResource->Unmap(0, nullptr);
+		indexData = nullptr;
+	}
+	if (materialResource && materialData) {
+		materialResource->Unmap(0, nullptr);
+		materialData = nullptr;
+	}
+	if (transformationMatrixResource && transformationMatrixData) {
+		transformationMatrixResource->Unmap(0, nullptr);
+		transformationMatrixData = nullptr;
+	}
+	OutputDebugStringA("Sprite::~Sprite() completed\n");
+}
+
 void Sprite::Initialize(SpriteCommon* spriteCommon, std::string textureFilePath)
 {
 	//Textureを読んで転送する
@@ -33,6 +56,11 @@ void Sprite::Initialize(SpriteCommon* spriteCommon, std::string textureFilePath)
 	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
 	//インデックスはuint32_tとする
 	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+
+	//Vertex
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	//Index
+	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
 
 	//Material
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
@@ -82,7 +110,6 @@ void Sprite::Update()
 	float tex_top = textureLeftTop_.y / metadata.height;
 	float tex_bottom = (textureLeftTop_.y + textureSize_.y) / metadata.height;
 
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 	//一個目
 	vertexData[0].position = { left,bottom,0.0f,1.0f };	 //左下
 	vertexData[1].position = { left,top,0.0f,1.0f };	 //左上
@@ -94,13 +121,12 @@ void Sprite::Update()
 	vertexData[2].texcoord = { tex_right,tex_bottom };   //右下
 	vertexData[3].texcoord = { tex_right,tex_top };	     //右上
 
-	vertexData[0].normal = { 0.0f,0.0f,-1.0f };          //左下	
+	vertexData[0].normal = { 0.0f,0.0f,-1.0f };          //左下
 	vertexData[1].normal = { 0.0f,0.0f,-1.0f };          //左上
 	vertexData[2].normal = { 0.0f,0.0f,-1.0f };          //右下
 	vertexData[3].normal = { 0.0f,0.0f,-1.0f };          //右上
 
 	//インデックスリソースにデータ書き込む
-	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
 	indexData[0] = 0; indexData[1] = 1; indexData[2] = 2;
 	indexData[3] = 1; indexData[4] = 3; indexData[5] = 2;
 

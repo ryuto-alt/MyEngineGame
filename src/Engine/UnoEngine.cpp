@@ -156,6 +156,12 @@ void UnoEngine::Update() {
 
         // シーンマネージャーの更新
         SceneManager::GetInstance()->Update();
+
+        // SceneManagerからの終了リクエストをチェック
+        if (SceneManager::GetInstance()->ShouldExit()) {
+            endRequest_ = true;
+            return;
+        }
     }
     catch (const std::exception&) {
         // エラーは無視

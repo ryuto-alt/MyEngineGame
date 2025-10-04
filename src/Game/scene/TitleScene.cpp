@@ -42,7 +42,7 @@ void TitleScene::Update() {
     }
 
     if (input_->TriggerKey(DIK_ESCAPE)) {
-        exit(0);
+        sceneManager_->RequestExit();
     }
 }
 
@@ -53,10 +53,36 @@ void TitleScene::Draw() {
     // スプライト共通描画設定
     spriteCommon_->CommonDraw();
 
-    // スプライトの描画
+    // 背景だけエフェクトのレンダーターゲットに描画
     titleBgSprite_->Draw();
-    titleTextSprite_->Draw();
 
     // ホラーエフェクトを適用してバックバッファに描画
     horrorEffect_->PostDraw();
+
+    // エフェクト適用後、タイトル文字をバックバッファに直接描画
+    spriteCommon_->CommonDraw();
+    titleTextSprite_->Draw();
+}
+
+void TitleScene::Finalize() {
+    OutputDebugStringA("TitleScene::Finalize() called\n");
+
+    // スプライトの解放
+    if (titleBgSprite_) {
+        OutputDebugStringA("  Releasing titleBgSprite_\n");
+        titleBgSprite_.reset();
+    }
+    if (titleTextSprite_) {
+        OutputDebugStringA("  Releasing titleTextSprite_\n");
+        titleTextSprite_.reset();
+    }
+
+    // ホラーエフェクトの明示的な解放
+    if (horrorEffect_) {
+        OutputDebugStringA("  Finalizing horrorEffect_\n");
+        horrorEffect_->Finalize();
+        horrorEffect_.reset();
+    }
+
+    OutputDebugStringA("TitleScene::Finalize() completed\n");
 }
