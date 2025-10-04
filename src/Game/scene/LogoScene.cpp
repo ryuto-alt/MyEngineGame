@@ -1,5 +1,6 @@
 #include "LogoScene.h"
 #include "SceneManager.h"
+#include "AudioManager.h"
 
 void LogoScene::Initialize() {
     OutputDebugStringA("LogoScene::Initialize() start\n");
@@ -8,6 +9,10 @@ void LogoScene::Initialize() {
     dxCommon_->SetClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     camera_->SetTranslate({0.0f, 0.0f, -10.0f});
+
+    // ロゴサウンドの読み込み（再生は1.5秒後）
+    AudioManager::GetInstance()->LoadMP3("logoSound", "Resources/Audio/logosound.mp3");
+    AudioManager::GetInstance()->SetVolume("logoSound", 0.5f);
 
     // ロゴスプライトの初期化
     logoSprite_ = std::make_unique<Sprite>();
@@ -24,7 +29,9 @@ void LogoScene::Initialize() {
 
     fadeTimer_ = 0.0f;
     displayTimer_ = 0.0f;
-    fadeState_ = FadeState::FadeIn;
+    waitTimer_ = 0.0f;
+    fadeState_ = FadeState::Wait;
+    soundPlayed_ = false;
 
     OutputDebugStringA("LogoScene::Initialize() completed\n");
 }
@@ -35,6 +42,19 @@ void LogoScene::Update() {
     float deltaTime = 1.0f / 60.0f;
 
     switch (fadeState_) {
+    case FadeState::Wait:
+        waitTimer_ += deltaTime;
+        if (waitTimer_ >= kWaitDuration) {
+            // 1.5秒経過したのでサウンド再生とフェードイン開始
+            if (!soundPlayed_) {
+                AudioManager::GetInstance()->Play("logoSound", false);
+                soundPlayed_ = true;
+            }
+            fadeState_ = FadeState::FadeIn;
+            fadeTimer_ = 0.0f;
+        }
+        break;
+
     case FadeState::FadeIn:
         fadeTimer_ += deltaTime;
         {
@@ -91,6 +111,9 @@ void LogoScene::Draw() {
 }
 
 void LogoScene::Finalize() {
+    // ロゴサウンドの停止
+    AudioManager::GetInstance()->Stop("logoSound");
+
     if (logoSprite_) {
         logoSprite_.reset();
     }
