@@ -1,8 +1,0 @@
-MSBuild のバージョン 17.13.19+0d9f5a35a (.NET Framework)
-MSBUILD : error MSB1008: 1 つのプロジェクトのみを指定できます。
-    完全なコマンド ライン: `"C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" CG2_00-01.vcxproj p:Configuration=Debug p:Platform=x64 /verbosity:normal`
- 応答ファイルによって追加されたスイッチ:
-``からの `C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.rsp`
-スイッチ: p:Configuration=Debug
-
-スイッチの構文については、"MSBuild -help" と入力してください
