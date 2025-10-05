@@ -20,6 +20,7 @@ private:
     std::unique_ptr<Sprite> titleTextSprite_;
     std::unique_ptr<Sprite> hazimeruSprite_;
     std::unique_ptr<Sprite> owaruSprite_;
+    std::unique_ptr<Sprite> noiseSprite_;  // 砂嵐スプライト
     std::unique_ptr<PostProcess> horrorEffect_;
     float time_ = 0.0f;
 
@@ -35,4 +36,16 @@ private:
     Vector2 hazimeruOriginalSize_;
     Vector2 owaruOriginalSize_;
     float noiseTimer_ = 0.0f;
+
+    // 砂嵐エフェクト用
+    bool showInitialNoise_ = true;       // 初回砂嵐表示フラグ
+    float initialNoiseTimer_ = 0.0f;     // 初回砂嵐タイマー
+    const float kInitialNoiseDuration = 0.3f; // 初回砂嵐表示時間
+
+    bool showRandomNoise_ = false;       // ランダム砂嵐表示フラグ
+    float randomNoiseTimer_ = 0.0f;      // ランダム砂嵐タイマー
+    float nextNoiseTime_ = 0.0f;         // 次の砂嵐までの時間
+    const float kRandomNoiseDuration = 0.15f; // ランダム砂嵐表示時間
+    const float kMinNoiseInterval = 8.0f;     // 最小間隔
+    const float kMaxNoiseInterval = 20.0f;    // 最大間隔
 };

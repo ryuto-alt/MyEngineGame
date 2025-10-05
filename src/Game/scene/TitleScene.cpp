@@ -1,6 +1,8 @@
 #include "TitleScene.h"
 #include "../../Engine/Resource/ResourcePreloader.h"
 #include "SceneManager.h"
+#include <cstdlib>
+#include <ctime>
 #ifdef _DEBUG
 #include "imgui.h"
 #endif
@@ -36,8 +38,19 @@ void TitleScene::Initialize() {
     owaruSprite_->SetPosition({ 640.0f, 590.0f });
     owaruSprite_->SetAnchorPoint({ 0.5f, 0.5f }); // 中心を基準に
 
+    // 砂嵐スプライトの初期化（画面全体を覆う）
+    noiseSprite_ = std::make_unique<Sprite>();
+    noiseSprite_->Initialize(spriteCommon_, "Resources/textures/Title/noize.png");
+    noiseSprite_->SetPosition({ 0.0f, 0.0f });
+    noiseSprite_->SetSize({ 1280.0f, 720.0f });
+    noiseSprite_->setColor({ 1.0f, 1.0f, 1.0f, 0.0f }); // 初期は透明
+
     ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_walk", "Resources/Models/human", "walk.gltf", dxCommon_);
     ResourcePreloader::GetInstance()->PreloadAnimatedModelLightweight("human_sneak", "Resources/Models/human", "sneakWalk.gltf", dxCommon_);
+
+    // ランダム砂嵐の初期タイミングを設定
+    srand(static_cast<unsigned int>(time(nullptr)));
+    nextNoiseTime_ = kMinNoiseInterval + static_cast<float>(rand()) / RAND_MAX * (kMaxNoiseInterval - kMinNoiseInterval);
 
     // タイトルBGMの読み込みと再生
     AudioManager::GetInstance()->LoadMP3("titleBGM", "Resources/Audio/title.mp3");
@@ -48,8 +61,47 @@ void TitleScene::Initialize() {
 void TitleScene::Update() {
     camera_->Update();
 
+    float deltaTime = 1.0f / 60.0f;
+
+    // 初回砂嵐エフェクト
+    if (showInitialNoise_) {
+        initialNoiseTimer_ += deltaTime;
+
+        // 画像をそのまま表示
+        noiseSprite_->setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+
+        if (initialNoiseTimer_ >= kInitialNoiseDuration) {
+            showInitialNoise_ = false;
+            noiseSprite_->setColor({ 1.0f, 1.0f, 1.0f, 0.0f });
+        }
+    }
+    // ランダム砂嵐エフェクト
+    else {
+        randomNoiseTimer_ += deltaTime;
+
+        // 次の砂嵐発生タイミングに到達
+        if (!showRandomNoise_ && randomNoiseTimer_ >= nextNoiseTime_) {
+            showRandomNoise_ = true;
+            randomNoiseTimer_ = 0.0f;
+        }
+
+        // 砂嵐表示中
+        if (showRandomNoise_) {
+            // 画像をそのまま表示
+            noiseSprite_->setColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+
+            if (randomNoiseTimer_ >= kRandomNoiseDuration) {
+                showRandomNoise_ = false;
+                noiseSprite_->setColor({ 1.0f, 1.0f, 1.0f, 0.0f });
+                randomNoiseTimer_ = 0.0f;
+                // 次の砂嵐タイミングをランダムに設定
+                nextNoiseTime_ = kMinNoiseInterval + static_cast<float>(rand()) / RAND_MAX * (kMaxNoiseInterval - kMinNoiseInterval);
+            }
+        }
+    }
+
     // ノイズタイマー更新
-    noiseTimer_ += 1.0f / 60.0f;
+    noiseTimer_ += deltaTime;
 
     // キーボード入力フラグ
     bool keyPressed = false;
@@ -119,6 +171,7 @@ void TitleScene::Update() {
     titleTextSprite_->Update();
     hazimeruSprite_->Update();
     owaruSprite_->Update();
+    noiseSprite_->Update();
 
     // ホラーエフェクトのパラメータ更新
     time_ += 1.0f / 60.0f;
@@ -127,7 +180,7 @@ void TitleScene::Update() {
         0.4f,  // ノイズ強度
         0.6f,  // 歪み強度
         0.3f,  // 血エフェクト強度
-        0.6f   // ビネット強度（緊張感を高める）
+        0.9f   // ビネット強度（ブラウン管風の丸み）
     );
 
     // マウスクリックで決定
@@ -168,6 +221,11 @@ void TitleScene::Draw() {
     titleBgSprite_->Draw();
     titleBg2Sprite_->Draw();
 
+    // 砂嵐エフェクトを最前面に描画
+    if (showInitialNoise_ || showRandomNoise_) {
+        noiseSprite_->Draw();
+    }
+
     // ホラーエフェクトを適用してバックバッファに描画
     horrorEffect_->PostDraw();
 
@@ -176,6 +234,8 @@ void TitleScene::Draw() {
     titleTextSprite_->Draw();
     hazimeruSprite_->Draw();
     owaruSprite_->Draw();
+
+    
 }
 
 bool TitleScene::CheckMouseHover(const Vector2& mousePos, const Vector2& spritePos, const Vector2& spriteSize) {
@@ -206,6 +266,9 @@ void TitleScene::Finalize() {
     }
     if (owaruSprite_) {
         owaruSprite_.reset();
+    }
+    if (noiseSprite_) {
+        noiseSprite_.reset();
     }
 
     // ホラーエフェクトの明示的な解放

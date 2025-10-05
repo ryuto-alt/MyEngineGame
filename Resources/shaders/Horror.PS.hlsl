@@ -58,16 +58,16 @@ float32_t3 chromaticAberration(float32_t2 uv, float amount)
     return float32_t3(r, g, b);
 }
 
-// ビネット効果（画面の四隅を暗くする）
+// ビネット効果（画面の四隅を暗くする - ブラウン管風）
 float32_t3 vignetteEffect(float32_t2 uv, float32_t3 color, float intensity)
 {
     // 画面の中心からの距離を計算
     float32_t2 center = float32_t2(0.5, 0.5);
     float dist = distance(uv, center);
 
-    // ビネット効果（中心から離れるほど暗くなる）
-    float vignette = 1.0 - smoothstep(0.3, 1.2, dist);
-    vignette = pow(vignette, 1.5);
+    // ビネット効果（ブラウン管のような丸みを帯びた暗さ）
+    float vignette = 1.0 - smoothstep(0.2, 0.85, dist);
+    vignette = pow(vignette, 2.2);
 
     // ビネットを適用（暗くする）
     float32_t3 result = color * (1.0 - (1.0 - vignette) * intensity);
