@@ -34,10 +34,19 @@ public:
 
 	bool ProcessMessage();
 
+	// フルスクリーン切り替え
+	void ToggleFullscreen();
+	bool IsFullscreen() const { return isFullscreen_; }
+
 private:
 
 	// ウィンドウハンドル
 	HWND hwnd = nullptr;
 	// ウィンドウクラスの設定
 	WNDCLASS wc{};
+
+	// フルスクリーン関連
+	bool isFullscreen_ = false;
+	RECT windowedRect_ = {};
+	LONG windowedStyle_ = 0;
 };

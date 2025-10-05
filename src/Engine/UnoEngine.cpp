@@ -131,6 +131,11 @@ void UnoEngine::Update() {
         // 入力更新
         input_->Update();
 
+        // F11キーでフルスクリーン切り替え
+        if (input_->TriggerKey(DIK_F11)) {
+            winApp_->ToggleFullscreen();
+        }
+
         // SRVヒープを描画前に明示的に設定
         if (srvManager_) {
             srvManager_->PreDraw();
