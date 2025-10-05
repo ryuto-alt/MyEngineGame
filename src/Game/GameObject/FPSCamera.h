@@ -32,7 +32,7 @@ public:
 
 private:
     bool isFPSMode_ = false;           // true: 一人称, false: 三人称
-    bool mouseLookEnabled_ = true;     // マウスによる視点移動の有効/無効
+    bool mouseLookEnabled_ = false;    // マウスによる視点移動の有効/無効（デフォルトはOFF）
     std::string eyeJointName_ = "Head"; // デフォルトは"Head"
     Vector3 eyeOffset_ = {0.0f, 0.15f, 0.0f}; // 目のオフセット（Headボーンからの相対位置）
 

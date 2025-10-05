@@ -2,8 +2,10 @@
 #include <wtypes.h>
 #include <Windows.h>
 #include <cstdint>
+#ifdef _DEBUG
 #include "imgui.h"
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
 
 
 class WinApp

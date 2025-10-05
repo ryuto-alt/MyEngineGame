@@ -1,4 +1,7 @@
 #include "Enemy.h"
+#ifdef _DEBUG
+#include "imgui.h"
+#endif
 #include <cmath>
 
 Enemy::Enemy() {
@@ -130,6 +133,7 @@ void Enemy::UpdateAnimation(float deltaTime) {
 }
 
 void Enemy::DrawImGui() {
+#ifdef _DEBUG
     if (ImGui::TreeNode("Enemy")) {
         // 位置
         ImGui::DragFloat3("Position", &position_.x, 0.1f);
@@ -183,4 +187,5 @@ void Enemy::DrawImGui() {
 
         ImGui::TreePop();
     }
+#endif
 }

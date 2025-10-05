@@ -52,7 +52,9 @@ void UnoEngine::Initialize() {
         // TextureManager::GetInstance()->LoadDefaultTexture();
 
         // ImGuiの初期化
+#ifdef _DEBUG
         InitializeImGui();
+#endif
 
         // 入力初期化
         input_ = std::make_unique<Input>();
@@ -188,8 +190,10 @@ void UnoEngine::Draw() {
         Particle3DManager::GetInstance()->Draw(camera_.get());
 
         // ImGuiの準備と描画
+#ifdef _DEBUG
         ImGui::Render();
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), dxCommon_->GetCommandList());
+#endif
 
         // 描画終了
         dxCommon_->End();
@@ -230,9 +234,11 @@ void UnoEngine::Finalize() {
         camera_.reset();
 
         // ImGuiの解放（DirectX12リソースを使用しているため早めに）
+#ifdef _DEBUG
         ImGui_ImplDX12_Shutdown();
         ImGui_ImplWin32_Shutdown();
         ImGui::DestroyContext();
+#endif
 
         // テクスチャマネージャの解放（シングルトンを強制破棄）
         TextureManager::GetInstance()->Finalize();
@@ -267,9 +273,11 @@ void UnoEngine::Run() {
     // ゲームループ
     while (!IsEndRequested()) {
         // ImGuiの新しいフレーム
+#ifdef _DEBUG
         ImGui_ImplDX12_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
+#endif
 
         // 更新
         Update();
@@ -412,15 +420,16 @@ void UnoEngine::ChangeScene(const std::string& sceneName) {
 
 // === デバッグ情報 ===
 void UnoEngine::ShowDebugInfo() {
+#ifdef _DEBUG
     ImGui::Begin("UnoEngine デバッグ情報");
-    
+
     // FPS情報
     ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-    
+
     // カメラ情報
     Vector3 cameraPos = camera_->GetTranslate();
     ImGui::Text("カメラ位置: (%.2f, %.2f, %.2f)", cameraPos.x, cameraPos.y, cameraPos.z);
-    
+
     // メモリ使用量（概算）
     // 全パーティクルグループのパーティクル数を合計
     uint32_t totalParticles = 0;
@@ -429,7 +438,7 @@ void UnoEngine::ShowDebugInfo() {
     totalParticles += particleManager->GetParticleCount("explosion");
     totalParticles += particleManager->GetParticleCount("smoke");
     ImGui::Text("アクティブパーティクル数: %d", totalParticles);
-    
+
     // 入力状態
     if (ImGui::TreeNode("入力状態")) {
         ImGui::Text("ESC: %s", input_->PushKey(DIK_ESCAPE) ? "押下中" : "未押下");
@@ -440,8 +449,9 @@ void UnoEngine::ShowDebugInfo() {
         ImGui::Text("D: %s", input_->PushKey(DIK_D) ? "押下中" : "未押下");
         ImGui::TreePop();
     }
-    
+
     ImGui::End();
+#endif
 }
 
 // === 3D空間オーディオシステム実装 ===
@@ -479,6 +489,7 @@ void UnoEngine::UpdateSpatialAudio() {
 }
 
 void UnoEngine::InitializeImGui() {
+#ifdef _DEBUG
     try {
         // ImGui初期化
         IMGUI_CHECKVERSION();
@@ -552,6 +563,7 @@ void UnoEngine::InitializeImGui() {
     catch (const std::exception&) {
         // エラーは無視
     }
+#endif
 }
 
 // === スムージングシステム実装 ===

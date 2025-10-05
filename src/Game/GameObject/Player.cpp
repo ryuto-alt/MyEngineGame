@@ -2,6 +2,9 @@
 #include "FPSCamera.h"
 #include "../Engine/Resource/ResourcePreloader.h"
 #include "../Engine/Collision/AABBCollision.h"
+#ifdef _DEBUG
+#include "imgui.h"
+#endif
 #include <cmath>
 
 Player::Player() {
@@ -182,6 +185,7 @@ void Player::Draw() {
 
 
 void Player::DrawUI() {
+#ifdef _DEBUG
     ImGui::Begin("Player");
 
     ImGui::Text("Controls:");
@@ -191,20 +195,16 @@ void Player::DrawUI() {
     ImGui::Text("R - Reset Animation");
     ImGui::Text("1/RShift - Toggle SneakWalk");
     ImGui::Text("ESC - Exit Game");
-#ifdef _DEBUG
     ImGui::Text("F1 - Toggle Free Camera");
     ImGui::Text("TAB - Toggle Mouse Look");
-#endif
 
     ImGui::Separator();
-    
+
     if (camera_) {
         Vector3 cameraPos = camera_->GetTranslate();
         ImGui::Text("Camera: (%.1f, %.1f, %.1f)", cameraPos.x, cameraPos.y, cameraPos.z);
 
-#ifdef _DEBUG
         ImGui::Text("Camera Mode: %s", camera_->IsFreeCameraMode() ? "Free" : "Follow Player");
-#endif
     }
 
     ImGui::Separator();
@@ -226,6 +226,7 @@ void Player::DrawUI() {
     }
 
     ImGui::End();
+#endif
 }
 
 void Player::Finalize() {

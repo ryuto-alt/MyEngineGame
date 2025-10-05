@@ -1,4 +1,7 @@
 #include "LightManager.h"
+#ifdef _DEBUG
+#include "imgui.h"
+#endif
 #include <cmath>
 #include <cstdlib>
 #include <ctime>
@@ -44,6 +47,7 @@ void LightManager::Update() {
 }
 
 void LightManager::DrawImGui() {
+#ifdef _DEBUG
     if (!showDebugWindow_) return;
     
     ImGui::Begin("Lighting Settings (F \u30ad\u30fc\u3067\u8868\u793a\u5207\u66ff)");
@@ -107,6 +111,7 @@ void LightManager::DrawImGui() {
         spotLight_.position.x, spotLight_.position.y, spotLight_.position.z);
     
     ImGui::End();
+#endif
 }
 
 void LightManager::NormalizeDirectionalLightDirection() {

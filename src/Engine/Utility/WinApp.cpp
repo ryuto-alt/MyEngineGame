@@ -2,9 +2,11 @@
 
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+#ifdef _DEBUG
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
+#endif
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
@@ -37,7 +39,7 @@ void WinApp::Initialize()
 #pragma region ウィンドウ生成と表示
 	hwnd = CreateWindow(
 		wc.lpszClassName,
-		L"CG2",
+		L"UnoEngineGame",
 		WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,

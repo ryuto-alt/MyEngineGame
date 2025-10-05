@@ -1,7 +1,9 @@
 #include "TitleScene.h"
 #include "../../Engine/Resource/ResourcePreloader.h"
 #include "SceneManager.h"
+#ifdef _DEBUG
 #include "imgui.h"
+#endif
 
 void TitleScene::Initialize() {
     camera_->SetTranslate({0.0f, 0.0f, -10.0f});

@@ -1,5 +1,7 @@
 #include "GamePlayScene.h"
+#ifdef _DEBUG
 #include "imgui.h"
+#endif
 #include "UnoEngine.h"
 #include "SceneManager.h"
 
@@ -69,6 +71,12 @@ void GamePlayScene::Initialize() {
     objeObject_->EnableCollision(true, "Object");
 
     skyboxEnabled_ = true;
+
+    // FPSカメラのマウスルックを有効化してマウスカーソルを非表示
+    if (fpsCamera_) {
+        fpsCamera_->SetMouseLookEnabled(true);
+        engine->SetMouseCursor(false);
+    }
 }
 
 
@@ -142,6 +150,7 @@ void GamePlayScene::Draw() {
 
     player_->DrawUI();
 
+#ifdef _DEBUG
     if (lightManager_) {
         lightManager_->DrawImGui();
     }
@@ -151,6 +160,7 @@ void GamePlayScene::Draw() {
     if (collisionManager) {
         collisionManager->DrawImGui();
     }
+#endif
 }
 
 void GamePlayScene::Finalize() {

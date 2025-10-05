@@ -7,15 +7,17 @@
 #include <array>
 #include <dxcapi.h>
 #pragma comment(lib, "dxcompiler.lib")
+#ifdef _DEBUG
 #include "imgui.h"
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#endif
 #include "DirectXTex.h"
 #include "d3dx12.h"
 #include <vector>
 #include <chrono>
 #include <thread>
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
 class DirectXCommon

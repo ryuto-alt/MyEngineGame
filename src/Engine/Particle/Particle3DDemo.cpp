@@ -1,5 +1,7 @@
 #include "Particle3DDemo.h"
+#ifdef _DEBUG
 #include <imgui.h>
+#endif
 
 void Particle3DDemo::Initialize() {
     // 初期値の設定
@@ -16,8 +18,9 @@ void Particle3DDemo::Update() {
 }
 
 void Particle3DDemo::DrawImGui() {
+#ifdef _DEBUG
     if (ImGui::Begin("3D Particle Effect Demo")) {
-        
+
         // エフェクト発生位置の設定
         ImGui::Text("Effect Position:");
         ImGui::SliderFloat3("Position", &effectPosition_.x, -10.0f, 10.0f);
@@ -84,11 +87,11 @@ void Particle3DDemo::DrawImGui() {
         if (showDebugInfo_) {
             ImGui::Separator();
             ImGui::Text("Debug Information:");
-            
+
             // エフェクトマネージャーの状態
             uint32_t activeCount = EffectManager3D::GetInstance()->GetActiveEffectCount();
             bool anyPlaying = EffectManager3D::GetInstance()->IsAnyEffectPlaying();
-            
+
             ImGui::Text("Active Effects: %u", activeCount);
             ImGui::Text("Any Playing: %s", anyPlaying ? "Yes" : "No");
 
@@ -108,6 +111,7 @@ void Particle3DDemo::DrawImGui() {
         ImGui::Text("Space: Random effects");
     }
     ImGui::End();
+#endif
 }
 
 void Particle3DDemo::TriggerEffectAtPosition() {

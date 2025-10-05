@@ -3,7 +3,9 @@
 #include "Model.h"
 #include "AnimatedModel.h"
 #include "../externals/tinygltf/tiny_gltf.h"
+#ifdef _DEBUG
 #include "imgui.h"
+#endif
 #include <algorithm>
 #include <cassert>
 
@@ -375,6 +377,7 @@ namespace Collision {
     }
 
     void AABBCollisionManager::DrawImGui() {
+#ifdef _DEBUG
         ImGui::Begin("AABB Collision Debug");
 
         ImGui::Text("Registered Objects: %zu", collisionObjects_.size());
@@ -430,6 +433,7 @@ namespace Collision {
         }
 
         ImGui::End();
+#endif
     }
 
 } // namespace Collision

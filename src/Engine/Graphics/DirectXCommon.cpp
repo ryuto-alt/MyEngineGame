@@ -295,6 +295,7 @@ void DirectXCommon::DxcCompilerInitialize()
 
 void DirectXCommon::ImguiInitialize()
 {
+#ifdef _DEBUG
 	//ImGui初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -303,6 +304,7 @@ void DirectXCommon::ImguiInitialize()
 
 	// ヒープはSrvManagerが管理するものを使用
 	// この部分は後ほど別途ImGuiManagerクラスを作成して管理する
+#endif
 }
 
 

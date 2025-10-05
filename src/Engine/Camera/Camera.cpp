@@ -27,11 +27,7 @@ Camera::Camera() :
     transform_.translate = { 0.0f, 0.0f, -5.0f };
 
     // マウス視点移動の初期設定
-#ifdef _DEBUG
-    mouseLookEnabled_ = false;  // デバッグ時は初期状態でOFF
-#else
-    mouseLookEnabled_ = true;   // リリース時は初期状態でON
-#endif
+    mouseLookEnabled_ = false;  // 初期状態でOFF（TABキーで切り替え可能）
 
     // 初期更新
     Update();
