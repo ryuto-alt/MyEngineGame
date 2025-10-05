@@ -85,18 +85,26 @@ bool WinApp::ProcessMessage()
 void WinApp::ToggleFullscreen()
 {
 	if (!isFullscreen_) {
-		// ウィンドウモード → フルスクリーン
+		// ウィンドウモード → フルスクリーン（ボーダーレスウィンドウ方式）
 		// 現在のウィンドウスタイルと位置を保存
 		windowedStyle_ = GetWindowLong(hwnd, GWL_STYLE);
 		GetWindowRect(hwnd, &windowedRect_);
 
-		// ウィンドウスタイルを変更（枠なし）
-		SetWindowLong(hwnd, GWL_STYLE, WS_POPUP);
+		// ウィンドウスタイルを変更（枠なし、最大化ボタンなし）
+		SetWindowLong(hwnd, GWL_STYLE, WS_VISIBLE | WS_POPUP);
 
-		// フルスクリーンサイズに変更
-		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-		SetWindowPos(hwnd, HWND_TOP, 0, 0, screenWidth, screenHeight, SWP_FRAMECHANGED);
+		// モニター情報を取得
+		HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTOPRIMARY);
+		MONITORINFO monitorInfo = { sizeof(MONITORINFO) };
+		GetMonitorInfo(hMonitor, &monitorInfo);
+
+		// フルスクリーンサイズに変更（モニターの作業領域全体）
+		SetWindowPos(hwnd, HWND_TOPMOST,
+			monitorInfo.rcMonitor.left,
+			monitorInfo.rcMonitor.top,
+			monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left,
+			monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top,
+			SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
 		isFullscreen_ = true;
 	}
@@ -105,13 +113,13 @@ void WinApp::ToggleFullscreen()
 		// 元のウィンドウスタイルに戻す
 		SetWindowLong(hwnd, GWL_STYLE, windowedStyle_);
 
-		// 元のサイズと位置に戻す
-		SetWindowPos(hwnd, HWND_TOP,
+		// 元のサイズと位置に戻す（HWND_NOTOPMOSTで最前面から外す）
+		SetWindowPos(hwnd, HWND_NOTOPMOST,
 			windowedRect_.left,
 			windowedRect_.top,
 			windowedRect_.right - windowedRect_.left,
 			windowedRect_.bottom - windowedRect_.top,
-			SWP_FRAMECHANGED);
+			SWP_FRAMECHANGED | SWP_SHOWWINDOW);
 
 		isFullscreen_ = false;
 	}

@@ -666,3 +666,16 @@ void DirectXCommon::CommandKick()
 	hr = commandList->Reset(commandAllocator.Get(), nullptr);
 	assert(SUCCEEDED(hr));
 }
+void DirectXCommon::ToggleFullscreen()
+{
+	BOOL isFullscreen = FALSE;
+	swapChain->GetFullscreenState(&isFullscreen, nullptr);
+	swapChain->SetFullscreenState(!isFullscreen, nullptr);
+}
+
+bool DirectXCommon::IsFullscreen() const
+{
+	BOOL isFullscreen = FALSE;
+	swapChain->GetFullscreenState(&isFullscreen, nullptr);
+	return isFullscreen != FALSE;
+}

@@ -100,6 +100,13 @@ public:
 		clearColor_[3] = a;
 	}
 
+	// フルスクリーン切り替え
+	void ToggleFullscreen();
+	bool IsFullscreen() const;
+
+	// スワップチェーンへのアクセス
+	IDXGISwapChain4* GetSwapChain() const { return swapChain.Get(); }
+
 private:
 	//WindowsAPI
 	WinApp* winApp_ = nullptr;
