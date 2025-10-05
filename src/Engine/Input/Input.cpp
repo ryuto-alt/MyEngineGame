@@ -133,6 +133,14 @@ void Input::ResetMouseCenter()
 	SetCursorPos(centerPoint.x, centerPoint.y);
 }
 
+bool Input::IsMouseButtonTriggered(int button)
+{
+	if (button < 0 || button >= 3) return false;
+
+	// 現在押されていて、前フレームで押されていなければトリガー
+	return (mouseState_.rgbButtons[button] & 0x80) && !(previousMouseState_.rgbButtons[button] & 0x80);
+}
+
 bool Input::IsXboxControllerConnected(int playerIndex)
 {
 	if (playerIndex < 0 || playerIndex >= XUSER_MAX_COUNT) return false;
